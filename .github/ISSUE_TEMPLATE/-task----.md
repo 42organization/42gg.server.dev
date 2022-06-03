@@ -8,7 +8,7 @@ assignees: nheo9143
 ---
 
 > ### ISSUE
-> * Type: `feature`, `fix`
+> * Type: `feature`, `fix`, `test`
 > * Detail: fix actions from client redux
 > 
 > ### TODO
