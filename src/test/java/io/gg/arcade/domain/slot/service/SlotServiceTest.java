@@ -50,15 +50,17 @@ class SlotServiceTest {
     @DisplayName("유저가 슬롯에 입장")
     void modifySlot() {
         //given
-        SlotRequestDto slotDto1 = new SlotRequestDto();
-        SlotRequestDto slotDto2 = new SlotRequestDto();
         Slot slot1 = slotService.addSlot(LocalDateTime.now());
-        slotDto1.setSlotId(slot1.getId());
-        slotDto1.setGamePpp(2400);
-        slotDto1.setType("single");
-        slotDto2.setSlotId(slot1.getId());
-        slotDto2.setGamePpp(1000);
-        slotDto2.setType("single");
+        SlotRequestDto slotDto1 = SlotRequestDto.builder()
+                .slotId(slot1.getId())
+                .gamePpp(2400)
+                .type("single")
+                .build();
+        SlotRequestDto slotDto2 = SlotRequestDto.builder()
+                .slotId(slot1.getId())
+                .gamePpp(1200)
+                .type("single")
+                .build();
 
         //when
         slotService.addUserInSlot(slotDto1);

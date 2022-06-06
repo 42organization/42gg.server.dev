@@ -1,6 +1,6 @@
 package io.gg.arcade.domain.user.service;
 
-import io.gg.arcade.domain.user.dto.UserRequestDto;
+import io.gg.arcade.domain.user.dto.UserSaveRequestDto;
 import io.gg.arcade.domain.user.entity.User;
 import io.gg.arcade.domain.user.repository.UserRepository;
 import org.assertj.core.api.Assertions;
@@ -24,11 +24,12 @@ class UserServiceTest {
     @DisplayName("유저 생성")
     void addUser() {
         //given
-        UserRequestDto userDto = new UserRequestDto();
-        userDto.setIntraId("hakim");
-        userDto.setUserImageUri("");
-        userDto.setRacketType("pen");
-        userDto.setStatusMessage("Hello pingpong!");
+        UserSaveRequestDto userDto = UserSaveRequestDto.builder()
+                .intraId("hakim")
+                .userImageUri("")
+                .racketType("pen")
+                .statusMessage("Hello pingpong!")
+                .build();
 
         //when
         User user1 = userService.addUser(userDto);

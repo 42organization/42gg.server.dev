@@ -59,10 +59,11 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public TeamResponseDto findTeam(TeamRequestDto teamDto) {
-        TeamResponseDto responseDto = new TeamResponseDto();
         List<Team> teams = teamRepository.findByTeamId(teamDto.getTeamId());
-        responseDto.setHeadCount(teams.size());
-        responseDto.setTeams(teams);
+        TeamResponseDto responseDto = TeamResponseDto.builder()
+                .teams(teams)
+                .headCount(teams.size())
+                .build();
         return responseDto;
     }
 
