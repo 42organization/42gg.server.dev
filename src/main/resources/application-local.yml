@@ -5,15 +5,15 @@ spring:
 
   # 데이터 소스 설정
   datasource:
-    url: jdbc:mysql://localhost:3306/Test?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/TEST?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     driverClassName: com.mysql.cj.jdbc.Driver
     username: root
-    password: commanderjiyun
+    password: blind42blind42
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: none
     properties:
       hibernate:
         show_sql: true
