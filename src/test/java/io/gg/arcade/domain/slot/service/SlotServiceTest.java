@@ -1,5 +1,6 @@
 package io.gg.arcade.domain.slot.service;
 
+import io.gg.arcade.domain.slot.dto.SlotFindDto;
 import io.gg.arcade.domain.slot.dto.SlotRequestDto;
 import io.gg.arcade.domain.slot.entity.Slot;
 import io.gg.arcade.domain.slot.repository.SlotRepository;
@@ -72,5 +73,18 @@ class SlotServiceTest {
         Assertions.assertThat(slot1.getGamePpp()).isEqualTo(slot2.getGamePpp()); // modify ppp test
         Assertions.assertThat(slot1.getGamePpp()).isEqualTo(slot3.getGamePpp()); // modify 안된거 있는지
         Assertions.assertThat(slot2.getGamePpp()).isEqualTo(slot3.getGamePpp());
+    }
+
+    @Test
+    @Transactional
+    void findByDate() {
+        LocalDateTime now = LocalDateTime.of(2022, 6, 6, 12, 0, 0);
+
+        SlotFindDto slotFindDto = SlotFindDto.builder()
+                .localDateTime(now)
+                .user(null)
+                .build();
+        slotService.addTodaySlots();
+        slotService.findByDate(slotFindDto);
     }
 }
