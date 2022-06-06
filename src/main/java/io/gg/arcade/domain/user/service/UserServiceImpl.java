@@ -1,6 +1,6 @@
 package io.gg.arcade.domain.user.service;
 
-import io.gg.arcade.domain.user.dto.UserRequestDto;
+import io.gg.arcade.domain.user.dto.UserSaveRequestDto;
 import io.gg.arcade.domain.user.entity.User;
 import io.gg.arcade.domain.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
 
     @Override
-    public User addUser(UserRequestDto userDto) {
+    public User addUser(UserSaveRequestDto userDto) {
         User user = User.builder()
                 .intraId(userDto.getIntraId())
                 .userImageUri(userDto.getUserImageUri())
