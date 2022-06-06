@@ -61,9 +61,9 @@ class SlotServiceTest {
         slotDto2.setType("single");
 
         //when
-        slotService.modifySlot(slotDto1);
+        slotService.addUserInSlot(slotDto1);
         Slot slot2 = slotRepository.getById(slot1.getId());
-        slotService.modifySlot(slotDto2);
+        slotService.addUserInSlot(slotDto2);
         Slot slot3 = slotRepository.getById(slot1.getId());
 
         //then
