@@ -39,24 +39,20 @@ public class SlotServiceImpl implements SlotService {
     @Override
     public void addUserInSlot(SlotRequestDto slotDto) {
         Slot slot = slotRepository.getById(slotDto.getSlotId());
-        if (slot.getType() == null) {
+        if (slot.getHeadCount() == 0) {
             slot.setType(slotDto.getType());
-        }
-        if (slot.getGamePpp() == null) {
             slot.setGamePpp(slotDto.getGamePpp());
         }
-        slot.setHeadCount(slot.getHeadCount() + 1); // 마이너스도 있을 수 있음;
+        slot.setHeadCount(slot.getHeadCount() + 1);
     }
 
     @Override
     public void removeUserInSlot(SlotRequestDto slotDto) {
         Slot slot = slotRepository.getById(slotDto.getSlotId());
-        if (slot.getType() == null) {
-            slot.setType(slotDto.getType());
+        slot.setHeadCount(slot.getHeadCount() - 1);
+        if (slot.getHeadCount() == 0) {
+            slot.setType(null);
+            slot.setGamePpp(null);
         }
-        if (slot.getGamePpp() == null) {
-            slot.setGamePpp(slotDto.getGamePpp());
-        }
-        slot.setHeadCount(slot.getHeadCount() - 1); // 마이너스도 있을 수 있음;
     }
 }
