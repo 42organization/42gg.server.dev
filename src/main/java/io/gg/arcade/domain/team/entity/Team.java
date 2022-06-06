@@ -27,19 +27,22 @@ public class Team extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @NotNull
+    @Setter
     @Column(name = "is_win")
     private Boolean isWin;
 
     @NotNull
+    @Setter
     @Column(name = "score")
     private Integer score;
 
     @NotNull
+    @Setter
     @Column(name = "ppp_change")
     private Integer pppChange;
 
     @NotNull
+    @Setter
     @Column(name = "ppp_result")
     private Integer pppResult;
 
