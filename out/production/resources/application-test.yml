@@ -5,10 +5,10 @@ spring:
 
   # 데이터 소스 설정
   datasource:
-    url: jdbc:mysql://localhost:3306/EXAMPLE?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/TEST?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     driverClassName: com.mysql.cj.jdbc.Driver
-    username: root
-    password: blind42blind42
+    username: 42gg
+    password: pingPongpower42#
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
@@ -21,9 +21,4 @@ spring:
         use_sql_comments: false
     logging:
       level:
-        org:
-          hibernate:
-            type:
-              descripter:
-                sql: trace
-            SQL: debug
+        org.hibernate.SQL: debug

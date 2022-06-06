@@ -1,5 +1,6 @@
 package io.gg.arcade.domain.user.entity;
 
+import io.gg.arcade.domain.user.dto.UserRequestDto;
 import io.gg.arcade.global.entity.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +12,6 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class User extends BaseTimeEntity {
     @Id
@@ -34,7 +34,6 @@ public class User extends BaseTimeEntity {
     @Column
     private Boolean isPlaying;
 
-    @NotNull
     @Column
     private String statusMessage;
 
