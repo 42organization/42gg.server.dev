@@ -5,6 +5,8 @@ import io.gg.arcade.domain.game.entity.Game;
 import io.gg.arcade.domain.game.repository.GameRepository;
 import io.gg.arcade.domain.game.service.GameService;
 import io.gg.arcade.domain.pchange.dto.PchangeAddRequestDto;
+import io.gg.arcade.domain.pchange.dto.PchangeFindRequestDto;
+import io.gg.arcade.domain.pchange.dto.PchangeFindResposeDto;
 import io.gg.arcade.domain.pchange.repository.PchangeRepository;
 import io.gg.arcade.domain.slot.entity.Slot;
 import io.gg.arcade.domain.slot.repository.SlotRepository;
@@ -114,5 +116,20 @@ class PchangeServiceImplTest {
     @Test
     @Transactional
     void findPchanges() {
+        PchangeAddRequestDto pchangeDto1 = PchangeAddRequestDto.builder()
+                .gameId(game.getId())
+                .pppChange(10)
+                .pppResult(user1.getPpp() + 10)
+                .userId(user1.getId())
+                .build();
+        PchangeFindRequestDto pchangeDto2 = PchangeFindRequestDto.builder()
+                .gameId(game.getId())
+                .userId(user1.getId())
+                .build();
+        //when
+        pchangeService.addPchange(pchangeDto1);
+
+        PchangeFindResposeDto pdto = pchangeService.findPchanges(pchangeDto2);
+        Assertions.assertThat(pdto.getPppResult()).isEqualTo(1010);
     }
 }
