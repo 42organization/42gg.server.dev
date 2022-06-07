@@ -1,6 +1,7 @@
 package io.gg.arcade.domain.slot.service;
 
 import io.gg.arcade.domain.rank.repository.RankRepository;
+import io.gg.arcade.domain.slot.dto.SlotAddRequestDto;
 import io.gg.arcade.domain.slot.dto.SlotFindDto;
 import io.gg.arcade.domain.slot.dto.SlotResponseDto;
 import io.gg.arcade.domain.slot.dto.SlotRequestDto;
@@ -28,23 +29,30 @@ public class SlotServiceImpl implements SlotService {
     @Override
     @Scheduled(cron = "0 0 0 1 * * *") // 나중에 global에 뺴야함
     public void addTodaySlots() {
-
         LocalDateTime now = LocalDateTime.now();
         for (int i = 0; i < 18; i++) {
-            addSlot(LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
-                    15 + i / 6, (i * 10) % 60, 0));
-        }
+            String team1Id = String.valueOf(UUID.randomUUID());
+            String team2Id = String.valueOf(UUID.randomUUID());
+            LocalDateTime test = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
+                    15 + i / 6, (i * 10) % 60, 0);
+            SlotAddRequestDto dto = SlotAddRequestDto.builder()
+                    .team1Id(team1Id)
+                    .team2Id(team2Id)
+                    .time(test)
+                    .build();
+            addSlot(dto);
+       }
     }
 
     @Override
-    public Slot addSlot(LocalDateTime time) {
-        Slot slot = Slot.builder()
-                .team1Id(String.valueOf(UUID.randomUUID()))
-                .team2Id(String.valueOf(UUID.randomUUID()))
-                .time(time)
+    public void addSlot(SlotAddRequestDto dto) {
+        slotRepository.save(
+                Slot.builder()
+                .team1Id(dto.getTeam1Id())
+                .team2Id(dto.getTeam2Id())
+                .time(dto.getTime())
                 .headCount(0)
-                .build();
-        return slotRepository.save(slot);
+                .build());
     }
 
     @Override // 이 메서드가 호출된 뒤에 빈 혹은 찬 팀에 유저 추가
@@ -78,21 +86,22 @@ public class SlotServiceImpl implements SlotService {
             dtoList.add(SlotResponseDto.builder()
                     .slotId(slot.getId())
                     .headCount(slot.getHeadCount())
-                    .status(getStatus(slotFindDto.getInquiringType(), slot.getHeadCount(), slot.getGamePpp(), slotFindDto.getCurrentUserPpp(), slotFindDto.getUserId()))
+                    .status(getStatus(slot.getType(), slotFindDto.getInquiringType(), slot.getHeadCount(), slot.getGamePpp(), slotFindDto.getCurrentUserPpp(), slotFindDto.getUserId()))
                     .build());
         }
         return dtoList;
     }
 
-    private String getStatus(String inquiringType, Integer headCount, Integer gamePpp, Integer ppp, Integer userId) {
-        String status = isSlotAvailable(inquiringType, headCount, gamePpp, ppp) ? "open" : "close";
-        if (isMyTable(userId, status) == true) {
+    private String getStatus(String slotType, String inquiringType, Integer headCount, Integer gamePpp, Integer ppp, Integer userId) {
+        String status = isSlotAvailable(slotType, inquiringType, headCount, gamePpp, ppp) ? "open" : "close";
+        if (isMyTable(userId) == true) {
             status = "myTable";
         }
         return status;
     }
 
-    private Boolean isMyTable(Integer userId, String status) {
+    private Boolean isMyTable(Integer userId) {
+        /*
         Boolean status = false;
         List<Team> teams = teamRepository.findByTeamId(slot.getTeam1Id());
         teams.addAll(teamRepository.findByTeamId(slot.getTeam2Id());
@@ -101,17 +110,21 @@ public class SlotServiceImpl implements SlotService {
                 status = true;
                 break;
             }
-        }
-        return status;
+        }*/
+        return false;
+        //return status;
     }
 
-    private Boolean isSlotAvailable(String inquiringType, Integer headCount, Integer gamePpp, Integer ppp) {
+    private Boolean isSlotAvailable(String slotType, String inquiringType, Integer headCount, Integer gamePpp, Integer ppp) {
         Integer diffLimit = 500;
         Boolean isAvailable = true;
 
         if (headCount == 0) {
             isAvailable = true;
-        } else if (inquiringType.equals("single")) {
+        } else if (slotType != null && !slotType.equals(inquiringType)){
+            isAvailable = false;
+        }
+        else if (inquiringType.equals("single")) {
             if (headCount == 1) {
                 if (gamePpp != null && Math.abs(gamePpp - ppp) > diffLimit) {
                     isAvailable = false;
@@ -119,7 +132,8 @@ public class SlotServiceImpl implements SlotService {
             } else if (headCount == 2) {
                 isAvailable = false;
             }
-        } else if (inquiringType.equals("double")) {
+        }
+        else if (inquiringType.equals("double")) {
             if (headCount < 4) {
                 if (gamePpp != null && Math.abs(gamePpp - ppp) > diffLimit) {
                     isAvailable = false;
@@ -130,29 +144,4 @@ public class SlotServiceImpl implements SlotService {
         }
         return isAvailable;
     }
-
-//    private String getStatus(Boolean isSingle, Slot slot, Integer ppp, Integer userId) {
-//        String type = slot.getType();
-//        Integer headCount = slot.getHeadCount();
-//        String status = "open";
-//        Integer diffLimit = 500;
-//
-//        if (type.equals("single")) {
-//            if (headCount == 1) {
-//                if (slot.getGamePpp() != null && Math.abs(slot.getGamePpp() - ppp) > diffLimit) {
-//                    status = "close";
-//                }
-//            } else if (headCount == 2) {
-//                status = "close";
-//            }
-//        } else if (type.equals("double")) {
-//            if (0 < headCount && headCount < 4) {
-//                if (slot.getGamePpp() != null && Math.abs(slot.getGamePpp() - ppp) > diffLimit) {
-//                    status = "close";
-//                }
-//            } else if (headCount == 4) {
-//                status = "close";
-//            }
-//        }
-//    }
 }

@@ -18,7 +18,7 @@ public class PChange {
     Integer gameId;
 
     @Column(name = "user_id")
-    String userId;
+    Integer userId;
 
     @Column(name = "ppp_change")
     Integer pppChange;
@@ -27,7 +27,7 @@ public class PChange {
     Integer pppResult;
 
     @Builder
-    public PChange(Integer gameId, String userId, Integer pppChange, Integer pppResult) {
+    public PChange(Integer gameId, Integer userId, Integer pppChange, Integer pppResult) {
         this.gameId = gameId;
         this.userId = userId;
         this.pppChange = pppChange;
