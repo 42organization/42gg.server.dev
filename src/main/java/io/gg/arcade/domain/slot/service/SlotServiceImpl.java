@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,6 +46,7 @@ public class SlotServiceImpl implements SlotService {
     }
 
     @Override
+    @Transactional
     public void addSlot(SlotAddRequestDto dto) {
         slotRepository.save(
                 Slot.builder()
@@ -56,6 +58,7 @@ public class SlotServiceImpl implements SlotService {
     }
 
     @Override // 이 메서드가 호출된 뒤에 빈 혹은 찬 팀에 유저 추가
+    @Transactional
     public void addUserInSlot(SlotRequestDto slotDto) {
         Slot slot = slotRepository.getById(slotDto.getSlotId());
         if (slot.getHeadCount() == 0) {
@@ -66,6 +69,7 @@ public class SlotServiceImpl implements SlotService {
     }
 
     @Override // 이 메서드가 호출된 뒤에 팀에 유저 제거
+    @Transactional
     public void removeUserInSlot(SlotRequestDto slotDto) {
         Slot slot = slotRepository.getById(slotDto.getSlotId());
         slot.setHeadCount(slot.getHeadCount() - 1);

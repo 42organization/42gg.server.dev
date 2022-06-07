@@ -1,6 +1,7 @@
 package io.gg.arcade.domain.team.service;
 
 import io.gg.arcade.domain.team.dto.TeamAddUserRequestDto;
+import io.gg.arcade.domain.team.dto.TeamRemoveUserRequestDto;
 import io.gg.arcade.domain.team.entity.Team;
 import io.gg.arcade.domain.team.repository.TeamRepository;
 import io.gg.arcade.domain.user.entity.User;
@@ -30,7 +31,8 @@ public class TeamServiceImpl implements TeamService{
 
     @Override
     @Transactional
-    public void removeUserInTeam() {
-
+    public void removeUserInTeam(TeamRemoveUserRequestDto dto) {
+        User user = userRepository.findById(dto.getUserId()).orElseThrow(RuntimeException::new);
+        teamRepository.deleteByUserAndTeamId(user, dto.getTeamId());
     }
 }
