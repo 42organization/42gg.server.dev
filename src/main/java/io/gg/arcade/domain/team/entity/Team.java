@@ -1,58 +1,30 @@
 package io.gg.arcade.domain.team.entity;
 
 import io.gg.arcade.domain.user.entity.User;
-import io.gg.arcade.global.entity.BaseTimeEntity;
 import lombok.Builder;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
-@Getter
 @Entity
 @NoArgsConstructor
-public class Team extends BaseTimeEntity {
+public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    Integer id;
 
     @NotNull
-    @Column(name = "temaId")
-    private String teamId;
+    @Column(name="team_id")
+    String teamId;
 
-    @NotNull
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @Setter
-    @Column(name = "is_win")
-    private Boolean isWin;
-
-    @NotNull
-    @Setter
-    @Column(name = "score")
-    private Integer score;
-
-    @NotNull
-    @Setter
-    @Column(name = "ppp_change")
-    private Integer pppChange;
-
-    @NotNull
-    @Setter
-    @Column(name = "ppp_result")
-    private Integer pppResult;
+    @JoinColumn(name="user_id")
+    User user;
 
     @Builder
-    public Team(String teamId, User user, Boolean isWin, Integer score, Integer pppChange, Integer pppResult) {
+    public Team(String teamId, User user) {
         this.teamId = teamId;
         this.user = user;
-        this.isWin = isWin;
-        this.score = score;
-        this.pppChange = pppChange;
-        this.pppResult = pppResult;
     }
 }
