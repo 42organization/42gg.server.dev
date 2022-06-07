@@ -5,6 +5,7 @@ import io.gg.arcade.global.entity.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -33,6 +34,7 @@ public class User extends BaseTimeEntity {
     @Column(name = "is_playing")
     Boolean isPlaying;
 
+    @Setter
     @NotNull
     @Column(name = "ppp")
     Integer ppp;
