@@ -16,5 +16,5 @@ public interface SlotService {
     Slot addSlot(LocalDateTime time);
     void addUserInSlot(SlotRequestDto slotDto);
     void removeUserInSlot(SlotRequestDto slotDto);
-    List<SlotResponseDto> findByDate(SlotFindDto slotFindDto);
+    List<SlotResponseDto> filterSlots(SlotFindDto slotFindDto);
 }

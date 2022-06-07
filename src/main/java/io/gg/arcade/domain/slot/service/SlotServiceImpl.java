@@ -1,10 +1,13 @@
 package io.gg.arcade.domain.slot.service;
 
+import io.gg.arcade.domain.rank.repository.RankRepository;
 import io.gg.arcade.domain.slot.dto.SlotFindDto;
 import io.gg.arcade.domain.slot.dto.SlotResponseDto;
 import io.gg.arcade.domain.slot.dto.SlotRequestDto;
 import io.gg.arcade.domain.slot.entity.Slot;
 import io.gg.arcade.domain.slot.repository.SlotRepository;
+import io.gg.arcade.domain.team.entity.Team;
+import io.gg.arcade.domain.team.repository.TeamRepository;
 import io.gg.arcade.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,6 +23,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class SlotServiceImpl implements SlotService {
     private final SlotRepository slotRepository;
+    private final TeamRepository teamRepository;
 
     @Override
     @Scheduled(cron = "0 0 0 1 * * *") // 나중에 global에 뺴야함
@@ -43,7 +47,7 @@ public class SlotServiceImpl implements SlotService {
         return slotRepository.save(slot);
     }
 
-    @Override
+    @Override // 이 메서드가 호출된 뒤에 빈 혹은 찬 팀에 유저 추가
     public void addUserInSlot(SlotRequestDto slotDto) {
         Slot slot = slotRepository.getById(slotDto.getSlotId());
         if (slot.getHeadCount() == 0) {
@@ -53,7 +57,7 @@ public class SlotServiceImpl implements SlotService {
         slot.setHeadCount(slot.getHeadCount() + 1);
     }
 
-    @Override
+    @Override // 이 메서드가 호출된 뒤에 팀에 유저 제거
     public void removeUserInSlot(SlotRequestDto slotDto) {
         Slot slot = slotRepository.getById(slotDto.getSlotId());
         slot.setHeadCount(slot.getHeadCount() - 1);
@@ -63,38 +67,92 @@ public class SlotServiceImpl implements SlotService {
         }
     }
 
-    @Override
-    public List<SlotResponseDto> findByDate(SlotFindDto slotFindDto) {
-        List<Slot> slotList = slotRepository.findAllByCreatedDateAfter(slotFindDto.getLocalDateTime());
-        List<SlotResponseDto> dtoList = new ArrayList<>();
-//        Integer ppp = slotFindDto.getUser().getPpp();
+    private List<Slot> findByDate(SlotFindDto slotFindDto) {
+        return slotRepository.findAllByCreatedDateAfter(slotFindDto.getLocalDateTime());
+    }
 
+    public List<SlotResponseDto> filterSlots(SlotFindDto slotFindDto) {
+        List<Slot> slotList = findByDate(slotFindDto);
+        List<SlotResponseDto> dtoList = new ArrayList<>();
         for (Slot slot : slotList) {
             dtoList.add(SlotResponseDto.builder()
                     .slotId(slot.getId())
                     .headCount(slot.getHeadCount())
-                    .status(getStatus(slot, 1000))
+                    .status(getStatus(slotFindDto.getInquiringType(), slot.getHeadCount(), slot.getGamePpp(), slotFindDto.getCurrentUserPpp(), slotFindDto.getUserId()))
                     .build());
         }
         return dtoList;
     }
 
-    //ranking 추가후 ppp로직 추가!!
-    private String getStatus(Slot slot, Integer ppp) {
-        if (slot.getType() == null) {
-            slot.setType("single");
+    private String getStatus(String inquiringType, Integer headCount, Integer gamePpp, Integer ppp, Integer userId) {
+        String status = isSlotAvailable(inquiringType, headCount, gamePpp, ppp) ? "open" : "close";
+        if (isMyTable(userId, status) == true) {
+            status = "myTable";
         }
-        String status = "opened";
-//type을 어케든 해야함...
-        if (slot.getType().equals("single")) {
-            if (slot.getHeadCount() == 2) {
-                status = "closed";
-            }
-        } else {
-            if (slot.getHeadCount() == 4) {
-                status = "closed";
+        return status;
+    }
+
+    private Boolean isMyTable(Integer userId, String status) {
+        Boolean status = false;
+        List<Team> teams = teamRepository.findByTeamId(slot.getTeam1Id());
+        teams.addAll(teamRepository.findByTeamId(slot.getTeam2Id());
+        for (Team team : teams) {
+            if (team.getUser().getId().equals(userId)) {
+                status = true;
+                break;
             }
         }
         return status;
     }
+
+    private Boolean isSlotAvailable(String inquiringType, Integer headCount, Integer gamePpp, Integer ppp) {
+        Integer diffLimit = 500;
+        Boolean isAvailable = true;
+
+        if (headCount == 0) {
+            isAvailable = true;
+        } else if (inquiringType.equals("single")) {
+            if (headCount == 1) {
+                if (gamePpp != null && Math.abs(gamePpp - ppp) > diffLimit) {
+                    isAvailable = false;
+                }
+            } else if (headCount == 2) {
+                isAvailable = false;
+            }
+        } else if (inquiringType.equals("double")) {
+            if (headCount < 4) {
+                if (gamePpp != null && Math.abs(gamePpp - ppp) > diffLimit) {
+                    isAvailable = false;
+                }
+            } else if (headCount == 4) {
+                isAvailable = false;
+            }
+        }
+        return isAvailable;
+    }
+
+//    private String getStatus(Boolean isSingle, Slot slot, Integer ppp, Integer userId) {
+//        String type = slot.getType();
+//        Integer headCount = slot.getHeadCount();
+//        String status = "open";
+//        Integer diffLimit = 500;
+//
+//        if (type.equals("single")) {
+//            if (headCount == 1) {
+//                if (slot.getGamePpp() != null && Math.abs(slot.getGamePpp() - ppp) > diffLimit) {
+//                    status = "close";
+//                }
+//            } else if (headCount == 2) {
+//                status = "close";
+//            }
+//        } else if (type.equals("double")) {
+//            if (0 < headCount && headCount < 4) {
+//                if (slot.getGamePpp() != null && Math.abs(slot.getGamePpp() - ppp) > diffLimit) {
+//                    status = "close";
+//                }
+//            } else if (headCount == 4) {
+//                status = "close";
+//            }
+//        }
+//    }
 }

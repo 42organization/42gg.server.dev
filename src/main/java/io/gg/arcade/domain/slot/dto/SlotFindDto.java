@@ -11,5 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 public class SlotFindDto {
     private LocalDateTime localDateTime;
-    private User user;
+    private Integer currentUserPpp;
+    private Integer userId;
+    private String inquiringType;
 }
