@@ -1,10 +1,10 @@
 package io.gg.arcade.domain.slot.dto;
 
-import io.gg.arcade.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter

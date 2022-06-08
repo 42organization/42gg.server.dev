@@ -1,6 +1,6 @@
 package io.gg.arcade.domain.game.entity;
 
-import io.gg.arcade.global.entity.BaseTimeEntity;
+import io.gg.arcade.common.entity.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,14 +41,18 @@ public class Game extends BaseTimeEntity {
     @Column(name="team2_score")
     Integer team2Score;
 
+    @Setter
+    @Column(name = "status")
+    String gameStatus;
 
     @Builder
-    public Game(String team1Id, Integer team1Score, Boolean team1Win, String team2Id, Integer team2Score, Boolean team2Win) {
+    public Game(String team1Id, Integer team1Score, Boolean team1Win, String team2Id, Integer team2Score, Boolean team2Win, String gameStatus) {
         this.team1Id = team1Id;
         this.team1Score = team1Score;
         this.team1Win = team1Win;
         this.team2Id = team2Id;
         this.team2Score = team2Score;
         this.team2Win = team2Win;
+        this.gameStatus = gameStatus;
     }
 }

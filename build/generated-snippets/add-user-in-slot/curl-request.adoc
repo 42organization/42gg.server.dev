@@ -1,0 +1,10 @@
+[source,bash]
+----
+$ curl 'http://localhost:8080/pingpong/match/tables/1?userId=3' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -d '{
+  "gamePpp" : "null",
+  "slotId" : "2",
+  "type" : "single"
+}'
+----

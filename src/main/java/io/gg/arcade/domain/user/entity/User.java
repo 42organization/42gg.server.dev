@@ -1,7 +1,7 @@
 package io.gg.arcade.domain.user.entity;
 
 
-import io.gg.arcade.global.entity.BaseTimeEntity;
+import io.gg.arcade.common.entity.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,7 +40,8 @@ public class User extends BaseTimeEntity {
     Integer ppp;
 
     @Builder
-    public User(String intraId, String userImgUri, String racketType, String statusMessage, Boolean isPlaying, Integer ppp) {
+    public User(Integer id, String intraId, String userImgUri, String racketType, String statusMessage, Boolean isPlaying, Integer ppp) {
+        this.id = id;
         this.intraId = intraId;
         this.userImgUri = userImgUri;
         this.racketType = racketType;
