@@ -1,0 +1,8 @@
+[source,options="nowrap"]
+----
+{
+  "gamePpp" : "null",
+  "slotId" : "2",
+  "type" : "single"
+}
+----

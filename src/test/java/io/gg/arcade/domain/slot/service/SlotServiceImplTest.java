@@ -2,7 +2,7 @@ package io.gg.arcade.domain.slot.service;
 
 import io.gg.arcade.domain.slot.dto.SlotAddRequestDto;
 import io.gg.arcade.domain.slot.dto.SlotFindDto;
-import io.gg.arcade.domain.slot.dto.SlotRequestDto;
+import io.gg.arcade.domain.slot.dto.SlotModifyRequestDto;
 import io.gg.arcade.domain.slot.dto.SlotResponseDto;
 import io.gg.arcade.domain.slot.entity.Slot;
 import io.gg.arcade.domain.slot.repository.SlotRepository;
@@ -75,7 +75,7 @@ class SlotServiceImplTest {
                 .build();
         slotService.addSlot(dto);
         //when
-        SlotRequestDto slotDto = SlotRequestDto.builder()
+        SlotModifyRequestDto slotDto = SlotModifyRequestDto.builder()
                 .slotId(slotRepository.findAll().get(0).getId())
                 .gamePpp(null)
                 .type(null)
@@ -97,32 +97,32 @@ class SlotServiceImplTest {
     void filterSlots() {
         //given
         slotService.addTodaySlots();
-        SlotRequestDto closeReqDto1 = SlotRequestDto.builder()
+        SlotModifyRequestDto closeReqDto1 = SlotModifyRequestDto.builder()
                 .slotId(slotRepository.findAll().get(10).getId())
                 .gamePpp(2000)
                 .type("single")
                 .build();
-        SlotRequestDto closeReqDto2 = SlotRequestDto.builder()
+        SlotModifyRequestDto closeReqDto2 = SlotModifyRequestDto.builder()
                 .slotId(slotRepository.findAll().get(11).getId())
                 .gamePpp(1000)
                 .type("double")
                 .build();
-        SlotRequestDto closeReqDto3 = SlotRequestDto.builder()
+        SlotModifyRequestDto closeReqDto3 = SlotModifyRequestDto.builder()
                 .slotId(slotRepository.findAll().get(12).getId())
                 .gamePpp(1200)
                 .type("single")
                 .build();
-        SlotRequestDto closeReqDto4 = SlotRequestDto.builder()
+        SlotModifyRequestDto closeReqDto4 = SlotModifyRequestDto.builder()
                 .slotId(slotRepository.findAll().get(12).getId())
                 .gamePpp(1200)
                 .type("single")
                 .build();
-        SlotRequestDto openReqDto1 = SlotRequestDto.builder()
+        SlotModifyRequestDto openReqDto1 = SlotModifyRequestDto.builder()
                 .slotId(slotRepository.findAll().get(1).getId())
                 .gamePpp(1200)
                 .type("single")
                 .build();
-        SlotRequestDto openReqDto2 = SlotRequestDto.builder()
+        SlotModifyRequestDto openReqDto2 = SlotModifyRequestDto.builder()
                 .slotId(slotRepository.findAll().get(2).getId())
                 .gamePpp(800)
                 .type("single")
@@ -135,7 +135,7 @@ class SlotServiceImplTest {
         slotService.addUserInSlot(openReqDto1);
         slotService.addUserInSlot(openReqDto2);
         SlotFindDto findDto = SlotFindDto.builder()
-                .localDateTime(LocalDateTime.of(2022, 6, 6, 12, 0, 0))
+                .localDateTime(LocalDateTime.now())
                 .currentUserPpp(1000)
                 .inquiringType("single")
                 .build();

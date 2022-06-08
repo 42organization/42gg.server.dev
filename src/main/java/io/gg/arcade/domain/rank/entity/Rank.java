@@ -10,6 +10,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name="ping_pong_rank")
 public class Rank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

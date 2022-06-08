@@ -1,6 +1,6 @@
 package io.gg.arcade.domain.slot.entity;
 
-import io.gg.arcade.global.entity.BaseTimeEntity;
+import io.gg.arcade.common.entity.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
