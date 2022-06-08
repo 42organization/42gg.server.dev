@@ -9,6 +9,7 @@ import io.gg.arcade.domain.slot.service.SlotService;
 import io.gg.arcade.domain.team.service.TeamService;
 import io.gg.arcade.domain.user.dto.UserAddRequestDto;
 import io.gg.arcade.domain.user.dto.UserDto;
+import io.gg.arcade.domain.user.repository.UserRepository;
 import io.gg.arcade.domain.user.service.UserService;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -37,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
 @Import(RestDocsConfiguration.class)
+@Transactional
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SlotControllerTest {
 
@@ -54,6 +56,9 @@ class SlotControllerTest {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     TeamService teamService;
@@ -84,6 +89,7 @@ class SlotControllerTest {
                 .intraId("jiyun")
                 .userImgUri("")
                 .build());
+
         user1 = userService.findByIntraId("nheo");
         user2 = userService.findByIntraId("donghyuk");
         user3 = userService.findByIntraId("hakim");

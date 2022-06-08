@@ -3,6 +3,7 @@ package io.gg.arcade.domain.game.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.gg.arcade.RestDocsConfiguration;
 import io.gg.arcade.domain.game.dto.GameAddRequestDto;
+import io.gg.arcade.domain.game.repository.GameRepository;
 import io.gg.arcade.domain.game.service.GameService;
 import io.gg.arcade.domain.slot.dto.SlotDto;
 import io.gg.arcade.domain.slot.repository.SlotRepository;
@@ -10,6 +11,7 @@ import io.gg.arcade.domain.slot.service.SlotService;
 import io.gg.arcade.domain.team.service.TeamService;
 import io.gg.arcade.domain.user.dto.UserAddRequestDto;
 import io.gg.arcade.domain.user.dto.UserDto;
+import io.gg.arcade.domain.user.repository.UserRepository;
 import io.gg.arcade.domain.user.service.UserService;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -37,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
 @Import(RestDocsConfiguration.class)
+@Transactional
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class GameControllerTest {
 
@@ -56,10 +59,16 @@ class GameControllerTest {
     UserService userService;
 
     @Autowired
+    UserRepository userRepository;
+
+    @Autowired
     TeamService teamService;
 
     @Autowired
     GameService gameService;
+
+    @Autowired
+    GameRepository gameRepository;
 
     UserDto user1;
     UserDto user2;
@@ -71,28 +80,36 @@ class GameControllerTest {
     @BeforeAll
     void init() {
         slotService.addTodaySlots();
-        userService.addUser(UserAddRequestDto.builder()
-                .intraId("nheo")
-                .userImgUri("")
-                .build());
-        userService.addUser(UserAddRequestDto.builder()
-                .intraId("donghyuk")
-                .userImgUri("")
-                .build());
-        userService.addUser(UserAddRequestDto.builder()
-                .intraId("hakim")
-                .userImgUri("")
-                .build());
-        userService.addUser(UserAddRequestDto.builder()
-                .intraId("jiyun")
-                .userImgUri("")
-                .build());
+//        userService.addUser(UserAddRequestDto.builder()
+//                .intraId("nheo")
+//                .userImgUri("")
+//                .build());
+//        userService.addUser(UserAddRequestDto.builder()
+//                .intraId("donghyuk")
+//                .userImgUri("")
+//                .build());
+//        userService.addUser(UserAddRequestDto.builder()
+//                .intraId("hakim")
+//                .userImgUri("")
+//                .build());
+//        userService.addUser(UserAddRequestDto.builder()
+//                .intraId("jiyun")
+//                .userImgUri("")
+//                .build());
         user1 = userService.findByIntraId("nheo");
         user2 = userService.findByIntraId("donghyuk");
         user3 = userService.findByIntraId("hakim");
         user4 = userService.findByIntraId("jiyun");
+
         slot1 = slotService.findSlotById(slotRepository.findAll().get(0).getId());
         slot2 = slotService.findSlotById(slotRepository.findAll().get(1).getId());
+        GameAddRequestDto gamedto = GameAddRequestDto.builder()
+                .team1Id(slot2.getTeam1Id())
+                .team2Id(slot2.getTeam2Id())
+                .build();
+
+        gameService.addGame(gamedto);
+
     }
 
     @Test
@@ -113,24 +130,18 @@ class GameControllerTest {
                         .content(objectMapper.writeValueAsString(body)))
                 .andExpect(status().isOk());
 
-        GameAddRequestDto gamedto = GameAddRequestDto.builder()
-                .team1Id(slot2.getTeam1Id())
-                .team2Id(slot2.getTeam2Id())
-                .build();
-
-        gameService.addGame(gamedto);
-
         Map<String, String> body2 = new HashMap<>();
-        body2.put("team1Score", "2");
-        body2.put("team2Score", "1");
-        body2.put("gameId", "1");
+        body2.put("myTeamScore", "2");
+        body2.put("enemyTeamScore", "1");
+        body2.put("gameId", String.valueOf(gameRepository.findAll().get(0).getId()));
+
         mockMvc.perform(post("/pingpong/games/1/result").contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(user2.getId()))
                         .content(objectMapper.writeValueAsString(body2)))
                 .andExpect(status().isOk())
                 .andDo(document("save-game-result"));
 
-        mockMvc.perform(get("/pingpong/games/1").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/pingpong/games/" + String.valueOf(gameRepository.findAll().get(0).getId())).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("game-result"));
     }

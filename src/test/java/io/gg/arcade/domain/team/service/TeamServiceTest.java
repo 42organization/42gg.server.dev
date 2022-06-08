@@ -5,6 +5,7 @@ import io.gg.arcade.domain.slot.entity.Slot;
 import io.gg.arcade.domain.slot.repository.SlotRepository;
 import io.gg.arcade.domain.slot.service.SlotService;
 import io.gg.arcade.domain.team.dto.TeamAddUserRequestDto;
+import io.gg.arcade.domain.team.dto.TeamDto;
 import io.gg.arcade.domain.team.dto.TeamRemoveUserRequestDto;
 import io.gg.arcade.domain.team.repository.TeamRepository;
 import io.gg.arcade.domain.user.dto.UserAddRequestDto;
@@ -12,8 +13,10 @@ import io.gg.arcade.domain.user.entity.User;
 import io.gg.arcade.domain.user.repository.UserRepository;
 import io.gg.arcade.domain.user.service.UserService;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -24,6 +27,8 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Transactional
 class TeamServiceTest {
 
     @Autowired
@@ -49,8 +54,7 @@ class TeamServiceTest {
     User user2;
     Slot slot;
 
-
-    @BeforeEach
+    @BeforeAll
     void init() {
         slotService.addTodaySlots();
 
@@ -60,12 +64,12 @@ class TeamServiceTest {
                 .intraId("nheo")
                 .userImgUri("")
                 .build();
-        userService.addUser(userDto1);
         UserAddRequestDto userDto2 = UserAddRequestDto.builder()
                 .intraId("donghyuk")
                 .userImgUri("")
                 .build();
-        userService.addUser(userDto2);
+//        userService.addUser(userDto1);
+//        userService.addUser(userDto2);
 
         user1 = userRepository.findByIntraId("nheo").orElseThrow();
         user2 = userRepository.findByIntraId("donghyuk").orElseThrow();
@@ -94,12 +98,18 @@ class TeamServiceTest {
 
         teamService.addUserInTeam(dto);
 
+        TeamDto team = teamService.findTeamByTeamId(slot.getTeam1Id());
+
+        Assertions.assertThat(team.getHeadCount()).isEqualTo(1);
+
         TeamRemoveUserRequestDto dto2 = TeamRemoveUserRequestDto.builder()
-                .teamId(slot.getTeam1Id())
+                .teamId(team.getTeamId())
                 .userId(user1.getId())
                 .build();
         teamService.removeUserInTeam(dto2);
 
-        Assertions.assertThat(teamRepository.findAll()).isEqualTo(Collections.EMPTY_LIST);
+        TeamDto team2 = teamService.findTeamByTeamId(slot.getTeam1Id());
+
+        Assertions.assertThat(team2.getHeadCount()).isEqualTo(0);
     }
 }
