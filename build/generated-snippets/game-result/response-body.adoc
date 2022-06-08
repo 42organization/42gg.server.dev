@@ -1,0 +1,12 @@
+[source,options="nowrap"]
+----
+{
+  "id" : 1,
+  "team1Id" : "f9f27c29-3315-4404-b835-b739e26b230d",
+  "team2Id" : "13293f82-4cad-4d75-adae-6d0c6071bf6e",
+  "team1Win" : true,
+  "team1Score" : 2,
+  "team2Win" : false,
+  "team2Score" : 1
+}
+----

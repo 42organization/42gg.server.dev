@@ -154,4 +154,5 @@ class SlotServiceImplTest {
         Assertions.assertThat(lst.get(11).getStatus()).isEqualTo("close");
         Assertions.assertThat(lst.get(12).getStatus()).isEqualTo("close");
     }
+    
 }

@@ -3,21 +3,15 @@ package io.gg.arcade.domain.game.controller;
 import io.gg.arcade.common.utils.EloRating;
 import io.gg.arcade.domain.game.dto.GameDto;
 import io.gg.arcade.domain.game.dto.GameModifyRequestDto;
-import io.gg.arcade.domain.game.entity.Game;
 import io.gg.arcade.domain.game.service.GameService;
 import io.gg.arcade.domain.pchange.dto.PchangeAddRequestDto;
 import io.gg.arcade.domain.pchange.service.PchangeService;
 import io.gg.arcade.domain.team.dto.TeamDto;
 import io.gg.arcade.domain.team.service.TeamService;
-import io.gg.arcade.domain.user.dto.UserDto;
 import io.gg.arcade.domain.user.dto.UserModifyPppRequestDto;
-import io.gg.arcade.domain.user.entity.User;
 import io.gg.arcade.domain.user.service.UserService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -33,15 +27,15 @@ public class GameControllerImpl implements GameController{
     private final TeamService teamService;
     private final PchangeService pchangeService;
 
-    @GetMapping(value = "/games/{gameId}/result")
-    public void GameResult(@PathVariable Integer gameId, Integer team1Score, Integer team2Score, Integer userId, HttpServletRequest request){
+    @Override
+    @PostMapping(value = "/games/{gameId}/result")
+    public void saveGameResult(Integer gameId, GameModifyRequestDto gameDto, Integer userId, HttpServletRequest request){
         // 스코어 크기가 2이상인지 확인
 
-        UserDto user = userService.findById(userId);
         GameDto game = gameService.findById(gameId);
 
 
-        List<TeamDto> userDtoList = new ArrayList<TeamDto>();
+        List<TeamDto> userDtoList = new ArrayList<>();
         userDtoList.addAll(teamService.findUserListByTeamId(game.getTeam1Id()));
         userDtoList.addAll(teamService.findUserListByTeamId(game.getTeam2Id()));
 
@@ -49,8 +43,8 @@ public class GameControllerImpl implements GameController{
         // 게임 정보 수정 (팀 스코어, 팀 Win)
         GameModifyRequestDto modifyRequestDto = GameModifyRequestDto.builder()
                                                 .gameId(game.getId())
-                                                .team1Score(team1Score)
-                                                .team2Score(team2Score)
+                                                .team1Score(gameDto.getTeam1Score())
+                                                .team2Score(gameDto.getTeam2Score())
                                                 .build();
         GameDto modifyGameDto = gameService.modifyGame(modifyRequestDto);
 
@@ -62,14 +56,14 @@ public class GameControllerImpl implements GameController{
         TeamDto curUserTeam = null;
         TeamDto opponentUserTeam = null;
         for (TeamDto teamDto : userDtoList){
-            if (teamDto.getUserDto().getId() == userId) {
+            if (teamDto.getUserDto().getId().equals(userId)) {
                 curUserTeam = teamDto;
             } else {
                 opponentUserTeam = teamDto;
             }
         }
 
-        Boolean isWin = null;
+        Boolean isWin;
         if (curUserTeam.getTeamId().equals(modifyGameDto.getTeam1Id())) {
             isWin = modifyGameDto.getTeam1Win();
         } else {
@@ -107,5 +101,11 @@ public class GameControllerImpl implements GameController{
                 .build();
         pchangeService.addPchange(pchangeAddRequestDto2);
         // 랭킹 PPP 수정 (레디스 ?)
+    }
+
+    @Override
+    @GetMapping("/games/{gameId}")
+    public GameDto gameResult(Integer gameId) {
+        return gameService.findById(gameId);
     }
 }
