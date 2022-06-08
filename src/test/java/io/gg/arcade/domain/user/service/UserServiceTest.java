@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 class UserServiceTest {
 
     @Autowired
@@ -31,6 +32,7 @@ class UserServiceTest {
                 .userImgUri("donghyuk's photo uri")
                 .build();
         userService.addUser(addDto);
+
         User user = userRepository.findByIntraId("donghyuk").orElseThrow();
         UserModifyPppRequestDto modifyPppDto = UserModifyPppRequestDto.builder()
                 .userId(user.getId())

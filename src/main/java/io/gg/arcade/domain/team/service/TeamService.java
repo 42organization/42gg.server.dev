@@ -3,15 +3,12 @@ package io.gg.arcade.domain.team.service;
 import io.gg.arcade.domain.team.dto.*;
 import io.gg.arcade.domain.team.entity.Team;
 import io.gg.arcade.domain.team.repository.TeamRepository;
-import io.gg.arcade.domain.user.dto.UserDto;
 import io.gg.arcade.domain.user.entity.User;
 import io.gg.arcade.domain.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -22,18 +19,35 @@ public class TeamService {
     @Transactional
     public void addUserInTeam(TeamAddUserRequestDto dto) {
         User user = userRepository.findById(dto.getUserId()).orElseThrow(RuntimeException::new);
-        teamRepository.save(
-                Team.builder()
-                .teamId(dto.getTeamId())
-                .user(user)
-                .build()
-        );
+        Team team = teamRepository.findByTeamId(dto.getTeamId()).orElseThrow(RuntimeException::new);
+
+        if (team.getUser1() == null) {
+            team.setUser1(user);
+            team.setTeamPpp((user.getPpp() + team.getTeamPpp()) / (team.getHeadCount() + 1));
+        } else if (team.getUser2() == null) {
+            team.setUser2(user);
+            team.setTeamPpp((user.getPpp() + team.getTeamPpp()) / (team.getHeadCount() + 1));
+        }
+        team.setHeadCount(team.getHeadCount() + 1);
     }
 
     @Transactional
     public void removeUserInTeam(TeamRemoveUserRequestDto dto) {
         User user = userRepository.findById(dto.getUserId()).orElseThrow(RuntimeException::new);
-        teamRepository.deleteByUserAndTeamId(user, dto.getTeamId());
+        Team team = teamRepository.findByTeamId(dto.getTeamId()).orElseThrow(RuntimeException::new);
+        if (team.getUser1().getId().equals(dto.getUserId())) {
+            team.setUser1(null);
+        } else if (team.getUser2().getId().equals(dto.getUserId())){
+            team.setUser2(null);
+        }
+        team.setHeadCount(team.getHeadCount() - 1);
+    }
+
+    @Transactional
+    public TeamDto findTeamByTeamId(String teamId) {
+        Team team = teamRepository.findByTeamId(teamId).orElseThrow(RuntimeException::new);
+        TeamDto dto = TeamDto.from(team);
+        return dto;
     }
 
     @Transactional
@@ -41,29 +55,13 @@ public class TeamService {
         String team1Id = listDto.getTeam1Id();
         String team2Id = listDto.getTeam2Id();
 
-        List<Team> listTeam1 = teamRepository.findTeamsByTeamId(team1Id);
-        List<Team> listTeam2 = teamRepository.findTeamsByTeamId(team2Id);
+        Team team1 = teamRepository.findByTeamId(team1Id).orElseThrow(RuntimeException::new);
+        Team team2 = teamRepository.findByTeamId(team2Id).orElseThrow(RuntimeException::new);
         return TeamListResponseDto.builder()
                 .team1Id(team1Id)
                 .team2Id(team2Id)
-                .team1HeadCount(listTeam1.size())
-                .team2HeadCount(listTeam2.size())
+                .team1HeadCount(team1.getHeadCount())
+                .team2HeadCount(team2.getHeadCount())
                 .build();
-    }
-
-    @Transactional
-    public List<TeamDto> findUserListByTeamId(String teamId){
-        List<Team> teamList = teamRepository.findByTeamId(teamId);
-        List<TeamDto> teamDtoList = new ArrayList<TeamDto>();
-        teamList.stream().forEach(team->{
-            teamDtoList.add(TeamDto.from(team));
-        });
-        return teamDtoList;
-    }
-
-    @Transactional
-    public List<UserDto> findTeamIdByUserId(String userId) {
-        teamRepository.findTeamIdByUserId(userId);
-        return null;
     }
 }

@@ -1,5 +1,5 @@
 [source,bash]
 ----
-$ http GET 'http://localhost:8080/pingpong/games/1' \
+$ http GET 'http://localhost:8080/pingpong/games/3' \
     'Content-Type:application/json;charset=UTF-8'
 ----
