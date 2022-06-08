@@ -1,0 +1,9 @@
+[source,bash]
+----
+$ echo '{
+  "gamePpp" : "null",
+  "slotId" : "2",
+  "type" : "single"
+}' | http POST 'http://localhost:8080/pingpong/match/tables/1?userId=3' \
+    'Content-Type:application/json;charset=UTF-8'
+----

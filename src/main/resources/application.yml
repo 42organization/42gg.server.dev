@@ -1,9 +1,12 @@
 spring:
   profiles:
     active: local
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
 
   thymeleaf:
     prefix: classpath:templates/
     suffix: .html
     cache: false
-
