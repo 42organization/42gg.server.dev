@@ -10,7 +10,8 @@ import java.util.List;
 
 public interface TeamRepository extends JpaRepository<Team, Integer> {
     void deleteByUserAndTeamId(User user, String teamId);
-    List<Team> findTeamByTeamIdOrTeamId(String team1Id, String team2Id);
+    List<Team> findTeamsByTeamIdIsOrTeamId(String team1Id, String team2Id);
+    List<Team> findTeamsByTeamId(String teamId);
     List<Team> findByTeamId(String teamId);
     @Query(nativeQuery = true, value = "select * from team where user_id == :userId")
     String findTeamIdByUserId(@Param("userId") String userId);

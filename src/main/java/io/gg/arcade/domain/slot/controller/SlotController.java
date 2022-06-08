@@ -12,5 +12,5 @@ import java.util.List;
 public interface SlotController {
     List<SlotResponseDto> findSlots(@PathVariable Integer tableId, @RequestParam String type, @RequestParam Integer userId);
     void addUserInSlot(@PathVariable Integer tableId, @RequestBody SlotModifyRequestDto slotRequestDto, @RequestParam Integer userId);
-    void removeUserInSlot(@RequestParam Integer matchId);
+    void removeUserInSlot(@PathVariable Integer tableId, @RequestParam Integer matchId);
 }
