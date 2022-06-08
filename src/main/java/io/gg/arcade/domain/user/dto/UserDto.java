@@ -20,6 +20,9 @@ public class UserDto {
     Integer ppp;
 
     public static UserDto from(User user){
+        if (user == null) {
+            return null;
+        }
         return UserDto.builder()
                 .id(user.getId())
                 .userImgUri(user.getUserImgUri())

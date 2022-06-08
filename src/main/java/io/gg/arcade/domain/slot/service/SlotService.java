@@ -3,6 +3,7 @@ package io.gg.arcade.domain.slot.service;
 import io.gg.arcade.domain.slot.dto.*;
 import io.gg.arcade.domain.slot.entity.Slot;
 import io.gg.arcade.domain.slot.repository.SlotRepository;
+import io.gg.arcade.domain.team.entity.Team;
 import io.gg.arcade.domain.team.repository.TeamRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,18 +36,30 @@ public class SlotService{
                     .time(test)
                     .build();
             addSlot(dto);
-       }
+            teamRepository.save(
+                    Team.builder()
+                            .teamId(dto.getTeam1Id())
+                            .teamPpp(0)
+                            .headCount(0)
+                            .build());
+            teamRepository.save(
+                    Team.builder()
+                            .teamId(dto.getTeam2Id())
+                            .teamPpp(0)
+                            .headCount(0)
+                            .build());
+        }
     }
 
     @Transactional
     public void addSlot(SlotAddRequestDto dto) {
         slotRepository.save(
                 Slot.builder()
-                .team1Id(dto.getTeam1Id())
-                .team2Id(dto.getTeam2Id())
-                .time(dto.getTime())
-                .headCount(0)
-                .build());
+                        .team1Id(dto.getTeam1Id())
+                        .team2Id(dto.getTeam2Id())
+                        .time(dto.getTime())
+                        .headCount(0)
+                        .build());
     }
 
     // 이 메서드가 호출된 뒤에 빈 혹은 찬 팀에 유저 추가
