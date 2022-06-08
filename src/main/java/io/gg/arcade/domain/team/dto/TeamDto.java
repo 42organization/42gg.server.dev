@@ -14,13 +14,19 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Builder
 public class TeamDto {
-    String teamId;
-    UserDto userDto;
+    private String teamId;
+    private UserDto user1;
+    private UserDto user2;
+    private Integer headCount;
+    private Integer teamPpp;
 
     public static TeamDto from(Team team){
         return TeamDto.builder()
                 .teamId(team.getTeamId())
-                .userDto(UserDto.from(team.getUser()))
+                .user1(UserDto.from(team.getUser1()))
+                .user2(UserDto.from(team.getUser2()))
+                .headCount(team.getHeadCount())
+                .teamPpp(team.getTeamPpp())
                 .build();
     }
 }
