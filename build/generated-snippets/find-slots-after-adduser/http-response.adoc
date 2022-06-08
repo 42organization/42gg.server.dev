@@ -1,0 +1,80 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 1093
+
+[ {
+  "slotId" : 1,
+  "status" : "close",
+  "headCount" : 1
+}, {
+  "slotId" : 2,
+  "status" : "close",
+  "headCount" : 2
+}, {
+  "slotId" : 3,
+  "status" : "open",
+  "headCount" : 0
+}, {
+  "slotId" : 4,
+  "status" : "open",
+  "headCount" : 0
+}, {
+  "slotId" : 5,
+  "status" : "open",
+  "headCount" : 0
+}, {
+  "slotId" : 6,
+  "status" : "open",
+  "headCount" : 0
+}, {
+  "slotId" : 7,
+  "status" : "open",
+  "headCount" : 0
+}, {
+  "slotId" : 8,
+  "status" : "open",
+  "headCount" : 0
+}, {
+  "slotId" : 9,
+  "status" : "open",
+  "headCount" : 0
+}, {
+  "slotId" : 10,
+  "status" : "open",
+  "headCount" : 0
+}, {
+  "slotId" : 11,
+  "status" : "open",
+  "headCount" : 0
+}, {
+  "slotId" : 12,
+  "status" : "open",
+  "headCount" : 0
+}, {
+  "slotId" : 13,
+  "status" : "open",
+  "headCount" : 0
+}, {
+  "slotId" : 14,
+  "status" : "open",
+  "headCount" : 0
+}, {
+  "slotId" : 15,
+  "status" : "open",
+  "headCount" : 0
+}, {
+  "slotId" : 16,
+  "status" : "open",
+  "headCount" : 0
+}, {
+  "slotId" : 17,
+  "status" : "open",
+  "headCount" : 0
+}, {
+  "slotId" : 18,
+  "status" : "open",
+  "headCount" : 0
+} ]
+----

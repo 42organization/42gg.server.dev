@@ -1,6 +1,7 @@
 package io.gg.arcade.domain.user.entity;
 
-import io.gg.arcade.global.entity.BaseTimeEntity;
+
+import io.gg.arcade.common.entity.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,39 +12,41 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
-@Setter
 @NoArgsConstructor
 public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    Integer id;
 
-    @NotNull
     @Column(name = "intra_id")
-    private String intraId;
-
     @NotNull
-    @Column
-    private String userImageUri;
+    String intraId;
 
-    @NotNull
-    @Column
-    private String racketType;
+    @Column(name = "user_img_uri")
+    String userImgUri;
 
-    @NotNull
-    @Column
-    private Boolean isPlaying;
+    @Column(name = "racket_type")
+    String racketType;
 
+    @Column(name = "status_message")
+    String statusMessage;
+    
+    @Column(name = "is_playing")
+    Boolean isPlaying;
+
+    @Setter
     @NotNull
-    @Column
-    private String statusMessage;
+    @Column(name = "ppp")
+    Integer ppp;
 
     @Builder
-    public User(String intraId, String userImageUri, String racketType, Boolean isPlaying, String statusMessage) {
+    public User(Integer id, String intraId, String userImgUri, String racketType, String statusMessage, Boolean isPlaying, Integer ppp) {
+        this.id = id;
         this.intraId = intraId;
-        this.userImageUri = userImageUri;
+        this.userImgUri = userImgUri;
         this.racketType = racketType;
-        this.isPlaying = isPlaying;
         this.statusMessage = statusMessage;
+        this.isPlaying = isPlaying;
+        this.ppp = ppp;
     }
 }

@@ -1,0 +1,8 @@
+[source,options="nowrap"]
+----
+{
+  "team1Score" : "2",
+  "gameId" : "1",
+  "team2Score" : "1"
+}
+----
