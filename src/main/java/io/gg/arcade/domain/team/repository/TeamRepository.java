@@ -7,12 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TeamRepository extends JpaRepository<Team, Integer> {
-    void deleteByUserAndTeamId(User user, String teamId);
-    List<Team> findTeamsByTeamIdIsOrTeamId(String team1Id, String team2Id);
-    List<Team> findTeamsByTeamId(String teamId);
-    List<Team> findByTeamId(String teamId);
-    @Query(nativeQuery = true, value = "select * from team where user_id == :userId")
-    String findTeamIdByUserId(@Param("userId") String userId);
+    Optional<Team> findByTeamId(String teamId);
 }

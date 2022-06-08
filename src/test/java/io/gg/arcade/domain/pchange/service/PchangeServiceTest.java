@@ -16,8 +16,10 @@ import io.gg.arcade.domain.user.entity.User;
 import io.gg.arcade.domain.user.repository.UserRepository;
 import io.gg.arcade.domain.user.service.UserService;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -26,6 +28,8 @@ import javax.transaction.Transactional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class PchangeServiceTest {
 
     @Autowired
@@ -57,7 +61,7 @@ class PchangeServiceTest {
     Game game;
     Slot slot;
 
-    @BeforeEach
+    @BeforeAll
     void init() {
         slotService.addTodaySlots();
 

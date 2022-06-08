@@ -23,6 +23,18 @@ ext {
 	set('snippetsDir', file("build/generated-snippets"))
 }
 
+asciidoctor {
+	inputs.dir snippetsDir
+	dependsOn test
+}
+
+bootJar {
+	dependsOn asciidoctor
+	from ("build/docs/asciidoc/html5") {
+		into 'static/docs'
+	}
+}
+
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	/*

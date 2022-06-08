@@ -1,9 +1,9 @@
 [source,bash]
 ----
 $ echo '{
-  "team1Score" : "2",
-  "gameId" : "1",
-  "team2Score" : "1"
+  "gameId" : "3",
+  "myTeamScore" : "2",
+  "enemyTeamScore" : "1"
 }' | http POST 'http://localhost:8080/pingpong/games/1/result?userId=2' \
     'Content-Type:application/json;charset=UTF-8'
 ----

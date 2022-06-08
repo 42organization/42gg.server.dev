@@ -1,9 +1,9 @@
 [source,options="nowrap"]
 ----
 {
-  "id" : 1,
-  "team1Id" : "f9f27c29-3315-4404-b835-b739e26b230d",
-  "team2Id" : "13293f82-4cad-4d75-adae-6d0c6071bf6e",
+  "id" : 3,
+  "team1Id" : "faedd763-606e-4215-993b-da4221e39056",
+  "team2Id" : "115a8a4c-2f0c-4905-a260-174b00934dd2",
   "team1Win" : true,
   "team1Score" : 2,
   "team2Win" : false,
