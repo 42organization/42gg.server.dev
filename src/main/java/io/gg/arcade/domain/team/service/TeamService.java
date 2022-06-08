@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -40,14 +39,15 @@ public class TeamService {
     @Transactional
     public TeamListResponseDto findTeamUserCountByTeamList(TeamListRequestDto listDto) {
         String team1Id = listDto.getTeam1Id();
-        String team2Id = listDto.getTeam1Id();
+        String team2Id = listDto.getTeam2Id();
 
-        List<Team> listTeam = teamRepository.findTeamByTeamIdOrTeamId(team1Id, team2Id);
+        List<Team> listTeam1 = teamRepository.findTeamsByTeamId(team1Id);
+        List<Team> listTeam2 = teamRepository.findTeamsByTeamId(team2Id);
         return TeamListResponseDto.builder()
                 .team1Id(team1Id)
                 .team2Id(team2Id)
-                .team1HeadCount(Collections.frequency(listTeam, team1Id))
-                .team2HeadCount(Collections.frequency(listTeam, team2Id))
+                .team1HeadCount(listTeam1.size())
+                .team2HeadCount(listTeam2.size())
                 .build();
     }
 

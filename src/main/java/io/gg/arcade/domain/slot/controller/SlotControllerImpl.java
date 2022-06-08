@@ -93,8 +93,8 @@ public class SlotControllerImpl implements SlotController {
     }
 
     @Override
-    @DeleteMapping(value = "/pingpong/match/tables/{tableId}?matchId={matchId}")
-    public void removeUserInSlot(Integer matchId) {
+    @DeleteMapping(value = "/pingpong/match/tables/{tableId}")
+    public void removeUserInSlot(Integer tableId, Integer matchId) {
         SlotModifyRequestDto slotDto = SlotModifyRequestDto.builder()
                 .slotId(matchId)
                 .build();

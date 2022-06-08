@@ -12,7 +12,6 @@ import io.gg.arcade.domain.user.dto.UserDto;
 import io.gg.arcade.domain.user.service.UserService;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -132,7 +130,8 @@ class SlotControllerTest {
 
         mockMvc.perform(post("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
                 .param("userId", String.valueOf(user2.getId()))
-                .content(objectMapper.writeValueAsString(body)));
+                .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().isOk());
 
         mockMvc.perform(post("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
                         .param("userId", String.valueOf(user3.getId()))
@@ -152,7 +151,34 @@ class SlotControllerTest {
     }
 
     @Test
-    void removeUserInSlot() {
-    }
+    void removeUserInSlot() throws Exception {
+        Map<String, String> body = new HashMap<>();
+        body.put("slotId", String.valueOf(slot2.getId()));
+        body.put("gamePpp", String.valueOf(slot2.getGamePpp()));
+        body.put("type", "single");
 
+        mockMvc.perform(post("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
+                .param("userId", String.valueOf(user3.getId()))
+                .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().isOk());
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("type", "single");
+        params.add("userId", String.valueOf(user4.getId()));
+
+        mockMvc.perform(get("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
+                        .params(params))
+                .andExpect(status().isOk())
+                .andDo(document("find-slots-before-removeuser"));
+
+        mockMvc.perform(delete("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
+                .param("matchId", String.valueOf(slot2.getId())))
+                .andExpect(status().isOk())
+                .andDo(document("remove-user-in-slot"));
+
+        mockMvc.perform(get("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
+                        .params(params))
+                .andExpect(status().isOk())
+                .andDo(document("find-slots-after-removeuser"));
+    }
 }
