@@ -32,10 +32,12 @@ public class Team {
     @Column(name = "team_ppp")
     private Integer teamPpp;
 
+    @NotNull
     @Setter
     @Column(name = "head_count")
     private Integer headCount;
 
+    @NotNull
     @Setter
     @Column(name = "score")
     private Integer score;
