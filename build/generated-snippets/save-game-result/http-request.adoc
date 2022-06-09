@@ -2,12 +2,12 @@
 ----
 POST /pingpong/games/1/result?userId=2 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
-Content-Length: 64
+Content-Length: 69
 Host: localhost:8080
 
 {
-  "team1Score" : "2",
-  "gameId" : "1",
-  "team2Score" : "1"
+  "gameId" : "3",
+  "myTeamScore" : "2",
+  "enemyTeamScore" : "1"
 }
 ----
