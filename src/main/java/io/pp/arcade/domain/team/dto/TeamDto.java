@@ -18,8 +18,8 @@ public class TeamDto {
     public static TeamDto from(Team team) {
         return TeamDto.builder()
                 .id(team.getId())
-                .user1Id(team.getUser1Id())
-                .user2Id(team.getUser2Id())
+                .user1Id(team.getUser1().getId())
+                .user2Id(team.getUser2().getId())
                 .teamPpp(team.getTeamPpp())
                 .headCount(team.getHeadCount())
                 .score(team.getScore())
