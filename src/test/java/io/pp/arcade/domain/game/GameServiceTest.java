@@ -8,10 +8,21 @@ class GameServiceTest {
 
     @Test
     void addGame() {
+        //given
+
+        //when
+
+        //then
 
     }
 
     @Test
     void modifyGameStatus() {
+        //given
+
+        //when
+
+        //then
+
     }
 }

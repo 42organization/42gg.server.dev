@@ -60,28 +60,41 @@ class TeamServiceTest {
     @Test
     @Transactional
     void findById() {
+        //when
         TeamDto teamDto = teamService.findById(team0.getId());
+
+        //then
         Assertions.assertThat(teamDto.getId()).isEqualTo(team0.getId());
     }
 
     @Test
     @Transactional
     void addUserInTeam() {
+        //given
         TeamAddUserRequestDto dto = TeamAddUserRequestDto.builder()
                 .teamId(team0.getId())
                 .userId(user1.getId())
                 .build();
+
+        //when
         teamService.addUserInTeam(dto);
         Team team_0 = teamRepository.findById(team0.getId()).orElseThrow();
+
+        //then
         Assertions.assertThat(team_0.getHeadCount()).isEqualTo(1);
         Assertions.assertThat(team_0.getTeamPpp()).isEqualTo(user1.getPpp());
 
+        //given
         TeamAddUserRequestDto dto1 = TeamAddUserRequestDto.builder()
                 .teamId(team0.getId())
                 .userId(user2.getId())
                 .build();
+
+        //when
         teamService.addUserInTeam(dto1);
         Team team_1 = teamRepository.findById(team0.getId()).orElseThrow();
+
+        //then
         Assertions.assertThat(team_1.getHeadCount()).isEqualTo(2);
         Assertions.assertThat(team_1.getTeamPpp()).isEqualTo((user1.getPpp() + user2.getPpp()) / 2);
     }
@@ -89,12 +102,17 @@ class TeamServiceTest {
     @Test
     @Transactional
     void removeUserInTeam() {
+        //given
         TeamRemoveUserRequestDto dto = TeamRemoveUserRequestDto.builder()
                 .teamId(team2.getId())
                 .userId(user1.getId())
                 .build();
+
+        //when
         teamService.removeUserInTeam(dto);
         Team team = teamRepository.findById(team2.getId()).orElseThrow();
+
+        //then
         Assertions.assertThat(team.getHeadCount()).isEqualTo(1);
         Assertions.assertThat(team.getTeamPpp()).isBetween(user2.getPpp() - 1, user2.getPpp() + 1);
     }
@@ -102,13 +120,18 @@ class TeamServiceTest {
     @Test
     @Transactional
     void saveGameResultInTeam() {
+        //given
         TeamSaveGameResultRequestDto dto = TeamSaveGameResultRequestDto.builder()
                 .teamId(team2.getId())
                 .score(2)
                 .win(true)
                 .build();
+
+        //when
         teamService.saveGameResultInTeam(dto);
         Team team = teamRepository.findById(team2.getId()).orElseThrow();
+
+        //then
         Assertions.assertThat(team.getScore()).isEqualTo(2);
         Assertions.assertThat(team.getWin()).isEqualTo(true);
     }
@@ -116,6 +139,7 @@ class TeamServiceTest {
     @Test
     @Transactional
     void modifyGameResultInTeam() {
+        //given
         Team team4 = teamRepository.save(Team.builder()
                 .teamPpp(42)
                 .headCount(1)
@@ -127,8 +151,12 @@ class TeamServiceTest {
                 .score(1)
                 .win(false)
                 .build();
+
+        //when
         teamService.modifyGameResultInTeam(dto);
         Team team = teamRepository.findById(team4.getId()).orElseThrow();
+
+        //then
         Assertions.assertThat(team.getScore()).isEqualTo(1);
         Assertions.assertThat(team.getWin()).isEqualTo(false);
     }

@@ -18,7 +18,7 @@ public class UserDto {
     private String statusMessage;
     private Integer ppp;
 
-    public static UserDto from(User user){
+    public static UserDto from(User user) {
         return UserDto.builder()
                 .id(user.getId())
                 .intraId(user.getIntraId())
