@@ -18,23 +18,29 @@ public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
     @NotNull
+    @OneToOne
     @JoinColumn (name = "team1_id")
-    @OneToOne
     private Team team1;
+
     @NotNull
-    @JoinColumn (name = "team2_id")
     @OneToOne
+    @JoinColumn (name = "team2_id")
     private Team team2;
+
     @NotNull
     @Column (name = "type")
     private String type;
+
     @NotNull
     @Column (name = "time")
     private LocalDateTime time;
+
     @NotNull
     @Column (name = "season")
     private Integer season;
+
     @NotNull
     @Column (name = "status")
     @Setter
