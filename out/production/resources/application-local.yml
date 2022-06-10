@@ -1,0 +1,29 @@
+spring:
+  config:
+    activate:
+      on-profile:
+
+  # 데이터 소스 설정
+  datasource:
+    url: jdbc:mysql://localhost:3306/EXAMPLE?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: root
+    password: commanderjiyun
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: false
+        use_sql_comments: false
+    logging:
+      level:
+        org:
+          hibernate:
+            type:
+              descripter:
+                sql: trace
+            SQL: debug

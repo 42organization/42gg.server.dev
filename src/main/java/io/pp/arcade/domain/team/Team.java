@@ -18,12 +18,12 @@ public class Team {
     private Integer id;
 
     @Setter
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user1_id")
     private User user1;
 
     @Setter
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user2_id")
     private User user2;
 
