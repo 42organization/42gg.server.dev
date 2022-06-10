@@ -1,13 +1,9 @@
 package io.pp.arcade.domain.team;
 
 
-import io.pp.arcade.domain.team.dto.TeamDto;
-import io.pp.arcade.domain.team.dto.TeamModifyGameResultRequestDto;
-import io.pp.arcade.domain.team.dto.TeamModifyUserRequestDto;
-import io.pp.arcade.domain.team.dto.TeamSaveGameResultRequestDto;
+import io.pp.arcade.domain.team.dto.*;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
-import io.pp.arcade.domain.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +22,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void addUserInTeam(TeamModifyUserRequestDto dto) {
+    public void addUserInTeam(TeamAddUserRequestDto dto) {
         User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
         Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
 
@@ -40,7 +36,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void removeUserInTeam(TeamModifyUserRequestDto dto) {
+    public void removeUserInTeam(TeamRemoveUserRequestDto dto) {
         User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
         Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
 
@@ -50,10 +46,12 @@ public class TeamService {
             team.setUser2(null);
         } // id가 user1이나 user2 둘중 하나로 validation 거쳐서 들어옴
         Integer headCountResult = team.getHeadCount() - 1; // entity라 반영이 안되어서 미리 뺀 값을 써줘야함
-        team.setHeadCount(headCountResult);
         if (headCountResult == 0) {
             team.setTeamPpp(0);
+        } else {
+            team.setTeamPpp((team.getTeamPpp() * team.getHeadCount() - user.getPpp()) / headCountResult);
         }
+        team.setHeadCount(headCountResult);
     }
 
 
