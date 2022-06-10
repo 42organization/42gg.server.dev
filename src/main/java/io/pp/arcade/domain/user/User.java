@@ -17,21 +17,21 @@ public class User {
     private Integer id;
 
     @NotNull
-    @Column(name="intra_id")
+    @Column(name = "intra_id")
     private String intraId;
 
-    @Column(name="image_uri")
+    @Column(name = "image_uri")
     private String imageUri;
 
-    @Column(name="racket_type")
+    @Column(name = "racket_type")
     private RacketType racketType;
 
     @NotNull
-    @Column(name="status_message")
+    @Column(name = "status_message")
     private String statusMessage;
 
     @NotNull
-    @Column(name="ppp")
+    @Column(name = "ppp")
     private Integer ppp;
 
     @Builder

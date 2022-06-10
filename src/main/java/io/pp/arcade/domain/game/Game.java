@@ -21,28 +21,28 @@ public class Game {
 
     @NotNull
     @OneToOne
-    @JoinColumn (name = "team1_id")
+    @JoinColumn(name = "team1_id")
     private Team team1;
 
     @NotNull
     @OneToOne
-    @JoinColumn (name = "team2_id")
+    @JoinColumn(name = "team2_id")
     private Team team2;
 
     @NotNull
-    @Column (name = "type")
+    @Column(name = "type")
     private String type;
 
     @NotNull
-    @Column (name = "time")
+    @Column(name = "time")
     private LocalDateTime time;
 
     @NotNull
-    @Column (name = "season")
+    @Column(name = "season")
     private Integer season;
 
     @NotNull
-    @Column (name = "status")
+    @Column(name = "status")
     @Setter
     private String status;
 
