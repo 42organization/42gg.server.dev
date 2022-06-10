@@ -1,4 +1,4 @@
-package io.pp.arcade.domain.game.dto;
+package io.pp.arcade.domain.game;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
