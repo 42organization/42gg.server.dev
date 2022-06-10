@@ -79,12 +79,12 @@ public class SlotService {
     //mytable 테이블 추가하기!
     public List<SlotResponseDto> findSlotsStatus(SlotFindStatusRequestDto findDto) {
         LocalDateTime now = findDto.getCurrentTime();
-        LocalDateTime todayStartTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0,0,0);
+        LocalDateTime todayStartTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 0);
         List<Slot> slots = slotRepository.findAllByCreatedDateAfter(todayStartTime);
 
         User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("?!"));
         List<SlotResponseDto> slotDtos = new ArrayList<>();
-        for(Slot slot: slots) {
+        for (Slot slot : slots) {
             slotDtos.add(SlotResponseDto.builder()
                     .slotId(slot.getId())
                     .headCount(slot.getHeadCount())
@@ -108,17 +108,17 @@ public class SlotService {
          */
         LocalDateTime currentTime = LocalDateTime.now();
         Integer maxCount = 2;
-        if (slotType == "double") {
+        if (slotType != null && slotType.equals("double")) {
             maxCount = 4;
         }
         String status = "open";
         if (currentTime.isAfter(slotTime)) {
             status = "close";
-        } else if (requestType != slotType) {
+        } else if (slotType != null && !requestType.equals(slotType)) {
             status = "close";
-        } else if (Math.abs(userPpp - gamePpp) > 100) {
+        } else if (gamePpp != null && Math.abs(userPpp - gamePpp) > 100) {
             status = "close";
-        } else if (headCount == maxCount) {
+        } else if (headCount.equals(maxCount)) {
             status = "close";
         }
         return status;

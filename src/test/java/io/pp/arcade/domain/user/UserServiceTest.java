@@ -33,41 +33,52 @@ class UserServiceTest {
     @Test
     @Transactional
     void findByIntraId() {
+        //when
         UserDto userDto = userService.findByIntraId("jiyun");
+
+        //then
         Assertions.assertThat(userDto.getIntraId()).isEqualTo("jiyun");
-        System.out.println(userDto.getId());
     }
 
     @Test
     @Transactional
     void findById() {
+        //given
         User user = userRepository.findByIntraId("jiyun").orElseThrow(() -> new IllegalArgumentException("haha"));
+
+        //when
         UserDto userDto = userService.findById(user.getId());
+
+        //then
         Assertions.assertThat(user.getId()).isEqualTo(userDto.getId());
-        System.out.println(userDto.getId());
     }
 
     @Test
     @Transactional
     void addUser() {
+        //when
         userService.addUser("jiyun2");
         UserDto userDto = userService.findByIntraId("jiyun2");
+
+        //then
         Assertions.assertThat(userDto.getIntraId()).isEqualTo("jiyun2");
-        System.out.println(userDto.getId());
     }
 
     @Test
     @Transactional
     void modifyUserPpp() {
+        //given
         UserDto userDto = userService.findByIntraId("jiyun");
         UserModifyPppRequestDto dto = UserModifyPppRequestDto.builder()
                 .userId(userDto.getId())
                 .ppp(50)
                 .build();
+
+        //when
         userService.modifyUserPpp(dto);
         UserDto userDto2 = userService.findByIntraId("jiyun");
-        Assertions.assertThat(userDto2.getPpp()).isEqualTo(50);
-        System.out.println(userDto.getId());
 
+        //then
+        Assertions.assertThat(userDto2.getPpp()).isEqualTo(50);
     }
 }
