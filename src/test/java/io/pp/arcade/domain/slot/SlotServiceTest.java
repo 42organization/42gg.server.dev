@@ -1,12 +1,12 @@
 package io.pp.arcade.domain.slot;
 
-import io.pp.arcade.domain.slot.dto.SlotAddRequestDto;
-import io.pp.arcade.domain.slot.dto.SlotAddUserRequestDto;
+import io.pp.arcade.domain.slot.dto.*;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 
+import io.pp.arcade.global.util.RacketType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @SpringBootTest
 class SlotServiceTest {
@@ -64,34 +65,49 @@ class SlotServiceTest {
     @Test
     @Transactional
     void addSlot() {
+        //given
         LocalDateTime time = LocalDateTime.now();
         SlotAddRequestDto dto = SlotAddRequestDto.builder().time(time).build();
+
+        //when
         slotService.addSlot(dto);
         Slot slot1 = slotRepository.findAll().get(1);
+
+        //then
         Assertions.assertThat(dto.getTime()).isEqualTo(slot1.getTime());
     }
 
     @Test
     @Transactional
     void addUserInSlot() {
+        //given
         SlotAddUserRequestDto dto = SlotAddUserRequestDto.builder()
                 .slotId(slot.getId())
                 .type("single")
                 .joinUserPpp(user1.getPpp())
                 .build();
+
+        //when
         slotService.addUserInSlot(dto);
         Slot s1 = slotRepository.findById(slot.getId()).orElseThrow();
+
+        //then
         Assertions.assertThat(s1.getHeadCount()).isEqualTo(1);
         Assertions.assertThat(s1.getGamePpp()).isEqualTo(user1.getPpp());
         Assertions.assertThat(s1.getType()).isEqualTo("single");
 
+        //given
         SlotAddUserRequestDto dto1 = SlotAddUserRequestDto.builder()
                 .slotId(slot.getId())
                 .type("single")
                 .joinUserPpp(user2.getPpp())
                 .build();
-        slotService.addUserInSlot(dto);
+
+        //when
+        slotService.addUserInSlot(dto1);
         Slot s2 = slotRepository.findById(slot.getId()).orElseThrow();
+
+        //then
         Assertions.assertThat(s2.getHeadCount()).isEqualTo(2);
         Assertions.assertThat(s2.getGamePpp()).isEqualTo((user1.getPpp() + user2.getPpp()) / 2);
         Assertions.assertThat(s2.getType()).isEqualTo("single");
@@ -100,15 +116,90 @@ class SlotServiceTest {
     @Test
     @Transactional
     void removeUserInSlot() {
+        // given
+        Slot slot1 = slotRepository.save(Slot.builder().team1(team1).team2(team2).time(LocalDateTime.now()).headCount(2).gamePpp(80).type("single").build());
+        SlotRemoveUserRequestDto dto = SlotRemoveUserRequestDto.builder()
+                .slotId(slot1.getId())
+                .exitUserPpp(60)
+                .build();
+        // when
+        slotService.removeUserInSlot(dto);
+        Slot removedUserSlot = slotRepository.findById(slot1.getId()).orElseThrow();
+
+        // then
+        Assertions.assertThat(removedUserSlot.getGamePpp()).isEqualTo(100);
+        Assertions.assertThat(removedUserSlot.getHeadCount()).isEqualTo(1);
+        Assertions.assertThat(removedUserSlot.getType()).isEqualTo("single");
+
+        // when
+        slotService.removeUserInSlot(dto);
+        Slot removedUserSlot2 = slotRepository.findById(slot1.getId()).orElseThrow();
+
+        // then
+        Assertions.assertThat(removedUserSlot2.getGamePpp()).isEqualTo(null);
+        Assertions.assertThat(removedUserSlot2.getHeadCount()).isEqualTo(0);
+        Assertions.assertThat(removedUserSlot2.getType()).isEqualTo(null);
     }
 
     @Test
     @Transactional
     void findSlotById() {
+        //when
+        SlotDto slotDto = slotService.findSlotById(slot.getId());
+
+        //then
+        Assertions.assertThat(slotDto.getSlotId()).isEqualTo(slot.getId());
     }
 
     @Test
     @Transactional
     void findSlotsStatus() {
+        //given
+        LocalDateTime now = LocalDateTime.now();
+        for (int i = 0; i < 18; i++) {
+            Team team_a = teamRepository.save(Team.builder()
+                    .teamPpp(0)
+                    .headCount(0)
+                    .score(0)
+                    .build());
+            Team team_b = teamRepository.save(Team.builder()
+                    .teamPpp(0)
+                    .headCount(0)
+                    .score(0)
+                    .build());
+            LocalDateTime test = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
+                    21 + i / 6,(i * 10) % 60, 0);
+            SlotAddRequestDto dto = SlotAddRequestDto.builder().time(test).build();
+            slotService.addSlot(dto);
+        }
+        List<Slot> slots =  slotRepository.findAll();
+        slots.get(0).setType("double");
+        slots.get(0).setHeadCount(3);
+        slots.get(1).setType("single");
+        slots.get(1).setHeadCount(2);
+        slots.get(2).setType("single");
+        slots.get(2).setHeadCount(1);
+
+        //when
+        SlotFindStatusRequestDto dto = SlotFindStatusRequestDto.builder()
+                .type("single")
+                .currentTime(LocalDateTime.of(1999,10,10,0,0,0))
+                .userId(user1.getId())
+                .build();
+        List<SlotResponseDto> responseDtos = slotService.findSlotsStatus(dto);
+
+        //then
+        Integer openCount = 0;
+        Integer closeCount = 0;
+        for (SlotResponseDto resDto : responseDtos) {
+            System.out.println(resDto.getStatus());
+            if (resDto.getStatus().equals("open")) {
+                openCount++;
+            } else if (resDto.getStatus().equals("close")) {
+                closeCount++;
+            }
+        }
+        Assertions.assertThat(openCount).isEqualTo(17);
+        Assertions.assertThat(closeCount).isEqualTo(2);
     }
 }

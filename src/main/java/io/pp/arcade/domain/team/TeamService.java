@@ -42,7 +42,7 @@ public class TeamService {
 
         if (team.getUser1() == user) {
             team.setUser1(null);
-        } else if (team.getUser2() == user){
+        } else {
             team.setUser2(null);
         } // id가 user1이나 user2 둘중 하나로 validation 거쳐서 들어옴
         Integer headCountResult = team.getHeadCount() - 1; // entity라 반영이 안되어서 미리 뺀 값을 써줘야함
