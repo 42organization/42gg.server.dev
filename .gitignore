@@ -1,2 +1,6 @@
+<<<<<<< HEAD
+.gradle/
+=======
 /.gradle/
 /src/main/resources/*.yml
+>>>>>>> dev
