@@ -185,12 +185,12 @@ class SlotServiceTest {
                 .currentTime(LocalDateTime.of(1999,10,10,0,0,0))
                 .userId(user1.getId())
                 .build();
-        List<SlotResponseDto> responseDtos = slotService.findSlotsStatus(dto);
+        List<SlotStatusDto> responseDtos = slotService.findSlotsStatus(dto);
 
         //then
         Integer openCount = 0;
         Integer closeCount = 0;
-        for (SlotResponseDto resDto : responseDtos) {
+        for (SlotStatusDto resDto : responseDtos) {
             System.out.println(resDto.getStatus());
             if (resDto.getStatus().equals("open")) {
                 openCount++;
