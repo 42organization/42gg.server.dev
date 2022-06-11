@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class PChangeAddRequestDto {
+public class PChangeAddDto {
     private Integer gameId;
     private Integer userId;
     private Integer pppChange;

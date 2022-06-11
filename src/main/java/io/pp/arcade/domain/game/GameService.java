@@ -1,6 +1,6 @@
 package io.pp.arcade.domain.game;
 
-import io.pp.arcade.domain.game.dto.GameAddRequestDto;
+import io.pp.arcade.domain.game.dto.GameAddDto;
 import io.pp.arcade.domain.game.dto.GameModifyStatusDto;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.Team;
@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -18,7 +17,7 @@ public class GameService {
     private final TeamRepository teamRepository;
 
     @Transactional
-    public void addGame(GameAddRequestDto addDto) {
+    public void addGame(GameAddDto addDto) {
         SlotDto slotDto = addDto.getSlotDto();
         Team team1 = teamRepository.findById(slotDto.getTeam1().getId()).orElseThrow(() -> new IllegalArgumentException("?"));
         Team team2 = teamRepository.findById(slotDto.getTeam2().getId()).orElseThrow(() -> new IllegalArgumentException("?"));

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class SlotRemoveUserRequestDto {
+public class SlotRemoveUserDto {
     private Integer slotId;
     private Integer exitUserPpp;
 }

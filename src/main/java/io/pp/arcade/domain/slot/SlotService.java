@@ -21,7 +21,7 @@ public class SlotService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void addSlot(SlotAddRequestDto addDto) {
+    public void addSlot(SlotAddDto addDto) {
         Team team1 = teamRepository.save(Team.builder()
                 .teamPpp(0)
                 .headCount(0)
@@ -46,7 +46,7 @@ public class SlotService {
     }
 
     @Transactional
-    public void addUserInSlot(SlotAddUserRequestDto addUserDto) {
+    public void addUserInSlot(SlotAddUserDto addUserDto) {
         Slot slot = slotRepository.findById(addUserDto.getSlotId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
         Integer headCountResult = slot.getHeadCount() + 1; // entity라 반영이 안되어서 미리 뺀 값을 써줘야함
         if (slot.getHeadCount() == 0) {
@@ -59,7 +59,7 @@ public class SlotService {
     }
 
     @Transactional
-    public void removeUserInSlot(SlotRemoveUserRequestDto removeUserDto) {
+    public void removeUserInSlot(SlotRemoveUserDto removeUserDto) {
         Slot slot = slotRepository.findById(removeUserDto.getSlotId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
         Integer headCountResult = slot.getHeadCount() - 1; // entity라 반영이 안되어서 미리 뺀 값을 써줘야함
         if (headCountResult == 0) {
@@ -77,7 +77,7 @@ public class SlotService {
     }
 
     //mytable 테이블 추가하기!
-    public List<SlotResponseDto> findSlotsStatus(SlotFindStatusRequestDto findDto) {
+    public List<SlotResponseDto> findSlotsStatus(SlotFindStatusDto findDto) {
         LocalDateTime now = findDto.getCurrentTime();
         LocalDateTime todayStartTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 0);
         List<Slot> slots = slotRepository.findAllByCreatedDateAfter(todayStartTime);
