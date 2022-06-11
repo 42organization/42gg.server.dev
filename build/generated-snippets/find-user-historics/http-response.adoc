@@ -6,52 +6,52 @@ Content-Length: 772
 
 [ {
   "gameId" : 9,
-  "userId" : 1,
+  "userId" : 2,
   "pppChange" : 2,
   "pppResult" : 1002
 }, {
   "gameId" : 8,
-  "userId" : 1,
+  "userId" : 2,
   "pppChange" : 2,
   "pppResult" : 1002
 }, {
   "gameId" : 7,
-  "userId" : 1,
+  "userId" : 2,
   "pppChange" : 2,
   "pppResult" : 1002
 }, {
   "gameId" : 6,
-  "userId" : 1,
+  "userId" : 2,
   "pppChange" : 2,
   "pppResult" : 1002
 }, {
   "gameId" : 5,
-  "userId" : 1,
+  "userId" : 2,
   "pppChange" : 2,
   "pppResult" : 1002
 }, {
   "gameId" : 4,
-  "userId" : 1,
+  "userId" : 2,
   "pppChange" : 2,
   "pppResult" : 1002
 }, {
   "gameId" : 3,
-  "userId" : 1,
+  "userId" : 2,
   "pppChange" : 2,
   "pppResult" : 1002
 }, {
   "gameId" : 2,
-  "userId" : 1,
+  "userId" : 2,
   "pppChange" : 2,
   "pppResult" : 1002
 }, {
   "gameId" : 1,
-  "userId" : 1,
+  "userId" : 2,
   "pppChange" : 2,
   "pppResult" : 1002
 }, {
   "gameId" : 0,
-  "userId" : 1,
+  "userId" : 2,
   "pppChange" : 2,
   "pppResult" : 1002
 } ]

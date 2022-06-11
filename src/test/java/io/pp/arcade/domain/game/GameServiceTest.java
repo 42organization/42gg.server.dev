@@ -65,6 +65,7 @@ class GameServiceTest {
                 .score(0)
                 .build());
         slot = slotRepository.save(Slot.builder()
+                .tableId(1)
                 .team1(team1)
                 .team2(team2)
                 .type("double")

@@ -105,7 +105,7 @@ public class SlotControllerImpl implements SlotController {
                 .teamId(teamId)
                 .build();
         SlotRemoveUserDto slotRemoveUserDto = SlotRemoveUserDto.builder()
-                .slotId(slot.getSlotId())
+                .slotId(slot.getId())
                 .exitUserPpp(user.getPpp())
                 .build();
         teamService.removeUserInTeam(teamRemoveUserDto);

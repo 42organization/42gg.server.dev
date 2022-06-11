@@ -40,7 +40,7 @@ public class TeamService {
         User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
         Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
 
-        if (team.getUser1() == user) {
+        if (team.getUser1().equals(user)) {
             team.setUser1(null);
         } else {
             team.setUser2(null);

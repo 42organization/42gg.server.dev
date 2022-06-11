@@ -2,17 +2,17 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 185
+Content-Length: 195
 
 {
   "userId" : "donghyuk",
-  "userImageUri" : null,
+  "userImageUri" : "",
   "rank" : null,
-  "ppp" : 1,
+  "ppp" : 1000,
   "wins" : null,
   "losses" : null,
   "winRate" : null,
-  "racketType" : null,
-  "statusMessage" : ""
+  "racketType" : "PENHOLDER",
+  "statusMessage" : "hi"
 }
 ----

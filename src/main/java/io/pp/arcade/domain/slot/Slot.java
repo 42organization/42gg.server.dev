@@ -21,6 +21,10 @@ public class Slot extends BaseTimeEntity {
     private Integer id;
 
     @NotNull
+    @Column(name = "table_id")
+    private Integer tableId;
+
+    @NotNull
     @OneToOne
     @JoinColumn(name = "team1_id")
     private Team team1;
@@ -48,7 +52,8 @@ public class Slot extends BaseTimeEntity {
     private String type;
 
     @Builder
-    public Slot(Team team1, Team team2, LocalDateTime time, Integer gamePpp, Integer headCount, String type) {
+    public Slot(Integer tableId, Team team1, Team team2, LocalDateTime time, Integer gamePpp, Integer headCount, String type) {
+        this.tableId = tableId;
         this.team1 = team1;
         this.team2 = team2;
         this.time = time;
