@@ -1,0 +1,12 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 74
+
+{
+  "userId" : "donghyuk",
+  "userImageUri" : null,
+  "notiCount" : null
+}
+----

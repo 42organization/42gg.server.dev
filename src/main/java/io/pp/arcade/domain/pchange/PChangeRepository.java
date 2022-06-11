@@ -8,4 +8,5 @@ import java.util.Optional;
 
 public interface PChangeRepository extends JpaRepository<PChange, Integer> {
     Optional<List<PChange>> findAllByGameId(Integer gameId);
+    List<PChange> findAllByUserId(Integer userId);
 }
