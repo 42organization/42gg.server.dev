@@ -1,5 +1,8 @@
 package io.pp.arcade.domain.slot.controller;
 
+import io.pp.arcade.domain.currentmatch.CurrentMatchService;
+import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
+import io.pp.arcade.domain.currentmatch.dto.CurrentMatchModifyDto;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.*;
 import io.pp.arcade.domain.team.TeamService;
@@ -22,6 +25,7 @@ public class SlotControllerImpl implements SlotController {
     private final SlotService slotService;
     private final UserService userService;
     private final TeamService teamService;
+    private final CurrentMatchService currentMatchService;
 
     @Override
     @GetMapping(value = "/match/tables/{tableId}")
@@ -42,6 +46,11 @@ public class SlotControllerImpl implements SlotController {
     public void slotAddUser(Integer tableId, SlotAddUserRequestDto addReqDto, Integer userId) {
         UserDto user = userService.findById(userId);
         //user가 매치를 이미 가지고 있는지 myTable에서 user 필터하기
+        CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUserId(userId);
+        if (!matchDto.equals(null)) {
+            throw new IllegalArgumentException("잘못된 요청입니다.");
+        }
+
         SlotAddUserDto addDto = SlotAddUserDto.builder()
                 .slotId(addReqDto.getSlotId())
                 .type(addReqDto.getType())
@@ -78,6 +87,22 @@ public class SlotControllerImpl implements SlotController {
                 .teamId(teamId)
                 .userId(userId)
                 .build();
+
+        Boolean isMatched = false;
+        Boolean isImminent = null;
+        if (slot.getHeadCount().equals(maxHeadCount - 1)) {
+            isMatched = true;
+        }
+        if (slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5))) {
+            isImminent = true;
+        }
+        CurrentMatchModifyDto matchModifyDto = CurrentMatchModifyDto.builder()
+                .userId(userId)
+                .isMatched(isMatched)
+                .matchImminent(isImminent)
+                .build();
+
+        currentMatchService.ModifyCurrentMatch(matchModifyDto);
         slotService.addUserInSlot(addDto);
         teamService.addUserInTeam(teamAddUserDto);
     }
@@ -93,9 +118,9 @@ public class SlotControllerImpl implements SlotController {
         TeamDto team2 = slot.getTeam2();
         Integer teamId;
         Integer userId = user.getId();
-        if (userId.equals(team1.getUser1().getId()) || userId.equals(team1.getUser2().getId())) {
+        if (user.equals(team1.getUser1()) || user.equals(team1.getUser2())) {
             teamId = team1.getId();
-        } else if(userId.equals(team2.getUser1().getId()) || userId.equals(team2.getUser2().getId())){
+        } else if (user.equals(team2.getUser1()) || user.equals(team2.getUser2())) {
             teamId = team2.getId();
         } else {
             throw new IllegalArgumentException("잘못된 요청입니다");
@@ -108,6 +133,7 @@ public class SlotControllerImpl implements SlotController {
                 .slotId(slot.getId())
                 .exitUserPpp(user.getPpp())
                 .build();
+        currentMatchService.removeCurrentMatch(userId);
         teamService.removeUserInTeam(teamRemoveUserDto);
         slotService.removeUserInSlot(slotRemoveUserDto);
     }

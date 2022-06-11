@@ -8,6 +8,8 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class SlotFilterDto {
+    private Integer slotId;
+    private Integer userSlotId;
     private LocalDateTime slotTime;
     private String slotType;
     private String requestType;

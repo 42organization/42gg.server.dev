@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.game;
 
+import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.team.Team;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,6 +19,11 @@ public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @NotNull
+    @OneToOne
+    @JoinColumn(name = "slot_id")
+    Slot slot;
 
     @NotNull
     @OneToOne
@@ -47,7 +53,8 @@ public class Game {
     private String status;
 
     @Builder
-    public Game(Team team1, Team team2, String type, LocalDateTime time, Integer season, String status) {
+    public Game(Slot slot, Team team1, Team team2, String type, LocalDateTime time, Integer season, String status) {
+        this.slot = slot;
         this.team1 = team1;
         this.team2 = team2;
         this.type = type;
