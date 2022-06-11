@@ -6,5 +6,6 @@ import lombok.Getter;
 @Builder
 @Getter
 public class PChangeFindDto {
-    private Integer GameId;
+    private Integer gameId;
+    private Integer userId;
 }

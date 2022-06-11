@@ -26,12 +26,17 @@ public class PChangeService {
                 .pppResult(addDto.getPppResult())
                 .build()
         );
-
     }
 
     @Transactional
-    public List<PChangeDto> findPChange(PChangeFindDto findDto) {
+    public List<PChangeDto> findPChangeByGameId(PChangeFindDto findDto) {
         List<PChange> pChangeList = pChangeRepository.findAllByGameId(findDto.getGameId()).orElseThrow(() -> new IllegalArgumentException("?"));        
+        return pChangeList.stream().map(PChangeDto::from).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<PChangeDto> findPChangeByUserId(PChangeFindDto findDto){
+        List<PChange> pChangeList = pChangeRepository.findAllByUserId(findDto.getUserId());
         return pChangeList.stream().map(PChangeDto::from).collect(Collectors.toList());
     }
 }
