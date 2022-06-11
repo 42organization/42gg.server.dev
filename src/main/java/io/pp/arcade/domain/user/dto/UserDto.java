@@ -19,13 +19,19 @@ public class UserDto {
     private Integer ppp;
 
     public static UserDto from(User user) {
-        return UserDto.builder()
-                .id(user.getId())
-                .intraId(user.getIntraId())
-                .imageUri(user.getImageUri())
-                .racketType(user.getRacketType())
-                .statusMessage(user.getStatusMessage())
-                .ppp(user.getPpp())
-                .build();
+        UserDto userDto;
+        if (user == null) {
+            userDto = null;
+        } else {
+            userDto = UserDto.builder()
+                    .id(user.getId())
+                    .intraId(user.getIntraId())
+                    .imageUri(user.getImageUri())
+                    .racketType(user.getRacketType())
+                    .statusMessage(user.getStatusMessage())
+                    .ppp(user.getPpp())
+                    .build();
+        }
+        return userDto;
     }
 }

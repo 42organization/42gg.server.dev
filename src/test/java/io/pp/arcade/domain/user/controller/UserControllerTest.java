@@ -1,11 +1,15 @@
 package io.pp.arcade.domain.user.controller;
 
+import io.pp.arcade.domain.pchange.PChange;
+import io.pp.arcade.domain.pchange.PChangeRepository;
 import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
 import io.pp.arcade.domain.user.User;
+import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.global.util.RacketType;
 import net.bytebuddy.implementation.bytecode.Throw;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,22 +33,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(RestDocsConfiguration.class)
 class UserControllerTest {
     @Autowired
-    private UserService userService;
+    private UserRepository userRepository;
 
     @Autowired
-    private PChangeService pChangeService;
+    private PChangeRepository pChangeRepository;
 
     @Autowired
     private MockMvc mockMvc;
 
-    UserDto user;
+    User user;
 
     @BeforeEach
     void init() {
-        userService.addUser("donghyuk");
-        user = userService.findByIntraId("donghyuk");
+        user = userRepository.save(User.builder()
+                .intraId("donghyuk")
+                .imageUri("")
+                .ppp(1000)
+                .racketType(RacketType.PENHOLDER)
+                .statusMessage("hi")
+                .build());
+        PChange pChange;
         for (int i = 0; i < 10; i++) {
-            pChangeService.addPChange(PChangeAddDto.builder()
+            user = userRepository.findById(user.getId()).orElseThrow();
+            pChange = pChangeRepository.save(PChange.builder()
                     .gameId(i)
                     .userId(user.getId())
                     .pppChange(2)
@@ -65,7 +76,8 @@ class UserControllerTest {
     @Test
     @Transactional
     void findDetailUser() throws Exception {
-        mockMvc.perform(get("/pingpong/users/"+ user.getId().toString() +"/detail").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/pingpong/users/"+ user.getId().toString() +"/detail").contentType(MediaType.APPLICATION_JSON)
+                .param("currentUserId",user.getId().toString()))
                 .andExpect(status().isOk())
                 .andDo(document("find-user-detail"));
     }

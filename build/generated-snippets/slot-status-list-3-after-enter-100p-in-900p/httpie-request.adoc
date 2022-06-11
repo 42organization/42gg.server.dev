@@ -1,0 +1,5 @@
+[source,bash]
+----
+$ http GET 'http://localhost:8080/pingpong/match/tables/1?type=single&userId=16' \
+    'Content-Type:application/json;charset=UTF-8'
+----
