@@ -77,26 +77,34 @@ public class SlotService {
     }
 
     //mytable 테이블 추가하기!
-    public List<SlotResponseDto> findSlotsStatus(SlotFindStatusDto findDto) {
+    public List<SlotStatusDto> findSlotsStatus(SlotFindStatusDto findDto) {
         LocalDateTime now = findDto.getCurrentTime();
         LocalDateTime todayStartTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 0);
         List<Slot> slots = slotRepository.findAllByCreatedDateAfter(todayStartTime);
 
         User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("?!"));
-        List<SlotResponseDto> slotDtos = new ArrayList<>();
+        List<SlotStatusDto> slotDtos = new ArrayList<>();
         for (Slot slot : slots) {
-            slotDtos.add(SlotResponseDto.builder()
+            SlotFilterDto filterDto = SlotFilterDto.builder()
+                    .slotTime(slot.getTime())
+                    .slotType(slot.getType())
+                    .requestType(findDto.getType())
+                    .userPpp(user.getPpp())
+                    .gamePpp(slot.getGamePpp())
+                    .headCount(slot.getHeadCount())
+                    .build();
+            slotDtos.add(SlotStatusDto.builder()
                     .slotId(slot.getId())
                     .headCount(slot.getHeadCount())
                     .time(slot.getTime())
-                    .status(getStatus(slot.getTime(), slot.getType(), findDto.getType(), user.getPpp(), slot.getGamePpp(), slot.getHeadCount()))
+                    .status(getStatus(filterDto))
                     .build()
             );
         }
         return slotDtos;
     }
 
-    private String getStatus(LocalDateTime slotTime, String slotType, String requestType, Integer userPpp, Integer gamePpp, Integer headCount) {
+    public String getStatus(SlotFilterDto dto) {
         /* if currentTime > slotTime
             then status == close
            else if requestType != slotType
@@ -106,6 +114,13 @@ public class SlotService {
            else if slotType == "double" and headCount == MAXCOUNT
             then status == close
          */
+        String slotType = dto.getSlotType();
+        LocalDateTime slotTime = dto.getSlotTime();
+        String requestType = dto.getRequestType();
+        Integer gamePpp = dto.getGamePpp();
+        Integer userPpp = dto.getUserPpp();
+        Integer headCount = dto.getHeadCount();
+
         LocalDateTime currentTime = LocalDateTime.now();
         Integer maxCount = 2;
         if (slotType != null && slotType.equals("double")) {

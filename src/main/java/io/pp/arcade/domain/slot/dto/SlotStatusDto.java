@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class SlotResponseDto {
+public class SlotStatusDto {
     private Integer slotId;
     private LocalDateTime time;
     private String status;
