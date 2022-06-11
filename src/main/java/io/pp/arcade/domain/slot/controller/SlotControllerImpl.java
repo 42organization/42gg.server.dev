@@ -1,19 +1,16 @@
 package io.pp.arcade.domain.slot.controller;
 
-import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.*;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamAddUserDto;
 import io.pp.arcade.domain.team.dto.TeamDto;
+import io.pp.arcade.domain.team.dto.TeamRemoveUserDto;
 import io.pp.arcade.domain.user.UserService;
-import io.pp.arcade.domain.user.dto.SlotFindResponseDto;
+import io.pp.arcade.domain.slot.dto.SlotFindResponseDto;
 import io.pp.arcade.domain.user.dto.UserDto;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,7 +38,7 @@ public class SlotControllerImpl implements SlotController {
     }
 
     @Override
-    @GetMapping(value = "/match/tables/{tableId}")
+    @PostMapping(value = "/match/tables/{tableId}")
     public void slotAddUser(Integer tableId, SlotAddUserRequestDto addReqDto, Integer userId) {
         UserDto user = userService.findById(userId);
         //user가 매치를 이미 가지고 있는지 myTable에서 user 필터하기
@@ -50,7 +47,6 @@ public class SlotControllerImpl implements SlotController {
                 .type(addReqDto.getType())
                 .joinUserPpp(user.getPpp())
                 .build();
-        slotService.addUserInSlot(addDto);
         SlotDto slot = slotService.findSlotById(addDto.getSlotId());
 
         //type 확인하고 headCount 확인하고 어느팀에 보낼지 정해야 함.
@@ -82,12 +78,37 @@ public class SlotControllerImpl implements SlotController {
                 .teamId(teamId)
                 .userId(userId)
                 .build();
+        slotService.addUserInSlot(addDto);
         teamService.addUserInTeam(teamAddUserDto);
     }
 
     @Override
     @DeleteMapping(value = "/match/tables/{tableId}")
-    public void slotRemoveUser(Integer tableId, Integer slotId, Integer userId) {
-
+    public void slotRemoveUser(Integer tableId, Integer slotId, Integer pUserId) {
+        // slotId , tableId 유효성 검사
+        UserDto user = userService.findById(pUserId);
+        // 유저 조회, 슬롯 조회, 팀 조회( 슬롯에 헤드 카운트 -, 팀에서 유저 퇴장 )
+        SlotDto slot = slotService.findSlotById(slotId);
+        TeamDto team1 = slot.getTeam1();
+        TeamDto team2 = slot.getTeam2();
+        Integer teamId;
+        Integer userId = user.getId();
+        if (userId.equals(team1.getUser1().getId()) || userId.equals(team1.getUser2().getId())) {
+            teamId = team1.getId();
+        } else if(userId.equals(team2.getUser1().getId()) || userId.equals(team2.getUser2().getId())){
+            teamId = team2.getId();
+        } else {
+            throw new IllegalArgumentException("잘못된 요청입니다");
+        }
+        TeamRemoveUserDto teamRemoveUserDto = TeamRemoveUserDto.builder()
+                .userId(user.getId())
+                .teamId(teamId)
+                .build();
+        SlotRemoveUserDto slotRemoveUserDto = SlotRemoveUserDto.builder()
+                .slotId(slot.getSlotId())
+                .exitUserPpp(user.getPpp())
+                .build();
+        teamService.removeUserInTeam(teamRemoveUserDto);
+        slotService.removeUserInSlot(slotRemoveUserDto);
     }
 }

@@ -1,8 +1,7 @@
 package io.pp.arcade.domain.slot.controller;
 
-import io.pp.arcade.domain.slot.dto.SlotAddUserDto;
 import io.pp.arcade.domain.slot.dto.SlotAddUserRequestDto;
-import io.pp.arcade.domain.user.dto.SlotFindResponseDto;
+import io.pp.arcade.domain.slot.dto.SlotFindResponseDto;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
