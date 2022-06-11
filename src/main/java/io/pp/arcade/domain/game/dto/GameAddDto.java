@@ -6,6 +6,6 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class GameAddRequestDto {
+public class GameAddDto {
     private SlotDto slotDto;
 }

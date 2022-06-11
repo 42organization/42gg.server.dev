@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class TeamRemoveUserRequestDto {
+public class TeamRemoveUserDto {
     private Integer teamId;
     private Integer userId;
 }

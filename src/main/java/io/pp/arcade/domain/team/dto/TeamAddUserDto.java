@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class TeamAddUserRequestDto {
+public class TeamAddUserDto {
     private Integer teamId;
     private Integer userId;
 }

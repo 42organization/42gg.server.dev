@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class UserModifyPppRequestDto {
+public class UserModifyPppDto {
     private Integer userId;
     private Integer ppp;
 }

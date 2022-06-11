@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class TeamModifyGameResultRequestDto {
+public class TeamModifyGameResultDto {
     private Integer teamId;
     private Integer score;
     private Boolean win;
