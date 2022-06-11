@@ -1,7 +1,6 @@
 package io.pp.arcade.domain.game;
 
-import io.pp.arcade.domain.game.dto.GameAddDto;
-import io.pp.arcade.domain.game.dto.GameModifyStatusDto;
+import io.pp.arcade.domain.game.dto.*;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
@@ -15,6 +14,14 @@ import javax.transaction.Transactional;
 public class GameService {
     private final GameRepository gameRepository;
     private final TeamRepository teamRepository;
+
+    @Transactional
+    public GameUserInfoResponseDto findById(Integer gameId) {
+        GameDto gameDto  = gameRepository.findById(gameId)
+                .orElseThrow(() -> new IllegalArgumentException("gameId를 찾을 수 없다."));
+
+        return GameUserInfoResponseDto(gameDto);
+    }
 
     @Transactional
     public void addGame(GameAddDto addDto) {
