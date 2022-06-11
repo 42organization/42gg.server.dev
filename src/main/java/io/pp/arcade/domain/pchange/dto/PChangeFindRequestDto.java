@@ -1,5 +1,10 @@
 package io.pp.arcade.domain.pchange.dto;
 
-public class PChangeFindRequestDto {
+import lombok.Builder;
+import lombok.Getter;
 
+@Builder
+@Getter
+public class PChangeFindRequestDto {
+    private Integer GameId;
 }
