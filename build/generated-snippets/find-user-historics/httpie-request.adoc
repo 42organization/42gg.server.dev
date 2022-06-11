@@ -1,0 +1,5 @@
+[source,bash]
+----
+$ http GET 'http://localhost:8080/pingpong/users/1/historics' \
+    'Content-Type:application/json;charset=UTF-8'
+----
