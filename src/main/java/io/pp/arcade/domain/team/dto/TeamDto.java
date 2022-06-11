@@ -1,6 +1,7 @@
 package io.pp.arcade.domain.team.dto;
 
 import io.pp.arcade.domain.team.Team;
+import io.pp.arcade.domain.user.dto.UserDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,8 +9,8 @@ import lombok.Getter;
 @Builder
 public class TeamDto {
     private Integer id;
-    private Integer user1Id;
-    private Integer user2Id;
+    private UserDto user1;
+    private UserDto user2;
     private Integer teamPpp;
     private Integer headCount;
     private Integer score;
@@ -18,8 +19,8 @@ public class TeamDto {
     public static TeamDto from(Team team) {
         return TeamDto.builder()
                 .id(team.getId())
-                .user1Id(team.getUser1() != null ? team.getUser1().getId() : null)
-                .user2Id(team.getUser2() != null ? team.getUser2().getId() : null)
+                .user1(UserDto.from(team.getUser1()))
+                .user2(UserDto.from(team.getUser2()))
                 .teamPpp(team.getTeamPpp())
                 .headCount(team.getHeadCount())
                 .score(team.getScore())
