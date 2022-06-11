@@ -1,17 +1,14 @@
 package io.pp.arcade.domain.user;
 
 import io.pp.arcade.domain.user.dto.UserDto;
-import io.pp.arcade.domain.user.dto.UserModifyPppRequestDto;
+import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class UserServiceTest {
@@ -69,7 +66,7 @@ class UserServiceTest {
     void modifyUserPpp() {
         //given
         UserDto userDto = userService.findByIntraId("jiyun");
-        UserModifyPppRequestDto dto = UserModifyPppRequestDto.builder()
+        UserModifyPppDto dto = UserModifyPppDto.builder()
                 .userId(userDto.getId())
                 .ppp(50)
                 .build();

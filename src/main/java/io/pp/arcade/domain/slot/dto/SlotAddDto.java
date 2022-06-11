@@ -7,6 +7,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Builder
-public class SlotAddRequestDto {
+public class SlotAddDto {
     private LocalDateTime time;
 }

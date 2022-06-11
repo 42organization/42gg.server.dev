@@ -6,7 +6,6 @@ import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 
-import io.pp.arcade.global.util.RacketType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -67,7 +66,7 @@ class SlotServiceTest {
     void addSlot() {
         //given
         LocalDateTime time = LocalDateTime.now();
-        SlotAddRequestDto dto = SlotAddRequestDto.builder().time(time).build();
+        SlotAddDto dto = SlotAddDto.builder().time(time).build();
 
         //when
         slotService.addSlot(dto);
@@ -81,7 +80,7 @@ class SlotServiceTest {
     @Transactional
     void addUserInSlot() {
         //given
-        SlotAddUserRequestDto dto = SlotAddUserRequestDto.builder()
+        SlotAddUserDto dto = SlotAddUserDto.builder()
                 .slotId(slot.getId())
                 .type("single")
                 .joinUserPpp(user1.getPpp())
@@ -97,7 +96,7 @@ class SlotServiceTest {
         Assertions.assertThat(s1.getType()).isEqualTo("single");
 
         //given
-        SlotAddUserRequestDto dto1 = SlotAddUserRequestDto.builder()
+        SlotAddUserDto dto1 = SlotAddUserDto.builder()
                 .slotId(slot.getId())
                 .type("single")
                 .joinUserPpp(user2.getPpp())
@@ -118,7 +117,7 @@ class SlotServiceTest {
     void removeUserInSlot() {
         // given
         Slot slot1 = slotRepository.save(Slot.builder().team1(team1).team2(team2).time(LocalDateTime.now()).headCount(2).gamePpp(80).type("single").build());
-        SlotRemoveUserRequestDto dto = SlotRemoveUserRequestDto.builder()
+        SlotRemoveUserDto dto = SlotRemoveUserDto.builder()
                 .slotId(slot1.getId())
                 .exitUserPpp(60)
                 .build();
@@ -169,7 +168,7 @@ class SlotServiceTest {
                     .build());
             LocalDateTime test = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
                     21 + i / 6,(i * 10) % 60, 0);
-            SlotAddRequestDto dto = SlotAddRequestDto.builder().time(test).build();
+            SlotAddDto dto = SlotAddDto.builder().time(test).build();
             slotService.addSlot(dto);
         }
         List<Slot> slots =  slotRepository.findAll();
@@ -181,7 +180,7 @@ class SlotServiceTest {
         slots.get(2).setHeadCount(1);
 
         //when
-        SlotFindStatusRequestDto dto = SlotFindStatusRequestDto.builder()
+        SlotFindStatusDto dto = SlotFindStatusDto.builder()
                 .type("single")
                 .currentTime(LocalDateTime.of(1999,10,10,0,0,0))
                 .userId(user1.getId())

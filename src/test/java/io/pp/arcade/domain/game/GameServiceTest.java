@@ -1,6 +1,6 @@
 package io.pp.arcade.domain.game;
 
-import io.pp.arcade.domain.game.dto.GameAddRequestDto;
+import io.pp.arcade.domain.game.dto.GameAddDto;
 import io.pp.arcade.domain.game.dto.GameModifyStatusDto;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
@@ -18,8 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.transaction.Transactional;
 
 import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class GameServiceTest {
@@ -79,7 +77,7 @@ class GameServiceTest {
     @Transactional
     void addGame() {
         //given
-        GameAddRequestDto addDto = GameAddRequestDto.builder()
+        GameAddDto addDto = GameAddDto.builder()
                 .slotDto(SlotDto.from(slot))
                 .build();
 

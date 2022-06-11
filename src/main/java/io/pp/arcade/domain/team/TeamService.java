@@ -22,7 +22,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void addUserInTeam(TeamAddUserRequestDto dto) {
+    public void addUserInTeam(TeamAddUserDto dto) {
         User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
         Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
 
@@ -36,7 +36,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void removeUserInTeam(TeamRemoveUserRequestDto dto) {
+    public void removeUserInTeam(TeamRemoveUserDto dto) {
         User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
         Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
 
@@ -56,14 +56,14 @@ public class TeamService {
 
 
     @Transactional
-    public void saveGameResultInTeam(TeamSaveGameResultRequestDto dto) {
+    public void saveGameResultInTeam(TeamSaveGameResultDto dto) {
         Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
 
         team.setScore(dto.getScore());
         team.setWin(dto.getWin());
     }
 
-    public void modifyGameResultInTeam(TeamModifyGameResultRequestDto dto) {
+    public void modifyGameResultInTeam(TeamModifyGameResultDto dto) {
         Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
 
         team.setScore(dto.getScore());
