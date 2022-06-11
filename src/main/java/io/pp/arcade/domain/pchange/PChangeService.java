@@ -36,7 +36,7 @@ public class PChangeService {
 
     @Transactional
     public List<PChangeDto> findPChangeByUserId(PChangeFindDto findDto){
-        List<PChange> pChangeList = pChangeRepository.findAllByUserId(findDto.getUserId());
+        List<PChange> pChangeList = pChangeRepository.findAllByUserIdOrderByIdDesc(findDto.getUserId());
         return pChangeList.stream().map(PChangeDto::from).collect(Collectors.toList());
     }
 }
