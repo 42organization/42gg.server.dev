@@ -1,4 +1,4 @@
-package io.pp.arcade.domain.user.dto;
+package io.pp.arcade.domain.slot.dto;
 
 import io.pp.arcade.domain.slot.dto.SlotStatusDto;
 import lombok.Builder;
