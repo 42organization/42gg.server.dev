@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.slot;
 
+import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.global.util.BaseTimeEntity;
 import lombok.Builder;

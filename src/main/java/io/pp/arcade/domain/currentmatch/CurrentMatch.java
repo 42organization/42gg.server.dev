@@ -7,6 +7,7 @@ import io.pp.arcade.global.util.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -22,22 +23,25 @@ public class CurrentMatch extends BaseTimeEntity {
     @NotNull
     @OneToOne
     @JoinColumn(name = "user_id")
-    User user;
+    private User user;
 
     @NotNull
     @ManyToOne
     @JoinColumn
-    Slot slot;
+    private Slot slot;
 
+    @Setter
     @ManyToOne
     @JoinColumn
-    Game game;
+    private Game game;
 
+    @Setter
     @Column(name = "match_imminent")
-    Boolean matchImminent;
+    private Boolean matchImminent;
 
+    @Setter
     @Column(name = "is_matched")
-    Boolean isMatched;
+    private Boolean isMatched;
 
     @Builder
     public CurrentMatch(User user, Slot slot, Game game, Boolean matchImminent, Boolean isMatched) {
