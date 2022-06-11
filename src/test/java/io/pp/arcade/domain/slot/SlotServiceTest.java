@@ -54,6 +54,7 @@ class SlotServiceTest {
                 .score(0)
                 .build());
         slot = slotRepository.save(Slot.builder()
+                .tableId(1)
                 .team1(team1)
                 .team2(team2)
                 .time(LocalDateTime.now())
@@ -66,7 +67,7 @@ class SlotServiceTest {
     void addSlot() {
         //given
         LocalDateTime time = LocalDateTime.now();
-        SlotAddDto dto = SlotAddDto.builder().time(time).build();
+        SlotAddDto dto = SlotAddDto.builder().tableId(1).time(time).build();
 
         //when
         slotService.addSlot(dto);
@@ -116,7 +117,7 @@ class SlotServiceTest {
     @Transactional
     void removeUserInSlot() {
         // given
-        Slot slot1 = slotRepository.save(Slot.builder().team1(team1).team2(team2).time(LocalDateTime.now()).headCount(2).gamePpp(80).type("single").build());
+        Slot slot1 = slotRepository.save(Slot.builder().tableId(1).team1(team1).team2(team2).time(LocalDateTime.now()).headCount(2).gamePpp(80).type("single").build());
         SlotRemoveUserDto dto = SlotRemoveUserDto.builder()
                 .slotId(slot1.getId())
                 .exitUserPpp(60)
@@ -147,7 +148,7 @@ class SlotServiceTest {
         SlotDto slotDto = slotService.findSlotById(slot.getId());
 
         //then
-        Assertions.assertThat(slotDto.getSlotId()).isEqualTo(slot.getId());
+        Assertions.assertThat(slotDto.getId()).isEqualTo(slot.getId());
     }
 
     @Test
@@ -168,7 +169,7 @@ class SlotServiceTest {
                     .build());
             LocalDateTime test = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
                     21 + i / 6,(i * 10) % 60, 0);
-            SlotAddDto dto = SlotAddDto.builder().time(test).build();
+            SlotAddDto dto = SlotAddDto.builder().tableId(1).time(test).build();
             slotService.addSlot(dto);
         }
         List<Slot> slots =  slotRepository.findAll();

@@ -37,6 +37,7 @@ public class SlotService {
         );
 
         slotRepository.save(Slot.builder()
+                .tableId(addDto.getTableId())
                 .time(addDto.getTime())
                 .team1(team1)
                 .team2(team2)

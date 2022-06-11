@@ -9,4 +9,5 @@ import java.time.LocalDateTime;
 @Builder
 public class SlotAddDto {
     private LocalDateTime time;
+    private Integer tableId;
 }
