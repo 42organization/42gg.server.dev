@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CurrentMatchRepository extends JpaRepository<CurrentMatch, Integer> {
     CurrentMatch findByUser(User user);
+    void deleteByUser(User user);
 }

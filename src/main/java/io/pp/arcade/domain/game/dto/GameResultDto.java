@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.game.dto;
 
+import io.pp.arcade.domain.game.Game;
 import lombok.Builder;
 import lombok.Getter;
 

@@ -1,5 +1,8 @@
 package io.pp.arcade.domain.slot;
 
+import io.pp.arcade.domain.currentmatch.CurrentMatch;
+import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
+import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.slot.dto.*;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
@@ -19,6 +22,7 @@ public class SlotService {
     private final SlotRepository slotRepository;
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
+    private final CurrentMatchRepository currentMatchRepository;
 
     @Transactional
     public void addSlot(SlotAddDto addDto) {
@@ -84,9 +88,14 @@ public class SlotService {
         List<Slot> slots = slotRepository.findAllByCreatedDateAfter(todayStartTime);
 
         User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("?!"));
+        CurrentMatch currentMatch = currentMatchRepository.findByUser(user);
+        Integer userSlotId = currentMatch.equals(null) ? null : currentMatch.getId();
+
         List<SlotStatusDto> slotDtos = new ArrayList<>();
         for (Slot slot : slots) {
             SlotFilterDto filterDto = SlotFilterDto.builder()
+                    .slotId(slot.getId())
+                    .userSlotId(userSlotId)
                     .slotTime(slot.getTime())
                     .slotType(slot.getType())
                     .requestType(findDto.getType())
@@ -105,6 +114,11 @@ public class SlotService {
         return slotDtos;
     }
 
+    public SlotDto findByTime(LocalDateTime time) {
+        Slot slot = slotRepository.findByTime(time).orElseThrow();
+        return SlotDto.from(slot);
+    }
+
     public String getStatus(SlotFilterDto dto) {
         /* if currentTime > slotTime
             then status == close
@@ -115,6 +129,8 @@ public class SlotService {
            else if slotType == "double" and headCount == MAXCOUNT
             then status == close
          */
+        Integer slotId = dto.getSlotId();
+        Integer userSlotId = dto.getUserSlotId();
         String slotType = dto.getSlotType();
         LocalDateTime slotTime = dto.getSlotTime();
         String requestType = dto.getRequestType();
@@ -130,6 +146,8 @@ public class SlotService {
         String status = "open";
         if (currentTime.isAfter(slotTime)) {
             status = "close";
+        } else if (slotId.equals(userSlotId)) {
+            status = "mytable";
         } else if (slotType != null && !requestType.equals(slotType)) {
             status = "close";
         } else if (gamePpp != null && Math.abs(userPpp - gamePpp) > 100) {
