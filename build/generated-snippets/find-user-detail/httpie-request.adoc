@@ -1,0 +1,5 @@
+[source,bash]
+----
+$ http GET 'http://localhost:8080/pingpong/users/1/detail?currentUserId=1' \
+    'Content-Type:application/json;charset=UTF-8'
+----

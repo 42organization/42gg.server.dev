@@ -1,0 +1,14 @@
+[source,options="nowrap"]
+----
+{
+  "userId" : "donghyuk",
+  "userImageUri" : null,
+  "rank" : null,
+  "ppp" : 1,
+  "wins" : null,
+  "losses" : null,
+  "winRate" : null,
+  "racketType" : null,
+  "statusMessage" : ""
+}
+----

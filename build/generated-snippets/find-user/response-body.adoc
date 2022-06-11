@@ -1,0 +1,8 @@
+[source,options="nowrap"]
+----
+{
+  "userId" : "donghyuk",
+  "userImageUri" : null,
+  "notiCount" : null
+}
+----
