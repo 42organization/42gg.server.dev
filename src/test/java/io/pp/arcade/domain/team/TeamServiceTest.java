@@ -71,7 +71,7 @@ class TeamServiceTest {
     @Transactional
     void addUserInTeam() {
         //given
-        TeamAddUserRequestDto dto = TeamAddUserRequestDto.builder()
+        TeamAddUserDto dto = TeamAddUserDto.builder()
                 .teamId(team0.getId())
                 .userId(user1.getId())
                 .build();
@@ -85,7 +85,7 @@ class TeamServiceTest {
         Assertions.assertThat(team_0.getTeamPpp()).isEqualTo(user1.getPpp());
 
         //given
-        TeamAddUserRequestDto dto1 = TeamAddUserRequestDto.builder()
+        TeamAddUserDto dto1 = TeamAddUserDto.builder()
                 .teamId(team0.getId())
                 .userId(user2.getId())
                 .build();
@@ -103,7 +103,7 @@ class TeamServiceTest {
     @Transactional
     void removeUserInTeam() {
         //given
-        TeamRemoveUserRequestDto dto = TeamRemoveUserRequestDto.builder()
+        TeamRemoveUserDto dto = TeamRemoveUserDto.builder()
                 .teamId(team2.getId())
                 .userId(user1.getId())
                 .build();
@@ -121,7 +121,7 @@ class TeamServiceTest {
     @Transactional
     void saveGameResultInTeam() {
         //given
-        TeamSaveGameResultRequestDto dto = TeamSaveGameResultRequestDto.builder()
+        TeamSaveGameResultDto dto = TeamSaveGameResultDto.builder()
                 .teamId(team2.getId())
                 .score(2)
                 .win(true)
@@ -146,7 +146,7 @@ class TeamServiceTest {
                 .win(true)
                 .score(5)
                 .build());
-        TeamModifyGameResultRequestDto dto = TeamModifyGameResultRequestDto.builder()
+        TeamModifyGameResultDto dto = TeamModifyGameResultDto.builder()
                 .teamId(team4.getId())
                 .score(1)
                 .win(false)

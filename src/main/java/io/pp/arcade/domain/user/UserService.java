@@ -1,7 +1,7 @@
 package io.pp.arcade.domain.user;
 
 import io.pp.arcade.domain.user.dto.UserDto;
-import io.pp.arcade.domain.user.dto.UserModifyPppRequestDto;
+import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,7 +31,7 @@ public class UserService {
     }
 
     /* 유저 ppp 변경 */
-    public void modifyUserPpp(UserModifyPppRequestDto modifyDto) {
+    public void modifyUserPpp(UserModifyPppDto modifyDto) {
         User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수 입니다."));
         user.update(modifyDto.getPpp());
     }
