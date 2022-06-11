@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class SlotDto {
-    private Integer slotId;
+    private Integer id;
     private TeamDto team1;
     private TeamDto team2;
     private LocalDateTime time;
@@ -22,7 +22,7 @@ public class SlotDto {
     //entity를 dto로 바꿔주는 메서드
     public static SlotDto from(Slot slot) {
         return SlotDto.builder()
-                .slotId(slot.getId())
+                .id(slot.getId())
                 .team1(TeamDto.from(slot.getTeam1()))
                 .team2(TeamDto.from(slot.getTeam2()))
                 .time(slot.getTime())

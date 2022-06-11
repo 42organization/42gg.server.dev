@@ -9,5 +9,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface SlotController {
     SlotFindResponseDto slotStatusList(@PathVariable Integer tableId, @RequestParam String type, @RequestParam Integer userId);
     void slotAddUser(@PathVariable Integer tableId, @RequestBody SlotAddUserRequestDto addReqDto, @RequestParam Integer userId);
-    void slotRemoveUser(@PathVariable Integer tableId, @RequestParam Integer slotId, @RequestParam Integer userId);
+    void slotRemoveUser(@PathVariable Integer tableId, @RequestParam Integer slotId, @RequestParam Integer pUserId);
 }

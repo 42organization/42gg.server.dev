@@ -2,7 +2,7 @@
 ----
 {
   "userId" : "donghyuk",
-  "userImageUri" : null,
+  "userImageUri" : "",
   "notiCount" : null
 }
 ----
