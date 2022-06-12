@@ -1,8 +1,8 @@
 [source,options="nowrap"]
 ----
 {
-  "userId" : "donghyuk",
-  "userImageUri" : "",
+  "userId" : "jiyun1",
+  "userImageUri" : null,
   "notiCount" : null
 }
 ----

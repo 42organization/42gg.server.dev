@@ -1,6 +1,5 @@
 package io.pp.arcade.domain.slot.dto;
 
-import io.pp.arcade.domain.slot.dto.SlotStatusDto;
 import lombok.Builder;
 import lombok.Getter;
 

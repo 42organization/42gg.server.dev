@@ -88,8 +88,8 @@ public class SlotService {
         List<Slot> slots = slotRepository.findAllByCreatedDateAfter(todayStartTime);
 
         User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("?!"));
-        CurrentMatch currentMatch = currentMatchRepository.findByUser(user);
-        Integer userSlotId = currentMatch.equals(null) ? null : currentMatch.getId();
+        CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
+        Integer userSlotId = currentMatch == null ? null : currentMatch.getId();
 
         List<SlotStatusDto> slotDtos = new ArrayList<>();
         for (Slot slot : slots) {

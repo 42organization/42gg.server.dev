@@ -58,7 +58,7 @@ public class GameGenerator {
                     .gameId(game.getId())
                     .userId(user.getId())
                     .build();
-            currentMatchService.SaveGameInCurrentMatch(matchSaveGameDto);
+            currentMatchService.saveGameInCurrentMatch(matchSaveGameDto);
         }
     }
 }

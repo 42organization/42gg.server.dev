@@ -14,8 +14,7 @@ public interface GameController {
     //게임 결과 정보 - GET /pingpong/games/{gameId}/result
     GameUserInfoResponseDto gameUserInfo(@PathVariable Integer gameId, @RequestParam Integer userId);
     //게임 결과 입력 - POST /pingpong/games/{gameId}/result
-    void saveGameResult(@PathVariable Integer gameId, @RequestBody GameResultRequestDto getterDto, @RequestParam Integer userId);
-    List<GameResultResponseDto> gameResultByCount(@PathVariable Integer gameId, @RequestParam Integer count);
-    List<GameResultResponseDto> gameResultByIndexAndCount(@PathVariable Integer gameId, @RequestParam Integer index, @RequestParam Integer count, @RequestParam String status);
-    List<GameResultResponseDto> gameResultByUserIdAndIndexAndCount(@PathVariable Integer userId, @RequestParam Integer index, @RequestParam Integer count, @RequestParam String type);
+    void gameResultSave(@PathVariable Integer gameId, @RequestBody GameResultRequestDto getterDto, @RequestParam Integer userId);
+    GameResultResponseDto gameResultByIndexAndCount(@RequestParam(required = false) Integer index, @RequestParam(required = false) Integer count, @RequestParam(required = false) String status);
+    GameResultResponseDto gameResultByUserIdAndIndexAndCount(@PathVariable Integer userId, @RequestParam Integer index, @RequestParam Integer count, @RequestParam String type);
 }

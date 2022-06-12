@@ -1,0 +1,78 @@
+[source,options="nowrap"]
+----
+{
+  "games" : [ {
+    "gameId" : 1,
+    "type" : null,
+    "status" : "end",
+    "time" : "2022-06-13T15:00:00",
+    "team1" : {
+      "playerInfos" : [ {
+        "userId" : 1,
+        "userImageUri" : null,
+        "wins" : null,
+        "losses" : null,
+        "winRate" : null,
+        "pppChange" : 20
+      } ],
+      "isWin" : true,
+      "score" : 2
+    },
+    "team2" : {
+      "playerInfos" : [ {
+        "userId" : 2,
+        "userImageUri" : null,
+        "wins" : null,
+        "losses" : null,
+        "winRate" : null,
+        "pppChange" : -20
+      } ],
+      "isWin" : false,
+      "score" : 1
+    }
+  }, {
+    "gameId" : 2,
+    "type" : null,
+    "status" : "end",
+    "time" : "2022-06-13T15:10:00",
+    "team1" : {
+      "playerInfos" : [ {
+        "userId" : 3,
+        "userImageUri" : null,
+        "wins" : null,
+        "losses" : null,
+        "winRate" : null,
+        "pppChange" : -20
+      }, {
+        "userId" : 4,
+        "userImageUri" : null,
+        "wins" : null,
+        "losses" : null,
+        "winRate" : null,
+        "pppChange" : -20
+      } ],
+      "isWin" : false,
+      "score" : 1
+    },
+    "team2" : {
+      "playerInfos" : [ {
+        "userId" : 5,
+        "userImageUri" : null,
+        "wins" : null,
+        "losses" : null,
+        "winRate" : null,
+        "pppChange" : 20
+      }, {
+        "userId" : 6,
+        "userImageUri" : null,
+        "wins" : null,
+        "losses" : null,
+        "winRate" : null,
+        "pppChange" : 20
+      } ],
+      "isWin" : true,
+      "score" : 2
+    }
+  } ]
+}
+----

@@ -15,5 +15,4 @@ public class GameResultDto {
     private LocalDateTime time;
     private GameTeamDto team1;
     private GameTeamDto team2;
-
 }

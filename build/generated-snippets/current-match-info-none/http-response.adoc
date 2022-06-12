@@ -1,0 +1,15 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Content-Type: application/json
+Content-Length: 119
+
+{
+  "time" : null,
+  "slotId" : null,
+  "gameId" : null,
+  "myTeam" : [ ],
+  "enemyTeam" : [ ],
+  "isMatched" : false
+}
+----

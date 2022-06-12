@@ -4,6 +4,8 @@ import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.game.dto.*;
 import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
+import io.pp.arcade.domain.pchange.dto.PChangeDto;
+import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.team.dto.TeamModifyGameResultDto;
@@ -30,40 +32,14 @@ public class GameControllerImpl implements GameController {
     @GetMapping(value = "/games/{gameId}/result")
     public GameUserInfoResponseDto gameUserInfo(Integer gameId, Integer userId) {
         GameDto game = gameService.findById(gameId);
+        UserDto user = userService.findById(userId);
         List<GameUserInfoDto> myTeams = new ArrayList<>();
         List<GameUserInfoDto> enemyTeams = new ArrayList<>();
-        ;
-        TeamDto team1 = game.getTeam1();
-        TeamDto team2 = game.getTeam2();
-        TeamDto myTeam;
-        TeamDto enemyTeam;
 
-        //figuring out team number for myteam and enemyteam
-        if (userId.equals(team1.getUser1().getId()) || userId.equals(team1.getUser2().getId())) {
-            myTeam = team1;
-            enemyTeam = team2;
-        } else if (userId.equals(team2.getUser1().getId()) || userId.equals(team2.getUser2().getId())) {
-            myTeam = team2;
-            enemyTeam = team1;
-        } else {
-            throw new IllegalArgumentException("잘못된 요청입니다");
-        }
-        UserDto myTeamUser1 = myTeam.getUser1();
-        UserDto myTeamUser2 = myTeam.getUser2();
-        UserDto enemyTeamUser1 = enemyTeam.getUser1();
-        UserDto enemyTeamUser2 = enemyTeam.getUser2();
-        if (myTeamUser1 != null) {
-            myTeams.add(GameUserInfoDto.builder().userId(myTeamUser1.getId()).userImageUri(myTeamUser1.getImageUri()).build());
-        }
-        if (myTeamUser2 != null) {
-            myTeams.add(GameUserInfoDto.builder().userId(myTeamUser2.getId()).userImageUri(myTeamUser2.getImageUri()).build());
-        }
-        if (enemyTeamUser1 != null) {
-            enemyTeams.add(GameUserInfoDto.builder().userId(enemyTeamUser1.getId()).userImageUri(enemyTeamUser1.getImageUri()).build());
-        }
-        if (enemyTeamUser2 != null) {
-            enemyTeams.add(GameUserInfoDto.builder().userId(enemyTeamUser2.getId()).userImageUri(enemyTeamUser2.getImageUri()).build());
-        }
+        //figuring out team number for myteam and enemyteam, and put each team's user infos in the right team
+        putUsersDataInTeams(game, user, myTeams, enemyTeams);
+
+        //make Dto to return
         GameUserInfoResponseDto gameUserInfoResponseDto = GameUserInfoResponseDto.builder()
                 .myTeam(myTeams)
                 .enemyTeam(enemyTeams)
@@ -73,52 +49,141 @@ public class GameControllerImpl implements GameController {
 
     @Override
     @PostMapping(value = "/games/{gameId}/result")
-    public void saveGameResult(Integer gameId, GameResultRequestDto requestDto, Integer userId) {
+    public void gameResultSave(Integer gameId, GameResultRequestDto requestDto, Integer userId) {
         GameDto game = gameService.findById(gameId);
+        UserDto user = userService.findById(userId);
         TeamDto team1 = game.getTeam1();
         TeamDto team2 = game.getTeam2();
-        TeamDto myTeam;
-        TeamDto enemyTeam;
+        //figuring out team number for myteam and enemyteam
+        List<TeamModifyGameResultDto> eachTeamModifyDto = getTeamModifyDto(team1, team2, requestDto, user);
+        //modify team with game result
+        for (TeamModifyGameResultDto dto : eachTeamModifyDto) {
+            teamService.modifyGameResultInTeam(dto);
+        }
+        //modify users with game result
+        TeamDto savedTeam1 = teamService.findById(team1.getId());
+        TeamDto savedTeam2 = teamService.findById(team2.getId());
+        modifyUserPppAndAddPchange(game.getId(), team1.getUser1(), savedTeam2);
+        modifyUserPppAndAddPchange(game.getId(), team1.getUser2(), savedTeam2);
+        modifyUserPppAndAddPchange(game.getId(), team2.getUser1(), savedTeam1);
+        modifyUserPppAndAddPchange(game.getId(), team2.getUser2(), savedTeam1);
+
+        //modify users' ranks with game result
+    }
+
+    @Override
+    @GetMapping(value = "/games")
+    public GameResultResponseDto gameResultByIndexAndCount(Integer index, Integer count, String status) {
+        List<GameDto> gameLists = gameService.findAllEndGames();
+        TeamDto team1;
+        TeamDto team2;
+        List<GamePlayerDto> gamePlayerList;
+        List<GameResultDto> gameResultList = new ArrayList<>();
+        GameTeamDto teamDto1;
+        GameTeamDto teamDto2;
+
+        for (GameDto game : gameLists) {
+            team1 = game.getTeam1();
+            team2 = game.getTeam2();
+
+            gamePlayerList = new ArrayList<>();
+            putGamePlayerDto(game, team1.getUser1(), gamePlayerList);
+            putGamePlayerDto(game, team1.getUser2(), gamePlayerList);
+            teamDto1 = GameTeamDto.builder()
+                    .isWin(team1.getWin())
+                    .score(team1.getScore())
+                    .playerInfos(gamePlayerList)
+                    .build();
+
+            gamePlayerList = new ArrayList();
+            putGamePlayerDto(game, team2.getUser1(), gamePlayerList);
+            putGamePlayerDto(game, team2.getUser2(), gamePlayerList);
+            teamDto2 = GameTeamDto.builder()
+                    .isWin(team2.getWin())
+                    .score(team2.getScore())
+                    .playerInfos(gamePlayerList)
+                    .build();
+
+            gameResultList.add(GameResultDto.builder()
+                    .gameId(game.getId())
+                    .team1(teamDto1)
+                    .team2(teamDto2)
+                    .status(game.getStatus())
+                    .time(game.getTime())
+                    .build());
+        }
+
+        GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
+                .games(gameResultList)
+                .build();
+        return gameResultResponse;
+    }
+
+    private void putGamePlayerDto(GameDto game, UserDto user, List<GamePlayerDto> gamePlayerList) {
+        if (user == null) {
+            return ;
+        } else {
+            PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().gameId(game.getId()).userId(user.getId()).build());
+            GamePlayerDto gamePlayerDto = GamePlayerDto.builder()
+                    .userId(user.getId())
+                    .userImageUri(user.getImageUri())
+                    .wins(null)
+                    .losses(null)
+                    .winRate(null)
+                    .pppChange(pChangeDto.getPppChange())
+                    .build();
+            gamePlayerList.add(gamePlayerDto);
+        }
+    }
+
+    @Override
+    @GetMapping(value = "/games/users/{userId}")
+    public GameResultResponseDto gameResultByUserIdAndIndexAndCount(Integer userId, Integer index, Integer count, String type) {
+        List<PChangeDto> pChangeDtos = pChangeService.findPChangeByUserId(PChangeFindDto.builder().userId(userId).build());
+
+        //Pageable
+        List<GameResultDto> games = new ArrayList<>();
+        for (GameResultDto dto : games) {
+            games.add(GameResultDto.builder()
+                    .gameId(dto.getGameId())
+                    .type(dto.getType())
+                    .status(dto.getStatus())
+                    .time(dto.getTime())
+                    .team1(dto.getTeam1())
+                    .team2(dto.getTeam2())
+                    .build());
+        }
+        GameResultResponseDto gameResultResponseDto = GameResultResponseDto.builder()
+                .games(games).build();
+        return gameResultResponseDto;
+    }
+
+    private List<TeamModifyGameResultDto> getTeamModifyDto(TeamDto team1, TeamDto team2, GameResultRequestDto requestDto, UserDto user) {
         Integer team1Score;
         Integer team2Score;
-
-        //figuring out team number for myteam and enemyteam
-        UserDto user = userService.findById(userId);
         if (user.equals(team1.getUser1()) || user.equals(team1.getUser2())) {
-            myTeam = team1;
             team1Score = requestDto.getMyTeamScore();
-            enemyTeam = team2;
             team2Score = requestDto.getEnemyTeamScore();
         } else if (user.equals(team2.getUser1()) || user.equals(team2.getUser2())) {
-            myTeam = team2;
             team2Score = requestDto.getMyTeamScore();
-            enemyTeam = team1;
             team1Score = requestDto.getEnemyTeamScore();
         } else {
             throw new IllegalArgumentException("잘못된 요청입니다");
         }
-
-        //modify team with game result
-        TeamModifyGameResultDto modifyGameResultDto1 = TeamModifyGameResultDto.builder()
+        List<TeamModifyGameResultDto> modifyList = new ArrayList<>();
+        modifyList.add(TeamModifyGameResultDto.builder()
                 .teamId(team1.getId())
                 .score(team1Score)
                 .win(team1Score > team2Score)
-                .build();
-        TeamModifyGameResultDto modifyGameResultDto2 = TeamModifyGameResultDto.builder()
+                .build()
+        );
+        modifyList.add(TeamModifyGameResultDto.builder()
                 .teamId(team2.getId())
                 .score(team2Score)
                 .win(team2Score > team1Score)
-                .build();
-        teamService.modifyGameResultInTeam(modifyGameResultDto1);
-        teamService.modifyGameResultInTeam(modifyGameResultDto2);
-
-        //modify users with game result
-        modifyUserPppAndAddPchange(gameId, myTeam.getUser1(), enemyTeam);
-        modifyUserPppAndAddPchange(gameId, myTeam.getUser2(), enemyTeam);
-        modifyUserPppAndAddPchange(gameId, enemyTeam.getUser1(), myTeam);
-        modifyUserPppAndAddPchange(gameId, enemyTeam.getUser2(), myTeam);
-
-        //modify users' ranks with game result
+                .build()
+        );
+        return modifyList;
     }
 
     private void modifyUserPppAndAddPchange(Integer gameId, UserDto user, TeamDto enemyTeam) {
@@ -140,21 +205,38 @@ public class GameControllerImpl implements GameController {
         pChangeService.addPChange(pChangeAddDto);
     }
 
-    @Override
-    @GetMapping(value = "/games")
-    public List<GameResultResponseDto> gameResultByCount(Integer gameId, Integer count) {
-        return null;
+    private void putUsersDataInTeams(GameDto game, UserDto user, List<GameUserInfoDto> myTeams, List<GameUserInfoDto> enemyTeams) {
+        TeamDto team1 = game.getTeam1();
+        TeamDto team2 = game.getTeam2();
+        TeamDto myTeam;
+        TeamDto enemyTeam;
+
+        //figuring out team number for myteam and enemyteam
+        if (user.equals(team1.getUser1()) || user.equals(team1.getUser2())) {
+            myTeam = team1;
+            enemyTeam = team2;
+        } else if (user.equals(team2.getUser1()) || user.equals(team2.getUser2())) {
+            myTeam = team2;
+            enemyTeam = team1;
+        } else {
+            throw new IllegalArgumentException("잘못된 요청입니다");
+        }
+        UserDto myTeamUser1 = myTeam.getUser1();
+        UserDto myTeamUser2 = myTeam.getUser2();
+        UserDto enemyTeamUser1 = enemyTeam.getUser1();
+        UserDto enemyTeamUser2 = enemyTeam.getUser2();
+        if (myTeamUser1 != null) {
+            myTeams.add(GameUserInfoDto.builder().intraId(myTeamUser1.getIntraId()).userImageUri(myTeamUser1.getImageUri()).build());
+        }
+        if (myTeamUser2 != null) {
+            myTeams.add(GameUserInfoDto.builder().intraId(myTeamUser2.getIntraId()).userImageUri(myTeamUser2.getImageUri()).build());
+        }
+        if (enemyTeamUser1 != null) {
+            enemyTeams.add(GameUserInfoDto.builder().intraId(enemyTeamUser1.getIntraId()).userImageUri(enemyTeamUser1.getImageUri()).build());
+        }
+        if (enemyTeamUser2 != null) {
+            enemyTeams.add(GameUserInfoDto.builder().intraId(enemyTeamUser2.getIntraId()).userImageUri(enemyTeamUser2.getImageUri()).build());
+        }
     }
 
-    @Override
-    @GetMapping(value = "/games")
-    public List<GameResultResponseDto> gameResultByIndexAndCount(Integer gameId, Integer index, Integer count, String status) {
-        return null;
-    }
-
-    @Override
-    @GetMapping(value = "/games/users/{userId}")
-    public List<GameResultResponseDto> gameResultByUserIdAndIndexAndCount(Integer userId, Integer index, Integer count, String type) {
-        return null;
-    }
 }

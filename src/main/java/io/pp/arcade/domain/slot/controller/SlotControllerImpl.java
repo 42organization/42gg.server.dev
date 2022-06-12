@@ -1,6 +1,7 @@
 package io.pp.arcade.domain.slot.controller;
 
 import io.pp.arcade.domain.currentmatch.CurrentMatchService;
+import io.pp.arcade.domain.currentmatch.dto.CurrentMatchAddDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchModifyDto;
 import io.pp.arcade.domain.slot.SlotService;
@@ -47,7 +48,7 @@ public class SlotControllerImpl implements SlotController {
         UserDto user = userService.findById(userId);
         //user가 매치를 이미 가지고 있는지 myTable에서 user 필터하기
         CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUserId(userId);
-        if (!matchDto.equals(null)) {
+        if (matchDto != null) {
             throw new IllegalArgumentException("잘못된 요청입니다.");
         }
 
@@ -67,6 +68,7 @@ public class SlotControllerImpl implements SlotController {
         Integer maxHeadCount = "single".equals(slotType) ? 1 : 2;
         //
         SlotFilterDto slotFilterDto = SlotFilterDto.builder()
+                .slotId(slot.getId())
                 .slotTime(slot.getTime())
                 .slotType(slot.getType())
                 .requestType(addReqDto.getType())
@@ -88,21 +90,31 @@ public class SlotControllerImpl implements SlotController {
                 .userId(userId)
                 .build();
 
+        //유저가 슬롯에 입장하면 currentMatch에 등록된다.
+        CurrentMatchAddDto matchAddDto = CurrentMatchAddDto.builder()
+                .slot(slot)
+                .userId(userId)
+                .build();
+        currentMatchService.addCurrentMatch(matchAddDto);
+
+        //유저가 슬롯에 꽉 차면 currentMatch가 전부 바뀐다.
         Boolean isMatched = false;
         Boolean isImminent = null;
         if (slot.getHeadCount().equals(maxHeadCount - 1)) {
             isMatched = true;
+            if (slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5))) {
+                isImminent = true;
+            }
+            CurrentMatchModifyDto matchModifyDto = CurrentMatchModifyDto.builder()
+                    .userId(user.getId())
+                    .isMatched(isMatched)
+                    .matchImminent(isImminent)
+                    .build();
+            modifyCurrentMatch(team1.getUser1(), matchModifyDto);
+            modifyCurrentMatch(team1.getUser2(), matchModifyDto);
+            modifyCurrentMatch(team2.getUser1(), matchModifyDto);
+            modifyCurrentMatch(team2.getUser2(), matchModifyDto);
         }
-        if (slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5))) {
-            isImminent = true;
-        }
-        CurrentMatchModifyDto matchModifyDto = CurrentMatchModifyDto.builder()
-                .userId(userId)
-                .isMatched(isMatched)
-                .matchImminent(isImminent)
-                .build();
-
-        currentMatchService.ModifyCurrentMatch(matchModifyDto);
         slotService.addUserInSlot(addDto);
         teamService.addUserInTeam(teamAddUserDto);
     }
@@ -114,6 +126,13 @@ public class SlotControllerImpl implements SlotController {
         UserDto user = userService.findById(pUserId);
         // 유저 조회, 슬롯 조회, 팀 조회( 슬롯에 헤드 카운트 -, 팀에서 유저 퇴장 )
         SlotDto slot = slotService.findSlotById(slotId);
+
+        currentMatchService.removeCurrentMatch(user.getId());
+        teamService.removeUserInTeam(getTeamRemoveUserDto(slot, user));
+        slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
+    }
+
+    private TeamRemoveUserDto getTeamRemoveUserDto(SlotDto slot, UserDto user) {
         TeamDto team1 = slot.getTeam1();
         TeamDto team2 = slot.getTeam2();
         Integer teamId;
@@ -129,12 +148,25 @@ public class SlotControllerImpl implements SlotController {
                 .userId(user.getId())
                 .teamId(teamId)
                 .build();
+        return teamRemoveUserDto;
+    }
+
+    private SlotRemoveUserDto getSlotRemoveUserDto(SlotDto slot, UserDto user) {
         SlotRemoveUserDto slotRemoveUserDto = SlotRemoveUserDto.builder()
                 .slotId(slot.getId())
                 .exitUserPpp(user.getPpp())
                 .build();
-        currentMatchService.removeCurrentMatch(userId);
-        teamService.removeUserInTeam(teamRemoveUserDto);
-        slotService.removeUserInSlot(slotRemoveUserDto);
+        return slotRemoveUserDto;
+    }
+
+    private void modifyCurrentMatch(UserDto user, CurrentMatchModifyDto modifyDto) {
+        if (user != null) {
+            CurrentMatchModifyDto matchModifyDto = CurrentMatchModifyDto.builder()
+                    .userId(user.getId())
+                    .isMatched(modifyDto.getIsMatched())
+                    .matchImminent(modifyDto.getMatchImminent())
+                    .build();
+            currentMatchService.modifyCurrentMatch(modifyDto);
+        }
     }
 }
