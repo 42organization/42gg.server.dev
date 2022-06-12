@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class GameUserInfoDto {
-    private Integer userId;
+    private String intraId;
     private String userImageUri;
 }

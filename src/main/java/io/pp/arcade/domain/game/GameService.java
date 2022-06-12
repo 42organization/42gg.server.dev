@@ -1,6 +1,7 @@
 package io.pp.arcade.domain.game;
 
 import io.pp.arcade.domain.game.dto.*;
+import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.slot.dto.SlotDto;
@@ -11,6 +12,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -58,5 +62,12 @@ public class GameService {
         Slot slot = slotRepository.findById(slotId).orElseThrow();
         GameDto game = GameDto.from(gameRepository.findBySlot(slot).orElseThrow());
         return game;
+    }
+
+    @Transactional
+    public List<GameDto> findAllEndGames() {
+        List<Game> games = gameRepository.findAllByStatus("end");
+        List<GameDto> gameDtoList = games.stream().map(GameDto::from).collect(Collectors.toList());
+        return gameDtoList;
     }
 }

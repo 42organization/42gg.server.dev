@@ -1,9 +1,15 @@
 package io.pp.arcade.domain.user.controller;
 
+import io.pp.arcade.domain.game.Game;
+import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.pchange.PChange;
 import io.pp.arcade.domain.pchange.PChangeRepository;
 import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
+import io.pp.arcade.domain.slot.Slot;
+import io.pp.arcade.domain.slot.SlotRepository;
+import io.pp.arcade.domain.team.Team;
+import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.domain.user.UserService;
@@ -23,6 +29,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
 
+import java.time.LocalDateTime;
+
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -39,25 +47,52 @@ class UserControllerTest {
     private PChangeRepository pChangeRepository;
 
     @Autowired
+    private GameRepository gameRepository;
+
+    @Autowired
+    private TeamRepository teamRepository;
+
+    @Autowired
+    private SlotRepository slotRepository;
+
+    @Autowired
     private MockMvc mockMvc;
 
     User user;
+    User user2;
+    User user3;
+    User user4;
+
+    Game game;
+    Team team1;
+    Team team2;
 
     @BeforeEach
     void init() {
-        user = userRepository.save(User.builder()
-                .intraId("donghyuk")
-                .imageUri("")
-                .ppp(1000)
-                .racketType(RacketType.PENHOLDER)
-                .statusMessage("hi")
-                .build());
+        user = userRepository.save(User.builder().intraId("jiyun1").statusMessage("").ppp(42).build());
+        user2 = userRepository.save(User.builder().intraId("jiyun2").statusMessage("").ppp(24).build());
+        user3 = userRepository.save(User.builder().intraId("nheo1").statusMessage("").ppp(60).build());
+        user4 = userRepository.save(User.builder().intraId("nheo2").statusMessage("").ppp(30).build());
         PChange pChange;
         for (int i = 0; i < 10; i++) {
-            user = userRepository.findById(user.getId()).orElseThrow();
+            Team team1 = teamRepository.save(Team.builder().teamPpp(0)
+                    .user1(user).headCount(1).score(0).build());
+            Team team2 = teamRepository.save(Team.builder().teamPpp(0)
+                    .user1(user2).headCount(1).score(0).build());
+            Slot slot = slotRepository.save(Slot.builder()
+                    .team1(team1)
+                    .team2(team2)
+                    .headCount(2)
+                    .type("single")
+                    .tableId(1)
+                    .time(LocalDateTime.now().plusDays(1))
+                    .gamePpp(50)
+                    .build());
+            game = gameRepository.save(Game.builder().slot(slot).team1(team1).team2(team2).type(slot.getType()).time(slot.getTime()).season(1).status("end").build());
+
             pChange = pChangeRepository.save(PChange.builder()
-                    .gameId(i)
-                    .userId(user.getId())
+                    .game(game)
+                    .user(user)
                     .pppChange(2)
                     .pppResult(2 + user.getPpp())
                     .build());

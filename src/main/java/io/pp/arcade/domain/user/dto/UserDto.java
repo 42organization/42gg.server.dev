@@ -7,6 +7,7 @@ import lombok.Getter;
 
 import javax.persistence.Column;
 import javax.validation.constraints.NotNull;
+import java.util.Objects;
 
 @Getter
 @Builder
@@ -33,5 +34,18 @@ public class UserDto {
                     .build();
         }
         return userDto;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDto userDto = (UserDto) o;
+        return Objects.equals(id, userDto.id) && Objects.equals(intraId, userDto.intraId) && Objects.equals(imageUri, userDto.imageUri) && racketType == userDto.racketType && Objects.equals(statusMessage, userDto.statusMessage) && Objects.equals(ppp, userDto.ppp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, intraId, imageUri, racketType, statusMessage, ppp);
     }
 }

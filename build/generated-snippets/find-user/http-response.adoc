@@ -5,8 +5,8 @@ Content-Type: application/json
 Content-Length: 72
 
 {
-  "userId" : "donghyuk",
-  "userImageUri" : "",
+  "userId" : "jiyun1",
+  "userImageUri" : null,
   "notiCount" : null
 }
 ----

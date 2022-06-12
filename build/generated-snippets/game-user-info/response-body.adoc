@@ -1,0 +1,13 @@
+[source,options="nowrap"]
+----
+{
+  "myTeam" : [ {
+    "intraId" : "donghyuk",
+    "userImageUri" : null
+  } ],
+  "enemyTeam" : [ {
+    "intraId" : "nheo",
+    "userImageUri" : null
+  } ]
+}
+----
