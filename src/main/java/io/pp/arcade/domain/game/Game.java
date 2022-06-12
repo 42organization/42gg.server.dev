@@ -48,8 +48,8 @@ public class Game {
     private Integer season;
 
     @NotNull
-    @Column(name = "status")
     @Setter
+    @Column(name = "status")
     private String status;
 
     @Builder

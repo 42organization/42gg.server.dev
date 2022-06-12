@@ -6,6 +6,7 @@ import io.pp.arcade.domain.currentmatch.dto.CurrentMatchModifyDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchSaveGameDto;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
+import io.pp.arcade.domain.game.dto.GameDto;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.slot.dto.SlotDto;
@@ -25,7 +26,7 @@ public class CurrentMatchService {
     private final SlotRepository slotRepository;
 
     @Transactional
-    public void AddCurrentMatch(CurrentMatchAddDto addDto){
+    public void addCurrentMatch(CurrentMatchAddDto addDto){
         User user = userRepository.findById(addDto.getUserId()).orElseThrow();
         Slot slot = slotRepository.findById(addDto.getSlot().getId()).orElseThrow();
         currentMatchRepository.save(CurrentMatch.builder()
@@ -37,32 +38,33 @@ public class CurrentMatchService {
     }
 
     @Transactional
-    public void ModifyCurrentMatch(CurrentMatchModifyDto modifyDto){
+    public void modifyCurrentMatch(CurrentMatchModifyDto modifyDto){
         User user = userRepository.findById(modifyDto.getUserId()).orElseThrow();
-        CurrentMatch currentMatch = currentMatchRepository.findByUser(user);
+        CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
         currentMatch.setIsMatched(modifyDto.getIsMatched());
         currentMatch.setMatchImminent(modifyDto.getMatchImminent());
     }
 
     @Transactional
-    public void SaveGameInCurrentMatch(CurrentMatchSaveGameDto saveDto) {
+    public void saveGameInCurrentMatch(CurrentMatchSaveGameDto saveDto) {
         Game game = gameRepository.findById(saveDto.getGameId()).orElseThrow();
         User user = userRepository.findById(saveDto.getUserId()).orElseThrow();
-        CurrentMatch currentMatch = currentMatchRepository.findByUser(user);
+        CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
         currentMatch.setGame(game);
     }
 
     @Transactional
     public CurrentMatchDto findCurrentMatchByUserId(Integer userId) {
         User user = userRepository.findById(userId).orElseThrow();
-        CurrentMatch currentMatch = currentMatchRepository.findByUser(user);
+        CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
         CurrentMatchDto dto = null;
 
         if (currentMatch != null) {
             dto = CurrentMatchDto.builder()
-                    .gameId(currentMatch.getGame().getId())
+                    .game(currentMatch.getGame() == null ? null : GameDto.from(currentMatch.getGame()))
                     .userId(user.getId())
                     .slot(SlotDto.from(currentMatch.getSlot()))
+                    .matchImminent(currentMatch.getMatchImminent())
                     .isMatched(currentMatch.getIsMatched())
                     .build();
         }

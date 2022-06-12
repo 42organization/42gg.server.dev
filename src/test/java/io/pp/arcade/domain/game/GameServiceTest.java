@@ -97,6 +97,7 @@ class GameServiceTest {
         Game game = gameRepository.save(Game.builder()
                 .team1(team1)
                 .team2(team2)
+                .slot(slot)
                 .type(slot.getType())
                 .time(slot.getTime())
                 .status("live")

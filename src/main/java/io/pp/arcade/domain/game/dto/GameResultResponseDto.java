@@ -8,5 +8,5 @@ import java.util.List;
 @Getter
 @Builder
 public class GameResultResponseDto {
-    List<GameResultDto> gameResultDtos;
+    List<GameResultDto> games;
 }

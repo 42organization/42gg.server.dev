@@ -21,18 +21,18 @@ public class CurrentMatch extends BaseTimeEntity {
     private Integer id;
 
     @NotNull
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @NotNull
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "slot_id")
     private Slot slot;
 
     @Setter
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "game_id")
     private Game game;
 
     @Setter

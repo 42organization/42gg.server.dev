@@ -1,0 +1,11 @@
+[source,options="nowrap"]
+----
+{
+  "time" : "2022-06-13T16:38:52.424041",
+  "slotId" : 141,
+  "gameId" : null,
+  "myTeam" : [ "jiyun", "wochae" ],
+  "enemyTeam" : [ "hakim", "new" ],
+  "isMatched" : true
+}
+----

@@ -32,6 +32,4 @@ public class GameDto {
                 .status(game.getStatus())
                 .build();
     }
-
-
 }

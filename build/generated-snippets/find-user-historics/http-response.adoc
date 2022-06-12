@@ -2,57 +2,57 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 772
+Content-Length: 762
 
 [ {
-  "gameId" : 9,
-  "userId" : 2,
+  "gameId" : 20,
+  "userId" : 5,
   "pppChange" : 2,
-  "pppResult" : 1002
+  "pppResult" : 44
 }, {
-  "gameId" : 8,
-  "userId" : 2,
+  "gameId" : 19,
+  "userId" : 5,
   "pppChange" : 2,
-  "pppResult" : 1002
+  "pppResult" : 44
 }, {
-  "gameId" : 7,
-  "userId" : 2,
+  "gameId" : 18,
+  "userId" : 5,
   "pppChange" : 2,
-  "pppResult" : 1002
+  "pppResult" : 44
 }, {
-  "gameId" : 6,
-  "userId" : 2,
+  "gameId" : 17,
+  "userId" : 5,
   "pppChange" : 2,
-  "pppResult" : 1002
+  "pppResult" : 44
 }, {
-  "gameId" : 5,
-  "userId" : 2,
+  "gameId" : 16,
+  "userId" : 5,
   "pppChange" : 2,
-  "pppResult" : 1002
+  "pppResult" : 44
 }, {
-  "gameId" : 4,
-  "userId" : 2,
+  "gameId" : 15,
+  "userId" : 5,
   "pppChange" : 2,
-  "pppResult" : 1002
+  "pppResult" : 44
 }, {
-  "gameId" : 3,
-  "userId" : 2,
+  "gameId" : 14,
+  "userId" : 5,
   "pppChange" : 2,
-  "pppResult" : 1002
+  "pppResult" : 44
 }, {
-  "gameId" : 2,
-  "userId" : 2,
+  "gameId" : 13,
+  "userId" : 5,
   "pppChange" : 2,
-  "pppResult" : 1002
+  "pppResult" : 44
 }, {
-  "gameId" : 1,
-  "userId" : 2,
+  "gameId" : 12,
+  "userId" : 5,
   "pppChange" : 2,
-  "pppResult" : 1002
+  "pppResult" : 44
 }, {
-  "gameId" : 0,
-  "userId" : 2,
+  "gameId" : 11,
+  "userId" : 5,
   "pppChange" : 2,
-  "pppResult" : 1002
+  "pppResult" : 44
 } ]
 ----

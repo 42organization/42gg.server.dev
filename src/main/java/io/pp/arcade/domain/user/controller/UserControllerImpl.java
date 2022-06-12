@@ -65,8 +65,8 @@ public class UserControllerImpl implements UserController {
             if (pChangeList.indexOf(dto) >= 10)
                 break;
             responseDto.add(UserHistoricResponseDto.builder()
-                    .gameId(dto.getGameId())
-                    .userId(dto.getUserId())
+                    .gameId(dto.getGame().getId())
+                    .userId(dto.getUser().getId())
                     .pppChange(dto.getPppChange())
                     .pppResult(dto.getPppResult())
                     .build());

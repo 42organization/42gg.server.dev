@@ -1,14 +1,14 @@
 [source,options="nowrap"]
 ----
 {
-  "userId" : "donghyuk",
-  "userImageUri" : "",
+  "userId" : "jiyun1",
+  "userImageUri" : null,
   "rank" : null,
-  "ppp" : 1000,
+  "ppp" : 42,
   "wins" : null,
   "losses" : null,
   "winRate" : null,
-  "racketType" : "PENHOLDER",
-  "statusMessage" : "hi"
+  "racketType" : null,
+  "statusMessage" : ""
 }
 ----

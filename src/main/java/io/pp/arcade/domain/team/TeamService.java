@@ -63,10 +63,13 @@ public class TeamService {
         team.setWin(dto.getWin());
     }
 
+    @Transactional
     public void modifyGameResultInTeam(TeamModifyGameResultDto dto) {
         Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
 
         team.setScore(dto.getScore());
         team.setWin(dto.getWin());
     }
+
+    /* 아이디를 통한 팀 추가 */
 }
