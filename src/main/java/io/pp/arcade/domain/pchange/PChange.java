@@ -1,5 +1,7 @@
 package io.pp.arcade.domain.pchange;
 
+import io.pp.arcade.domain.game.Game;
+import io.pp.arcade.domain.user.User;
 import io.pp.arcade.global.util.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,12 +19,14 @@ public class PChange extends BaseTimeEntity {
     private Integer id;
 
     @NotNull
-    @Column(name = "game_id")
-    private Integer gameId;
+    @ManyToOne
+    @JoinColumn(name = "game_id")
+    private Game game;
 
     @NotNull
-    @Column(name = "user_id")
-    private Integer userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @NotNull
     @Column(name = "ppp_change")
@@ -33,9 +37,9 @@ public class PChange extends BaseTimeEntity {
     private  Integer pppResult;
 
     @Builder
-    public PChange(Integer gameId, Integer userId, Integer pppChange, Integer pppResult) {
-        this.gameId = gameId;
-        this.userId = userId;
+    public PChange(Game game, User user, Integer pppChange, Integer pppResult) {
+        this.game = game;
+        this.user = user;
         this.pppChange = pppChange;
         this.pppResult = pppResult;
     }
