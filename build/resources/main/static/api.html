@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<title>RESTful Notes API Guide</title>
+<title>42PINGPONG API DOCS</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -439,7 +439,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </head>
 <body class="book toc2 toc-left">
 <div id="header">
-<h1>RESTful Notes API Guide</h1>
+<h1>42PINGPONG API DOCS</h1>
 <div class="details">
 <span id="revnumber">version 0.0.1-SNAPSHOT</span>
 </div>
@@ -449,139 +449,140 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_유저_정보_조회헤더에_포함되는_정보">유저 정보 조회(헤더에 포함되는 정보)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request">curl-request</a></li>
+<li><a href="#_http_request">http-request</a></li>
 <li><a href="#_http_response">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_유저_정보_조회프로필_페이지">유저 정보 조회(프로필 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_2">curl-request</a></li>
-<li><a href="#_http_request">http-request</a></li>
+<li><a href="#_http_request_2">http-request</a></li>
 <li><a href="#_http_response_2">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_최근_경기_결과_그래프프로필_페이지">최근 경기 결과 그래프(프로필 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_3">curl-request</a></li>
-<li><a href="#_http_request_2">http-request</a></li>
+<li><a href="#_http_request_3">http-request</a></li>
 <li><a href="#_http_response_3">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_매칭_슬롯_목록빈_슬롯_목록_매칭_페이지">매칭 슬롯 목록(빈 슬롯 목록, 매칭 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_4">curl-request</a></li>
-<li><a href="#_http_request_3">http-request</a></li>
+<li><a href="#_http_request_4">http-request</a></li>
 <li><a href="#_http_response_4">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_매칭_슬롯_목록유저_2명_추가_매칭_페이지">매칭 슬롯 목록(유저 2명 추가, 매칭 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_5">curl-request</a></li>
-<li><a href="#_http_request_4">http-request</a></li>
+<li><a href="#_http_request_5">http-request</a></li>
 <li><a href="#_http_response_5">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_매칭_슬롯_목록유저_2명_추가_매칭_페이지_2">매칭 슬롯 목록(유저 2명 추가, 매칭 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_6">curl-request</a></li>
-<li><a href="#_http_request_5">http-request</a></li>
+<li><a href="#_http_request_6">http-request</a></li>
 <li><a href="#_http_response_6">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_매칭_슬롯_목록ppp_낮은_사람_추가_매칭_페이지">매칭 슬롯 목록(ppp 낮은 사람 추가, 매칭 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_7">curl-request</a></li>
-<li><a href="#_http_request_6">http-request</a></li>
+<li><a href="#_http_request_7">http-request</a></li>
 <li><a href="#_http_response_7">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_매칭_슬롯_목록복식_매치_추가_매칭_페이지">매칭 슬롯 목록(복식 매치 추가, 매칭 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_8">curl-request</a></li>
-<li><a href="#_http_request_7">http-request</a></li>
+<li><a href="#_http_request_8">http-request</a></li>
 <li><a href="#_http_response_8">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_매칭_슬롯_목록ppp낮은_복식_매치_추가_매칭_페이지">매칭 슬롯 목록(ppp낮은 복식 매치 추가, 매칭 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_9">curl-request</a></li>
-<li><a href="#_http_request_8">http-request</a></li>
+<li><a href="#_http_request_9">http-request</a></li>
 <li><a href="#_http_response_9">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_매칭_슬롯_목록ppp낮은_복식_매치_추가_매칭_페이지_2">매칭 슬롯 목록(ppp낮은 복식 매치 추가, 매칭 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_10">curl-request</a></li>
-<li><a href="#_http_request_9">http-request</a></li>
+<li><a href="#_http_request_10">http-request</a></li>
 <li><a href="#_http_response_10">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_매칭_슬롯에_유저_추가단식_두명_매칭_페이지">매칭 슬롯에 유저 추가(단식 두명, 매칭 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_11">curl-request</a></li>
-<li><a href="#_http_request_10">http-request</a></li>
+<li><a href="#_http_request_11">http-request</a></li>
 <li><a href="#_http_response_11">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_단식_2명_매칭된_후_최근_경기_조회">단식 2명 매칭된 후 최근 경기 조회</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_12">curl-request</a></li>
-<li><a href="#_http_request_11">http-request</a></li>
+<li><a href="#_http_request_12">http-request</a></li>
 <li><a href="#_http_response_12">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_게임_유저_조회결과_입력_페이지">게임 유저 조회(결과 입력 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_13">curl-request</a></li>
-<li><a href="#_http_request_12">http-request</a></li>
+<li><a href="#_http_request_13">http-request</a></li>
 <li><a href="#_http_response_13">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_게임_결과_입력결과_입력_페이지">게임 결과 입력(결과 입력 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_14">curl-request</a></li>
-<li><a href="#_http_request_13">http-request</a></li>
+<li><a href="#_http_request_14">http-request</a></li>
 <li><a href="#_http_response_14">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_게임_결과_조회최근_매치_페이지">게임 결과 조회(최근 매치 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_15">curl-request</a></li>
-<li><a href="#_http_request_14">http-request</a></li>
+<li><a href="#_http_request_15">http-request</a></li>
 <li><a href="#_http_response_15">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_게임_결과_조회최근_매치_페이지_2">게임 결과 조회(최근 매치 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_16">curl-request</a></li>
-<li><a href="#_http_request_15">http-request</a></li>
+<li><a href="#_http_request_16">http-request</a></li>
 <li><a href="#_http_response_16">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_현재_게임_부분_조회매칭_안됨_모든_페이지">현재 게임 부분 조회(매칭 안됨, 모든 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_17">curl-request</a></li>
-<li><a href="#_http_request_16">http-request</a></li>
+<li><a href="#_http_request_17">http-request</a></li>
 <li><a href="#_http_response_17">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_현재_게임_부분_조회매칭만_됨_모든_페이지">현재 게임 부분 조회(매칭만 됨, 모든 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_18">curl-request</a></li>
-<li><a href="#_http_request_17">http-request</a></li>
+<li><a href="#_http_request_18">http-request</a></li>
 <li><a href="#_http_response_18">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_현재_게임_부분_조회5분_전_모든_페이지">현재 게임 부분 조회(5분 전, 모든 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_19">curl-request</a></li>
-<li><a href="#_http_request_18">http-request</a></li>
+<li><a href="#_http_request_19">http-request</a></li>
 <li><a href="#_http_response_19">http-response</a></li>
 </ul>
 </li>
 <li><a href="#_현재_게임_부분_조회게임_시작_모든_페이지">현재 게임 부분 조회(게임 시작, 모든 페이지)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_20">curl-request</a></li>
-<li><a href="#_http_request_19">http-request</a></li>
+<li><a href="#_http_request_20">http-request</a></li>
 <li><a href="#_http_response_20">http-response</a></li>
 </ul>
 </li>
@@ -598,6 +599,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/users?userId=98' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_request"><a class="link" href="#_http_request">http-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/users?userId=98 HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Host: localhost:8080</code></pre>
 </div>
 </div>
 </div>
@@ -632,7 +643,7 @@ Content-Length: 72
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request"><a class="link" href="#_http_request">http-request</a></h3>
+<h3 id="_http_request_2"><a class="link" href="#_http_request_2">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/users/90/detail?currentUserId=90 HTTP/1.1
@@ -678,7 +689,7 @@ Content-Length: 184
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_2"><a class="link" href="#_http_request_2">http-request</a></h3>
+<h3 id="_http_request_3"><a class="link" href="#_http_request_3">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/users/94/historics HTTP/1.1
@@ -766,7 +777,7 @@ Content-Length: 892
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_3"><a class="link" href="#_http_request_3">http-request</a></h3>
+<h3 id="_http_request_4"><a class="link" href="#_http_request_4">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/tables/1?type=single&amp;userId=62 HTTP/1.1
@@ -894,7 +905,7 @@ Content-Length: 1932
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_4"><a class="link" href="#_http_request_4">http-request</a></h3>
+<h3 id="_http_request_5"><a class="link" href="#_http_request_5">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/tables/1?type=single&amp;userId=62 HTTP/1.1
@@ -1022,7 +1033,7 @@ Content-Length: 1933
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_5"><a class="link" href="#_http_request_5">http-request</a></h3>
+<h3 id="_http_request_6"><a class="link" href="#_http_request_6">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/tables/1?type=single&amp;userId=62 HTTP/1.1
@@ -1150,7 +1161,7 @@ Content-Length: 1933
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_6"><a class="link" href="#_http_request_6">http-request</a></h3>
+<h3 id="_http_request_7"><a class="link" href="#_http_request_7">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/tables/1?type=single&amp;userId=68 HTTP/1.1
@@ -1278,7 +1289,7 @@ Content-Length: 1934
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_7"><a class="link" href="#_http_request_7">http-request</a></h3>
+<h3 id="_http_request_8"><a class="link" href="#_http_request_8">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/tables/1?type=double&amp;userId=62 HTTP/1.1
@@ -1406,7 +1417,7 @@ Content-Length: 1935
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_8"><a class="link" href="#_http_request_8">http-request</a></h3>
+<h3 id="_http_request_9"><a class="link" href="#_http_request_9">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/tables/1?type=single&amp;userId=68 HTTP/1.1
@@ -1534,7 +1545,7 @@ Content-Length: 1935
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_9"><a class="link" href="#_http_request_9">http-request</a></h3>
+<h3 id="_http_request_10"><a class="link" href="#_http_request_10">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/tables/1?type=single&amp;userId=68 HTTP/1.1
@@ -1662,7 +1673,7 @@ Content-Length: 1935
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_10"><a class="link" href="#_http_request_10">http-request</a></h3>
+<h3 id="_http_request_11"><a class="link" href="#_http_request_11">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/tables/1?type=single&amp;userId=69 HTTP/1.1
@@ -1790,7 +1801,7 @@ Content-Length: 1933
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_11"><a class="link" href="#_http_request_11">http-request</a></h3>
+<h3 id="_http_request_12"><a class="link" href="#_http_request_12">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/current?userId=73 HTTP/1.1
@@ -1833,7 +1844,7 @@ Content-Length: 134
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_12"><a class="link" href="#_http_request_12">http-request</a></h3>
+<h3 id="_http_request_13"><a class="link" href="#_http_request_13">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/games/6/result?userId=22 HTTP/1.1
@@ -1878,7 +1889,7 @@ Content-Length: 157
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_13"><a class="link" href="#_http_request_13">http-request</a></h3>
+<h3 id="_http_request_14"><a class="link" href="#_http_request_14">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/games/6/result?userId=22 HTTP/1.1
@@ -1923,7 +1934,7 @@ Content-Length: 157
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_14"><a class="link" href="#_http_request_14">http-request</a></h3>
+<h3 id="_http_request_15"><a class="link" href="#_http_request_15">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/games?index=1&amp;count=1&amp;status=1 HTTP/1.1
@@ -2033,7 +2044,7 @@ Content-Length: 1565
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_15"><a class="link" href="#_http_request_15">http-request</a></h3>
+<h3 id="_http_request_16"><a class="link" href="#_http_request_16">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/games?index=1&amp;count=1&amp;status=1 HTTP/1.1
@@ -2143,7 +2154,7 @@ Content-Length: 1565
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_16"><a class="link" href="#_http_request_16">http-request</a></h3>
+<h3 id="_http_request_17"><a class="link" href="#_http_request_17">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/current?userId=1 HTTP/1.1
@@ -2186,7 +2197,7 @@ Content-Length: 119
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_17"><a class="link" href="#_http_request_17">http-request</a></h3>
+<h3 id="_http_request_18"><a class="link" href="#_http_request_18">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/current?userId=2 HTTP/1.1
@@ -2229,7 +2240,7 @@ Content-Length: 133
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_18"><a class="link" href="#_http_request_18">http-request</a></h3>
+<h3 id="_http_request_19"><a class="link" href="#_http_request_19">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/current?userId=4 HTTP/1.1
@@ -2247,7 +2258,7 @@ Content-Type: application/json
 Content-Length: 173
 
 {
-  "time" : "2022-06-14T10:24:59.511534",
+  "time" : "2022-06-14T10:30:15.904905",
   "slotId" : 19,
   "gameId" : null,
   "myTeam" : [ "jiyun", "wochae" ],
@@ -2272,7 +2283,7 @@ Content-Length: 173
 </div>
 </div>
 <div class="sect2">
-<h3 id="_http_request_19"><a class="link" href="#_http_request_19">http-request</a></h3>
+<h3 id="_http_request_20"><a class="link" href="#_http_request_20">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/current?userId=5 HTTP/1.1
@@ -2290,7 +2301,7 @@ Content-Type: application/json
 Content-Length: 170
 
 {
-  "time" : "2022-06-14T10:24:59.535089",
+  "time" : "2022-06-14T10:30:15.928177",
   "slotId" : 20,
   "gameId" : 1,
   "myTeam" : [ "jiyun", "wochae" ],
@@ -2306,7 +2317,7 @@ Content-Length: 170
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-06-13 10:24:35 +0900
+Last updated 2022-06-13 10:30:02 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
