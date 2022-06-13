@@ -1,0 +1,42 @@
+package io.pp.arcade.domain.season;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@NoArgsConstructor
+public class Season {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    @NotNull
+    @Column(name = "season_name")
+    private String seasonName;
+
+    @NotNull
+    @Column(name = "start_time")
+    private LocalDateTime startTime;
+
+    @NotNull
+    @Column(name = "end_time")
+    private LocalDateTime endTime;
+
+    @NotNull
+    @Column(name = "start_ppp")
+    private Integer startPpp;
+
+    @Builder
+    public Season(String seasonName, LocalDateTime startTime, LocalDateTime endTime, Integer startPpp) {
+        this.seasonName = seasonName;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.startPpp = startPpp;
+    }
+}
