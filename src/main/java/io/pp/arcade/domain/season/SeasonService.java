@@ -33,7 +33,7 @@ public class SeasonService {
     }
 
     public SeasonDto findCurrentSeason(SeasonFindDto findDto) {
-        Season season = seasonRepository.findByEndTimeLessThan(findDto.getTime()).orElseThrow();
+        Season season = seasonRepository.findByStartTimeAfterAndEndTimeBefore(findDto.getCurrentTime()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
         return SeasonDto.from(season);
     }
 }
