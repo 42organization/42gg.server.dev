@@ -2,12 +2,12 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 172
+Content-Length: 170
 
 {
-  "time" : "2022-06-13T16:38:52.446332",
-  "slotId" : 142,
-  "gameId" : 36,
+  "time" : "2022-06-14T10:30:15.928177",
+  "slotId" : 20,
+  "gameId" : 1,
   "myTeam" : [ "jiyun", "wochae" ],
   "enemyTeam" : [ "hakim", "new" ],
   "isMatched" : true

@@ -22,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -212,6 +213,12 @@ class SlotControllerTest {
                         .params(params))
                 .andExpect(status().isOk())
                 .andDo(document("slot-add-user"));
+
+
+        mockMvc.perform(RestDocumentationRequestBuilders.get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON)
+                        .param("userId",user4.getId().toString()))
+                .andExpect(status().isOk())
+                .andDo(document("current-match-after-add-match"));
     }
 
     @Transactional

@@ -65,7 +65,7 @@ public class SlotControllerImpl implements SlotController {
         TeamDto team1 = slot.getTeam1();
         TeamDto team2 = slot.getTeam2();
         Integer headCount = slot.getHeadCount();
-        Integer maxHeadCount = "single".equals(slotType) ? 1 : 2;
+        Integer maxTeamHeadCount = "single".equals(slotType) ? 1 : 2;
         //
         SlotFilterDto slotFilterDto = SlotFilterDto.builder()
                 .slotId(slot.getId())
@@ -77,7 +77,7 @@ public class SlotControllerImpl implements SlotController {
                 .headCount(slot.getHeadCount())
                 .build();
         if (slotService.getStatus(slotFilterDto).equals("open")) {
-            if (team1.getHeadCount() < maxHeadCount) {
+            if (team1.getHeadCount() < maxTeamHeadCount) {
                 teamId = team1.getId();
             } else {
                 teamId = team2.getId();
@@ -97,10 +97,17 @@ public class SlotControllerImpl implements SlotController {
                 .build();
         currentMatchService.addCurrentMatch(matchAddDto);
 
+        slotService.addUserInSlot(addDto);
+        teamService.addUserInTeam(teamAddUserDto);
+
+        slot = slotService.findSlotById(slot.getId());
+        team1 = slot.getTeam1();
+        team2 = slot.getTeam2();
         //유저가 슬롯에 꽉 차면 currentMatch가 전부 바뀐다.
         Boolean isMatched = false;
-        Boolean isImminent = null;
-        if (slot.getHeadCount().equals(maxHeadCount - 1)) {
+        Boolean isImminent = false;
+        Integer maxSlotHeadCount = "single".equals(slot.getType()) ? 2 : 4;
+        if (slot.getHeadCount().equals(maxSlotHeadCount)) {
             isMatched = true;
             if (slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5))) {
                 isImminent = true;
@@ -115,8 +122,6 @@ public class SlotControllerImpl implements SlotController {
             modifyCurrentMatch(team2.getUser1(), matchModifyDto);
             modifyCurrentMatch(team2.getUser2(), matchModifyDto);
         }
-        slotService.addUserInSlot(addDto);
-        teamService.addUserInTeam(teamAddUserDto);
     }
 
     @Override
@@ -166,7 +171,7 @@ public class SlotControllerImpl implements SlotController {
                     .isMatched(modifyDto.getIsMatched())
                     .matchImminent(modifyDto.getMatchImminent())
                     .build();
-            currentMatchService.modifyCurrentMatch(modifyDto);
+            currentMatchService.modifyCurrentMatch(matchModifyDto);
         }
     }
 }

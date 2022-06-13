@@ -4,10 +4,7 @@ import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.user.UserService;
-import io.pp.arcade.domain.user.dto.UserDetailResponseDto;
-import io.pp.arcade.domain.user.dto.UserDto;
-import io.pp.arcade.domain.user.dto.UserHistoricResponseDto;
-import io.pp.arcade.domain.user.dto.UserResponseDto;
+import io.pp.arcade.domain.user.dto.*;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -56,21 +53,23 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @GetMapping(value = "/users/{userId}/historics")
-    public List<UserHistoricResponseDto> findUserHistorics(Integer userId) {
+    public UserHistoricResponseDto findUserHistorics(Integer userId) {
         List<PChangeDto> pChangeList = pChangeService.findPChangeByUserId(PChangeFindDto.builder()
                 .userId(userId)
                 .build());
-        List<UserHistoricResponseDto> responseDto = new ArrayList<UserHistoricResponseDto>();
+        List<UserHistoricDto> historicDtos = new ArrayList<UserHistoricDto>();
         for (PChangeDto dto : pChangeList){
             if (pChangeList.indexOf(dto) >= 10)
                 break;
-            responseDto.add(UserHistoricResponseDto.builder()
+            historicDtos.add(UserHistoricDto.builder()
                     .gameId(dto.getGame().getId())
                     .userId(dto.getUser().getId())
                     .pppChange(dto.getPppChange())
                     .pppResult(dto.getPppResult())
                     .build());
         }
+        UserHistoricResponseDto responseDto = UserHistoricResponseDto.builder()
+                .historics(historicDtos).build();
         return responseDto;
     }
 }
