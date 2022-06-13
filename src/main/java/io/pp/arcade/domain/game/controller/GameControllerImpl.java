@@ -2,7 +2,6 @@ package io.pp.arcade.domain.game.controller;
 
 import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.game.dto.*;
-import io.pp.arcade.domain.pchange.PChange;
 import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
@@ -16,12 +15,12 @@ import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import io.pp.arcade.global.util.EloRating;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -65,12 +64,7 @@ public class GameControllerImpl implements GameController {
             teamService.modifyGameResultInTeam(dto);
         }
         //modify users with game result
-        TeamDto savedTeam1 = teamService.findById(team1.getId());
-        TeamDto savedTeam2 = teamService.findById(team2.getId());
-        modifyUserPppAndAddPchange(game.getId(), team1.getUser1(), savedTeam2);
-        modifyUserPppAndAddPchange(game.getId(), team1.getUser2(), savedTeam2);
-        modifyUserPppAndAddPchange(game.getId(), team2.getUser1(), savedTeam1);
-        modifyUserPppAndAddPchange(game.getId(), team2.getUser2(), savedTeam1);
+        modifyUsersPppAndPChange(game, team1, team2);
 
         //modify users' ranks with game result
     }
@@ -79,44 +73,10 @@ public class GameControllerImpl implements GameController {
     @GetMapping(value = "/games")
     public GameResultResponseDto gameResultByIndexAndCount(Pageable pageable, String status) {
         GameResultPageDto resultPageDto = gameService.findEndGames(pageable);
-        TeamDto team1;
-        TeamDto team2;
-        List<GamePlayerDto> gamePlayerList;
         List<GameResultDto> gameResultList = new ArrayList<>();
-        GameTeamDto teamDto1;
-        GameTeamDto teamDto2;
         List<GameDto> gameLists = resultPageDto.getGameList();
-
-        for (GameDto game : gameLists) {
-            team1 = game.getTeam1();
-            team2 = game.getTeam2();
-
-            gamePlayerList = new ArrayList<>();
-            putGamePlayerDto(game, team1.getUser1(), gamePlayerList);
-            putGamePlayerDto(game, team1.getUser2(), gamePlayerList);
-            teamDto1 = GameTeamDto.builder()
-                    .isWin(team1.getWin())
-                    .score(team1.getScore())
-                    .playerInfos(gamePlayerList)
-                    .build();
-
-            gamePlayerList = new ArrayList();
-            putGamePlayerDto(game, team2.getUser1(), gamePlayerList);
-            putGamePlayerDto(game, team2.getUser2(), gamePlayerList);
-            teamDto2 = GameTeamDto.builder()
-                    .isWin(team2.getWin())
-                    .score(team2.getScore())
-                    .playerInfos(gamePlayerList)
-                    .build();
-
-            gameResultList.add(GameResultDto.builder()
-                    .gameId(game.getId())
-                    .team1(teamDto1)
-                    .team2(teamDto2)
-                    .status(game.getStatus())
-                    .time(game.getTime())
-                    .build());
-        }
+        
+        putResultInGames(gameResultList, gameLists);
 
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
@@ -124,23 +84,6 @@ public class GameControllerImpl implements GameController {
                 .totalPage(resultPageDto.getTotalPage())
                 .build();
         return gameResultResponse;
-    }
-
-    private void putGamePlayerDto(GameDto game, UserDto user, List<GamePlayerDto> gamePlayerList) {
-        if (user == null) {
-            return;
-        } else {
-            PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().gameId(game.getId()).userId(user.getIntraId()).build());
-            GamePlayerDto gamePlayerDto = GamePlayerDto.builder()
-                    .userId(user.getIntraId())
-                    .userImageUri(user.getImageUri())
-                    .wins(null)
-                    .losses(null)
-                    .winRate(null)
-                    .pppChange(pChangeDto.getPppChange())
-                    .build();
-            gamePlayerList.add(gamePlayerDto);
-        }
     }
 
     @Override
@@ -157,45 +100,12 @@ public class GameControllerImpl implements GameController {
                 .userId(userId)
                 .build();
         PChangePageDto pChangePageDto = pChangeService.findPChangeByUserId(findDto, pageable);
-        List<PChangeDto> gameLists = pChangePageDto.getPChangeList();
-        TeamDto team1;
-        TeamDto team2;
-        List<GamePlayerDto> gamePlayerList;
+        List<PChangeDto> pChangeLists = pChangePageDto.getPChangeList();
+        List<GameDto> gameLists = pChangeLists.stream().map(PChangeDto::getGame).collect(Collectors.toList());;
         List<GameResultDto> gameResultList = new ArrayList<>();
-        GameTeamDto teamDto1;
-        GameTeamDto teamDto2;
 
-        for (PChangeDto pChangeDto : gameLists) {
-            GameDto game = pChangeDto.getGame();
-            team1 = game.getTeam1();
-            team2 = game.getTeam2();
+        putResultInGames(gameResultList, gameLists);
 
-            gamePlayerList = new ArrayList<>();
-            putGamePlayerDto(game, team1.getUser1(), gamePlayerList);
-            putGamePlayerDto(game, team1.getUser2(), gamePlayerList);
-            teamDto1 = GameTeamDto.builder()
-                    .isWin(team1.getWin())
-                    .score(team1.getScore())
-                    .playerInfos(gamePlayerList)
-                    .build();
-
-            gamePlayerList = new ArrayList();
-            putGamePlayerDto(game, team2.getUser1(), gamePlayerList);
-            putGamePlayerDto(game, team2.getUser2(), gamePlayerList);
-            teamDto2 = GameTeamDto.builder()
-                    .isWin(team2.getWin())
-                    .score(team2.getScore())
-                    .playerInfos(gamePlayerList)
-                    .build();
-
-            gameResultList.add(GameResultDto.builder()
-                    .gameId(game.getId())
-                    .team1(teamDto1)
-                    .team2(teamDto2)
-                    .status(game.getStatus())
-                    .time(game.getTime())
-                    .build());
-        }
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
                 .currentPage(pChangePageDto.getCurrentPage())
@@ -203,6 +113,8 @@ public class GameControllerImpl implements GameController {
                 .build();
         return gameResultResponse;
     }
+
+    // 이하 분리된 메서드
 
     private List<TeamModifyGameResultDto> getTeamModifyDto(TeamDto team1, TeamDto team2, GameResultRequestDto requestDto, UserDto user) {
         Integer team1Score;
@@ -231,7 +143,16 @@ public class GameControllerImpl implements GameController {
         );
         return modifyList;
     }
-
+    
+    private void modifyUsersPppAndPChange(GameDto game, TeamDto team1, TeamDto team2) {
+        TeamDto savedTeam1 = teamService.findById(team1.getId());
+        TeamDto savedTeam2 = teamService.findById(team2.getId());
+        modifyUserPppAndAddPchange(game.getId(), team1.getUser1(), savedTeam2);
+        modifyUserPppAndAddPchange(game.getId(), team1.getUser2(), savedTeam2);
+        modifyUserPppAndAddPchange(game.getId(), team2.getUser1(), savedTeam1);
+        modifyUserPppAndAddPchange(game.getId(), team2.getUser2(), savedTeam1);
+    }
+    
     private void modifyUserPppAndAddPchange(Integer gameId, UserDto user, TeamDto enemyTeam) {
         if (user == null) {
             return;
@@ -285,4 +206,56 @@ public class GameControllerImpl implements GameController {
         }
     }
 
+    private void putResultInGames(List<GameResultDto> gameResultList, List<GameDto> gameLists) {
+        TeamDto team1;
+        TeamDto team2;
+        GameTeamDto teamDto1;
+        GameTeamDto teamDto2;
+        for (GameDto game : gameLists) {
+            team1 = game.getTeam1();
+            team2 = game.getTeam2();
+
+            teamDto1 = getTeamDtoFromGamePlayers(team1, game);
+            teamDto2 = getTeamDtoFromGamePlayers(team2, game);
+
+            gameResultList.add(GameResultDto.builder()
+                    .gameId(game.getId())
+                    .team1(teamDto1)
+                    .team2(teamDto2)
+                    .status(game.getStatus())
+                    .time(game.getTime())
+                    .build());
+        }
+    }
+
+    private GameTeamDto getTeamDtoFromGamePlayers(TeamDto team, GameDto game) {
+        GameTeamDto teamDto;
+        List<GamePlayerDto> gamePlayerList;
+        gamePlayerList = new ArrayList<>();
+        putGamePlayerDto(game, team.getUser1(), gamePlayerList);
+        putGamePlayerDto(game, team.getUser2(), gamePlayerList);
+        teamDto = GameTeamDto.builder()
+                .isWin(team.getWin())
+                .score(team.getScore())
+                .playerInfos(gamePlayerList)
+                .build();
+        return teamDto;
+    }
+
+    private void putGamePlayerDto(GameDto game, UserDto user, List<GamePlayerDto> gamePlayerList) {
+        if (user == null) {
+            return;
+        } else {
+            PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().gameId(game.getId()).userId(user.getIntraId()).build());
+            GamePlayerDto gamePlayerDto = GamePlayerDto.builder()
+                    .userId(user.getIntraId())
+                    .userImageUri(user.getImageUri())
+                    .wins(null)
+                    .losses(null)
+                    .winRate(null)
+                    .pppChange(pChangeDto.getPppChange())
+                    .build();
+            gamePlayerList.add(gamePlayerDto);
+        }
+    }
 }
