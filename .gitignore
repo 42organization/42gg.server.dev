@@ -1,1 +1,3 @@
 .gradle/
+/Users/hangyulkim/42/42pingpong/hapzak/src/main/resources
+./src/main/resources/application-local.yml
