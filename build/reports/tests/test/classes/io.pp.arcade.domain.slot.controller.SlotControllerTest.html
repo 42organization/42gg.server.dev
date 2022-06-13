@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - SlotControllerTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>SlotControllerTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/io.pp.arcade.domain.slot.controller.html">io.pp.arcade.domain.slot.controller</a> &gt; SlotControllerTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">3</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.477s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+<li>
+<a href="#tab2">Standard error</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">slotAddUser()</td>
+<td class="success">0.159s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">slotRemoveUser()</td>
+<td class="success">0.150s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">slotStatusList()</td>
+<td class="success">0.168s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>2022-06-13 10:30:16.963  INFO 93221 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [io.pp.arcade.domain.slot.controller.SlotControllerTest], using SpringBootContextLoader
+2022-06-13 10:30:16.969  INFO 93221 --- [    Test worker] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [io.pp.arcade.domain.slot.controller.SlotControllerTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+2022-06-13 10:30:16.969  INFO 93221 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [io.pp.arcade.domain.slot.controller.SlotControllerTest]: SlotControllerTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2022-06-13 10:30:17.007  INFO 93221 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration io.pp.arcade.Application for test class io.pp.arcade.domain.slot.controller.SlotControllerTest
+2022-06-13 10:30:17.013  INFO 93221 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+2022-06-13 10:30:17.014  INFO 93221 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@25a2702c, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@23110196, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@328446e1, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@584f12eb, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@6eda3ade, org.springframework.test.context.support.DirtiesContextTestExecutionListener@45ec9b22, org.springframework.test.context.transaction.TransactionalTestExecutionListener@554f6e30, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@7537f638, org.springframework.test.context.event.EventPublishingTestExecutionListener@4a842e8a, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@6b909973, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@458044df, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@f4cfc61, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@64d7737c, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@b632594, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@4c822e9b]
+2022-06-13 10:30:17.039  INFO 93221 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@4704b66a testClass = SlotControllerTest, testInstance = io.pp.arcade.domain.slot.controller.SlotControllerTest@70edffdb, testMethod = slotRemoveUser@SlotControllerTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@3d8c499a testClass = SlotControllerTest, locations = '{}', classes = '{class io.pp.arcade.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@56a4479a, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@63da79bb, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@67ab1c47, [ImportsContextCustomizer@2b7e739 key = [@org.springframework.boot.test.context.SpringBootTest(args={}, webEnvironment=MOCK, value={}, properties={}, classes={}), @org.springframework.boot.test.autoconfigure.properties.PropertyMapping(value=&quot;spring.test.mockmvc&quot;, skip=NO), @org.springframework.context.annotation.Import(value={org.springframework.boot.autoconfigure.ImportAutoConfigurationImportSelector.class}), @org.springframework.context.annotation.Import(value={org.springframework.boot.test.autoconfigure.restdocs.RestDocumentationContextProviderRegistrar.class}), @org.springframework.boot.autoconfigure.ImportAutoConfiguration(value={}, exclude={}, classes={}), @org.springframework.boot.test.autoconfigure.properties.PropertyMapping(value=&quot;spring.test.restdocs&quot;, skip=NO), @org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc(webDriverEnabled=true, print=DEFAULT, webClientEnabled=true, printOnlyOnFailure=true, addFilters=true), @org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs(uriScheme=&quot;http&quot;, outputDir=&quot;&quot;, uriPort=8080, value=&quot;&quot;, uriHost=&quot;localhost&quot;), @org.springframework.test.context.BootstrapWith(value=org.springframework.boot.test.context.SpringBootTestContextBootstrapper.class), @org.springframework.context.annotation.Import(value={io.pp.arcade.RestDocsConfiguration.class})]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@2a3c96e3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cb191ca, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@75d0911a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@15d49048], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@136c3a6]; rollback [true]
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: select slot0_.id as id1_3_, slot0_.created_date as created_2_3_, slot0_.modified_date as modified3_3_, slot0_.game_ppp as game_ppp4_3_, slot0_.head_count as head_cou5_3_, slot0_.table_id as table_id6_3_, slot0_.team1_id as team9_3_, slot0_.team2_id as team10_3_, slot0_.time as time7_3_, slot0_.type as type8_3_ from slot slot0_
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+Hibernate: update team set head_count=?, score=?, team_ppp=?, user1_id=?, user2_id=?, win=? where id=?
+Hibernate: update slot set modified_date=?, game_ppp=?, head_count=?, table_id=?, team1_id=?, team2_id=?, time=?, type=? where id=?
+Hibernate: select slot0_.id as id1_3_, slot0_.created_date as created_2_3_, slot0_.modified_date as modified3_3_, slot0_.game_ppp as game_ppp4_3_, slot0_.head_count as head_cou5_3_, slot0_.table_id as table_id6_3_, slot0_.team1_id as team9_3_, slot0_.team2_id as team10_3_, slot0_.time as time7_3_, slot0_.type as type8_3_ from slot slot0_ where slot0_.created_date&gt;?
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+2022-06-13 10:30:17.182  INFO 93221 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@4704b66a testClass = SlotControllerTest, testInstance = io.pp.arcade.domain.slot.controller.SlotControllerTest@70edffdb, testMethod = slotRemoveUser@SlotControllerTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@3d8c499a testClass = SlotControllerTest, locations = '{}', classes = '{class io.pp.arcade.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@56a4479a, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@63da79bb, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@67ab1c47, [ImportsContextCustomizer@2b7e739 key = [@org.springframework.boot.test.context.SpringBootTest(args={}, webEnvironment=MOCK, value={}, properties={}, classes={}), @org.springframework.boot.test.autoconfigure.properties.PropertyMapping(value=&quot;spring.test.mockmvc&quot;, skip=NO), @org.springframework.context.annotation.Import(value={org.springframework.boot.autoconfigure.ImportAutoConfigurationImportSelector.class}), @org.springframework.context.annotation.Import(value={org.springframework.boot.test.autoconfigure.restdocs.RestDocumentationContextProviderRegistrar.class}), @org.springframework.boot.autoconfigure.ImportAutoConfiguration(value={}, exclude={}, classes={}), @org.springframework.boot.test.autoconfigure.properties.PropertyMapping(value=&quot;spring.test.restdocs&quot;, skip=NO), @org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc(webDriverEnabled=true, print=DEFAULT, webClientEnabled=true, printOnlyOnFailure=true, addFilters=true), @org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs(uriScheme=&quot;http&quot;, outputDir=&quot;&quot;, uriPort=8080, value=&quot;&quot;, uriHost=&quot;localhost&quot;), @org.springframework.test.context.BootstrapWith(value=org.springframework.boot.test.context.SpringBootTestContextBootstrapper.class), @org.springframework.context.annotation.Import(value={io.pp.arcade.RestDocsConfiguration.class})]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@2a3c96e3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cb191ca, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@75d0911a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@15d49048], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]
+2022-06-13 10:30:17.190  INFO 93221 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@4704b66a testClass = SlotControllerTest, testInstance = io.pp.arcade.domain.slot.controller.SlotControllerTest@7db644d5, testMethod = slotStatusList@SlotControllerTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@3d8c499a testClass = SlotControllerTest, locations = '{}', classes = '{class io.pp.arcade.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@56a4479a, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@63da79bb, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@67ab1c47, [ImportsContextCustomizer@2b7e739 key = [@org.springframework.boot.test.context.SpringBootTest(args={}, webEnvironment=MOCK, value={}, properties={}, classes={}), @org.springframework.boot.test.autoconfigure.properties.PropertyMapping(value=&quot;spring.test.mockmvc&quot;, skip=NO), @org.springframework.context.annotation.Import(value={org.springframework.boot.autoconfigure.ImportAutoConfigurationImportSelector.class}), @org.springframework.context.annotation.Import(value={org.springframework.boot.test.autoconfigure.restdocs.RestDocumentationContextProviderRegistrar.class}), @org.springframework.boot.autoconfigure.ImportAutoConfiguration(value={}, exclude={}, classes={}), @org.springframework.boot.test.autoconfigure.properties.PropertyMapping(value=&quot;spring.test.restdocs&quot;, skip=NO), @org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc(webDriverEnabled=true, print=DEFAULT, webClientEnabled=true, printOnlyOnFailure=true, addFilters=true), @org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs(uriScheme=&quot;http&quot;, outputDir=&quot;&quot;, uriPort=8080, value=&quot;&quot;, uriHost=&quot;localhost&quot;), @org.springframework.test.context.BootstrapWith(value=org.springframework.boot.test.context.SpringBootTestContextBootstrapper.class), @org.springframework.context.annotation.Import(value={io.pp.arcade.RestDocsConfiguration.class})]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@2a3c96e3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cb191ca, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@75d0911a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@15d49048], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@136c3a6]; rollback [true]
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: select slot0_.id as id1_3_, slot0_.created_date as created_2_3_, slot0_.modified_date as modified3_3_, slot0_.game_ppp as game_ppp4_3_, slot0_.head_count as head_cou5_3_, slot0_.table_id as table_id6_3_, slot0_.team1_id as team9_3_, slot0_.team2_id as team10_3_, slot0_.time as time7_3_, slot0_.type as type8_3_ from slot slot0_
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: select slot0_.id as id1_3_, slot0_.created_date as created_2_3_, slot0_.modified_date as modified3_3_, slot0_.game_ppp as game_ppp4_3_, slot0_.head_count as head_cou5_3_, slot0_.table_id as table_id6_3_, slot0_.team1_id as team9_3_, slot0_.team2_id as team10_3_, slot0_.time as time7_3_, slot0_.type as type8_3_ from slot slot0_ where slot0_.created_date&gt;?
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+Hibernate: update slot set modified_date=?, game_ppp=?, head_count=?, table_id=?, team1_id=?, team2_id=?, time=?, type=? where id=?
+Hibernate: select slot0_.id as id1_3_, slot0_.created_date as created_2_3_, slot0_.modified_date as modified3_3_, slot0_.game_ppp as game_ppp4_3_, slot0_.head_count as head_cou5_3_, slot0_.table_id as table_id6_3_, slot0_.team1_id as team9_3_, slot0_.team2_id as team10_3_, slot0_.time as time7_3_, slot0_.type as type8_3_ from slot slot0_ where slot0_.created_date&gt;?
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+Hibernate: update slot set modified_date=?, game_ppp=?, head_count=?, table_id=?, team1_id=?, team2_id=?, time=?, type=? where id=?
+Hibernate: select slot0_.id as id1_3_, slot0_.created_date as created_2_3_, slot0_.modified_date as modified3_3_, slot0_.game_ppp as game_ppp4_3_, slot0_.head_count as head_cou5_3_, slot0_.table_id as table_id6_3_, slot0_.team1_id as team9_3_, slot0_.team2_id as team10_3_, slot0_.time as time7_3_, slot0_.type as type8_3_ from slot slot0_ where slot0_.created_date&gt;?
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+Hibernate: update slot set modified_date=?, game_ppp=?, head_count=?, table_id=?, team1_id=?, team2_id=?, time=?, type=? where id=?
+Hibernate: select slot0_.id as id1_3_, slot0_.created_date as created_2_3_, slot0_.modified_date as modified3_3_, slot0_.game_ppp as game_ppp4_3_, slot0_.head_count as head_cou5_3_, slot0_.table_id as table_id6_3_, slot0_.team1_id as team9_3_, slot0_.team2_id as team10_3_, slot0_.time as time7_3_, slot0_.type as type8_3_ from slot slot0_ where slot0_.created_date&gt;?
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+Hibernate: update slot set modified_date=?, game_ppp=?, head_count=?, table_id=?, team1_id=?, team2_id=?, time=?, type=? where id=?
+Hibernate: select slot0_.id as id1_3_, slot0_.created_date as created_2_3_, slot0_.modified_date as modified3_3_, slot0_.game_ppp as game_ppp4_3_, slot0_.head_count as head_cou5_3_, slot0_.table_id as table_id6_3_, slot0_.team1_id as team9_3_, slot0_.team2_id as team10_3_, slot0_.time as time7_3_, slot0_.type as type8_3_ from slot slot0_ where slot0_.created_date&gt;?
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+2022-06-13 10:30:17.355  INFO 93221 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@4704b66a testClass = SlotControllerTest, testInstance = io.pp.arcade.domain.slot.controller.SlotControllerTest@7db644d5, testMethod = slotStatusList@SlotControllerTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@3d8c499a testClass = SlotControllerTest, locations = '{}', classes = '{class io.pp.arcade.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@56a4479a, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@63da79bb, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@67ab1c47, [ImportsContextCustomizer@2b7e739 key = [@org.springframework.boot.test.context.SpringBootTest(args={}, webEnvironment=MOCK, value={}, properties={}, classes={}), @org.springframework.boot.test.autoconfigure.properties.PropertyMapping(value=&quot;spring.test.mockmvc&quot;, skip=NO), @org.springframework.context.annotation.Import(value={org.springframework.boot.autoconfigure.ImportAutoConfigurationImportSelector.class}), @org.springframework.context.annotation.Import(value={org.springframework.boot.test.autoconfigure.restdocs.RestDocumentationContextProviderRegistrar.class}), @org.springframework.boot.autoconfigure.ImportAutoConfiguration(value={}, exclude={}, classes={}), @org.springframework.boot.test.autoconfigure.properties.PropertyMapping(value=&quot;spring.test.restdocs&quot;, skip=NO), @org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc(webDriverEnabled=true, print=DEFAULT, webClientEnabled=true, printOnlyOnFailure=true, addFilters=true), @org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs(uriScheme=&quot;http&quot;, outputDir=&quot;&quot;, uriPort=8080, value=&quot;&quot;, uriHost=&quot;localhost&quot;), @org.springframework.test.context.BootstrapWith(value=org.springframework.boot.test.context.SpringBootTestContextBootstrapper.class), @org.springframework.context.annotation.Import(value={io.pp.arcade.RestDocsConfiguration.class})]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@2a3c96e3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cb191ca, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@75d0911a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@15d49048], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]
+2022-06-13 10:30:17.363  INFO 93221 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@4704b66a testClass = SlotControllerTest, testInstance = io.pp.arcade.domain.slot.controller.SlotControllerTest@5961fad1, testMethod = slotAddUser@SlotControllerTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@3d8c499a testClass = SlotControllerTest, locations = '{}', classes = '{class io.pp.arcade.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@56a4479a, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@63da79bb, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@67ab1c47, [ImportsContextCustomizer@2b7e739 key = [@org.springframework.boot.test.context.SpringBootTest(args={}, webEnvironment=MOCK, value={}, properties={}, classes={}), @org.springframework.boot.test.autoconfigure.properties.PropertyMapping(value=&quot;spring.test.mockmvc&quot;, skip=NO), @org.springframework.context.annotation.Import(value={org.springframework.boot.autoconfigure.ImportAutoConfigurationImportSelector.class}), @org.springframework.context.annotation.Import(value={org.springframework.boot.test.autoconfigure.restdocs.RestDocumentationContextProviderRegistrar.class}), @org.springframework.boot.autoconfigure.ImportAutoConfiguration(value={}, exclude={}, classes={}), @org.springframework.boot.test.autoconfigure.properties.PropertyMapping(value=&quot;spring.test.restdocs&quot;, skip=NO), @org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc(webDriverEnabled=true, print=DEFAULT, webClientEnabled=true, printOnlyOnFailure=true, addFilters=true), @org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs(uriScheme=&quot;http&quot;, outputDir=&quot;&quot;, uriPort=8080, value=&quot;&quot;, uriHost=&quot;localhost&quot;), @org.springframework.test.context.BootstrapWith(value=org.springframework.boot.test.context.SpringBootTestContextBootstrapper.class), @org.springframework.context.annotation.Import(value={io.pp.arcade.RestDocsConfiguration.class})]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@2a3c96e3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cb191ca, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@75d0911a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@15d49048], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@136c3a6]; rollback [true]
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: select slot0_.id as id1_3_, slot0_.created_date as created_2_3_, slot0_.modified_date as modified3_3_, slot0_.game_ppp as game_ppp4_3_, slot0_.head_count as head_cou5_3_, slot0_.table_id as table_id6_3_, slot0_.team1_id as team9_3_, slot0_.team2_id as team10_3_, slot0_.time as time7_3_, slot0_.type as type8_3_ from slot slot0_
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+Hibernate: insert into current_match (created_date, modified_date, game_id, is_matched, match_imminent, slot_id, user_id) values (?, ?, ?, ?, ?, ?, ?)
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+Hibernate: insert into current_match (created_date, modified_date, game_id, is_matched, match_imminent, slot_id, user_id) values (?, ?, ?, ?, ?, ?, ?)
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+Hibernate: update team set head_count=?, score=?, team_ppp=?, user1_id=?, user2_id=?, win=? where id=?
+Hibernate: update team set head_count=?, score=?, team_ppp=?, user1_id=?, user2_id=?, win=? where id=?
+Hibernate: update slot set modified_date=?, game_ppp=?, head_count=?, table_id=?, team1_id=?, team2_id=?, time=?, type=? where id=?
+Hibernate: update current_match set modified_date=?, game_id=?, is_matched=?, match_imminent=?, slot_id=?, user_id=? where id=?
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+Hibernate: update current_match set modified_date=?, game_id=?, is_matched=?, match_imminent=?, slot_id=?, user_id=? where id=?
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+Hibernate: select slot0_.id as id1_3_, slot0_.created_date as created_2_3_, slot0_.modified_date as modified3_3_, slot0_.game_ppp as game_ppp4_3_, slot0_.head_count as head_cou5_3_, slot0_.table_id as table_id6_3_, slot0_.team1_id as team9_3_, slot0_.team2_id as team10_3_, slot0_.time as time7_3_, slot0_.type as type8_3_ from slot slot0_ where slot0_.created_date&gt;?
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+2022-06-13 10:30:17.513  INFO 93221 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@4704b66a testClass = SlotControllerTest, testInstance = io.pp.arcade.domain.slot.controller.SlotControllerTest@5961fad1, testMethod = slotAddUser@SlotControllerTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@3d8c499a testClass = SlotControllerTest, locations = '{}', classes = '{class io.pp.arcade.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@56a4479a, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@63da79bb, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@67ab1c47, [ImportsContextCustomizer@2b7e739 key = [@org.springframework.boot.test.context.SpringBootTest(args={}, webEnvironment=MOCK, value={}, properties={}, classes={}), @org.springframework.boot.test.autoconfigure.properties.PropertyMapping(value=&quot;spring.test.mockmvc&quot;, skip=NO), @org.springframework.context.annotation.Import(value={org.springframework.boot.autoconfigure.ImportAutoConfigurationImportSelector.class}), @org.springframework.context.annotation.Import(value={org.springframework.boot.test.autoconfigure.restdocs.RestDocumentationContextProviderRegistrar.class}), @org.springframework.boot.autoconfigure.ImportAutoConfiguration(value={}, exclude={}, classes={}), @org.springframework.boot.test.autoconfigure.properties.PropertyMapping(value=&quot;spring.test.restdocs&quot;, skip=NO), @org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc(webDriverEnabled=true, print=DEFAULT, webClientEnabled=true, printOnlyOnFailure=true, addFilters=true), @org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs(uriScheme=&quot;http&quot;, outputDir=&quot;&quot;, uriPort=8080, value=&quot;&quot;, uriHost=&quot;localhost&quot;), @org.springframework.test.context.BootstrapWith(value=org.springframework.boot.test.context.SpringBootTestContextBootstrapper.class), @org.springframework.context.annotation.Import(value={io.pp.arcade.RestDocsConfiguration.class})]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@2a3c96e3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cb191ca, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@75d0911a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@15d49048], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]
+</pre>
+</span>
+</div>
+<div id="tab2" class="tab">
+<h2>Standard error</h2>
+<span class="code">
+<pre>유저가 3명이라 터졌을지도!
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 7.4.1</a> at Jun 13, 2022, 10:30:18 AM</p>
+</div>
+</div>
+</body>
+</html>

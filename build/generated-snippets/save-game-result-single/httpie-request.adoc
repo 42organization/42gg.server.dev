@@ -3,6 +3,6 @@
 $ echo '{
   "myTeamScore" : "2",
   "enemyTeamScore" : "1"
-}' | http POST 'http://localhost:8080/pingpong/games/1/result?userId=1' \
+}' | http POST 'http://localhost:8080/pingpong/games/4/result?userId=16' \
     'Content-Type:application/json;charset=UTF-8'
 ----

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - CurrentMatchServiceTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>CurrentMatchServiceTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/io.pp.arcade.domain.currentmatch.html">io.pp.arcade.domain.currentmatch</a> &gt; CurrentMatchServiceTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">5</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.517s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+<li>
+<a href="#tab1">Standard output</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">addCurrentMatch()</td>
+<td class="success">0.035s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">findCurrentMatchByUserId()</td>
+<td class="success">0.027s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">modifyCurrentMatch()</td>
+<td class="success">0.367s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">removeCurrentMatch()</td>
+<td class="success">0.062s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">saveGameInCurrentMatch()</td>
+<td class="success">0.026s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+<div id="tab1" class="tab">
+<h2>Standard output</h2>
+<span class="code">
+<pre>2022-06-13 10:30:12.821  INFO 93221 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Neither @ContextConfiguration nor @ContextHierarchy found for test class [io.pp.arcade.domain.currentmatch.CurrentMatchServiceTest], using SpringBootContextLoader
+2022-06-13 10:30:12.823  INFO 93221 --- [    Test worker] o.s.t.c.support.AbstractContextLoader    : Could not detect default resource locations for test class [io.pp.arcade.domain.currentmatch.CurrentMatchServiceTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+2022-06-13 10:30:12.823  INFO 93221 --- [    Test worker] t.c.s.AnnotationConfigContextLoaderUtils : Could not detect default configuration classes for test class [io.pp.arcade.domain.currentmatch.CurrentMatchServiceTest]: CurrentMatchServiceTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2022-06-13 10:30:12.850  INFO 93221 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Found @SpringBootConfiguration io.pp.arcade.Application for test class io.pp.arcade.domain.currentmatch.CurrentMatchServiceTest
+2022-06-13 10:30:12.861  INFO 93221 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.event.ApplicationEventsTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener, org.springframework.test.context.event.EventPublishingTestExecutionListener]
+2022-06-13 10:30:12.862  INFO 93221 --- [    Test worker] .b.t.c.SpringBootTestContextBootstrapper : Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@4dfe56dc, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@2a728076, org.springframework.test.context.event.ApplicationEventsTestExecutionListener@a3f1f32, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@67fda9fb, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@580a5b6e, org.springframework.test.context.support.DirtiesContextTestExecutionListener@66450129, org.springframework.test.context.transaction.TransactionalTestExecutionListener@14f1545c, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@1ec98548, org.springframework.test.context.event.EventPublishingTestExecutionListener@14927cd4, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@5a106b26, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@445d878c, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@16eca98a, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@119f035f, org.springframework.boot.test.autoconfigure.webservices.client.MockWebServiceServerTestExecutionListener@480f1311, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@60c68c7b]
+2022-06-13 10:30:12.896  INFO 93221 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@30b0f674 testClass = CurrentMatchServiceTest, testInstance = io.pp.arcade.domain.currentmatch.CurrentMatchServiceTest@62818ab0, testMethod = modifyCurrentMatch@CurrentMatchServiceTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@39f5eba4 testClass = CurrentMatchServiceTest, locations = '{}', classes = '{class io.pp.arcade.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@56a4479a, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@67ab1c47, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@2a3c96e3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cb191ca, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@75d0911a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@15d49048], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@69374e28]; rollback [true]
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into game (season, slot_id, status, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into current_match (created_date, modified_date, game_id, is_matched, match_imminent, slot_id, user_id) values (?, ?, ?, ?, ?, ?, ?)
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+2022-06-13 10:30:13.248  INFO 93221 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@30b0f674 testClass = CurrentMatchServiceTest, testInstance = io.pp.arcade.domain.currentmatch.CurrentMatchServiceTest@62818ab0, testMethod = modifyCurrentMatch@CurrentMatchServiceTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@39f5eba4 testClass = CurrentMatchServiceTest, locations = '{}', classes = '{class io.pp.arcade.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@56a4479a, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@67ab1c47, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@2a3c96e3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cb191ca, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@75d0911a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@15d49048], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]
+2022-06-13 10:30:13.254  INFO 93221 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@30b0f674 testClass = CurrentMatchServiceTest, testInstance = io.pp.arcade.domain.currentmatch.CurrentMatchServiceTest@16ac67e3, testMethod = findCurrentMatchByUserId@CurrentMatchServiceTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@39f5eba4 testClass = CurrentMatchServiceTest, locations = '{}', classes = '{class io.pp.arcade.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@56a4479a, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@67ab1c47, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@2a3c96e3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cb191ca, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@75d0911a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@15d49048], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@69374e28]; rollback [true]
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into game (season, slot_id, status, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into current_match (created_date, modified_date, game_id, is_matched, match_imminent, slot_id, user_id) values (?, ?, ?, ?, ?, ?, ?)
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+2022-06-13 10:30:13.278  INFO 93221 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@30b0f674 testClass = CurrentMatchServiceTest, testInstance = io.pp.arcade.domain.currentmatch.CurrentMatchServiceTest@16ac67e3, testMethod = findCurrentMatchByUserId@CurrentMatchServiceTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@39f5eba4 testClass = CurrentMatchServiceTest, locations = '{}', classes = '{class io.pp.arcade.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@56a4479a, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@67ab1c47, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@2a3c96e3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cb191ca, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@75d0911a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@15d49048], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]
+2022-06-13 10:30:13.284  INFO 93221 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@30b0f674 testClass = CurrentMatchServiceTest, testInstance = io.pp.arcade.domain.currentmatch.CurrentMatchServiceTest@39aaa7db, testMethod = addCurrentMatch@CurrentMatchServiceTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@39f5eba4 testClass = CurrentMatchServiceTest, locations = '{}', classes = '{class io.pp.arcade.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@56a4479a, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@67ab1c47, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@2a3c96e3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cb191ca, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@75d0911a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@15d49048], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@69374e28]; rollback [true]
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into game (season, slot_id, status, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into current_match (created_date, modified_date, game_id, is_matched, match_imminent, slot_id, user_id) values (?, ?, ?, ?, ?, ?, ?)
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+2022-06-13 10:30:13.317  INFO 93221 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@30b0f674 testClass = CurrentMatchServiceTest, testInstance = io.pp.arcade.domain.currentmatch.CurrentMatchServiceTest@39aaa7db, testMethod = addCurrentMatch@CurrentMatchServiceTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@39f5eba4 testClass = CurrentMatchServiceTest, locations = '{}', classes = '{class io.pp.arcade.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@56a4479a, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@67ab1c47, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@2a3c96e3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cb191ca, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@75d0911a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@15d49048], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]
+2022-06-13 10:30:13.319  INFO 93221 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@30b0f674 testClass = CurrentMatchServiceTest, testInstance = io.pp.arcade.domain.currentmatch.CurrentMatchServiceTest@64d0b8e3, testMethod = removeCurrentMatch@CurrentMatchServiceTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@39f5eba4 testClass = CurrentMatchServiceTest, locations = '{}', classes = '{class io.pp.arcade.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@56a4479a, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@67ab1c47, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@2a3c96e3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cb191ca, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@75d0911a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@15d49048], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@69374e28]; rollback [true]
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into game (season, slot_id, status, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into current_match (created_date, modified_date, game_id, is_matched, match_imminent, slot_id, user_id) values (?, ?, ?, ?, ?, ?, ?)
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+Hibernate: delete from current_match where id=?
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_
+2022-06-13 10:30:13.376  INFO 93221 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@30b0f674 testClass = CurrentMatchServiceTest, testInstance = io.pp.arcade.domain.currentmatch.CurrentMatchServiceTest@64d0b8e3, testMethod = removeCurrentMatch@CurrentMatchServiceTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@39f5eba4 testClass = CurrentMatchServiceTest, locations = '{}', classes = '{class io.pp.arcade.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@56a4479a, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@67ab1c47, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@2a3c96e3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cb191ca, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@75d0911a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@15d49048], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]
+2022-06-13 10:30:13.385  INFO 93221 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Began transaction (1) for test context [DefaultTestContext@30b0f674 testClass = CurrentMatchServiceTest, testInstance = io.pp.arcade.domain.currentmatch.CurrentMatchServiceTest@362fbd98, testMethod = saveGameInCurrentMatch@CurrentMatchServiceTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@39f5eba4 testClass = CurrentMatchServiceTest, locations = '{}', classes = '{class io.pp.arcade.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@56a4479a, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@67ab1c47, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@2a3c96e3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cb191ca, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@75d0911a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@15d49048], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]; transaction manager [org.springframework.orm.jpa.JpaTransactionManager@69374e28]; rollback [true]
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into user (image_uri, intra_id, ppp, racket_type, status_message) values (?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into team (head_count, score, team_ppp, user1_id, user2_id, win) values (?, ?, ?, ?, ?, ?)
+Hibernate: insert into slot (created_date, modified_date, game_ppp, head_count, table_id, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into game (season, slot_id, status, team1_id, team2_id, time, type) values (?, ?, ?, ?, ?, ?, ?)
+Hibernate: insert into current_match (created_date, modified_date, game_id, is_matched, match_imminent, slot_id, user_id) values (?, ?, ?, ?, ?, ?, ?)
+Hibernate: select currentmat0_.id as id1_0_, currentmat0_.created_date as created_2_0_, currentmat0_.modified_date as modified3_0_, currentmat0_.game_id as game_id6_0_, currentmat0_.is_matched as is_match4_0_, currentmat0_.match_imminent as match_im5_0_, currentmat0_.slot_id as slot_id7_0_, currentmat0_.user_id as user_id8_0_ from current_match currentmat0_ where currentmat0_.user_id=?
+2022-06-13 10:30:13.408  INFO 93221 --- [    Test worker] o.s.t.c.transaction.TransactionContext   : Rolled back transaction for test: [DefaultTestContext@30b0f674 testClass = CurrentMatchServiceTest, testInstance = io.pp.arcade.domain.currentmatch.CurrentMatchServiceTest@362fbd98, testMethod = saveGameInCurrentMatch@CurrentMatchServiceTest, testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@39f5eba4 testClass = CurrentMatchServiceTest, locations = '{}', classes = '{class io.pp.arcade.Application}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.actuate.metrics.MetricsExportContextCustomizerFactory$DisableMetricExportContextCustomizer@56a4479a, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@67ab1c47, org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@2a3c96e3, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@cb191ca, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@0, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@75d0911a, org.springframework.boot.test.context.SpringBootTestArgs@1, org.springframework.boot.test.context.SpringBootTestWebEnvironment@15d49048], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.populatedRequestContextHolder' -&gt; true, 'org.springframework.test.context.web.ServletTestExecutionListener.resetRequestContextHolder' -&gt; true, 'org.springframework.test.context.event.ApplicationEventsTestExecutionListener.recordApplicationEvents' -&gt; false]]
+</pre>
+</span>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 7.4.1</a> at Jun 13, 2022, 10:30:18 AM</p>
+</div>
+</div>
+</body>
+</html>
