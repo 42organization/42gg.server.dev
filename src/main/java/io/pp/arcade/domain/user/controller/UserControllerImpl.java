@@ -17,56 +17,71 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping (value = "/pingpong")
+@RequestMapping(value = "/pingpong")
 public class UserControllerImpl implements UserController {
     private final UserService userService;
     private final PChangeService pChangeService;
 
+    /* *
+     * [메인 페이지]
+     * 유저 기본 정보 조회
+     * */
     @Override
     @GetMapping(value = "/users")
-    public UserResponseDto findUser(Integer userId) {
+    public UserResponseDto userFind(Integer userId) {
         UserDto user = userService.findById(userId);
-        return UserResponseDto.builder()
+        UserResponseDto responseDto = UserResponseDto.builder()
                 .userId(user.getIntraId())
                 .userImageUri(user.getImageUri())
-                //.notiCount()
-                .build(); // notiCount 추가 필요!
+                .notiCount(10)
+                .build();// notiCount 추가 필요!
+        return responseDto;
     }
 
+    /* *
+     * [프로필 페이지]
+     * 유저 프로필 정보 조회
+     * */
     @Override
     @GetMapping(value = "/users/{targetUserId}/detail")
-    public UserDetailResponseDto findDetailUser(Integer targetUserId, Integer currentUserId) {
+    public UserDetailResponseDto userFindDetail(String targetUserId, Integer currentUserId) {
         /* 상대 전적 비교 */
         UserDto curUser = userService.findById(currentUserId);
+        UserDto targetUser = userService.findByIntraId(targetUserId);
 
-        UserDto targetUser = userService.findById(targetUserId);
-        return UserDetailResponseDto.builder()
+        UserDetailResponseDto responseDto = UserDetailResponseDto.builder()
                 .userId(targetUser.getIntraId())
                 .userImageUri(targetUser.getImageUri())
                 .racketType(targetUser.getRacketType())
                 .ppp(targetUser.getPpp())
                 .statusMessage(targetUser.getStatusMessage())
-                //.wins()
-                //.losses()
-                //.winRate()
-                //.rank()
+                .wins(1)        // 추
+                .losses(0)      // 후
+                .winRate(100.0) // 구
+                .rank(1)        // 현
                 .build();
+        return responseDto;
     }
 
+    /* *
+     * [프로필 페이지]
+     * 유저 최근 전적 경향 조회
+     * */
     @Override
     @GetMapping(value = "/users/{userId}/historics")
-    public UserHistoricResponseDto findUserHistorics(Integer userId, Pageable pageable) {
+    public UserHistoricResponseDto userFindHistorics(String userId, Pageable pageable) {
         PChangePageDto pChangePage = pChangeService.findPChangeByUserId(PChangeFindDto.builder()
                 .userId(userId)
                 .build(), pageable);
         List<PChangeDto> pChangeList = pChangePage.getPChangeList();
         List<UserHistoricDto> historicDtos = new ArrayList<UserHistoricDto>();
-        for (PChangeDto dto : pChangeList){
+        for (PChangeDto dto : pChangeList) {
             historicDtos.add(UserHistoricDto.builder()
                     .gameId(dto.getGame().getId())
                     .userId(dto.getUser().getId())
                     .pppChange(dto.getPppChange())
                     .pppResult(dto.getPppResult())
+                    .time(dto.getGame().getTime())
                     .build());
         }
         UserHistoricResponseDto responseDto = UserHistoricResponseDto.builder()

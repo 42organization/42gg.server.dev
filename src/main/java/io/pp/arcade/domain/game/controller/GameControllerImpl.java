@@ -130,9 +130,9 @@ public class GameControllerImpl implements GameController {
         if (user == null) {
             return;
         } else {
-            PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().gameId(game.getId()).userId(user.getId()).build());
+            PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().gameId(game.getId()).userId(user.getIntraId()).build());
             GamePlayerDto gamePlayerDto = GamePlayerDto.builder()
-                    .userId(user.getId())
+                    .userId(user.getIntraId())
                     .userImageUri(user.getImageUri())
                     .wins(null)
                     .losses(null)
@@ -144,8 +144,8 @@ public class GameControllerImpl implements GameController {
     }
 
     @Override
-    @GetMapping(value = "/games/users/{userId}")
-    public GameResultResponseDto gameResultByUserIdAndIndexAndCount(Integer userId, Pageable pageable, String type) {
+    @GetMapping(value = "/games/{userId}")
+    public GameResultResponseDto gameResultByUserIdAndIndexAndCount(String userId, Pageable pageable, String type) {
         //Pageable
         /*
          * 1. PChange에서 유저별 게임 목록을 가져온다

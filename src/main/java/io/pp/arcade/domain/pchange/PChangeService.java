@@ -46,7 +46,7 @@ public class PChangeService {
 
     @Transactional
     public PChangePageDto findPChangeByUserId(PChangeFindDto findDto, Pageable pageable){
-        User user = userRepository.findById(findDto.getUserId()).orElseThrow();
+        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow();
         Page<PChange> pChangePage = pChangeRepository.findAllByUserOrderByIdDesc(user, pageable);
         PChangePageDto dto = PChangePageDto.builder()
                 .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()))
@@ -59,7 +59,7 @@ public class PChangeService {
     @Transactional
     public PChangeDto findPChangeByUserAndGame(PChangeFindDto findDto) {
         Game game = gameRepository.findById(findDto.getGameId()).orElseThrow();
-        User user = userRepository.findById(findDto.getUserId()).orElseThrow();
+        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow();
         PChangeDto pChangeDto = PChangeDto.from(pChangeRepository.findByUserAndGame(user, game).orElseThrow());
         return  pChangeDto;
     }
