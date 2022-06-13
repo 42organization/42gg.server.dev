@@ -3,8 +3,6 @@ package io.pp.arcade.domain.season;
 import io.pp.arcade.domain.season.dto.SeasonAddDto;
 import io.pp.arcade.domain.season.dto.SeasonDeleteDto;
 import io.pp.arcade.domain.season.dto.SeasonDto;
-import io.pp.arcade.domain.season.dto.SeasonFindDto;
-import org.apache.tomcat.jni.Local;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -86,10 +84,7 @@ public class SeasonServiceTest {
     @Test
     @Transactional
     void findCurrentSeason() {
-        LocalDateTime startTime = LocalDateTime.now().minusMonths(1);
-        LocalDateTime endTime = LocalDateTime.now().plusMonths(1);
-        SeasonFindDto findDto = SeasonFindDto.builder().startTime(startTime).endTime(endTime).build();
-        SeasonDto foundDto = seasonService.findCurrentSeason(findDto);
+        SeasonDto foundDto = seasonService.findCurrentSeason();
 
         Assertions.assertThat(foundDto.getSeasonName()).isEqualTo(season_present.getSeasonName());
         Assertions.assertThat(foundDto.getStartTime()).isEqualTo(season_present.getStartTime());
