@@ -2,11 +2,14 @@ package io.pp.arcade.domain.user;
 
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
+import io.pp.arcade.domain.user.dto.UserSearchDto;
 import io.pp.arcade.domain.user.dto.UserUpdateInfoDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -43,8 +46,14 @@ public class UserService {
         user.update(modifyDto.getPpp());
     }
 
-    /* 유저 정보 업데이트 */
+    /* 문자열을 포함하는 intraId를 가진 유저 찾기 */
+    @Transactional
+    public List<UserDto> findByPartsOfIntraId(UserSearchDto userSearchDto) {
+        List<User> users = userRepository.findByIntraIdContains(userSearchDto.getIntraId());
+        return users.stream().map(UserDto::from).collect(Collectors.toList());
+    }
 
+    /* 유저 정보 업데이트 */
     public void updateUserInfo(UserUpdateInfoDto updateDto) {
 
     }

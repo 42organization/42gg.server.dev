@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -87,5 +88,13 @@ public class UserControllerImpl implements UserController {
         UserHistoricResponseDto responseDto = UserHistoricResponseDto.builder()
                 .historics(historicDtos).build();
         return responseDto;
+    }
+
+    @Override
+    @GetMapping(value = "/users/searches")
+    public UserSearchResultResponseDto userSearchResult(String userId) {
+        List<String> users = userService.findByPartsOfIntraId(UserSearchDto.builder().intraId(userId).build())
+                .stream().map(UserDto::getIntraId).collect(Collectors.toList());
+        return UserSearchResultResponseDto.builder().users(users).build();
     }
 }
