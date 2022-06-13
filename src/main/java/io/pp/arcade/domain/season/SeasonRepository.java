@@ -7,5 +7,5 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface SeasonRepository extends JpaRepository <Season, Integer> {
-    Optional<Season> findByStartTimeAfterAndEndTimeBefore(LocalDateTime currentTime);
+    Optional<Season> findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(LocalDateTime startTime, LocalDateTime endTime);
 }

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SealedObject;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -33,7 +34,9 @@ public class SeasonService {
     }
 
     public SeasonDto findCurrentSeason(SeasonFindDto findDto) {
-        Season season = seasonRepository.findByStartTimeAfterAndEndTimeBefore(findDto.getCurrentTime()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
+        LocalDateTime now = LocalDateTime.now();
+        List<Season> seasonList = seasonRepository.findAll();
+        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElseThrow();
         return SeasonDto.from(season);
     }
 }

@@ -3,8 +3,13 @@ package io.pp.arcade.domain.season.dto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 public class SeasonAddDto {
-    private SeasonDto seasonDto;
+    private String seasonName;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private Integer startPpp;
 }
