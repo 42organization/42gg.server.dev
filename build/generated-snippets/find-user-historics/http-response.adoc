@@ -2,59 +2,9 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 892
+Content-Length: 43
 
 {
-  "historics" : [ {
-    "gameId" : 28,
-    "userId" : 94,
-    "pppChange" : 2,
-    "pppResult" : 44
-  }, {
-    "gameId" : 27,
-    "userId" : 94,
-    "pppChange" : 2,
-    "pppResult" : 44
-  }, {
-    "gameId" : 26,
-    "userId" : 94,
-    "pppChange" : 2,
-    "pppResult" : 44
-  }, {
-    "gameId" : 25,
-    "userId" : 94,
-    "pppChange" : 2,
-    "pppResult" : 44
-  }, {
-    "gameId" : 24,
-    "userId" : 94,
-    "pppChange" : 2,
-    "pppResult" : 44
-  }, {
-    "gameId" : 23,
-    "userId" : 94,
-    "pppChange" : 2,
-    "pppResult" : 44
-  }, {
-    "gameId" : 22,
-    "userId" : 94,
-    "pppChange" : 2,
-    "pppResult" : 44
-  }, {
-    "gameId" : 21,
-    "userId" : 94,
-    "pppChange" : 2,
-    "pppResult" : 44
-  }, {
-    "gameId" : 20,
-    "userId" : 94,
-    "pppChange" : 2,
-    "pppResult" : 44
-  }, {
-    "gameId" : 19,
-    "userId" : 94,
-    "pppChange" : 2,
-    "pppResult" : 44
-  } ]
+  "datas" : [ "donghyuk", "donghyuk2" ]
 }
 ----

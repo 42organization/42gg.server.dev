@@ -17,5 +17,5 @@ public interface GameController {
     //게임 결과 입력 - POST /pingpong/games/{gameId}/result
     void gameResultSave(@PathVariable Integer gameId, @RequestBody GameResultRequestDto getterDto, @RequestParam Integer userId);
     GameResultResponseDto gameResultByIndexAndCount(Pageable pageable, @RequestParam(required = false) String status);
-    GameResultResponseDto gameResultByUserIdAndIndexAndCount(@PathVariable Integer userId, Pageable pageable, @RequestParam String type);
+    GameResultResponseDto gameResultByUserIdAndIndexAndCount(@PathVariable String userId, Pageable pageable, @RequestParam String type);
 }
