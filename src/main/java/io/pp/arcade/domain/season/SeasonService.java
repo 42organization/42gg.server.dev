@@ -3,14 +3,11 @@ package io.pp.arcade.domain.season;
 import io.pp.arcade.domain.season.dto.SeasonAddDto;
 import io.pp.arcade.domain.season.dto.SeasonDeleteDto;
 import io.pp.arcade.domain.season.dto.SeasonDto;
-import io.pp.arcade.domain.season.dto.SeasonFindDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SealedObject;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -33,9 +30,8 @@ public class SeasonService {
         seasonRepository.delete(season);
     }
 
-    public SeasonDto findCurrentSeason(SeasonFindDto findDto) {
+    public SeasonDto findCurrentSeason() {
         LocalDateTime now = LocalDateTime.now();
-        List<Season> seasonList = seasonRepository.findAll();
         Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElseThrow();
         return SeasonDto.from(season);
     }
