@@ -42,12 +42,26 @@ dependencies {
 
 }
 
-tasks.named('test') {
+test {
 	outputs.dir snippetsDir
 	useJUnitPlatform()
 }
 
-tasks.named('asciidoctor') {
-	inputs.dir snippetsDir
+asciidoctor {
 	dependsOn test
+	inputs.dir snippetsDir
+}
+
+bootJar {
+	dependsOn asciidoctor
+	copy {
+		from "${asciidoctor.outputDir}"
+		into 'BOOT-INF/classes/static/docs'
+	}
+}
+
+task copyDocument(type: Copy) {
+	dependsOn asciidoctor
+	from file("build/docs/asciidoc")
+	into file("src/main/resources/static/docs")
 }

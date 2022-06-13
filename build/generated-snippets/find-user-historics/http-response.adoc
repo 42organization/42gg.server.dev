@@ -2,57 +2,59 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 762
+Content-Length: 892
 
-[ {
-  "gameId" : 20,
-  "userId" : 5,
-  "pppChange" : 2,
-  "pppResult" : 44
-}, {
-  "gameId" : 19,
-  "userId" : 5,
-  "pppChange" : 2,
-  "pppResult" : 44
-}, {
-  "gameId" : 18,
-  "userId" : 5,
-  "pppChange" : 2,
-  "pppResult" : 44
-}, {
-  "gameId" : 17,
-  "userId" : 5,
-  "pppChange" : 2,
-  "pppResult" : 44
-}, {
-  "gameId" : 16,
-  "userId" : 5,
-  "pppChange" : 2,
-  "pppResult" : 44
-}, {
-  "gameId" : 15,
-  "userId" : 5,
-  "pppChange" : 2,
-  "pppResult" : 44
-}, {
-  "gameId" : 14,
-  "userId" : 5,
-  "pppChange" : 2,
-  "pppResult" : 44
-}, {
-  "gameId" : 13,
-  "userId" : 5,
-  "pppChange" : 2,
-  "pppResult" : 44
-}, {
-  "gameId" : 12,
-  "userId" : 5,
-  "pppChange" : 2,
-  "pppResult" : 44
-}, {
-  "gameId" : 11,
-  "userId" : 5,
-  "pppChange" : 2,
-  "pppResult" : 44
-} ]
+{
+  "historics" : [ {
+    "gameId" : 28,
+    "userId" : 94,
+    "pppChange" : 2,
+    "pppResult" : 44
+  }, {
+    "gameId" : 27,
+    "userId" : 94,
+    "pppChange" : 2,
+    "pppResult" : 44
+  }, {
+    "gameId" : 26,
+    "userId" : 94,
+    "pppChange" : 2,
+    "pppResult" : 44
+  }, {
+    "gameId" : 25,
+    "userId" : 94,
+    "pppChange" : 2,
+    "pppResult" : 44
+  }, {
+    "gameId" : 24,
+    "userId" : 94,
+    "pppChange" : 2,
+    "pppResult" : 44
+  }, {
+    "gameId" : 23,
+    "userId" : 94,
+    "pppChange" : 2,
+    "pppResult" : 44
+  }, {
+    "gameId" : 22,
+    "userId" : 94,
+    "pppChange" : 2,
+    "pppResult" : 44
+  }, {
+    "gameId" : 21,
+    "userId" : 94,
+    "pppChange" : 2,
+    "pppResult" : 44
+  }, {
+    "gameId" : 20,
+    "userId" : 94,
+    "pppChange" : 2,
+    "pppResult" : 44
+  }, {
+    "gameId" : 19,
+    "userId" : 94,
+    "pppChange" : 2,
+    "pppResult" : 44
+  } ]
+}
 ----
