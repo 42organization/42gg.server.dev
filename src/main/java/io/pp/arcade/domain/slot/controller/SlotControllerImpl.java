@@ -58,20 +58,55 @@ public class SlotControllerImpl implements SlotController {
                 .joinUserPpp(user.getPpp())
                 .build();
         SlotDto slot = slotService.findSlotById(addDto.getSlotId());
+        TeamAddUserDto teamAddUserDto = getTeamAddUserDto(slot, addReqDto.getType(), user);
 
-        //type 확인하고 headCount 확인하고 어느팀에 보낼지 정해야 함.
+        //유저가 슬롯에 입장하면 currentMatch에 등록된다.
+        CurrentMatchAddDto matchAddDto = CurrentMatchAddDto.builder()
+                .slot(slot)
+                .userId(userId)
+                .build();
+        currentMatchService.addCurrentMatch(matchAddDto);
+
+        slotService.addUserInSlot(addDto);
+        teamService.addUserInTeam(teamAddUserDto);
+
+        slot = slotService.findSlotById(slot.getId());
+
+        //유저가 슬롯에 꽉 차면 currentMatch가 전부 바뀐다.
+        addUsersMachModify(user.getId(), slot);
+
+    }
+
+    private void addUsersMachModify (int userId, SlotDto slot) {
+        TeamDto team1 = slot.getTeam1();
+        TeamDto team2 = slot.getTeam2();
+        Integer maxSlotHeadCount = "single".equals(slot.getType()) ? 2 : 4;
+        Boolean isMatched = slot.getHeadCount().equals(maxSlotHeadCount) ? true : false;
+        Boolean isImminent = slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5)) ? true : false;
+        CurrentMatchModifyDto matchModifyDto = CurrentMatchModifyDto.builder()
+                .userId(userId)
+                .isMatched(isMatched)
+                .matchImminent(isImminent)
+                .build();
+        modifyCurrentMatch(team1.getUser1(), matchModifyDto);
+        modifyCurrentMatch(team1.getUser2(), matchModifyDto);
+        modifyCurrentMatch(team2.getUser1(), matchModifyDto);
+        modifyCurrentMatch(team2.getUser2(), matchModifyDto);
+    }
+
+    private TeamAddUserDto getTeamAddUserDto(SlotDto slot, String reqType, UserDto user) {
         Integer teamId;
         String slotType = slot.getType();
         TeamDto team1 = slot.getTeam1();
         TeamDto team2 = slot.getTeam2();
         Integer headCount = slot.getHeadCount();
         Integer maxTeamHeadCount = "single".equals(slotType) ? 1 : 2;
-        //
+
         SlotFilterDto slotFilterDto = SlotFilterDto.builder()
                 .slotId(slot.getId())
                 .slotTime(slot.getTime())
                 .slotType(slot.getType())
-                .requestType(addReqDto.getType())
+                .requestType(reqType)
                 .userPpp(user.getPpp())
                 .gamePpp(slot.getGamePpp())
                 .headCount(slot.getHeadCount())
@@ -87,41 +122,9 @@ public class SlotControllerImpl implements SlotController {
         }
         TeamAddUserDto teamAddUserDto = TeamAddUserDto.builder()
                 .teamId(teamId)
-                .userId(userId)
+                .userId(user.getId())
                 .build();
-
-        //유저가 슬롯에 입장하면 currentMatch에 등록된다.
-        CurrentMatchAddDto matchAddDto = CurrentMatchAddDto.builder()
-                .slot(slot)
-                .userId(userId)
-                .build();
-        currentMatchService.addCurrentMatch(matchAddDto);
-
-        slotService.addUserInSlot(addDto);
-        teamService.addUserInTeam(teamAddUserDto);
-
-        slot = slotService.findSlotById(slot.getId());
-        team1 = slot.getTeam1();
-        team2 = slot.getTeam2();
-        //유저가 슬롯에 꽉 차면 currentMatch가 전부 바뀐다.
-        Boolean isMatched = false;
-        Boolean isImminent = false;
-        Integer maxSlotHeadCount = "single".equals(slot.getType()) ? 2 : 4;
-        if (slot.getHeadCount().equals(maxSlotHeadCount)) {
-            isMatched = true;
-            if (slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5))) {
-                isImminent = true;
-            }
-            CurrentMatchModifyDto matchModifyDto = CurrentMatchModifyDto.builder()
-                    .userId(user.getId())
-                    .isMatched(isMatched)
-                    .matchImminent(isImminent)
-                    .build();
-            modifyCurrentMatch(team1.getUser1(), matchModifyDto);
-            modifyCurrentMatch(team1.getUser2(), matchModifyDto);
-            modifyCurrentMatch(team2.getUser1(), matchModifyDto);
-            modifyCurrentMatch(team2.getUser2(), matchModifyDto);
-        }
+        return teamAddUserDto;
     }
 
     @Override
