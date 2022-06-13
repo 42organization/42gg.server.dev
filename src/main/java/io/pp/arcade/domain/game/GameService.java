@@ -8,7 +8,11 @@ import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.team.dto.TeamDto;
+import io.pp.arcade.domain.user.User;
+import io.pp.arcade.domain.user.dto.UserDto;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -65,9 +69,14 @@ public class GameService {
     }
 
     @Transactional
-    public List<GameDto> findAllEndGames() {
-        List<Game> games = gameRepository.findAllByStatus("end");
+    public GameResultPageDto findEndGames(Pageable page) {
+        Page<Game> games = gameRepository.findByStatus("end", page);
         List<GameDto> gameDtoList = games.stream().map(GameDto::from).collect(Collectors.toList());
-        return gameDtoList;
+
+        GameResultPageDto resultPageDto = GameResultPageDto.builder().gameList(gameDtoList)
+                                                .currentPage(games.getNumber())
+                                                .totalPage(games.getTotalPages())
+                                                .build();
+        return resultPageDto;
     }
 }

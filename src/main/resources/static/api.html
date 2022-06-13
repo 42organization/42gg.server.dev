@@ -1928,7 +1928,7 @@ Content-Length: 157
 <h3 id="_curl_request_15"><a class="link" href="#_curl_request_15">curl-request</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/games?index=1&amp;count=1&amp;status=1' -i -X GET \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/games?page=1&amp;status=end' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8'</code></pre>
 </div>
 </div>
@@ -1937,7 +1937,7 @@ Content-Length: 157
 <h3 id="_http_request_15"><a class="link" href="#_http_request_15">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/games?index=1&amp;count=1&amp;status=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/games?page=1&amp;status=end HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Host: localhost:8080</code></pre>
 </div>
@@ -1949,7 +1949,7 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 1565
+Content-Length: 1605
 
 {
   "games" : [ {
@@ -2024,7 +2024,9 @@ Content-Length: 1565
       "isWin" : true,
       "score" : 2
     }
-  } ]
+  } ],
+  "currentPage" : 0,
+  "totalPage" : 1
 }</code></pre>
 </div>
 </div>
@@ -2038,7 +2040,7 @@ Content-Length: 1565
 <h3 id="_curl_request_16"><a class="link" href="#_curl_request_16">curl-request</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/games?index=1&amp;count=1&amp;status=1' -i -X GET \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/games?page=1&amp;status=end' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8'</code></pre>
 </div>
 </div>
@@ -2047,7 +2049,7 @@ Content-Length: 1565
 <h3 id="_http_request_16"><a class="link" href="#_http_request_16">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/games?index=1&amp;count=1&amp;status=1 HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/games?page=1&amp;status=end HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Host: localhost:8080</code></pre>
 </div>
@@ -2059,7 +2061,7 @@ Host: localhost:8080</code></pre>
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 1565
+Content-Length: 1605
 
 {
   "games" : [ {
@@ -2134,7 +2136,9 @@ Content-Length: 1565
       "isWin" : true,
       "score" : 2
     }
-  } ]
+  } ],
+  "currentPage" : 0,
+  "totalPage" : 1
 }</code></pre>
 </div>
 </div>
@@ -2258,7 +2262,7 @@ Content-Type: application/json
 Content-Length: 173
 
 {
-  "time" : "2022-06-14T10:30:15.904905",
+  "time" : "2022-06-14T12:00:17.455116",
   "slotId" : 19,
   "gameId" : null,
   "myTeam" : [ "jiyun", "wochae" ],
@@ -2301,7 +2305,7 @@ Content-Type: application/json
 Content-Length: 170
 
 {
-  "time" : "2022-06-14T10:30:15.928177",
+  "time" : "2022-06-14T12:00:17.481118",
   "slotId" : 20,
   "gameId" : 1,
   "myTeam" : [ "jiyun", "wochae" ],
@@ -2317,7 +2321,7 @@ Content-Length: 170
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-06-13 10:30:02 +0900
+Last updated 2022-06-13 10:58:12 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">
