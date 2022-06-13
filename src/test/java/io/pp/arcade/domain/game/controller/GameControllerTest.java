@@ -22,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
@@ -196,9 +197,9 @@ class GameControllerTest {
                 .andDo(document("save-game-result-double"));
         MultiValueMap<String, String> params;
         params = new LinkedMultiValueMap<>();
-        params.add("index", "1");
-        params.add("count", "1");
-        params.add("status", "1");
+//        Pageable pageable;
+        params.add("page", "1");
+        params.add("status", "end");
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params))
                 .andExpect(status().isOk())

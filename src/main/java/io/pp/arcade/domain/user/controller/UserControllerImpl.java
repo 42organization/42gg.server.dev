@@ -3,9 +3,11 @@ package io.pp.arcade.domain.user.controller;
 import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
+import io.pp.arcade.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.*;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -53,14 +55,13 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @GetMapping(value = "/users/{userId}/historics")
-    public UserHistoricResponseDto findUserHistorics(Integer userId) {
-        List<PChangeDto> pChangeList = pChangeService.findPChangeByUserId(PChangeFindDto.builder()
+    public UserHistoricResponseDto findUserHistorics(Integer userId, Pageable pageable) {
+        PChangePageDto pChangePage = pChangeService.findPChangeByUserId(PChangeFindDto.builder()
                 .userId(userId)
-                .build());
+                .build(), pageable);
+        List<PChangeDto> pChangeList = pChangePage.getPChangeList();
         List<UserHistoricDto> historicDtos = new ArrayList<UserHistoricDto>();
         for (PChangeDto dto : pChangeList){
-            if (pChangeList.indexOf(dto) >= 10)
-                break;
             historicDtos.add(UserHistoricDto.builder()
                     .gameId(dto.getGame().getId())
                     .userId(dto.getUser().getId())
