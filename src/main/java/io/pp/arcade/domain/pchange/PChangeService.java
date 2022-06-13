@@ -5,9 +5,12 @@ import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
+import io.pp.arcade.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -42,10 +45,15 @@ public class PChangeService {
     }
 
     @Transactional
-    public List<PChangeDto> findPChangeByUserId(PChangeFindDto findDto){
+    public PChangePageDto findPChangeByUserId(PChangeFindDto findDto, Pageable pageable){
         User user = userRepository.findById(findDto.getUserId()).orElseThrow();
-        List<PChange> pChangeList = pChangeRepository.findAllByUserOrderByIdDesc(user);
-        return pChangeList.stream().map(PChangeDto::from).collect(Collectors.toList());
+        Page<PChange> pChangePage = pChangeRepository.findAllByUserOrderByIdDesc(user, pageable);
+        PChangePageDto dto = PChangePageDto.builder()
+                .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()))
+                .totalPage(pChangePage.getTotalPages())
+                .currentPage(pChangePage.getPageable().getPageNumber())
+                .build();
+        return dto;
     }
 
     @Transactional

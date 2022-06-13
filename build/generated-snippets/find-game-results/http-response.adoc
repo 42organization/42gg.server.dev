@@ -2,7 +2,7 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 1565
+Content-Length: 1605
 
 {
   "games" : [ {
@@ -77,6 +77,8 @@ Content-Length: 1565
       "isWin" : true,
       "score" : 2
     }
-  } ]
+  } ],
+  "currentPage" : 0,
+  "totalPage" : 1
 }
 ----

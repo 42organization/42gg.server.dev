@@ -73,6 +73,8 @@
       "isWin" : true,
       "score" : 2
     }
-  } ]
+  } ],
+  "currentPage" : 0,
+  "totalPage" : 1
 }
 ----

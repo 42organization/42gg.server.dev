@@ -2,10 +2,12 @@ package io.pp.arcade.domain.game.controller;
 
 import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.game.dto.*;
+import io.pp.arcade.domain.pchange.PChange;
 import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
+import io.pp.arcade.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.team.dto.TeamModifyGameResultDto;
@@ -14,6 +16,8 @@ import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import io.pp.arcade.global.util.EloRating;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -73,14 +77,15 @@ public class GameControllerImpl implements GameController {
 
     @Override
     @GetMapping(value = "/games")
-    public GameResultResponseDto gameResultByIndexAndCount(Integer index, Integer count, String status) {
-        List<GameDto> gameLists = gameService.findAllEndGames();
+    public GameResultResponseDto gameResultByIndexAndCount(Pageable pageable, String status) {
+        GameResultPageDto resultPageDto = gameService.findEndGames(pageable);
         TeamDto team1;
         TeamDto team2;
         List<GamePlayerDto> gamePlayerList;
         List<GameResultDto> gameResultList = new ArrayList<>();
         GameTeamDto teamDto1;
         GameTeamDto teamDto2;
+        List<GameDto> gameLists = resultPageDto.getGameList();
 
         for (GameDto game : gameLists) {
             team1 = game.getTeam1();
@@ -115,13 +120,15 @@ public class GameControllerImpl implements GameController {
 
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
+                .currentPage(resultPageDto.getCurrentPage())
+                .totalPage(resultPageDto.getTotalPage())
                 .build();
         return gameResultResponse;
     }
 
     private void putGamePlayerDto(GameDto game, UserDto user, List<GamePlayerDto> gamePlayerList) {
         if (user == null) {
-            return ;
+            return;
         } else {
             PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().gameId(game.getId()).userId(user.getId()).build());
             GamePlayerDto gamePlayerDto = GamePlayerDto.builder()
@@ -138,24 +145,63 @@ public class GameControllerImpl implements GameController {
 
     @Override
     @GetMapping(value = "/games/users/{userId}")
-    public GameResultResponseDto gameResultByUserIdAndIndexAndCount(Integer userId, Integer index, Integer count, String type) {
-        List<PChangeDto> pChangeDtos = pChangeService.findPChangeByUserId(PChangeFindDto.builder().userId(userId).build());
-
+    public GameResultResponseDto gameResultByUserIdAndIndexAndCount(Integer userId, Pageable pageable, String type) {
         //Pageable
-        List<GameResultDto> games = new ArrayList<>();
-        for (GameResultDto dto : games) {
-            games.add(GameResultDto.builder()
-                    .gameId(dto.getGameId())
-                    .type(dto.getType())
-                    .status(dto.getStatus())
-                    .time(dto.getTime())
-                    .team1(dto.getTeam1())
-                    .team2(dto.getTeam2())
+        /*
+         * 1. PChange에서 유저별 게임 목록을 가져온다
+         * 2. 얘네를 바탕으로 게임을 다 긁어온다.
+         * 3. 얘네를 DTO로 만들어준다
+         *
+         */
+        PChangeFindDto findDto = PChangeFindDto.builder()
+                .userId(userId)
+                .build();
+        PChangePageDto pChangePageDto = pChangeService.findPChangeByUserId(findDto, pageable);
+        List<PChangeDto> gameLists = pChangePageDto.getPChangeList();
+        TeamDto team1;
+        TeamDto team2;
+        List<GamePlayerDto> gamePlayerList;
+        List<GameResultDto> gameResultList = new ArrayList<>();
+        GameTeamDto teamDto1;
+        GameTeamDto teamDto2;
+
+        for (PChangeDto pChangeDto : gameLists) {
+            GameDto game = pChangeDto.getGame();
+            team1 = game.getTeam1();
+            team2 = game.getTeam2();
+
+            gamePlayerList = new ArrayList<>();
+            putGamePlayerDto(game, team1.getUser1(), gamePlayerList);
+            putGamePlayerDto(game, team1.getUser2(), gamePlayerList);
+            teamDto1 = GameTeamDto.builder()
+                    .isWin(team1.getWin())
+                    .score(team1.getScore())
+                    .playerInfos(gamePlayerList)
+                    .build();
+
+            gamePlayerList = new ArrayList();
+            putGamePlayerDto(game, team2.getUser1(), gamePlayerList);
+            putGamePlayerDto(game, team2.getUser2(), gamePlayerList);
+            teamDto2 = GameTeamDto.builder()
+                    .isWin(team2.getWin())
+                    .score(team2.getScore())
+                    .playerInfos(gamePlayerList)
+                    .build();
+
+            gameResultList.add(GameResultDto.builder()
+                    .gameId(game.getId())
+                    .team1(teamDto1)
+                    .team2(teamDto2)
+                    .status(game.getStatus())
+                    .time(game.getTime())
                     .build());
         }
-        GameResultResponseDto gameResultResponseDto = GameResultResponseDto.builder()
-                .games(games).build();
-        return gameResultResponseDto;
+        GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
+                .games(gameResultList)
+                .currentPage(pChangePageDto.getCurrentPage())
+                .totalPage(pChangePageDto.getTotalPage())
+                .build();
+        return gameResultResponse;
     }
 
     private List<TeamModifyGameResultDto> getTeamModifyDto(TeamDto team1, TeamDto team2, GameResultRequestDto requestDto, UserDto user) {
