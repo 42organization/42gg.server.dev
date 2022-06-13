@@ -120,7 +120,7 @@ class UserControllerTest {
     @Test
     @Transactional
     void findUserHistorics() throws Exception {
-        mockMvc.perform(get("/pingpong/users/"+ user.getId().toString() +"/historics").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/pingpong/users/"+ user.getIntraId().toString() +"/historics").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("find-user-historics"));
     }

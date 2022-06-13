@@ -13,7 +13,7 @@ public class UserDetailResponseDto {
     private Integer ppp;
     private Integer wins;
     private Integer losses;
-    private Integer winRate;
+    private Double winRate;
     private RacketType racketType;
     private String statusMessage;
 }
