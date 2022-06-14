@@ -5,9 +5,9 @@ Content-Type: application/json
 Content-Length: 170
 
 {
-  "time" : "2022-06-15T15:57:51.601457",
-  "slotId" : 20,
-  "gameId" : 1,
+  "time" : "2022-06-15T16:26:39.364237",
+  "slotId" : 25,
+  "gameId" : 6,
   "myTeam" : [ "jiyun", "wochae" ],
   "enemyTeam" : [ "hakim", "new" ],
   "isMatched" : true

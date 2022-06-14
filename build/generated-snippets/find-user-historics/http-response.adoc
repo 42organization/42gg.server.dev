@@ -2,9 +2,69 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 43
+Content-Length: 1321
 
 {
-  "datas" : [ "donghyuk", "donghyuk2" ]
+  "historics" : [ {
+    "gameId" : 20,
+    "userId" : 16,
+    "pppChange" : 2,
+    "pppResult" : 44,
+    "time" : "2022-06-15T16:26:35.383633"
+  }, {
+    "gameId" : 19,
+    "userId" : 16,
+    "pppChange" : 2,
+    "pppResult" : 44,
+    "time" : "2022-06-15T16:26:35.370544"
+  }, {
+    "gameId" : 18,
+    "userId" : 16,
+    "pppChange" : 2,
+    "pppResult" : 44,
+    "time" : "2022-06-15T16:26:35.359926"
+  }, {
+    "gameId" : 17,
+    "userId" : 16,
+    "pppChange" : 2,
+    "pppResult" : 44,
+    "time" : "2022-06-15T16:26:35.343598"
+  }, {
+    "gameId" : 16,
+    "userId" : 16,
+    "pppChange" : 2,
+    "pppResult" : 44,
+    "time" : "2022-06-15T16:26:35.329766"
+  }, {
+    "gameId" : 15,
+    "userId" : 16,
+    "pppChange" : 2,
+    "pppResult" : 44,
+    "time" : "2022-06-15T16:26:35.304624"
+  }, {
+    "gameId" : 14,
+    "userId" : 16,
+    "pppChange" : 2,
+    "pppResult" : 44,
+    "time" : "2022-06-15T16:26:35.289057"
+  }, {
+    "gameId" : 13,
+    "userId" : 16,
+    "pppChange" : 2,
+    "pppResult" : 44,
+    "time" : "2022-06-15T16:26:35.28259"
+  }, {
+    "gameId" : 12,
+    "userId" : 16,
+    "pppChange" : 2,
+    "pppResult" : 44,
+    "time" : "2022-06-15T16:26:35.277518"
+  }, {
+    "gameId" : 11,
+    "userId" : 16,
+    "pppChange" : 2,
+    "pppResult" : 44,
+    "time" : "2022-06-15T16:26:35.268559"
+  } ]
 }
 ----

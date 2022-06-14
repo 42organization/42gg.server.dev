@@ -2,14 +2,14 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 1638
+Content-Length: 1639
 
 {
   "games" : [ {
-    "gameId" : 1,
+    "gameId" : 9,
     "type" : null,
     "status" : "end",
-    "time" : "2022-06-14T15:00:00",
+    "time" : "2022-06-15T15:00:00",
     "team1" : {
       "playerInfos" : [ {
         "userId" : "donghyuk",
@@ -35,10 +35,10 @@ Content-Length: 1638
       "score" : 1
     }
   }, {
-    "gameId" : 2,
+    "gameId" : 10,
     "type" : null,
     "status" : "end",
-    "time" : "2022-06-14T15:10:00",
+    "time" : "2022-06-15T15:10:00",
     "team1" : {
       "playerInfos" : [ {
         "userId" : "jekim",
