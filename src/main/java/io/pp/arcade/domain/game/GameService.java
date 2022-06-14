@@ -31,8 +31,6 @@ public class GameService {
     public GameDto findById(Integer gameId) {
         Game game = gameRepository.findById(gameId)
                 .orElseThrow(() -> new IllegalArgumentException("gameId를 찾을 수 없다."));
-        Team team1 = teamRepository.findById(game.getTeam1().getId()).orElseThrow(() -> new IllegalArgumentException("?"));
-        Team team2 = teamRepository.findById(game.getTeam2().getId()).orElseThrow(() -> new IllegalArgumentException("?"));
         GameDto dto = GameDto.from(game);
         return dto;
     }

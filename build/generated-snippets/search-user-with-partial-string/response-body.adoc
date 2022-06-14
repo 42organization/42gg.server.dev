@@ -1,6 +1,6 @@
 [source,options="nowrap"]
 ----
 {
-  "users" : [ "jiyun1", "jiyun2", "jekim", "jihyukim", "jabae", "sujpark" ]
+  "users" : [ ]
 }
 ----
