@@ -2,9 +2,9 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 79
+Content-Length: 19
 
 {
-  "users" : [ "jiyun1", "jiyun2", "jekim", "jihyukim", "jabae", "sujpark" ]
+  "users" : [ ]
 }
 ----
