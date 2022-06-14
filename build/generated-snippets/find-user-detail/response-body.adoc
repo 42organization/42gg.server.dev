@@ -3,11 +3,11 @@
 {
   "userId" : "jiyun1",
   "userImageUri" : null,
-  "rank" : null,
+  "rank" : 1,
   "ppp" : 42,
-  "wins" : null,
-  "losses" : null,
-  "winRate" : null,
+  "wins" : 1,
+  "losses" : 0,
+  "winRate" : 100.0,
   "racketType" : null,
   "statusMessage" : ""
 }

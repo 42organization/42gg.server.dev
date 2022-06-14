@@ -3,6 +3,6 @@
 {
   "userId" : "jiyun1",
   "userImageUri" : null,
-  "notiCount" : null
+  "notiCount" : 10
 }
 ----
