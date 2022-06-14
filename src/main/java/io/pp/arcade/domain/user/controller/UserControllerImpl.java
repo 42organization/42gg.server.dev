@@ -95,13 +95,14 @@ public class UserControllerImpl implements UserController {
     @Override
     @PostMapping(value = "/users/{userId}/detail")
     public void userModifyProfile(String userId) {
-       UserDto user = userService.findByIntraId(userId);
-       userService.modifyUserProfile(UserModifyProfileDto.builder()
-               .userId(user.getId())
-               .userImageUri(user.getImageUri())
-               .racketType(user.getRacketType())
-               .statusMessage(user.getStatusMessage()).build());
-  
+        UserDto user = userService.findByIntraId(userId);
+        userService.modifyUserProfile(UserModifyProfileDto.builder()
+                .userId(user.getId())
+                .userImageUri(user.getImageUri())
+                .racketType(user.getRacketType())
+                .statusMessage(user.getStatusMessage()).build());
+    }
+
     @GetMapping(value = "/users/searches")
     public UserSearchResultResponseDto userSearchResult(String userId) {
         List<String> users = userService.findByPartsOfIntraId(UserSearchDto.builder().intraId(userId).build())

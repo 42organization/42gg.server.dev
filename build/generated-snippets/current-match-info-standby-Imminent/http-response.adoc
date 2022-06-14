@@ -6,7 +6,7 @@ Content-Length: 133
 
 {
   "time" : "2022-06-15T15:10:00",
-  "slotId" : 2,
+  "slotId" : 7,
   "gameId" : null,
   "myTeam" : [ ],
   "enemyTeam" : [ ],

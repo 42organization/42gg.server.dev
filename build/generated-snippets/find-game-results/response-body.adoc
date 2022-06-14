@@ -2,10 +2,10 @@
 ----
 {
   "games" : [ {
-    "gameId" : 1,
+    "gameId" : 9,
     "type" : null,
     "status" : "end",
-    "time" : "2022-06-14T15:00:00",
+    "time" : "2022-06-15T15:00:00",
     "team1" : {
       "playerInfos" : [ {
         "userId" : "donghyuk",
@@ -31,10 +31,10 @@
       "score" : 1
     }
   }, {
-    "gameId" : 2,
+    "gameId" : 10,
     "type" : null,
     "status" : "end",
-    "time" : "2022-06-14T15:10:00",
+    "time" : "2022-06-15T15:10:00",
     "team1" : {
       "playerInfos" : [ {
         "userId" : "jekim",

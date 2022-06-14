@@ -1,8 +1,8 @@
 [source,options="nowrap"]
 ----
 {
-  "time" : "2022-06-15T15:57:51.553281",
-  "slotId" : 19,
+  "time" : "2022-06-15T16:26:39.318414",
+  "slotId" : 24,
   "gameId" : null,
   "myTeam" : [ "jiyun", "wochae" ],
   "enemyTeam" : [ "hakim", "new" ],
