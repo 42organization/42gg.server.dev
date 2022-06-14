@@ -18,4 +18,5 @@ public interface GameController {
     void gameResultSave(@PathVariable Integer gameId, @RequestBody GameResultRequestDto getterDto, @RequestParam Integer userId);
     GameResultResponseDto gameResultByIndexAndCount(Pageable pageable, @RequestParam(required = false) String status);
     GameResultResponseDto gameResultByUserIdAndIndexAndCount(@PathVariable String userId, Pageable pageable, @RequestParam String type);
+
 }
