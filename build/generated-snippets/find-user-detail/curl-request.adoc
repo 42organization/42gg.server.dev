@@ -1,5 +1,5 @@
 [source,bash]
 ----
-$ curl 'http://localhost:8080/pingpong/users/90/detail?currentUserId=90' -i -X GET \
+$ curl 'http://localhost:8080/pingpong/users/jiyun1/detail?currentUserId=1' -i -X GET \
     -H 'Content-Type: application/json;charset=UTF-8'
 ----

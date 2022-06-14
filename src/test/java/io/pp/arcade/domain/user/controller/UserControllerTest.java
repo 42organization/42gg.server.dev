@@ -177,7 +177,7 @@ class UserControllerTest {
     @Test
     @Transactional
     void findDetailUser() throws Exception {
-        mockMvc.perform(get("/pingpong/users/"+ user.getId().toString() +"/detail").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/users/"+ user.getIntraId().toString() +"/detail").contentType(MediaType.APPLICATION_JSON)
                 .param("currentUserId",user.getId().toString()))
                 .andExpect(status().isOk())
                 .andDo(document("find-user-detail"));
