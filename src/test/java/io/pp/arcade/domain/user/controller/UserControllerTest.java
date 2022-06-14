@@ -195,7 +195,7 @@ class UserControllerTest {
     @Transactional
     void findByPartsOfIntraId() throws Exception {
         mockMvc.perform(get("/pingpong/users/searches").contentType(MediaType.APPLICATION_JSON)
-                .param("userId", "j"))
+                .param("userId", "zzang"))
                 .andExpect(status().isOk())
                 .andDo(document("search-user-with-partial-string"));
     }

@@ -66,18 +66,30 @@ public class SlotControllerImpl implements SlotController {
                 .userId(userId)
                 .build();
         currentMatchService.addCurrentMatch(matchAddDto);
-
         slotService.addUserInSlot(addDto);
         teamService.addUserInTeam(teamAddUserDto);
 
         slot = slotService.findSlotById(slot.getId());
 
         //유저가 슬롯에 꽉 차면 currentMatch가 전부 바뀐다.
-        addUsersMachModify(user.getId(), slot);
+        modifyUsersCurrentMatchStatus(user.getId(), slot);
 
     }
 
-    private void addUsersMachModify (int userId, SlotDto slot) {
+    @Override
+    @DeleteMapping(value = "/match/tables/{tableId}")
+    public void slotRemoveUser(Integer tableId, Integer slotId, Integer pUserId) {
+        // slotId , tableId 유효성 검사
+        UserDto user = userService.findById(pUserId);
+        // 유저 조회, 슬롯 조회, 팀 조회( 슬롯에 헤드 카운트 -, 팀에서 유저 퇴장 )
+        SlotDto slot = slotService.findSlotById(slotId);
+
+        currentMatchService.removeCurrentMatch(user.getId());
+        teamService.removeUserInTeam(getTeamRemoveUserDto(slot, user));
+        slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
+    }
+
+    private void modifyUsersCurrentMatchStatus(int userId, SlotDto slot) {
         TeamDto team1 = slot.getTeam1();
         TeamDto team2 = slot.getTeam2();
         Integer maxSlotHeadCount = "single".equals(slot.getType()) ? 2 : 4;
@@ -125,19 +137,6 @@ public class SlotControllerImpl implements SlotController {
                 .userId(user.getId())
                 .build();
         return teamAddUserDto;
-    }
-
-    @Override
-    @DeleteMapping(value = "/match/tables/{tableId}")
-    public void slotRemoveUser(Integer tableId, Integer slotId, Integer pUserId) {
-        // slotId , tableId 유효성 검사
-        UserDto user = userService.findById(pUserId);
-        // 유저 조회, 슬롯 조회, 팀 조회( 슬롯에 헤드 카운트 -, 팀에서 유저 퇴장 )
-        SlotDto slot = slotService.findSlotById(slotId);
-
-        currentMatchService.removeCurrentMatch(user.getId());
-        teamService.removeUserInTeam(getTeamRemoveUserDto(slot, user));
-        slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
     }
 
     private TeamRemoveUserDto getTeamRemoveUserDto(SlotDto slot, UserDto user) {
