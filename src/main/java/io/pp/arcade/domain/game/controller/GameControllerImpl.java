@@ -204,6 +204,8 @@ public class GameControllerImpl implements GameController {
         return gameResultResponse;
     }
 
+
+
     private List<TeamModifyGameResultDto> getTeamModifyDto(TeamDto team1, TeamDto team2, GameResultRequestDto requestDto, UserDto user) {
         Integer team1Score;
         Integer team2Score;
@@ -284,5 +286,4 @@ public class GameControllerImpl implements GameController {
             enemyTeams.add(GameUserInfoDto.builder().intraId(enemyTeamUser2.getIntraId()).userImageUri(enemyTeamUser2.getImageUri()).build());
         }
     }
-
 }
