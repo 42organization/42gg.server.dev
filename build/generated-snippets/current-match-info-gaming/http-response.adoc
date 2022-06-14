@@ -5,7 +5,7 @@ Content-Type: application/json
 Content-Length: 170
 
 {
-  "time" : "2022-06-14T12:00:17.481118",
+  "time" : "2022-06-15T15:57:51.601457",
   "slotId" : 20,
   "gameId" : 1,
   "myTeam" : [ "jiyun", "wochae" ],
