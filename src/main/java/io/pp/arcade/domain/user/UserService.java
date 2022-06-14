@@ -2,6 +2,7 @@ package io.pp.arcade.domain.user;
 
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
+import io.pp.arcade.domain.user.dto.UserModifyProfileDto;
 import io.pp.arcade.domain.user.dto.UserSearchDto;
 import io.pp.arcade.domain.user.dto.UserUpdateInfoDto;
 import lombok.AllArgsConstructor;
@@ -43,9 +44,16 @@ public class UserService {
     @Transactional
     public void modifyUserPpp(UserModifyPppDto modifyDto) {
         User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수 입니다."));
-        user.update(modifyDto.getPpp());
+        user.setPpp(modifyDto.getPpp());
     }
 
+    /* 유저 정보 업데이트 */
+    public void modifyUserProfile(UserModifyProfileDto modifyDto) {
+        User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수 입니다."));
+        user.setImageUri(modifyDto.getUserImageUri());
+        user.setRacketType(modifyDto.getRacketType());
+        user.setStatusMessage(modifyDto.getStatusMessage());
+      
     /* 문자열을 포함하는 intraId를 가진 유저 찾기 */
     @Transactional
     public List<UserDto> findByPartsOfIntraId(UserSearchDto userSearchDto) {

@@ -115,7 +115,6 @@ public class GameControllerImpl implements GameController {
     }
 
     // 이하 분리된 메서드
-
     private List<TeamModifyGameResultDto> getTeamModifyDto(TeamDto team1, TeamDto team2, GameResultRequestDto requestDto, UserDto user) {
         Integer team1Score;
         Integer team2Score;
@@ -205,7 +204,7 @@ public class GameControllerImpl implements GameController {
             enemyTeams.add(GameUserInfoDto.builder().intraId(enemyTeamUser2.getIntraId()).userImageUri(enemyTeamUser2.getImageUri()).build());
         }
     }
-
+  
     private void putResultInGames(List<GameResultDto> gameResultList, List<GameDto> gameLists) {
         TeamDto team1;
         TeamDto team2;
