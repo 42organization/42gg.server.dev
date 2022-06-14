@@ -2,17 +2,17 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 1605
+Content-Length: 1638
 
 {
   "games" : [ {
-    "gameId" : 4,
+    "gameId" : 1,
     "type" : null,
     "status" : "end",
     "time" : "2022-06-14T15:00:00",
     "team1" : {
       "playerInfos" : [ {
-        "userId" : 16,
+        "userId" : "donghyuk",
         "userImageUri" : null,
         "wins" : null,
         "losses" : null,
@@ -24,7 +24,7 @@ Content-Length: 1605
     },
     "team2" : {
       "playerInfos" : [ {
-        "userId" : 17,
+        "userId" : "nheo",
         "userImageUri" : null,
         "wins" : null,
         "losses" : null,
@@ -35,20 +35,20 @@ Content-Length: 1605
       "score" : 1
     }
   }, {
-    "gameId" : 5,
+    "gameId" : 2,
     "type" : null,
     "status" : "end",
     "time" : "2022-06-14T15:10:00",
     "team1" : {
       "playerInfos" : [ {
-        "userId" : 18,
+        "userId" : "jekim",
         "userImageUri" : null,
         "wins" : null,
         "losses" : null,
         "winRate" : null,
         "pppChange" : -20
       }, {
-        "userId" : 19,
+        "userId" : "jiyun",
         "userImageUri" : null,
         "wins" : null,
         "losses" : null,
@@ -60,14 +60,14 @@ Content-Length: 1605
     },
     "team2" : {
       "playerInfos" : [ {
-        "userId" : 20,
+        "userId" : "wochae",
         "userImageUri" : null,
         "wins" : null,
         "losses" : null,
         "winRate" : null,
         "pppChange" : 20
       }, {
-        "userId" : 21,
+        "userId" : "hakim",
         "userImageUri" : null,
         "wins" : null,
         "losses" : null,
