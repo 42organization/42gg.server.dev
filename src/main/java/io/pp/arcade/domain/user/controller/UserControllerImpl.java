@@ -4,11 +4,13 @@ import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
+import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.*;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -87,5 +89,16 @@ public class UserControllerImpl implements UserController {
         UserHistoricResponseDto responseDto = UserHistoricResponseDto.builder()
                 .historics(historicDtos).build();
         return responseDto;
+    }
+
+    @Override
+    @PostMapping(value = "/users/{userId}/detail")
+    public void userModifyProfile(String userId) {
+       UserDto user = userService.findByIntraId(userId);
+       userService.modifyUserProfile(UserModifyProfileDto.builder()
+               .userId(user.getId())
+               .userImageUri(user.getImageUri())
+               .racketType(user.getRacketType())
+               .statusMessage(user.getStatusMessage()).build());
     }
 }

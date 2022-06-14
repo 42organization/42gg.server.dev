@@ -4,6 +4,7 @@ import io.pp.arcade.global.util.RacketType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -20,16 +21,20 @@ public class User {
     @Column(name = "intra_id")
     private String intraId;
 
+    @Setter
     @Column(name = "image_uri")
     private String imageUri;
 
+    @Setter
     @Column(name = "racket_type")
     private RacketType racketType;
 
+    @Setter
     @NotNull
     @Column(name = "status_message")
     private String statusMessage;
 
+    @Setter
     @NotNull
     @Column(name = "ppp")
     private Integer ppp;
@@ -40,10 +45,6 @@ public class User {
         this.imageUri = imageUri;
         this.racketType = racketType;
         this.statusMessage = statusMessage;
-        this.ppp = ppp;
-    }
-
-    public void update(Integer ppp) {
         this.ppp = ppp;
     }
 }

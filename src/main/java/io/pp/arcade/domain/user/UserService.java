@@ -2,7 +2,7 @@ package io.pp.arcade.domain.user;
 
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
-import io.pp.arcade.domain.user.dto.UserUpdateInfoDto;
+import io.pp.arcade.domain.user.dto.UserModifyProfileDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -40,13 +40,15 @@ public class UserService {
     @Transactional
     public void modifyUserPpp(UserModifyPppDto modifyDto) {
         User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수 입니다."));
-        user.update(modifyDto.getPpp());
+        user.setPpp(modifyDto.getPpp());
     }
 
     /* 유저 정보 업데이트 */
-
-    public void updateUserInfo(UserUpdateInfoDto updateDto) {
-
+    public void modifyUserProfile(UserModifyProfileDto modifyDto) {
+        User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수 입니다."));
+        user.setImageUri(modifyDto.getUserImageUri());
+        user.setRacketType(modifyDto.getRacketType());
+        user.setStatusMessage(modifyDto.getStatusMessage());
     }
 
 }
