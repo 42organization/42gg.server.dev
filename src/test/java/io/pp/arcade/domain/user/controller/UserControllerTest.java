@@ -73,6 +73,72 @@ class UserControllerTest {
         user2 = userRepository.save(User.builder().intraId("jiyun2").statusMessage("").ppp(24).build());
         user3 = userRepository.save(User.builder().intraId("nheo1").statusMessage("").ppp(60).build());
         user4 = userRepository.save(User.builder().intraId("nheo2").statusMessage("").ppp(30).build());
+        userRepository.save(User.builder()
+                .intraId("hakim")
+                .statusMessage("")
+                .ppp(1)
+                .build()
+        );
+        userRepository.save(User.builder()
+                .intraId("nheo")
+                .statusMessage("")
+                .ppp(1)
+                .build()
+        );
+        userRepository.save(User.builder()
+                .intraId("donghyuk")
+                .statusMessage("")
+                .ppp(1)
+                .build()
+        );
+        userRepository.save(User.builder()
+                .intraId("wochae")
+                .statusMessage("")
+                .ppp(1)
+                .build()
+        );
+        userRepository.save(User.builder()
+                .intraId("jekim")
+                .statusMessage("")
+                .ppp(1)
+                .build()
+        );
+        userRepository.save(User.builder()
+                .intraId("jihyukim")
+                .statusMessage("")
+                .ppp(1)
+                .build()
+        );
+        userRepository.save(User.builder()
+                .intraId("jabae")
+                .statusMessage("")
+                .ppp(1)
+                .build()
+        );
+        userRepository.save(User.builder()
+                .intraId("kipark")
+                .statusMessage("")
+                .ppp(1)
+                .build()
+        );
+        userRepository.save(User.builder()
+                .intraId("daekim")
+                .statusMessage("")
+                .ppp(1)
+                .build()
+        );
+        userRepository.save(User.builder()
+                .intraId("sujpark")
+                .statusMessage("")
+                .ppp(1)
+                .build()
+        );
+        userRepository.save(User.builder()
+                .intraId("Polarbear")
+                .statusMessage("")
+                .ppp(1)
+                .build()
+        );
         PChange pChange;
         for (int i = 0; i < 10; i++) {
             Team team1 = teamRepository.save(Team.builder().teamPpp(0)
@@ -123,5 +189,14 @@ class UserControllerTest {
         mockMvc.perform(get("/pingpong/users/"+ user.getIntraId().toString() +"/historics").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("find-user-historics"));
+    }
+
+    @Test
+    @Transactional
+    void findByPartsOfIntraId() throws Exception {
+        mockMvc.perform(get("/pingpong/users/searches").contentType(MediaType.APPLICATION_JSON)
+                .param("userId", "zzang"))
+                .andExpect(status().isOk())
+                .andDo(document("search-user-with-partial-string"));
     }
 }
