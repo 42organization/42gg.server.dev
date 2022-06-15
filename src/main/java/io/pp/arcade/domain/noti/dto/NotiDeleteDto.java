@@ -7,5 +7,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class NotiDeleteDto {
+    private Integer notiId;
     private UserDto user;
 }

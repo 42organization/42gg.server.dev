@@ -1,5 +1,11 @@
 package io.pp.arcade.domain.user.controller;
 
+import io.pp.arcade.domain.currentmatch.CurrentMatch;
+import io.pp.arcade.domain.currentmatch.CurrentMatchService;
+import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
+import io.pp.arcade.domain.noti.NotiService;
+import io.pp.arcade.domain.noti.dto.NotiCountDto;
+import io.pp.arcade.domain.noti.dto.NotiFindDto;
 import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
@@ -9,10 +15,7 @@ import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.*;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +27,8 @@ import java.util.stream.Collectors;
 public class UserControllerImpl implements UserController {
     private final UserService userService;
     private final PChangeService pChangeService;
-
+    private final NotiService notiService;
+    private final CurrentMatchService currentMatchService;
     /* *
      * [메인 페이지]
      * 유저 기본 정보 조회
@@ -93,7 +97,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @PostMapping(value = "/users/{userId}/detail")
+    @PutMapping(value = "/users/{userId}/detail")
     public void userModifyProfile(String userId) {
         UserDto user = userService.findByIntraId(userId);
         userService.modifyUserProfile(UserModifyProfileDto.builder()
@@ -104,9 +108,24 @@ public class UserControllerImpl implements UserController {
     }
 
     @GetMapping(value = "/users/searches")
-    public UserSearchResultResponseDto userSearchResult(String userId) {
-        List<String> users = userService.findByPartsOfIntraId(UserSearchDto.builder().intraId(userId).build())
+    public UserSearchResultResponseDto userSearchResult(String inquiringString) {
+        List<String> users = userService.findByPartsOfIntraId(UserSearchDto.builder().intraId(inquiringString).build())
                 .stream().map(UserDto::getIntraId).collect(Collectors.toList());
         return UserSearchResultResponseDto.builder().users(users).build();
+    }
+
+    @GetMapping(value = "/users/{intraId}/live")
+    public UserLiveInfoResponseDto userLiveInfo(String intraId, Integer userId) {
+        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUserId(userId);
+        if (!userId.equals(currentMatch.getUserId())) {
+            throw new IllegalArgumentException("?");
+        }
+        UserDto user = userService.findById(userId);
+        NotiCountDto notiCount = notiService.countAllNByUser(NotiFindDto.builder().user(user).build());
+        UserLiveInfoResponseDto userLiveInfoResponse = UserLiveInfoResponseDto.builder()
+                .notiCount(notiCount.getNotiCount()) //
+                .gameId(currentMatch.getGame() != null ? currentMatch.getGame().getId() : null)
+                .build();
+        return userLiveInfoResponse;
     }
 }

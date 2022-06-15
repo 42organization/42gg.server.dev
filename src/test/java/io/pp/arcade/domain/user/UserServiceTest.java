@@ -2,6 +2,8 @@ package io.pp.arcade.domain.user;
 
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
+import io.pp.arcade.domain.user.dto.UserModifyProfileDto;
+import io.pp.arcade.global.util.RacketType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,5 +79,25 @@ class UserServiceTest {
 
         //then
         Assertions.assertThat(userDto2.getPpp()).isEqualTo(50);
+    }
+
+    @Test
+    @Transactional
+    void modifyUserProfile() {
+        //given
+        UserDto userDto = userService.findByIntraId("jiyun");
+        UserModifyProfileDto dto = UserModifyProfileDto.builder()
+                .userId(userDto.getId())
+                .userImageUri("image")
+                .racketType(RacketType.SHAKEHAND)
+                .statusMessage("선출 아님").build();
+        //when
+        userService.modifyUserProfile(dto);
+        User user = userRepository.findByIntraId("jiyun").orElseThrow();
+
+        //then
+        Assertions.assertThat(user.getImageUri()).isEqualTo("image");
+        Assertions.assertThat(user.getRacketType()).isEqualTo(RacketType.SHAKEHAND);
+        Assertions.assertThat(user.getStatusMessage()).isEqualTo("선출 아님");
     }
 }

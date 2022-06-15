@@ -32,7 +32,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -198,5 +198,13 @@ class UserControllerTest {
                 .param("userId", "zzang"))
                 .andExpect(status().isOk())
                 .andDo(document("search-user-with-partial-string"));
+    }
+
+    @Test
+    @Transactional
+    void modifyProfile() throws Exception {
+        mockMvc.perform(put("/pingpong/users/" + user.getIntraId().toString() + "/detail").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("modify-user-profile"));
     }
 }

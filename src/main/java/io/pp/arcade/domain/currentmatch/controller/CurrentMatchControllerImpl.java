@@ -3,8 +3,11 @@ package io.pp.arcade.domain.currentmatch.controller;
 import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchResponseDto;
+import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
+import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamDto;
+import io.pp.arcade.domain.team.dto.TeamPosDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
 import lombok.AllArgsConstructor;
@@ -22,6 +25,7 @@ import java.util.List;
 public class CurrentMatchControllerImpl implements CurrentMatchController {
     private final CurrentMatchService currentMatchService;
     private final UserService userService;
+    private final TeamService teamService;
 
     @Override
     @GetMapping(value = "/match/current")
@@ -55,10 +59,11 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
             slotId = slot.getId();
             slotTime = slot.getTime();
             isMatch = currentMatch.getIsMatched();
+            TeamPosDto teamPosDto = teamService.getTeamPosNT(curUser, slot.getTeam1(), slot.getTeam2());
             // 경기는 5분전이고 매치가 성사되었는가?
             if (currentMatch.getMatchImminent() && isMatch){
-                myTeam = getTeamUsersIntraIdList(getMyTeamDto(curUser, slot));
-                enemyTeam = getTeamUsersIntraIdList(getEnemyTeamDto(curUser, slot));
+                myTeam = getTeamUsersIntraIdList(teamPosDto.getMyTeam());
+                enemyTeam = getTeamUsersIntraIdList(teamPosDto.getEnemyTeam());
             }
             // 경기가 시작되었는가?
             if (currentMatch.getGame() != null) {
@@ -74,32 +79,6 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
                 .enemyTeam(enemyTeam)
                 .build();
         return responseDto;
-    }
-
-    private TeamDto getEnemyTeamDto(UserDto curUser, SlotDto slot) {
-        TeamDto team1 = slot.getTeam1();
-        TeamDto team2 = slot.getTeam2();
-        TeamDto enemyTeamDto;
-
-        if (curUser.equals(team1.getUser1()) || curUser.equals(team1.getUser2())) {
-            enemyTeamDto = team2;
-        } else {
-            enemyTeamDto = team1;
-        }
-        return enemyTeamDto;
-    }
-
-    private TeamDto getMyTeamDto(UserDto curUser, SlotDto slot) {
-        TeamDto team1 = slot.getTeam1();
-        TeamDto team2 = slot.getTeam2();
-        TeamDto myTeamDto;
-
-        if (curUser.equals(team1.getUser1()) || curUser.equals(team1.getUser2())) {
-            myTeamDto = team1;
-        } else {
-            myTeamDto = team2;
-        }
-        return myTeamDto;
     }
 
     private List<String> getTeamUsersIntraIdList(TeamDto teamDto) {

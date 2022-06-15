@@ -1,9 +1,12 @@
 package io.pp.arcade.domain.team;
 
 
+import io.pp.arcade.domain.game.dto.GameDto;
+import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.dto.*;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.domain.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -71,5 +74,24 @@ public class TeamService {
         team.setWin(dto.getWin());
     }
 
+    public TeamPosDto getTeamPosNT(UserDto curUser, TeamDto team1, TeamDto team2) {
+        TeamDto myTeamDto;
+        TeamDto enemyTeamDto;
+
+        if (curUser.equals(team1.getUser1()) || curUser.equals(team1.getUser2())) {
+            myTeamDto = team1;
+            enemyTeamDto = team2;
+        } else if (curUser.equals(team2.getUser1()) || curUser.equals(team2.getUser2())) {
+            myTeamDto = team2;
+            enemyTeamDto = team1;
+        } else {
+            throw new IllegalArgumentException("?");
+        }
+        TeamPosDto dto = TeamPosDto.builder()
+                .myTeam(myTeamDto)
+                .enemyTeam(enemyTeamDto)
+                .build();
+        return dto;
+    }
     /* 아이디를 통한 팀 추가 */
 }

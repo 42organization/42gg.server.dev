@@ -10,6 +10,7 @@ import io.pp.arcade.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.team.dto.TeamModifyGameResultDto;
+import io.pp.arcade.domain.team.dto.TeamPosDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
@@ -172,21 +173,11 @@ public class GameControllerImpl implements GameController {
     }
 
     private void putUsersDataInTeams(GameDto game, UserDto user, List<GameUserInfoDto> myTeams, List<GameUserInfoDto> enemyTeams) {
-        TeamDto team1 = game.getTeam1();
-        TeamDto team2 = game.getTeam2();
-        TeamDto myTeam;
-        TeamDto enemyTeam;
-
         //figuring out team number for myteam and enemyteam
-        if (user.equals(team1.getUser1()) || user.equals(team1.getUser2())) {
-            myTeam = team1;
-            enemyTeam = team2;
-        } else if (user.equals(team2.getUser1()) || user.equals(team2.getUser2())) {
-            myTeam = team2;
-            enemyTeam = team1;
-        } else {
-            throw new IllegalArgumentException("잘못된 요청입니다");
-        }
+        TeamPosDto teamPos = teamService.getTeamPosNT(user, game.getTeam1(), game.getTeam2());
+
+        TeamDto myTeam = teamPos.getMyTeam();
+        TeamDto enemyTeam = teamPos.getEnemyTeam();
         UserDto myTeamUser1 = myTeam.getUser1();
         UserDto myTeamUser2 = myTeam.getUser2();
         UserDto enemyTeamUser1 = enemyTeam.getUser1();
