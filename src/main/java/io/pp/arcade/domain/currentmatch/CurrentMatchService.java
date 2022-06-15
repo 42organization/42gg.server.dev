@@ -72,6 +72,24 @@ public class CurrentMatchService {
     }
 
     @Transactional
+    public CurrentMatchDto findCurrentMatchByIntraId(String intraId) {
+        User user = userRepository.findByIntraId(intraId).orElseThrow();
+        CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
+        CurrentMatchDto dto = null;
+
+        if (currentMatch != null) {
+            dto = CurrentMatchDto.builder()
+                    .game(currentMatch.getGame() == null ? null : GameDto.from(currentMatch.getGame()))
+                    .userId(user.getId())
+                    .slot(SlotDto.from(currentMatch.getSlot()))
+                    .matchImminent(currentMatch.getMatchImminent())
+                    .isMatched(currentMatch.getIsMatched())
+                    .build();
+        }
+        return dto;
+    }
+
+    @Transactional
     public void removeCurrentMatch(Integer userId) {
         User user = userRepository.findById(userId).orElseThrow();
         currentMatchRepository.deleteByUser(user);

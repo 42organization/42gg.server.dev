@@ -1,7 +1,12 @@
 package io.pp.arcade.domain.noti.dto;
 
+import lombok.Builder;
+import lombok.Getter;
+
 import java.util.List;
 
-public class NotiResponseDto {
-    List<NotiDto> notifications;
+@Getter
+@Builder
+public class NotiResponseDto<T> {
+    private List<T> notifications;
 }

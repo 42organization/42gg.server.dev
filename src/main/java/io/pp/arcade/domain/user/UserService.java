@@ -4,7 +4,6 @@ import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import io.pp.arcade.domain.user.dto.UserModifyProfileDto;
 import io.pp.arcade.domain.user.dto.UserSearchDto;
-import io.pp.arcade.domain.user.dto.UserUpdateInfoDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -61,10 +60,4 @@ public class UserService {
         List<User> users = userRepository.findByIntraIdContains(userSearchDto.getIntraId());
         return users.stream().map(UserDto::from).collect(Collectors.toList());
     }
-
-    /* 유저 정보 업데이트 */
-    public void updateUserInfo(UserUpdateInfoDto updateDto) {
-
-    }
-
 }
