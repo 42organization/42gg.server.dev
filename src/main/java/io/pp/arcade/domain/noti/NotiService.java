@@ -5,7 +5,6 @@ import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
-import io.pp.arcade.domain.user.dto.UserModifyProfileDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,8 +21,11 @@ public class NotiService {
 
     @Transactional
     public void addNoti(NotiAddDto notiAddDto) {
-        User user = userRepository.findById(notiAddDto.getUserDto().getId()).orElseThrow();
-        Slot slot = slotRepository.findById(notiAddDto.getSlotDto().getId()).orElseThrow();
+        User user = userRepository.findById(notiAddDto.getUser().getId()).orElseThrow();
+        Slot slot = null;
+        if (notiAddDto.getSlot() != null) {
+            slot = slotRepository.findById(notiAddDto.getSlot().getId()).orElseThrow();
+        }
         Noti noti = Noti.builder()
                 .user(user)
                 .slot(slot)
@@ -51,8 +53,8 @@ public class NotiService {
     }
 
     @Transactional
-    public void modifyNotiChecked(NotiFindDto findDto) {
-        User user = userRepository.findById(findDto.getUser().getId()).orElseThrow();
+    public void modifyNotiChecked(NotiModifyDto modifyDto) {
+        User user = userRepository.findById(modifyDto.getUser().getId()).orElseThrow();
         List<Noti> notis = notiRepository.findAllByUser(user);
         notis.forEach(noti -> {noti.setIsChecked(true);});
     }
