@@ -17,7 +17,9 @@ import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import io.pp.arcade.global.util.EloRating;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +60,8 @@ public class GameControllerImpl implements GameController {
         UserDto user = userService.findById(userId);
         TeamDto team1 = game.getTeam1();
         TeamDto team2 = game.getTeam2();
+        // if the result already exists, throw 202 error
+        checkIfResultExists(game);
         //figuring out team number for myteam and enemyteam
         List<TeamModifyGameResultDto> eachTeamModifyDto = getTeamModifyDto(team1, team2, requestDto, user);
         //modify team with game result
@@ -66,7 +70,7 @@ public class GameControllerImpl implements GameController {
         }
         //modify users with game result
         modifyUsersPppAndPChange(game, team1, team2);
-
+        endGameStatus(game);
         //modify users' ranks with game result
     }
 
@@ -76,7 +80,7 @@ public class GameControllerImpl implements GameController {
         GameResultPageDto resultPageDto = gameService.findEndGames(pageable);
         List<GameResultDto> gameResultList = new ArrayList<>();
         List<GameDto> gameLists = resultPageDto.getGameList();
-        
+
         putResultInGames(gameResultList, gameLists);
 
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
@@ -115,7 +119,20 @@ public class GameControllerImpl implements GameController {
         return gameResultResponse;
     }
 
+
     // 이하 분리된 메서드
+    private void checkIfResultExists(GameDto game) {
+        if ("end".equals(game.getStatus()))
+            throw new ResponseStatusException(HttpStatus.ACCEPTED, "이미 입력해짜나~~");
+    }
+
+    private void endGameStatus(GameDto game) {
+        GameModifyStatusDto modifyStatusDto = GameModifyStatusDto.builder()
+                .gameId(game.getId())
+                .status("end").build();
+        gameService.modifyGameStatus(modifyStatusDto);
+    }
+
     private List<TeamModifyGameResultDto> getTeamModifyDto(TeamDto team1, TeamDto team2, GameResultRequestDto requestDto, UserDto user) {
         Integer team1Score;
         Integer team2Score;
@@ -143,7 +160,7 @@ public class GameControllerImpl implements GameController {
         );
         return modifyList;
     }
-    
+
     private void modifyUsersPppAndPChange(GameDto game, TeamDto team1, TeamDto team2) {
         TeamDto savedTeam1 = teamService.findById(team1.getId());
         TeamDto savedTeam2 = teamService.findById(team2.getId());
