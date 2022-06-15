@@ -12,7 +12,6 @@ import java.util.List;
 public class CurrentMatchResponseDto {
     private LocalDateTime time;
     private Integer slotId;
-    private Integer gameId;
     private List<String> myTeam;
     private List<String> enemyTeam;
     private Boolean isMatched;
