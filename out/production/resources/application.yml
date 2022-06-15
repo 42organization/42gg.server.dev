@@ -1,0 +1,18 @@
+spring:
+  profiles:
+    active: local
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+  thymeleaf:
+    prefix: classpath:templates/
+    suffix: .html
+    cache: false
+
+  data:
+    web:
+      pageable:
+        default-page-size: 20
+        one-indexed-parameters: true

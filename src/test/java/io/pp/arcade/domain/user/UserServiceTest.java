@@ -1,8 +1,6 @@
 package io.pp.arcade.domain.user;
 
-import io.pp.arcade.domain.user.dto.UserDto;
-import io.pp.arcade.domain.user.dto.UserModifyPppDto;
-import io.pp.arcade.domain.user.dto.UserModifyProfileDto;
+import io.pp.arcade.domain.user.dto.*;
 import io.pp.arcade.global.util.RacketType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +31,7 @@ class UserServiceTest {
     @Transactional
     void findByIntraId() {
         //when
-        UserDto userDto = userService.findByIntraId("jiyun");
+        UserDto userDto = userService.findByIntraId(UserFindDto.builder().intraId("jiyun").build());
 
         //then
         Assertions.assertThat(userDto.getIntraId()).isEqualTo("jiyun");
@@ -46,19 +44,19 @@ class UserServiceTest {
         User user = userRepository.findByIntraId("jiyun").orElseThrow(() -> new IllegalArgumentException("haha"));
 
         //when
-        UserDto userDto = userService.findById(user.getId());
+        UserDto userDto = userService.findById(UserFindDto.builder().userId(user.getId()).build());
 
         //then
-        Assertions.assertThat(user.getId()).isEqualTo(userDto.getId());
+        Assertions.assertThat(userDto.getIntraId()).isEqualTo(userDto.getIntraId());
     }
 
     @Test
     @Transactional
     void addUser() {
         //when
-        userService.addUser("jiyun2");
-        UserDto userDto = userService.findByIntraId("jiyun2");
-
+        userService.addUser(UserAddDto.builder().intraId("jiyun2").build());
+        UserDto userDto = userService.findByIntraId(UserFindDto.builder().intraId("jiyun2").build());
+g
         //then
         Assertions.assertThat(userDto.getIntraId()).isEqualTo("jiyun2");
     }
@@ -67,7 +65,8 @@ class UserServiceTest {
     @Transactional
     void modifyUserPpp() {
         //given
-        UserDto userDto = userService.findByIntraId("jiyun");
+
+        UserDto userDto = userService.findByIntraId(UserFindDto.builder().intraId("jiyun").build());
         UserModifyPppDto dto = UserModifyPppDto.builder()
                 .userId(userDto.getId())
                 .ppp(50)
@@ -75,7 +74,7 @@ class UserServiceTest {
 
         //when
         userService.modifyUserPpp(dto);
-        UserDto userDto2 = userService.findByIntraId("jiyun");
+        UserDto userDto2 = userService.findByIntraId(UserFindDto.builder().intraId("jiyun").build());
 
         //then
         Assertions.assertThat(userDto2.getPpp()).isEqualTo(50);
@@ -85,7 +84,7 @@ class UserServiceTest {
     @Transactional
     void modifyUserProfile() {
         //given
-        UserDto userDto = userService.findByIntraId("jiyun");
+        UserDto userDto = userService.findByIntraId(UserFindDto.builder().intraId("jiyun").build());
         UserModifyProfileDto dto = UserModifyProfileDto.builder()
                 .userId(userDto.getId())
                 .userImageUri("image")

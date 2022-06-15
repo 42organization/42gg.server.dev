@@ -85,7 +85,7 @@ public class SlotService {
     public List<SlotStatusDto> findSlotsStatus(SlotFindStatusDto findDto) {
         LocalDateTime now = findDto.getCurrentTime();
         LocalDateTime todayStartTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 0);
-        List<Slot> slots = slotRepository.findAllByCreatedDateAfter(todayStartTime);
+        List<Slot> slots = slotRepository.findAllByCreatedAtAfter(todayStartTime);
 
         User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("?!"));
         CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);

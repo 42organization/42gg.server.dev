@@ -2,12 +2,11 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 141
+Content-Length: 123
 
 {
-  "time" : "2022-06-15T19:06:04.504009",
-  "slotId" : 19,
-  "gameId" : null,
+  "time" : "2022-06-16T19:35:35.288381",
+  "slotId" : 162,
   "myTeam" : [ ],
   "enemyTeam" : [ ],
   "isMatched" : false

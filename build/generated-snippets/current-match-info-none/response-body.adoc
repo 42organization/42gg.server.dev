@@ -3,7 +3,6 @@
 {
   "time" : null,
   "slotId" : null,
-  "gameId" : null,
   "myTeam" : [ ],
   "enemyTeam" : [ ],
   "isMatched" : false

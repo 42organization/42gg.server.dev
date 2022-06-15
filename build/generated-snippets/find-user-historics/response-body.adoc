@@ -3,64 +3,64 @@
 {
   "historics" : [ {
     "gameId" : 20,
-    "userId" : 16,
+    "userId" : 28,
     "pppChange" : 2,
     "pppResult" : 44,
-    "time" : "2022-06-15T18:53:30.265337"
+    "time" : "2022-06-16T19:35:32.545378"
   }, {
     "gameId" : 19,
-    "userId" : 16,
+    "userId" : 28,
     "pppChange" : 2,
     "pppResult" : 44,
-    "time" : "2022-06-15T18:53:30.254892"
+    "time" : "2022-06-16T19:35:32.532243"
   }, {
     "gameId" : 18,
-    "userId" : 16,
+    "userId" : 28,
     "pppChange" : 2,
     "pppResult" : 44,
-    "time" : "2022-06-15T18:53:30.244838"
+    "time" : "2022-06-16T19:35:32.517903"
   }, {
     "gameId" : 17,
-    "userId" : 16,
+    "userId" : 28,
     "pppChange" : 2,
     "pppResult" : 44,
-    "time" : "2022-06-15T18:53:30.235719"
+    "time" : "2022-06-16T19:35:32.496398"
   }, {
     "gameId" : 16,
-    "userId" : 16,
+    "userId" : 28,
     "pppChange" : 2,
     "pppResult" : 44,
-    "time" : "2022-06-15T18:53:30.224965"
+    "time" : "2022-06-16T19:35:32.476541"
   }, {
     "gameId" : 15,
-    "userId" : 16,
+    "userId" : 28,
     "pppChange" : 2,
     "pppResult" : 44,
-    "time" : "2022-06-15T18:53:30.219601"
+    "time" : "2022-06-16T19:35:32.466159"
   }, {
     "gameId" : 14,
-    "userId" : 16,
+    "userId" : 28,
     "pppChange" : 2,
     "pppResult" : 44,
-    "time" : "2022-06-15T18:53:30.211265"
+    "time" : "2022-06-16T19:35:32.452607"
   }, {
     "gameId" : 13,
-    "userId" : 16,
+    "userId" : 28,
     "pppChange" : 2,
     "pppResult" : 44,
-    "time" : "2022-06-15T18:53:30.199954"
+    "time" : "2022-06-16T19:35:32.438707"
   }, {
     "gameId" : 12,
-    "userId" : 16,
+    "userId" : 28,
     "pppChange" : 2,
     "pppResult" : 44,
-    "time" : "2022-06-15T18:53:30.193256"
+    "time" : "2022-06-16T19:35:32.418086"
   }, {
     "gameId" : 11,
-    "userId" : 16,
+    "userId" : 28,
     "pppChange" : 2,
     "pppResult" : 44,
-    "time" : "2022-06-15T18:53:30.184722"
+    "time" : "2022-06-16T19:35:32.407412"
   } ]
 }
 ----

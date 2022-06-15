@@ -13,6 +13,7 @@ import io.pp.arcade.domain.team.dto.TeamModifyGameResultDto;
 import io.pp.arcade.domain.team.dto.TeamPosDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.domain.user.dto.UserFindDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import io.pp.arcade.global.util.EloRating;
 import lombok.AllArgsConstructor;
@@ -38,7 +39,7 @@ public class GameControllerImpl implements GameController {
     @GetMapping(value = "/games/{gameId}/result")
     public GameUserInfoResponseDto gameUserInfo(Integer gameId, Integer userId) {
         GameDto game = gameService.findById(gameId);
-        UserDto user = userService.findById(userId);
+        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
         List<GameUserInfoDto> myTeams = new ArrayList<>();
         List<GameUserInfoDto> enemyTeams = new ArrayList<>();
 
@@ -57,7 +58,7 @@ public class GameControllerImpl implements GameController {
     @PostMapping(value = "/games/{gameId}/result")
     public void gameResultSave(Integer gameId, GameResultRequestDto requestDto, Integer userId) {
         GameDto game = gameService.findById(gameId);
-        UserDto user = userService.findById(userId);
+        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
         TeamDto team1 = game.getTeam1();
         TeamDto team2 = game.getTeam2();
         // if the result already exists, throw 202 error

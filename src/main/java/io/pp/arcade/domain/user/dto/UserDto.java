@@ -14,6 +14,7 @@ import java.util.Objects;
 public class UserDto {
     private Integer id;
     private String intraId;
+    private String eMail;
     private String imageUri;
     private RacketType racketType;
     private String statusMessage;
@@ -27,6 +28,7 @@ public class UserDto {
             userDto = UserDto.builder()
                     .id(user.getId())
                     .intraId(user.getIntraId())
+                    .eMail(user.getEMail())
                     .imageUri(user.getImageUri())
                     .racketType(user.getRacketType())
                     .statusMessage(user.getStatusMessage())

@@ -1,9 +1,6 @@
 package io.pp.arcade.domain.user;
 
-import io.pp.arcade.domain.user.dto.UserDto;
-import io.pp.arcade.domain.user.dto.UserModifyPppDto;
-import io.pp.arcade.domain.user.dto.UserModifyProfileDto;
-import io.pp.arcade.domain.user.dto.UserSearchDto;
+import io.pp.arcade.domain.user.dto.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,22 +14,23 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public UserDto findByIntraId(String intraId) {
-        User user = userRepository.findByIntraId(intraId).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
+    public UserDto findByIntraId(UserFindDto findDto) {
+        User user = userRepository.findByIntraId(findDto.getIntraId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
         return UserDto.from(user);
     }
 
     @Transactional
-    public UserDto findById(Integer userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
+    public UserDto findById(UserFindDto findDto) {
+        User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
         return UserDto.from(user);
     }
 
     /* 유저 등록 */
     @Transactional
-    public void addUser(String intraId) {
+    public void addUser(UserAddDto addDto) {
         User user = User.builder()
-                .intraId(intraId)
+                .intraId(addDto.getIntraId())
+                .eMail(addDto.getEMail())
                 .statusMessage("")
                 .ppp(1000)
                 .build();
