@@ -6,8 +6,12 @@ import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,9 +22,10 @@ public class NotiService {
     private final NotiRepository notiRepository;
     private final UserRepository userRepository;
     private final SlotRepository slotRepository;
+    private final JavaMailSender javaMailSender;
 
     @Transactional
-    public void addNoti(NotiAddDto notiAddDto) {
+    public void addNoti(NotiAddDto notiAddDto) throws MessagingException {
         User user = userRepository.findById(notiAddDto.getUser().getId()).orElseThrow();
         Slot slot = null;
         if (notiAddDto.getSlot() != null) {
@@ -33,6 +38,11 @@ public class NotiService {
                 .message(notiAddDto.getMessage())
                 .isChecked(false)
                 .build();
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+        helper.setTo(user.getEMail());
+        helper.setText("New Notification : " + notiAddDto.getNotiType() + "\nYou Have New Noti in 42PingPong!");
+        javaMailSender.send(message);
         notiRepository.save(noti);
     }
 
