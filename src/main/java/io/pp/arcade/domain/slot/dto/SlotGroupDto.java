@@ -7,6 +7,6 @@ import java.util.List;
 
 @Getter
 @Builder
-public class SlotFindResponseDto {
-    List<SlotStatusDto> matchBoards;
+public class SlotGroupDto {
+    List<SlotStatusDto> slots;
 }
