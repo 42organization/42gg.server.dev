@@ -16,6 +16,7 @@ import io.pp.arcade.domain.team.dto.TeamRemoveUserDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.slot.dto.SlotStatusResponseDto;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.domain.user.dto.UserFindDto;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,7 +51,7 @@ public class SlotControllerImpl implements SlotController {
     @Override
     @PostMapping(value = "/match/tables/{tableId}")
     public void slotAddUser(Integer tableId, SlotAddUserRequestDto addReqDto, Integer userId) {
-        UserDto user = userService.findById(userId);
+        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
         //user가 매치를 이미 가지고 있는지 myTable에서 user 필터하기
         CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUserId(userId);
         if (matchDto != null) {
@@ -85,7 +86,7 @@ public class SlotControllerImpl implements SlotController {
     @DeleteMapping(value = "/match/tables/{tableId}")
     public void slotRemoveUser(Integer tableId, Integer slotId, Integer pUserId) {
         // slotId , tableId 유효성 검사
-        UserDto user = userService.findById(pUserId);
+        UserDto user = userService.findById(UserFindDto.builder().userId(pUserId).build());
         // 유저 조회, 슬롯 조회, 팀 조회( 슬롯에 헤드 카운트 -, 팀에서 유저 퇴장 )
         SlotDto slot = slotService.findSlotById(slotId);
 

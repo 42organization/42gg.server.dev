@@ -8,6 +8,7 @@ import io.pp.arcade.domain.team.dto.TeamPosDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.domain.user.dto.UserFindDto;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class NotiControllerImpl implements NotiController {
     @Override
     @GetMapping(value = "/notifications")
     public NotiResponseDto notiFindByUser(Integer userId) {
-        UserDto user = userService.findById(userId);
+        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
         NotiFindDto notiFindDto = NotiFindDto.builder()
                 .user(user).build();
         List<NotiDto> notis = notiService.findNotiByUser(notiFindDto);
@@ -106,7 +107,7 @@ public class NotiControllerImpl implements NotiController {
     @Override
     @DeleteMapping(value = "/notifications")
     public void notiRemoveAll(Integer userId) {
-        UserDto user = userService.findById(userId);
+        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
         NotiDeleteDto deleteDto = NotiDeleteDto.builder()
                         .user(user)
                         .build();

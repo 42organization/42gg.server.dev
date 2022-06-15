@@ -1,6 +1,5 @@
 package io.pp.arcade.domain.user.controller;
 
-import io.pp.arcade.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.domain.noti.NotiService;
@@ -10,7 +9,6 @@ import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
-import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.*;
 import lombok.AllArgsConstructor;
@@ -36,11 +34,10 @@ public class UserControllerImpl implements UserController {
     @Override
     @GetMapping(value = "/users")
     public UserResponseDto userFind(Integer userId) {
-        UserDto user = userService.findById(userId);
+        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
         UserResponseDto responseDto = UserResponseDto.builder()
-                .userId(user.getIntraId())
+                .intraId(user.getIntraId())
                 .userImageUri(user.getImageUri())
-                .notiCount(10)
                 .build();// notiCount 추가 필요!
         return responseDto;
     }
@@ -53,8 +50,8 @@ public class UserControllerImpl implements UserController {
     @GetMapping(value = "/users/{targetUserId}/detail")
     public UserDetailResponseDto userFindDetail(String targetUserId, Integer currentUserId) {
         /* 상대 전적 비교 */
-        UserDto curUser = userService.findById(currentUserId);
-        UserDto targetUser = userService.findByIntraId(targetUserId);
+        UserDto curUser = userService.findById(UserFindDto.builder().userId(currentUserId).build());
+        UserDto targetUser = userService.findByIntraId(UserFindDto.builder().intraId(targetUserId).build());
 
         UserDetailResponseDto responseDto = UserDetailResponseDto.builder()
                 .userId(targetUser.getIntraId())
@@ -97,9 +94,9 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @PutMapping(value = "/users/{userId}/detail")
+    @PutMapping(value = "/users/{intraId}/detail")
     public void userModifyProfile(Integer userId, String intraId) {
-        UserDto user = userService.findById(userId);
+        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
         if (!(user.getIntraId().equals(intraId))) {
             throw new IllegalArgumentException("?!");
         }
@@ -123,7 +120,7 @@ public class UserControllerImpl implements UserController {
         if (!userId.equals(currentMatch.getUserId())) {
             throw new IllegalArgumentException("?");
         }
-        UserDto user = userService.findById(userId);
+        UserDto user = userService.findByIntraId(UserFindDto.builder().intraId(intraId).build());
         NotiCountDto notiCount = notiService.countAllNByUser(NotiFindDto.builder().user(user).build());
         UserLiveInfoResponseDto userLiveInfoResponse = UserLiveInfoResponseDto.builder()
                 .notiCount(notiCount.getNotiCount()) //
