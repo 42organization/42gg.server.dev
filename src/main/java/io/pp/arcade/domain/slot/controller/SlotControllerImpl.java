@@ -20,6 +20,7 @@ import io.pp.arcade.domain.user.dto.UserFindDto;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class SlotControllerImpl implements SlotController {
 
     @Override
     @PostMapping(value = "/match/tables/{tableId}")
-    public void slotAddUser(Integer tableId, SlotAddUserRequestDto addReqDto, Integer userId) {
+    public void slotAddUser(Integer tableId, SlotAddUserRequestDto addReqDto, Integer userId) throws MessagingException {
         UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
         //user가 매치를 이미 가지고 있는지 myTable에서 user 필터하기
         CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUserId(userId);
@@ -84,7 +85,7 @@ public class SlotControllerImpl implements SlotController {
 
     @Override
     @DeleteMapping(value = "/match/tables/{tableId}")
-    public void slotRemoveUser(Integer tableId, Integer slotId, Integer pUserId) {
+    public void slotRemoveUser(Integer tableId, Integer slotId, Integer pUserId) throws MessagingException {
         // slotId , tableId 유효성 검사
         UserDto user = userService.findById(UserFindDto.builder().userId(pUserId).build());
         // 유저 조회, 슬롯 조회, 팀 조회( 슬롯에 헤드 카운트 -, 팀에서 유저 퇴장 )
@@ -113,7 +114,7 @@ public class SlotControllerImpl implements SlotController {
         modifyCurrentMatch(team2.getUser2(), matchModifyDto);
     }
 
-    private void addMatchNotisBySlot(SlotDto slot) {
+    private void addMatchNotisBySlot(SlotDto slot) throws MessagingException {
         Integer maxSlotHeadCount = "single".equals(slot.getType()) ? 2 : 4;
         Boolean isMatched = slot.getHeadCount().equals(maxSlotHeadCount) ? true : false;
         Boolean isImminent = slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5)) ? true : false;
@@ -130,14 +131,14 @@ public class SlotControllerImpl implements SlotController {
         }
     }
 
-    private void addCancelNotisBySlot(SlotDto slot) {
+    private void addCancelNotisBySlot(SlotDto slot) throws MessagingException {
         addNoti(slot.getTeam1().getUser1(), slot, "canceled");
         addNoti(slot.getTeam1().getUser2(), slot, "canceled");
         addNoti(slot.getTeam2().getUser1(), slot, "canceled");
         addNoti(slot.getTeam2().getUser2(), slot, "canceled");
     }
 
-    private void addNoti(UserDto user, SlotDto slot, String type) {
+    private void addNoti(UserDto user, SlotDto slot, String type) throws MessagingException {
         if (user != null) {
             NotiAddDto notiAddDto = NotiAddDto.builder()
                     .user(user)
