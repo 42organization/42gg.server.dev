@@ -1,13 +1,11 @@
 package io.pp.arcade.domain.noti;
 
-import io.pp.arcade.domain.noti.dto.NotiAddDto;
-import io.pp.arcade.domain.noti.dto.NotiDeleteDto;
-import io.pp.arcade.domain.noti.dto.NotiDto;
-import io.pp.arcade.domain.noti.dto.NotiFindDto;
+import io.pp.arcade.domain.noti.dto.*;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.domain.user.dto.UserModifyProfileDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -40,8 +38,16 @@ public class NotiService {
     public List<NotiDto> findNotiByUser(NotiFindDto findDto) {
         User user = userRepository.findById(findDto.getUser().getId()).orElseThrow();
         List<Noti> notis = notiRepository.findAllByUser(user);
-        List<NotiDto> dtoList = notis.stream().map(NotiDto::from).collect(Collectors.toList());
-        return dtoList;
+        List<NotiDto> notiDtoList = notis.stream().map(NotiDto::from).collect(Collectors.toList());
+        return notiDtoList;
+    }
+
+    @Transactional
+    public NotiCountDto countAllNByUser(NotiFindDto findDto) {
+        User user = userRepository.findById(findDto.getUser().getId()).orElseThrow();
+        Integer count = notiRepository.countAllNByUser(user);
+        NotiCountDto countDto = NotiCountDto.builder().notiCount(count).build();
+        return countDto;
     }
 
     @Transactional
@@ -52,8 +58,13 @@ public class NotiService {
     }
 
     @Transactional
-    public void deleteAllNotisByUser(NotiDeleteDto deleteDto) {
+    public void removeAllNotisByUser(NotiDeleteDto deleteDto) {
         User user = userRepository.findById(deleteDto.getUser().getId()).orElseThrow();
         notiRepository.deleteAllByUser(user);
+    }
+
+    @Transactional
+    public void removeNotiById(NotiDeleteDto deleteDto) {
+        notiRepository.deleteById(deleteDto.getNotiId());
     }
 }

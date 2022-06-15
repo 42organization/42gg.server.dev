@@ -1,8 +1,8 @@
 [source,options="nowrap"]
 ----
 {
-  "time" : "2022-06-15T15:00:00",
-  "slotId" : 6,
+  "time" : "2022-06-15T19:06:04.504009",
+  "slotId" : 19,
   "gameId" : null,
   "myTeam" : [ ],
   "enemyTeam" : [ ],
