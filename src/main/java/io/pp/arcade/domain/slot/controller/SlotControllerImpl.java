@@ -4,6 +4,8 @@ import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchAddDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchModifyDto;
+import io.pp.arcade.domain.noti.NotiService;
+import io.pp.arcade.domain.noti.dto.NotiAddDto;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.*;
 import io.pp.arcade.domain.team.TeamService;
@@ -27,6 +29,7 @@ public class SlotControllerImpl implements SlotController {
     private final SlotService slotService;
     private final UserService userService;
     private final TeamService teamService;
+    private final NotiService notiService;
     private final CurrentMatchService currentMatchService;
 
     @Override
@@ -73,8 +76,8 @@ public class SlotControllerImpl implements SlotController {
         slot = slotService.findSlotById(slot.getId());
 
         //유저가 슬롯에 꽉 차면 currentMatch가 전부 바뀐다.
-        modifyUsersCurrentMatchStatus(user.getId(), slot);
-
+        modifyUsersCurrentMatchStatus(user, slot);
+        addMatchNotisBySlot(slot);
     }
 
     @Override
@@ -88,16 +91,17 @@ public class SlotControllerImpl implements SlotController {
         currentMatchService.removeCurrentMatch(user.getId());
         teamService.removeUserInTeam(getTeamRemoveUserDto(slot, user));
         slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
+        addCancelNotisBySlot(slot);
     }
 
-    private void modifyUsersCurrentMatchStatus(int userId, SlotDto slot) {
+    private void modifyUsersCurrentMatchStatus(UserDto user, SlotDto slot) {
         TeamDto team1 = slot.getTeam1();
         TeamDto team2 = slot.getTeam2();
         Integer maxSlotHeadCount = "single".equals(slot.getType()) ? 2 : 4;
         Boolean isMatched = slot.getHeadCount().equals(maxSlotHeadCount) ? true : false;
         Boolean isImminent = slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5)) ? true : false;
         CurrentMatchModifyDto matchModifyDto = CurrentMatchModifyDto.builder()
-                .userId(userId)
+                .userId(user.getId())
                 .isMatched(isMatched)
                 .matchImminent(isImminent)
                 .build();
@@ -105,6 +109,41 @@ public class SlotControllerImpl implements SlotController {
         modifyCurrentMatch(team1.getUser2(), matchModifyDto);
         modifyCurrentMatch(team2.getUser1(), matchModifyDto);
         modifyCurrentMatch(team2.getUser2(), matchModifyDto);
+    }
+
+    private void addMatchNotisBySlot(SlotDto slot) {
+        Integer maxSlotHeadCount = "single".equals(slot.getType()) ? 2 : 4;
+        Boolean isMatched = slot.getHeadCount().equals(maxSlotHeadCount) ? true : false;
+        Boolean isImminent = slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5)) ? true : false;
+        if (isImminent == true) {
+            addNoti(slot.getTeam1().getUser1(), slot, "imminent");
+            addNoti(slot.getTeam1().getUser2(), slot, "imminent");
+            addNoti(slot.getTeam2().getUser1(), slot, "imminent");
+            addNoti(slot.getTeam2().getUser2(), slot, "imminent");
+        } else if (isMatched == true) {
+            addNoti(slot.getTeam1().getUser1(), slot, "matched");
+            addNoti(slot.getTeam1().getUser2(), slot, "matched");
+            addNoti(slot.getTeam2().getUser1(), slot, "matched");
+            addNoti(slot.getTeam2().getUser2(), slot, "matched");
+        }
+    }
+
+    private void addCancelNotisBySlot(SlotDto slot) {
+        addNoti(slot.getTeam1().getUser1(), slot, "canceled");
+        addNoti(slot.getTeam1().getUser2(), slot, "canceled");
+        addNoti(slot.getTeam2().getUser1(), slot, "canceled");
+        addNoti(slot.getTeam2().getUser2(), slot, "canceled");
+    }
+
+    private void addNoti(UserDto user, SlotDto slot, String type) {
+        if (user != null) {
+            NotiAddDto notiAddDto = NotiAddDto.builder()
+                    .user(user)
+                    .slot(slot)
+                    .notiType(type)
+                    .build();
+            notiService.addNoti(notiAddDto);
+        }
     }
 
     private TeamAddUserDto getTeamAddUserDto(SlotDto slot, String reqType, UserDto user) {
