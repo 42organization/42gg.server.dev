@@ -8,5 +8,4 @@ import lombok.Getter;
 public class UserResponseDto {
     private String userId;
     private String userImageUri;
-    private Integer notiCount;
 }

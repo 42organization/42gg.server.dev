@@ -12,7 +12,7 @@ import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.team.dto.TeamPosDto;
 import io.pp.arcade.domain.team.dto.TeamRemoveUserDto;
 import io.pp.arcade.domain.user.UserService;
-import io.pp.arcade.domain.slot.dto.SlotFindResponseDto;
+import io.pp.arcade.domain.slot.dto.SlotStatusResponseDto;
 import io.pp.arcade.domain.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -31,15 +31,16 @@ public class SlotControllerImpl implements SlotController {
 
     @Override
     @GetMapping(value = "/match/tables/{tableId}")
-    public SlotFindResponseDto slotStatusList(Integer tableId, String type, Integer userId) {
+    public SlotStatusResponseDto slotStatusList(Integer tableId, String type, Integer userId) {
         List<SlotStatusDto> slots;
+        List<SlotGroupDto> slotGroups = null;
         SlotFindStatusDto findDto = SlotFindStatusDto.builder()
                 .userId(userId)
                 .type(type)
                 .currentTime(LocalDateTime.now())
                 .build();
         slots = slotService.findSlotsStatus(findDto);
-        SlotFindResponseDto responseDto = SlotFindResponseDto.builder().matchBoards(slots).build();
+        SlotStatusResponseDto responseDto = SlotStatusResponseDto.builder().slotGroups(slotGroups).build();
         return responseDto;
     }
 

@@ -169,7 +169,7 @@ class UserControllerTest {
     @Transactional
     void findUser() throws Exception {
         mockMvc.perform(get("/pingpong/users").contentType(MediaType.APPLICATION_JSON)
-                .param("userId",user.getId().toString()))
+                        .param("userId", user.getId().toString()))
                 .andExpect(status().isOk())
                 .andDo(document("find-user"));
     }
@@ -177,8 +177,8 @@ class UserControllerTest {
     @Test
     @Transactional
     void findDetailUser() throws Exception {
-        mockMvc.perform(get("/pingpong/users/"+ user.getIntraId().toString() +"/detail").contentType(MediaType.APPLICATION_JSON)
-                .param("currentUserId",user.getId().toString()))
+        mockMvc.perform(get("/pingpong/users/" + user.getIntraId().toString() + "/detail").contentType(MediaType.APPLICATION_JSON)
+                        .param("currentUserId", user.getId().toString()))
                 .andExpect(status().isOk())
                 .andDo(document("find-user-detail"));
     }
@@ -186,7 +186,7 @@ class UserControllerTest {
     @Test
     @Transactional
     void findUserHistorics() throws Exception {
-        mockMvc.perform(get("/pingpong/users/"+ user.getIntraId().toString() +"/historics").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/pingpong/users/" + user.getIntraId().toString() + "/historics").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("find-user-historics"));
     }
@@ -195,7 +195,7 @@ class UserControllerTest {
     @Transactional
     void findByPartsOfIntraId() throws Exception {
         mockMvc.perform(get("/pingpong/users/searches").contentType(MediaType.APPLICATION_JSON)
-                .param("userId", "zzang"))
+                        .param("userId", "zzang"))
                 .andExpect(status().isOk())
                 .andDo(document("search-user-with-partial-string"));
     }
@@ -203,7 +203,8 @@ class UserControllerTest {
     @Test
     @Transactional
     void modifyProfile() throws Exception {
-        mockMvc.perform(put("/pingpong/users/" + user.getIntraId().toString() + "/detail").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put("/pingpong/users/" + user.getIntraId() + "/detail").contentType(MediaType.APPLICATION_JSON)
+                        .param("userId", user.getId().toString()))
                 .andExpect(status().isOk())
                 .andDo(document("modify-user-profile"));
     }

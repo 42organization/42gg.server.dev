@@ -29,6 +29,7 @@ public class UserControllerImpl implements UserController {
     private final PChangeService pChangeService;
     private final NotiService notiService;
     private final CurrentMatchService currentMatchService;
+
     /* *
      * [메인 페이지]
      * 유저 기본 정보 조회
@@ -40,8 +41,7 @@ public class UserControllerImpl implements UserController {
         UserResponseDto responseDto = UserResponseDto.builder()
                 .userId(user.getIntraId())
                 .userImageUri(user.getImageUri())
-                .notiCount(10)
-                .build();// notiCount 추가 필요!
+                .build();
         return responseDto;
     }
 
@@ -75,10 +75,10 @@ public class UserControllerImpl implements UserController {
      * 유저 최근 전적 경향 조회
      * */
     @Override
-    @GetMapping(value = "/users/{userId}/historics")
-    public UserHistoricResponseDto userFindHistorics(String userId, Pageable pageable) {
+    @GetMapping(value = "/users/{intraId}/historics")
+    public UserHistoricResponseDto userFindHistorics(String intraId, Pageable pageable) {
         PChangePageDto pChangePage = pChangeService.findPChangeByUserId(PChangeFindDto.builder()
-                .userId(userId)
+                .userId(intraId)
                 .build(), pageable);
         List<PChangeDto> pChangeList = pChangePage.getPChangeList();
         List<UserHistoricDto> historicDtos = new ArrayList<UserHistoricDto>();
@@ -97,9 +97,12 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @PutMapping(value = "/users/{userId}/detail")
-    public void userModifyProfile(String userId) {
-        UserDto user = userService.findByIntraId(userId);
+    @PutMapping(value = "/users/{intraId}/detail")
+    public void userModifyProfile(Integer userId, String intraId) {
+        UserDto user = userService.findById(userId);
+        if (!(user.getIntraId().equals(intraId))) {
+            throw new IllegalArgumentException("?!");
+        }
         userService.modifyUserProfile(UserModifyProfileDto.builder()
                 .userId(user.getId())
                 .userImageUri(user.getImageUri())
