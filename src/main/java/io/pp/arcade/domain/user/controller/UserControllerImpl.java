@@ -98,8 +98,11 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @PutMapping(value = "/users/{userId}/detail")
-    public void userModifyProfile(String userId) {
-        UserDto user = userService.findByIntraId(userId);
+    public void userModifyProfile(Integer userId, String intraId) {
+        UserDto user = userService.findById(userId);
+        if (!(user.getIntraId().equals(intraId))) {
+            throw new IllegalArgumentException("?!");
+        }
         userService.modifyUserProfile(UserModifyProfileDto.builder()
                 .userId(user.getId())
                 .userImageUri(user.getImageUri())
