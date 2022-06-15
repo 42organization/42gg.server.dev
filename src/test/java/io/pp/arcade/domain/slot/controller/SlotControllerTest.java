@@ -33,6 +33,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -182,7 +183,7 @@ class SlotControllerTest {
     @Transactional
     void slotAddUser() throws Exception {
         Map<String, String> body1 = new HashMap<>();
-        Slot slotA = slotList.get(0);
+        Slot slotA = slotList.get(1);
         body1.put("slotId", slotA.getId().toString());
         body1.put("type", "single");
 
@@ -219,6 +220,24 @@ class SlotControllerTest {
                         .param("userId",user4.getId().toString()))
                 .andExpect(status().isOk())
                 .andDo(document("current-match-after-add-match"));
+
+        mockMvc.perform(get("/pingpong/notifications").contentType(MediaType.APPLICATION_JSON)
+                        .param("userId", user4.getId().toString()))
+                .andExpect(status().isOk())
+                .andDo(document("after-matched-notification"));
+
+        MultiValueMap<String, String> params1 = new LinkedMultiValueMap<>();
+
+        params1.add("slotId", slotA.getId().toString());
+        params1.add("pUserId", user5.getId().toString());
+        mockMvc.perform(delete("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
+                        .params(params1))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(get("/pingpong/notifications").contentType(MediaType.APPLICATION_JSON)
+                        .param("userId", user4.getId().toString()))
+                .andExpect(status().isOk())
+                .andDo(document("after-canceled-notification"));
     }
 
     @Transactional
@@ -240,6 +259,7 @@ class SlotControllerTest {
         mockMvc.perform(delete("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
                         .params(params))
                 .andExpect(status().isOk());
+
         MultiValueMap<String, String> newParams = new LinkedMultiValueMap<>();
         newParams.add("type", "single");
         newParams.add("userId", user.getId().toString());
