@@ -48,7 +48,6 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
         */
         List<String> myTeam = new ArrayList<>();
         List<String> enemyTeam = new ArrayList<>();
-        Integer gameId = null;
         LocalDateTime slotTime = null;
         boolean isMatch = false;
         Integer slotId = null;
@@ -65,15 +64,10 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
                 myTeam = getTeamUsersIntraIdList(teamPosDto.getMyTeam());
                 enemyTeam = getTeamUsersIntraIdList(teamPosDto.getEnemyTeam());
             }
-            // 경기가 시작되었는가?
-            if (currentMatch.getGame() != null) {
-                gameId = currentMatch.getGame().getId();
-            }
         }
         CurrentMatchResponseDto responseDto = CurrentMatchResponseDto.builder()
                 .time(slotTime)
                 .isMatched(isMatch)
-                .gameId(gameId)
                 .slotId(slotId)
                 .myTeam(myTeam)
                 .enemyTeam(enemyTeam)
