@@ -127,7 +127,7 @@ class GameControllerTest {
                 .type("single")
                 .time(slot.getTime())
                 .season(1)
-                .status("end")
+                .status("not end")
                 .build();
         gameRepository.save(game);
         return game;
@@ -204,6 +204,32 @@ class GameControllerTest {
                         .params(params))
                 .andExpect(status().isOk())
                 .andDo(document("find-game-results"));
+
+        //given2 // 결과 재입력, 202에러 띄워야함
+        //위의 게임을 그대로 씀
+
+        //when2
+        body = new HashMap<>();
+        body.put("myTeamScore", "2");
+        body.put("enemyTeamScore", "1");
+
+        //then2
+        mockMvc.perform(post("/pingpong/games/"+ game.getId().toString() +"/result").contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body)) // { "myTeamScore" : "2", ..}
+                        .param("userId", user4.getId().toString()))
+                // ?userId=userId(donghyuk's userId) 어느 팀에 속한 유저인지 혹은 결과 입력이 필요한 유저가 맞는지 알기 위해서
+                .andExpect(status().isAccepted())
+                .andDo(document("save-game-result-after-duplicated-request"));
+        params = new LinkedMultiValueMap<>();
+//        Pageable pageable;
+        params.add("page", "1");
+        params.add("status", "end");
+        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
+                        .params(params))
+                .andExpect(status().isOk())
+                .andDo(document("find-game-results-after-duplicated-request"));
+
+
     }
 
 //    @Test
