@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.user;
 
+import io.pp.arcade.global.util.BaseTimeEntity;
 import io.pp.arcade.global.util.RacketType;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 @Getter
 @NoArgsConstructor
-public class User {
+public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -20,6 +21,10 @@ public class User {
     @NotNull
     @Column(name = "intra_id")
     private String intraId;
+
+
+    @Column(name = "e_mail")
+    private String eMail;
 
     @Setter
     @Column(name = "image_uri")
@@ -40,8 +45,9 @@ public class User {
     private Integer ppp;
 
     @Builder
-    public User(String intraId, String imageUri, RacketType racketType, String statusMessage, Integer ppp) {
+    public User(String intraId, String eMail, String imageUri, RacketType racketType, String statusMessage, Integer ppp) {
         this.intraId = intraId;
+        this.eMail = eMail;
         this.imageUri = imageUri;
         this.racketType = racketType;
         this.statusMessage = statusMessage;

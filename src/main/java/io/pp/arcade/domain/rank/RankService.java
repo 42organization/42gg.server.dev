@@ -12,10 +12,10 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class RankService {
-    private final RankRepository rankRepository;
-
-    public List<FindRankDto> findRankList(Pageable pageable) {
-        Page<Rank> pageListDto = rankRepository.findRankList(pageable);
-        return pageListDto.stream().map(FindRankDto::from).collect(Collectors.toList());
-    }
+//    private final RankRepository rankRepository;
+//
+//    public List<FindRankDto> findRankList(Pageable pageable) {
+//        Page<Rank> pageListDto = rankRepository.findRankList(pageable);
+//        return pageListDto.stream().map(FindRankDto::from).collect(Collectors.toList());
+//    }
 }

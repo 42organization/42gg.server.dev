@@ -1,0 +1,18 @@
+[source,options="nowrap"]
+----
+{
+  "notifications" : [ {
+    "id" : 14,
+    "type" : "matched",
+    "time" : "2022-06-16T15:10:00",
+    "isChecked" : true,
+    "createdTime" : "2022-06-15T19:35:34.992225"
+  }, {
+    "id" : 16,
+    "type" : "canceled",
+    "time" : "2022-06-16T15:10:00",
+    "isChecked" : false,
+    "createdTime" : "2022-06-15T19:35:35.071982"
+  } ]
+}
+----

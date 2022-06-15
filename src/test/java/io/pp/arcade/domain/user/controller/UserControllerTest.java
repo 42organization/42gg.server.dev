@@ -203,7 +203,8 @@ class UserControllerTest {
     @Test
     @Transactional
     void modifyProfile() throws Exception {
-        mockMvc.perform(put("/pingpong/users/" + user.getIntraId().toString() + "/detail").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put("/pingpong/users/" + user.getIntraId() + "/detail").contentType(MediaType.APPLICATION_JSON)
+                        .param("userId", user.getId().toString()))
                 .andExpect(status().isOk())
                 .andDo(document("modify-user-profile"));
     }

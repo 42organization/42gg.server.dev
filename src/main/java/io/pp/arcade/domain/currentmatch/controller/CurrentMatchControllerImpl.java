@@ -10,6 +10,7 @@ import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.team.dto.TeamPosDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.domain.user.dto.UserFindDto;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +32,7 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
     @GetMapping(value = "/match/current")
     public CurrentMatchResponseDto currentMatchFind(Integer userId) {
         CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUserId(userId);
-        UserDto curUser = userService.findById(userId);
+        UserDto curUser = userService.findById(UserFindDto.builder().userId(userId).build());
         CurrentMatchResponseDto responseDto = getCurrentMatchResponseDto(currentMatch, curUser);
         return responseDto;
     }
