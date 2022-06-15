@@ -9,6 +9,7 @@ import io.pp.arcade.domain.slot.dto.*;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamAddUserDto;
 import io.pp.arcade.domain.team.dto.TeamDto;
+import io.pp.arcade.domain.team.dto.TeamPosDto;
 import io.pp.arcade.domain.team.dto.TeamRemoveUserDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.slot.dto.SlotFindResponseDto;
@@ -140,20 +141,10 @@ public class SlotControllerImpl implements SlotController {
     }
 
     private TeamRemoveUserDto getTeamRemoveUserDto(SlotDto slot, UserDto user) {
-        TeamDto team1 = slot.getTeam1();
-        TeamDto team2 = slot.getTeam2();
-        Integer teamId;
-        Integer userId = user.getId();
-        if (user.equals(team1.getUser1()) || user.equals(team1.getUser2())) {
-            teamId = team1.getId();
-        } else if (user.equals(team2.getUser1()) || user.equals(team2.getUser2())) {
-            teamId = team2.getId();
-        } else {
-            throw new IllegalArgumentException("잘못된 요청입니다");
-        }
+        TeamPosDto teamPos = teamService.getTeamPosNT(user, slot.getTeam1(), slot.getTeam2());
         TeamRemoveUserDto teamRemoveUserDto = TeamRemoveUserDto.builder()
                 .userId(user.getId())
-                .teamId(teamId)
+                .teamId(teamPos.getMyTeam().getId())
                 .build();
         return teamRemoveUserDto;
     }

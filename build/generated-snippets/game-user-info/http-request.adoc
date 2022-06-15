@@ -1,6 +1,6 @@
 [source,http,options="nowrap"]
 ----
-GET /pingpong/games/11/result?userId=32 HTTP/1.1
+GET /pingpong/games/55/result?userId=90 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Host: localhost:8080
 
