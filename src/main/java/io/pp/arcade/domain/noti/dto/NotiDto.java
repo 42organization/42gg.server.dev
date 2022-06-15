@@ -28,7 +28,7 @@ public class NotiDto {
                 .type(noti.getNotiType())
                 .isChecked(noti.getIsChecked())
                 .message(noti.getMessage())
-                .creatdDate(noti.getCreatedDate())
+                .creatdDate(noti.getCreatedAt())
                 .build();
     }
 }

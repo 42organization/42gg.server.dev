@@ -1,6 +1,6 @@
 [source,http,options="nowrap"]
 ----
-GET /pingpong/match/tables/1?type=double&userId=102 HTTP/1.1
+GET /pingpong/match/tables/1?type=double&userId=106 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Host: localhost:8080
 

@@ -2,11 +2,10 @@
 ----
 HTTP/1.1 200 OK
 Content-Type: application/json
-Content-Length: 70
+Content-Length: 51
 
 {
-  "userId" : "jiyun1",
-  "userImageUri" : null,
-  "notiCount" : 10
+  "intraId" : "jiyun1",
+  "userImageUri" : null
 }
 ----

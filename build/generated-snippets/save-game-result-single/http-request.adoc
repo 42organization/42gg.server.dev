@@ -1,6 +1,6 @@
 [source,http,options="nowrap"]
 ----
-POST /pingpong/games/53/result?userId=84 HTTP/1.1
+POST /pingpong/games/51/result?userId=88 HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Content-Length: 51
 Host: localhost:8080

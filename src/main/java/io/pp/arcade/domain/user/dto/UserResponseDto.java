@@ -6,7 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class UserResponseDto {
-    private String userId;
+    private String intraId;
     private String userImageUri;
-    private Integer notiCount;
 }
