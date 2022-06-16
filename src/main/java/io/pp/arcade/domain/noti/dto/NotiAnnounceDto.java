@@ -12,5 +12,5 @@ public class NotiAnnounceDto {
     private String type;
     private Boolean isChecked;
     private String message;
-    private LocalDateTime createdTime;
+    private LocalDateTime createdAt;
 }
