@@ -1,7 +1,10 @@
 package io.pp.arcade.domain.user;
 
+import io.pp.arcade.domain.admin.dto.create.UserCreateDto;
 import io.pp.arcade.domain.user.dto.*;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -32,7 +35,7 @@ public class UserService {
                 .intraId(addDto.getIntraId())
                 .eMail(addDto.getEMail())
                 .statusMessage("")
-                .ppp(1000)
+                .ppp(0)
                 .build();
         userRepository.save(user);
     }
@@ -57,5 +60,25 @@ public class UserService {
     public List<UserDto> findByPartsOfIntraId(UserSearchDto userSearchDto) {
         List<User> users = userRepository.findByIntraIdContains(userSearchDto.getIntraId());
         return users.stream().map(UserDto::from).collect(Collectors.toList());
+    }
+
+    @Transactional
+    public void createUserByAdmin(UserCreateDto userCreateDto) {
+        User user = User.builder()
+                .intraId(userCreateDto.getIntraId())
+                .eMail(userCreateDto.getEMail())
+                .imageUri(userCreateDto.getUserImageUri())
+                .racketType(userCreateDto.getRacketType())
+                .statusMessage(userCreateDto.getStatusMessage() == null ? "" : userCreateDto.getStatusMessage())
+                .ppp(userCreateDto.getPpp() == null ? 0 : userCreateDto.getPpp())
+                .build();
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public List<UserDto> findUserByAdmin(Pageable pageable) {
+        Page<User> users = userRepository.findAll(pageable);
+        List<UserDto> userDtos = users.stream().map(UserDto::from).collect(Collectors.toList());
+        return userDtos;
     }
 }

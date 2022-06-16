@@ -5,6 +5,7 @@ import io.pp.arcade.domain.admin.dto.create.GameCreateDto;
 import io.pp.arcade.domain.admin.dto.delete.GameDeleteDto;
 import io.pp.arcade.domain.admin.dto.update.GameUpdateDto;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,19 +22,19 @@ public class GameAdminControllerImpl implements GameAdminController {
 
     @Override
     @PutMapping(value = "/game/{id}")
-    public void gameUpdate(GameUpdateDto gameUpdateDto, HttpServletRequest request) {
+    public void gameUpdate(Integer id, GameUpdateDto gameUpdateDto, HttpServletRequest request) {
 
     }
 
     @Override
     @DeleteMapping(value = "/game/{id}")
-    public void gameDelete(GameDeleteDto gameDeleteDto, HttpServletRequest request) {
+    public void gameDelete(Integer id, GameDeleteDto gameDeleteDto, HttpServletRequest request) {
 
     }
 
     @Override
     @GetMapping(value = "/game")
-    public void gameAll(GameAllDto gameAllDto, HttpServletRequest request) {
+    public void gameAll(Pageable pageable, HttpServletRequest request) {
 
     }
 }
