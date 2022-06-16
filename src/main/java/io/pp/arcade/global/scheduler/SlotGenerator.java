@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class SlotGenerator {
     private final SlotService slotService;
 
-    @Scheduled(cron = "30 0 0 * * *") // 초 분 시 일 월 년 요일
+    @Scheduled(cron = "30 0 0 * * *", zone = "Asia/Seoul") // 초 분 시 일 월 년 요일
     public void dailyGenerate() {
         LocalDateTime now = LocalDateTime.now();
         for (int i = 0; i < 18; i++) {
