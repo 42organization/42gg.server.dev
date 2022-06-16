@@ -34,22 +34,23 @@ public class GameGenerator {
         if (slotDto.getType().equals("double")) {
             maxHeadCount = 4;
         }
+        if (slotDto != null) {
+            CurrentMatchSaveGameDto matchSaveGameDto;
+            if (slotDto.getHeadCount().equals(maxHeadCount)) {
+                TeamDto team1 = slotDto.getTeam1();
+                TeamDto team2 = slotDto.getTeam2();
 
-        CurrentMatchSaveGameDto matchSaveGameDto;
-        if (slotDto.getHeadCount().equals(maxHeadCount)) {
-            TeamDto team1 = slotDto.getTeam1();
-            TeamDto team2 = slotDto.getTeam2();
+                GameAddDto gameAddDto = GameAddDto.builder()
+                        .slotDto(slotDto)
+                        .build();
+                gameService.addGame(gameAddDto);
+                GameDto game = gameService.findBySlot(slotDto.getId());
 
-            GameAddDto gameAddDto = GameAddDto.builder()
-                    .slotDto(slotDto)
-                    .build();
-            gameService.addGame(gameAddDto);
-            GameDto game = gameService.findBySlot(slotDto.getId());
-
-            saveCurrentMatch(team1.getUser1(), game);
-            saveCurrentMatch(team1.getUser2(), game);
-            saveCurrentMatch(team2.getUser1(), game);
-            saveCurrentMatch(team2.getUser2(), game);
+                saveCurrentMatch(team1.getUser1(), game);
+                saveCurrentMatch(team1.getUser2(), game);
+                saveCurrentMatch(team2.getUser1(), game);
+                saveCurrentMatch(team2.getUser2(), game);
+            }
         }
     }
 
