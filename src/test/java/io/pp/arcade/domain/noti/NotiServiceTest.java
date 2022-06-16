@@ -55,10 +55,10 @@ class NotiServiceTest {
 
     @BeforeEach
     void init() {
-        user1 = userRepository.save(User.builder().intraId("jiyun1").statusMessage("").ppp(42).build());
-        user2 = userRepository.save(User.builder().intraId("jiyun2").statusMessage("").ppp(24).build());
-        user3 = userRepository.save(User.builder().intraId("nheo1").statusMessage("").ppp(60).build());
-        user4 = userRepository.save(User.builder().intraId("nheo2").statusMessage("").ppp(30).build());
+        user1 = userRepository.save(User.builder().intraId("jiyun1").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(42).build());
+        user2 = userRepository.save(User.builder().intraId("jiyun2").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(24).build());
+        user3 = userRepository.save(User.builder().intraId("nheo1").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(60).build());
+        user4 = userRepository.save(User.builder().intraId("nheo2").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(30).build());
         team1 = teamRepository.save(Team.builder()
                 .teamPpp(0)
                 .user1(user1)
