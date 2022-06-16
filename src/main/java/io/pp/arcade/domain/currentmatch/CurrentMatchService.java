@@ -1,9 +1,6 @@
 package io.pp.arcade.domain.currentmatch;
 
-import io.pp.arcade.domain.currentmatch.dto.CurrentMatchAddDto;
-import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
-import io.pp.arcade.domain.currentmatch.dto.CurrentMatchModifyDto;
-import io.pp.arcade.domain.currentmatch.dto.CurrentMatchSaveGameDto;
+import io.pp.arcade.domain.currentmatch.dto.*;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.game.dto.GameDto;
@@ -16,6 +13,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -90,8 +89,16 @@ public class CurrentMatchService {
     }
 
     @Transactional
-    public void removeCurrentMatch(Integer userId) {
-        User user = userRepository.findById(userId).orElseThrow();
+    public List<CurrentMatchDto> findCurrentMatchByGame(CurrentMatchFindDto findDto) {
+        Game game = gameRepository.findById(findDto.getGame().getId()).orElseThrow();
+        List<CurrentMatch> matches = currentMatchRepository.findAllByGame(game);
+        List<CurrentMatchDto> currentMatchDtos = matches.stream().map(CurrentMatchDto::from).collect(Collectors.toList());
+        return currentMatchDtos;
+    }
+
+    @Transactional
+    public void removeCurrentMatch(CurrentMatchRemoveDto removeDto) {
+        User user = userRepository.findById(removeDto.getUserId()).orElseThrow();
         currentMatchRepository.deleteByUser(user);
     }
 }

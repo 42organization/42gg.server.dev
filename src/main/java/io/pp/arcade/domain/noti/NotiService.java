@@ -40,6 +40,7 @@ public class NotiService {
                 .build();
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
+        helper.setSubject("핑퐁요정으로부터 온 편지");
         helper.setTo(user.getEMail());
         helper.setText("New Notification : " + notiAddDto.getNotiType() + "\nYou Have New Noti in 42PingPong!");
         javaMailSender.send(message);

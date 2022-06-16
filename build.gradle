@@ -2,7 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.6.8'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
-	id 'java'
+	id 'war'
 }
 
 group = 'io.42pp'
@@ -15,6 +15,11 @@ configurations {
 	}
 }
 
+bootWar {
+	archivesBaseName = 'api'
+	archiveFileName = 'api.war'
+	archiveVersion = "0.0.1"
+}
 repositories {
 	mavenCentral()
 }
