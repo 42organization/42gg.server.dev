@@ -1,5 +1,7 @@
 package io.pp.arcade.domain.slot;
 
+import io.pp.arcade.domain.admin.dto.create.SlotCreateDto;
+import io.pp.arcade.domain.admin.dto.update.SlotUpdateDto;
 import io.pp.arcade.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
 import io.pp.arcade.domain.currentmatch.CurrentMatchService;
@@ -156,5 +158,24 @@ public class SlotService {
             status = "close";
         }
         return status;
+    }
+
+    public void createSlotByAdmin(SlotCreateDto createDto) {
+        slotRepository.save(Slot.builder()
+                .tableId(createDto.getTableId())
+                .team1(teamRepository.getById(createDto.getTeam1Id()))
+                .team2(teamRepository.getById(createDto.getTeam2Id()))
+                .time(createDto.getTime())
+                .gamePpp(createDto.getGamePpp())
+                .headCount(createDto.getHeadCount())
+                .type(createDto.getType())
+                .build());
+    }
+
+    public void updateSlotByAdmin(Integer id, SlotUpdateDto updateDto) {
+        Slot slot = slotRepository.findById(id).orElseThrow(null);
+        slot.setGamePpp(updateDto.getGamePpp());
+        slot.setHeadCount(updateDto.getHeadCount());
+        slot.setType(updateDto.getType());
     }
 }
