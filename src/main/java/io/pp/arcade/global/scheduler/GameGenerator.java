@@ -25,11 +25,12 @@ public class GameGenerator {
     private final String endTime = "18";
     private final String intervalTime = "10";
 
-    @Scheduled(cron = "0 */" + intervalTime + " " + startTime + "-" + endTime + " * * *") // 초 분 시 일 월 년 요일
+    @Scheduled(cron = "0 */" + intervalTime + " " + startTime + "-" + endTime + " * * *", zone = "Asia/Seoul") // 초 분 시 일 월 년 요일
     public void addGame() {
         Integer maxHeadCount = 2;
-
-        SlotDto slotDto = slotService.findByTime(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
+        SlotDto slotDto = slotService.findByTime(now);
         if (slotDto.getType().equals("double")) {
             maxHeadCount = 4;
         }
