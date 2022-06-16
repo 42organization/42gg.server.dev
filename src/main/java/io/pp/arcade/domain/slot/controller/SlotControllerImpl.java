@@ -4,6 +4,7 @@ import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchAddDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchModifyDto;
+import io.pp.arcade.domain.currentmatch.dto.CurrentMatchRemoveDto;
 import io.pp.arcade.domain.noti.NotiService;
 import io.pp.arcade.domain.noti.dto.NotiAddDto;
 import io.pp.arcade.domain.slot.SlotService;
@@ -121,7 +122,9 @@ public class SlotControllerImpl implements SlotController {
         // 유저 조회, 슬롯 조회, 팀 조회( 슬롯에 헤드 카운트 -, 팀에서 유저 퇴장 )
         SlotDto slot = slotService.findSlotById(slotId);
 
-        currentMatchService.removeCurrentMatch(user.getId());
+        CurrentMatchRemoveDto currentMatchRemoveDto = CurrentMatchRemoveDto.builder()
+                .userId(user.getId()).build();
+        currentMatchService.removeCurrentMatch(currentMatchRemoveDto);
         teamService.removeUserInTeam(getTeamRemoveUserDto(slot, user));
         slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
         addCancelNotisBySlot(slot);

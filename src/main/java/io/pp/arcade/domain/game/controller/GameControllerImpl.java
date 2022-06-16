@@ -1,5 +1,9 @@
 package io.pp.arcade.domain.game.controller;
 
+import io.pp.arcade.domain.currentmatch.CurrentMatchService;
+import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
+import io.pp.arcade.domain.currentmatch.dto.CurrentMatchFindDto;
+import io.pp.arcade.domain.currentmatch.dto.CurrentMatchRemoveDto;
 import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.game.dto.*;
 import io.pp.arcade.domain.pchange.PChangeService;
@@ -34,6 +38,7 @@ public class GameControllerImpl implements GameController {
     private final TeamService teamService;
     private final UserService userService;
     private final PChangeService pChangeService;
+    private final CurrentMatchService currentMatchService;
 
     @Override
     @GetMapping(value = "/games/{gameId}/result")
@@ -72,6 +77,7 @@ public class GameControllerImpl implements GameController {
         //modify users with game result
         modifyUsersPppAndPChange(game, team1, team2);
         endGameStatus(game);
+        removCurrentMatch(game);
         //modify users' ranks with game result
     }
 
@@ -178,7 +184,7 @@ public class GameControllerImpl implements GameController {
         Integer pppChange = EloRating.pppChange(user.getPpp(), enemyTeam.getTeamPpp(), !enemyTeam.getWin());
         UserModifyPppDto modifyPppDto = UserModifyPppDto.builder()
                 .userId(user.getId())
-                .ppp(pppChange)
+                .ppp(user.getPpp() + pppChange)
                 .build();
         userService.modifyUserPpp(modifyPppDto);
         PChangeAddDto pChangeAddDto = PChangeAddDto.builder()
@@ -188,6 +194,18 @@ public class GameControllerImpl implements GameController {
                 .pppResult(user.getPpp() + pppChange)
                 .build();
         pChangeService.addPChange(pChangeAddDto);
+    }
+
+    private void removCurrentMatch(GameDto game) {
+        CurrentMatchFindDto findDto = CurrentMatchFindDto.builder()
+                .game(game)
+                .build();
+        List<CurrentMatchDto> currentMatchDtos = currentMatchService.findCurrentMatchByGame(findDto);
+        currentMatchDtos.forEach(currentMatchDto -> {
+            CurrentMatchRemoveDto removeDto = CurrentMatchRemoveDto.builder()
+                    .userId(currentMatchDto.getUserId()).build();
+            currentMatchService.removeCurrentMatch(removeDto);
+        });
     }
 
     private void putUsersDataInTeams(GameDto game, UserDto user, List<GameUserInfoDto> myTeams, List<GameUserInfoDto> enemyTeams) {

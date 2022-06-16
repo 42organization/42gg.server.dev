@@ -17,24 +17,27 @@ import java.time.LocalDateTime;
 @Component
 @AllArgsConstructor
 public class CurrentMatchUpdater {
-    private final GameService gameService;
     private final SlotService slotService;
     private final CurrentMatchService currentMatchService;
     private final String startTime = "15";
     private final String endTime = "18";
-    private final String intervalTime = "10";
+    private final String intervalTime = "5";
 
-    @Scheduled(cron = "0 */" + intervalTime + " " + startTime + "-" + endTime + " * * *") // 초 분 시 일 월 년 요일
+    @Scheduled(cron = "0 */" + intervalTime + " " + startTime + "-" + endTime + " * * *", zone = "Asia/Seoul") // 초 분 시 일 월 년 요일
     public void updateIsImminent() {
-        SlotDto slot = slotService.findByTime(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute() + 5, 0);
 
-        TeamDto team1 = slot.getTeam1();
-        TeamDto team2 = slot.getTeam2();
+        SlotDto slot = slotService.findByTime(now);
+        if (slot != null) {
+            TeamDto team1 = slot.getTeam1();
+            TeamDto team2 = slot.getTeam2();
 
-        modifyCurrentMatch(team1.getUser1());
-        modifyCurrentMatch(team1.getUser2());
-        modifyCurrentMatch(team2.getUser1());
-        modifyCurrentMatch(team2.getUser2());
+            modifyCurrentMatch(team1.getUser1());
+            modifyCurrentMatch(team1.getUser2());
+            modifyCurrentMatch(team2.getUser1());
+            modifyCurrentMatch(team2.getUser2());
+        }
     }
 
     public void modifyCurrentMatch(UserDto user) {
