@@ -13,5 +13,5 @@ public class NotiMatchedDto {
     private String type;
     private LocalDateTime time;
     private Boolean isChecked;
-    private LocalDateTime createdTime;
+    private LocalDateTime createdAt;
 }
