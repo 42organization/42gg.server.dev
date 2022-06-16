@@ -68,12 +68,12 @@ class SlotControllerTest {
 
     @BeforeEach
     void init() {
-        user = User.builder().intraId("donghyuk").statusMessage("").ppp(1000).build();
-        user1 = User.builder().intraId("nheo").statusMessage("").ppp(1000).build();
-        user2 = User.builder().intraId("jekim").statusMessage("").ppp(1000).build();
-        user3 = User.builder().intraId("jiyun").statusMessage("").ppp(1000).build();
-        user4 = User.builder().intraId("wochae").statusMessage("").ppp(1000).build();
-        user5 = User.builder().intraId("hakim").statusMessage("").ppp(1000).build();
+        user = User.builder().intraId("donghyuk").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(1000).build();
+        user1 = User.builder().intraId("nheo").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(1000).build();
+        user2 = User.builder().intraId("jekim").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(1000).build();
+        user3 = User.builder().intraId("jiyun").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(1000).build();
+        user4 = User.builder().intraId("wochae").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(1000).build();
+        user5 = User.builder().intraId("hakim").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(1000).build();
         users = new ArrayList<>();
         users.add(user);
         users.add(user1);

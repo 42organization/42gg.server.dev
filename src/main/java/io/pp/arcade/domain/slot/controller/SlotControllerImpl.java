@@ -18,6 +18,7 @@ import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.slot.dto.SlotStatusResponseDto;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserFindDto;
+import io.pp.arcade.global.util.NotiGenerater;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,7 @@ public class SlotControllerImpl implements SlotController {
     private final TeamService teamService;
     private final NotiService notiService;
     private final CurrentMatchService currentMatchService;
+    private final NotiGenerater notiGenerater;
 
     @Override
     @GetMapping(value = "/match/tables/{tableId}")
@@ -111,7 +113,7 @@ public class SlotControllerImpl implements SlotController {
 
         //유저가 슬롯에 꽉 차면 currentMatch가 전부 바뀐다.
         modifyUsersCurrentMatchStatus(user, slot);
-        addMatchNotisBySlot(slot);
+        notiGenerater.addMatchNotisBySlot(slot);
     }
 
     @Override
@@ -127,7 +129,7 @@ public class SlotControllerImpl implements SlotController {
         currentMatchService.removeCurrentMatch(currentMatchRemoveDto);
         teamService.removeUserInTeam(getTeamRemoveUserDto(slot, user));
         slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
-        addCancelNotisBySlot(slot);
+        notiGenerater.addCancelNotisBySlot(slot);
     }
 
     private void modifyUsersCurrentMatchStatus(UserDto user, SlotDto slot) {
@@ -145,41 +147,6 @@ public class SlotControllerImpl implements SlotController {
         modifyCurrentMatch(team1.getUser2(), matchModifyDto);
         modifyCurrentMatch(team2.getUser1(), matchModifyDto);
         modifyCurrentMatch(team2.getUser2(), matchModifyDto);
-    }
-
-    private void addMatchNotisBySlot(SlotDto slot) throws MessagingException {
-        Integer maxSlotHeadCount = "single".equals(slot.getType()) ? 2 : 4;
-        Boolean isMatched = slot.getHeadCount().equals(maxSlotHeadCount) ? true : false;
-        Boolean isImminent = slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5)) ? true : false;
-        if (isImminent == true) {
-            addNoti(slot.getTeam1().getUser1(), slot, "imminent");
-            addNoti(slot.getTeam1().getUser2(), slot, "imminent");
-            addNoti(slot.getTeam2().getUser1(), slot, "imminent");
-            addNoti(slot.getTeam2().getUser2(), slot, "imminent");
-        } else if (isMatched == true) {
-            addNoti(slot.getTeam1().getUser1(), slot, "matched");
-            addNoti(slot.getTeam1().getUser2(), slot, "matched");
-            addNoti(slot.getTeam2().getUser1(), slot, "matched");
-            addNoti(slot.getTeam2().getUser2(), slot, "matched");
-        }
-    }
-
-    private void addCancelNotisBySlot(SlotDto slot) throws MessagingException {
-        addNoti(slot.getTeam1().getUser1(), slot, "canceled");
-        addNoti(slot.getTeam1().getUser2(), slot, "canceled");
-        addNoti(slot.getTeam2().getUser1(), slot, "canceled");
-        addNoti(slot.getTeam2().getUser2(), slot, "canceled");
-    }
-
-    private void addNoti(UserDto user, SlotDto slot, String type) throws MessagingException {
-        if (user != null) {
-            NotiAddDto notiAddDto = NotiAddDto.builder()
-                    .user(user)
-                    .slot(slot)
-                    .notiType(type)
-                    .build();
-            notiService.addNoti(notiAddDto);
-        }
     }
 
     private TeamAddUserDto getTeamAddUserDto(SlotDto slot, String reqType, UserDto user) {
