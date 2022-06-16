@@ -73,6 +73,9 @@ public class SlotControllerImpl implements SlotController {
                 groupTime = slot.getTime().getHour(); //시간 갱신
             }
         }
+        slotGroups.add(SlotGroupDto.builder()
+                .slots(oneGroup).build());
+
         return slotGroups;
     }
 
