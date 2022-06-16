@@ -72,7 +72,7 @@ public class GameService {
         List<GameDto> gameDtoList = games.stream().map(GameDto::from).collect(Collectors.toList());
 
         GameResultPageDto resultPageDto = GameResultPageDto.builder().gameList(gameDtoList)
-                                                .currentPage(games.getNumber())
+                                                .currentPage(games.getNumber() + 1)
                                                 .totalPage(games.getTotalPages())
                                                 .build();
         return resultPageDto;
