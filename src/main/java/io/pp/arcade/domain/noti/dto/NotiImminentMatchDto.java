@@ -15,5 +15,5 @@ public class NotiImminentMatchDto {
     private Boolean isChecked;
     private List<String> myTeam;
     private List<String> enemyTeam;
-    private LocalDateTime createdTime;
+    private LocalDateTime createdAt;
 }
