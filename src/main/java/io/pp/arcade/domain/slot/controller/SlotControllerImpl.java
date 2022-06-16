@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -38,15 +39,41 @@ public class SlotControllerImpl implements SlotController {
     @GetMapping(value = "/match/tables/{tableId}")
     public SlotStatusResponseDto slotStatusList(Integer tableId, String type, Integer userId) {
         List<SlotStatusDto> slots;
-        List<SlotGroupDto> slotGroups = null;
+        List<SlotGroupDto> slotGroups;
         SlotFindStatusDto findDto = SlotFindStatusDto.builder()
                 .userId(userId)
                 .type(type)
                 .currentTime(LocalDateTime.now())
                 .build();
         slots = slotService.findSlotsStatus(findDto);
+        slotGroups = groupingSlots(slots);
         SlotStatusResponseDto responseDto = SlotStatusResponseDto.builder().slotGroups(slotGroups).build();
         return responseDto;
+    }
+
+    private List<SlotGroupDto> groupingSlots(List<SlotStatusDto> slots) {
+        if (slots.size() == 0) {
+            throw new IllegalArgumentException("?");
+        }
+        List<SlotGroupDto> slotGroups = new ArrayList<>();
+        List<SlotStatusDto> oneGroup = new ArrayList<>();
+        int groupTime = slots.get(0).getTime().getHour();
+
+        for(SlotStatusDto slot: slots) {
+            if (slot.getTime().getHour() == groupTime) {
+                oneGroup.add(SlotStatusDto.builder()
+                        .slotId(slot.getSlotId())
+                        .time(slot.getTime())
+                        .headCount(slot.getHeadCount())
+                        .status(slot.getStatus()).build());
+            } else {
+                slotGroups.add(SlotGroupDto.builder()
+                        .slots(oneGroup).build());
+                oneGroup = new ArrayList<>(); //다음 그루핑을 위한 그룹 생성
+                groupTime = slot.getTime().getHour(); //시간 갱신
+            }
+        }
+        return slotGroups;
     }
 
     @Override
