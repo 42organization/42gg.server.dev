@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -85,7 +86,7 @@ class NotiServiceTest {
 
     @Test
     @Transactional
-    void addNoti() {
+    void addNoti() throws MessagingException {
         NotiAddDto addDto = NotiAddDto.builder()
                 .notiType("announce")
                 .user(UserDto.from(user1))
