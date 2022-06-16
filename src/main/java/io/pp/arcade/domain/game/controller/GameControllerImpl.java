@@ -263,7 +263,7 @@ public class GameControllerImpl implements GameController {
         teamDto = GameTeamDto.builder()
                 .isWin(team.getWin())
                 .score(team.getScore())
-                .playerInfos(gamePlayerList)
+                .players(gamePlayerList)
                 .build();
         return teamDto;
     }
