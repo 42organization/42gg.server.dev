@@ -8,7 +8,7 @@ import java.util.List;
 @Getter
 @Builder
 public class GameTeamDto {
-    List<GamePlayerDto> playerInfos;
+    List<GamePlayerDto> players;
     private Boolean isWin;
     private Integer score;
 }
