@@ -4,6 +4,7 @@ import io.pp.arcade.domain.admin.dto.all.SlotAllDto;
 import io.pp.arcade.domain.admin.dto.create.SlotCreateDto;
 import io.pp.arcade.domain.admin.dto.delete.SlotDeleteDto;
 import io.pp.arcade.domain.admin.dto.update.SlotUpdateDto;
+import io.pp.arcade.domain.slot.SlotService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -14,16 +15,18 @@ import javax.servlet.http.HttpServletRequest;
 @AllArgsConstructor
 @RequestMapping(value = "/admin")
 public class SlotAdminControllerImpl implements SlotAdminController {
+    private final SlotService slotService;
+
     @Override
     @PostMapping(value = "/slot")
     public void slotCreate(SlotCreateDto slotCreateDto, HttpServletRequest request) {
-
+        slotService.createSlotByAdmin(slotCreateDto);
     }
 
     @Override
     @PutMapping(value = "/slot/{id}")
     public void slotUpdate(Integer id, SlotUpdateDto slotUpdateDto, HttpServletRequest request) {
-
+        slotService.updateSlotByAdmin(id, slotUpdateDto);
     }
 
     @Override
