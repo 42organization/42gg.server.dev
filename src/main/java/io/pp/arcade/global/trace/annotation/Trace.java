@@ -1,4 +1,4 @@
-package com.blind.api.global.Trace.annotation;
+package io.pp.arcade.global.trace.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

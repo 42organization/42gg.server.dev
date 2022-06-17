@@ -2,6 +2,7 @@ package io.pp.arcade.domain.user.controller;
 
 import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
+import io.pp.arcade.domain.game.dto.GameDto;
 import io.pp.arcade.domain.noti.NotiService;
 import io.pp.arcade.domain.noti.dto.NotiCountDto;
 import io.pp.arcade.domain.noti.dto.NotiFindDto;
@@ -76,7 +77,8 @@ public class UserControllerImpl implements UserController {
     public UserHistoricResponseDto userFindHistorics(String userId, Pageable pageable) {
         PChangePageDto pChangePage = pChangeService.findPChangeByUserId(PChangeFindDto.builder()
                 .userId(userId)
-                .build(), pageable);
+                .pageable(pageable)
+                .build());
         List<PChangeDto> pChangeList = pChangePage.getPChangeList();
         List<UserHistoricDto> historicDtos = new ArrayList<UserHistoricDto>();
         for (PChangeDto dto : pChangeList) {
@@ -117,14 +119,12 @@ public class UserControllerImpl implements UserController {
     @GetMapping(value = "/users/{intraId}/live")
     public UserLiveInfoResponseDto userLiveInfo(String intraId, Integer userId) {
         CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUserId(userId);
-        if (!userId.equals(currentMatch.getUserId())) {
-            throw new IllegalArgumentException("?");
-        }
+        GameDto currentMatchGame = currentMatch == null ? null : currentMatch.getGame();
         UserDto user = userService.findByIntraId(UserFindDto.builder().intraId(intraId).build());
         NotiCountDto notiCount = notiService.countAllNByUser(NotiFindDto.builder().user(user).build());
         UserLiveInfoResponseDto userLiveInfoResponse = UserLiveInfoResponseDto.builder()
                 .notiCount(notiCount.getNotiCount()) //
-                .gameId(currentMatch.getGame() != null ? currentMatch.getGame().getId() : null)
+                .gameId(currentMatchGame == null ? null : currentMatchGame.getId())
                 .build();
         return userLiveInfoResponse;
     }
