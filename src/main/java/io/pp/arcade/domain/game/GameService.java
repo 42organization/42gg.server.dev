@@ -68,14 +68,19 @@ public class GameService {
     }
 
     @Transactional
-    public GameResultPageDto findEndGames(Pageable page) {
-        Page<Game> games = gameRepository.findByStatus("end", page);
+    public GameResultPageDto findGamesAfterId(GameFindDto findDto) {
+        Page<Game> games;
+        Integer gameId = findDto.getId() == null ? Integer.MAX_VALUE : findDto.getId();
+        if (findDto.getStatus() != null) {
+            games = gameRepository.findByIdLessThanAndStatusOrderByIdDesc(gameId, findDto.getStatus(), findDto.getPageable());
+        } else {
+            games = gameRepository.findByIdLessThanOrderByIdDesc(gameId, findDto.getPageable());
+        }
         List<GameDto> gameDtoList = games.stream().map(GameDto::from).collect(Collectors.toList());
 
-        GameResultPageDto resultPageDto = GameResultPageDto.builder().gameList(gameDtoList)
-                                                .currentPage(games.getNumber() + 1)
-                                                .totalPage(games.getTotalPages())
-                                                .build();
+        GameResultPageDto resultPageDto = GameResultPageDto.builder()
+                .gameList(gameDtoList)
+                .build();
         return resultPageDto;
     }
 

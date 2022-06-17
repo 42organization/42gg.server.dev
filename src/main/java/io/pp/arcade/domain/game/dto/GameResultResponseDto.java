@@ -9,6 +9,7 @@ import java.util.List;
 @Builder
 public class GameResultResponseDto {
     List<GameResultDto> games;
-    Integer currentPage;
-    Integer totalPage;
+    Integer lastGameId;
+//    Integer currentPage;
+//    Integer totalPage;
 }

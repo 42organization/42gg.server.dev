@@ -7,8 +7,9 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class RankModifyPppDto {
+public class RankModifyDto {
     private String intraId;
     private GameType gameType;
+    private Boolean isWin;
     private Integer Ppp;
 }

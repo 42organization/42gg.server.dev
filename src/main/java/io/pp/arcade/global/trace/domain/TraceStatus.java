@@ -1,4 +1,4 @@
-package com.blind.api.global.Trace.domain;
+package io.pp.arcade.global.trace.domain;
 
 import lombok.Getter;
 

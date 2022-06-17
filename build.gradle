@@ -47,6 +47,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springfremework.session:spring-session-data-redis'
 	implementation 'org.redisson:redisson:3.17.3'
+	
 	/* oauth */
 	// implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 

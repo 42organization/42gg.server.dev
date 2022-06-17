@@ -120,8 +120,9 @@ public class SlotService {
     }
 
     public SlotDto findByTime(LocalDateTime time) {
-        Slot slot = slotRepository.findByTime(time).orElseThrow();
-        return SlotDto.from(slot);
+        Slot slot = slotRepository.findByTime(time).orElse(null);
+        SlotDto slotDto = slot == null ? null : SlotDto.from(slot);
+        return slotDto;
     }
 
     public String getStatus(SlotFilterDto dto) {
