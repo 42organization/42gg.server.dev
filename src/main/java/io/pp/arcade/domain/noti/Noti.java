@@ -22,7 +22,7 @@ public class Noti extends BaseTimeEntity {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "intra_id")
     private User user;
 
     @ManyToOne
