@@ -1,6 +1,0 @@
-[source,bash]
-----
-$ http --form PUT 'http://localhost:8080/pingpong/users/jiyun1/detail' \
-    'Content-Type:application/json;charset=UTF-8' \
-    'userId=43'
-----
