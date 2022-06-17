@@ -41,7 +41,7 @@ public class NotiControllerImpl implements NotiController {
                         .type(noti.getType())
                         .isChecked(noti.getIsChecked())
                         .message(noti.getMessage())
-                        .createdTime(noti.getCreatdDate())
+                        .createdAt(noti.getCreatdDate())
                         .build());
             } else if (noti.getType().equals("matched")) {
                 notiDtos.add(NotiMatchedDto.builder()
@@ -49,7 +49,7 @@ public class NotiControllerImpl implements NotiController {
                         .type(noti.getType())
                         .time(noti.getSlot().getTime())
                         .isChecked(noti.getIsChecked())
-                        .createdTime(noti.getCreatdDate())
+                        .createdAt(noti.getCreatdDate())
                         .build());
             } else if (noti.getType().equals("imminent")) {
                 TeamPosDto teamPosDto = teamService.getTeamPosNT(user, noti.getSlot().getTeam1(), noti.getSlot().getTeam2());
@@ -74,7 +74,7 @@ public class NotiControllerImpl implements NotiController {
                         .isChecked(noti.getIsChecked())
                         .myTeam(myTeam)
                         .enemyTeam(enemyTeam)
-                        .createdTime(noti.getCreatdDate())
+                        .createdAt(noti.getCreatdDate())
                         .build());
             } else if (noti.getType().equals("canceled")) {
                 notiDtos.add(NotiCanceledDto.builder()
@@ -82,7 +82,7 @@ public class NotiControllerImpl implements NotiController {
                         .type(noti.getType())
                         .time(noti.getSlot().getTime())
                         .isChecked(noti.getIsChecked())
-                        .createdTime(noti.getCreatdDate())
+                        .createdAt(noti.getCreatdDate())
                         .build());
             }
         });

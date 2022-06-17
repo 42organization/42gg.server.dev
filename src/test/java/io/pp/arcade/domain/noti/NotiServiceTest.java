@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -54,10 +55,10 @@ class NotiServiceTest {
 
     @BeforeEach
     void init() {
-        user1 = userRepository.save(User.builder().intraId("jiyun1").statusMessage("").ppp(42).build());
-        user2 = userRepository.save(User.builder().intraId("jiyun2").statusMessage("").ppp(24).build());
-        user3 = userRepository.save(User.builder().intraId("nheo1").statusMessage("").ppp(60).build());
-        user4 = userRepository.save(User.builder().intraId("nheo2").statusMessage("").ppp(30).build());
+        user1 = userRepository.save(User.builder().intraId("jiyun1").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(42).build());
+        user2 = userRepository.save(User.builder().intraId("jiyun2").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(24).build());
+        user3 = userRepository.save(User.builder().intraId("nheo1").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(60).build());
+        user4 = userRepository.save(User.builder().intraId("nheo2").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(30).build());
         team1 = teamRepository.save(Team.builder()
                 .teamPpp(0)
                 .user1(user1)
@@ -85,7 +86,7 @@ class NotiServiceTest {
 
     @Test
     @Transactional
-    void addNoti() {
+    void addNoti() throws MessagingException {
         NotiAddDto addDto = NotiAddDto.builder()
                 .notiType("announce")
                 .user(UserDto.from(user1))

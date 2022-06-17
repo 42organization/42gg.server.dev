@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: test
   mvc:
     hiddenmethod:
       filter:
@@ -16,3 +16,15 @@ spring:
       pageable:
         default-page-size: 20
         one-indexed-parameters: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: 42seoularcade@gmail.com
+    password: ddejvefnkjscumxf
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+            required: true
+          auth: true
