@@ -1,7 +1,0 @@
-[source,options="nowrap"]
-----
-{
-  "intraId" : "jiyun1",
-  "userImageUri" : null
-}
-----
