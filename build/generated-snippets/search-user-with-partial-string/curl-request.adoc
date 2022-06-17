@@ -1,5 +1,0 @@
-[source,bash]
-----
-$ curl 'http://localhost:8080/pingpong/users/searches?userId=zzang' -i -X GET \
-    -H 'Content-Type: application/json;charset=UTF-8'
-----

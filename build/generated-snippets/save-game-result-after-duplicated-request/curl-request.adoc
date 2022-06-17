@@ -1,9 +1,0 @@
-[source,bash]
-----
-$ curl 'http://localhost:8080/pingpong/games/52/result?userId=92' -i -X POST \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -d '{
-  "myTeamScore" : "2",
-  "enemyTeamScore" : "1"
-}'
-----
