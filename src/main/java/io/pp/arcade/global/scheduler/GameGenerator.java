@@ -25,30 +25,32 @@ public class GameGenerator {
     private final String endTime = "18";
     private final String intervalTime = "10";
 
-    @Scheduled(cron = "0 */" + intervalTime + " " + startTime + "-" + endTime + " * * *") // 초 분 시 일 월 년 요일
+    @Scheduled(cron = "0 */" + intervalTime + " " + startTime + "-" + endTime + " * * *", zone = "Asia/Seoul") // 초 분 시 일 월 년 요일
     public void addGame() {
         Integer maxHeadCount = 2;
-
-        SlotDto slotDto = slotService.findByTime(LocalDateTime.now());
+        LocalDateTime now = LocalDateTime.now();
+        now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
+        SlotDto slotDto = slotService.findByTime(now);
         if (slotDto.getType().equals("double")) {
             maxHeadCount = 4;
         }
+        if (slotDto != null) {
+            CurrentMatchSaveGameDto matchSaveGameDto;
+            if (slotDto.getHeadCount().equals(maxHeadCount)) {
+                TeamDto team1 = slotDto.getTeam1();
+                TeamDto team2 = slotDto.getTeam2();
 
-        CurrentMatchSaveGameDto matchSaveGameDto;
-        if (slotDto.getHeadCount().equals(maxHeadCount)) {
-            TeamDto team1 = slotDto.getTeam1();
-            TeamDto team2 = slotDto.getTeam2();
+                GameAddDto gameAddDto = GameAddDto.builder()
+                        .slotDto(slotDto)
+                        .build();
+                gameService.addGame(gameAddDto);
+                GameDto game = gameService.findBySlot(slotDto.getId());
 
-            GameAddDto gameAddDto = GameAddDto.builder()
-                    .slotDto(slotDto)
-                    .build();
-            gameService.addGame(gameAddDto);
-            GameDto game = gameService.findBySlot(slotDto.getId());
-
-            saveCurrentMatch(team1.getUser1(), game);
-            saveCurrentMatch(team1.getUser2(), game);
-            saveCurrentMatch(team2.getUser1(), game);
-            saveCurrentMatch(team2.getUser2(), game);
+                saveCurrentMatch(team1.getUser1(), game);
+                saveCurrentMatch(team1.getUser2(), game);
+                saveCurrentMatch(team2.getUser1(), game);
+                saveCurrentMatch(team2.getUser2(), game);
+            }
         }
     }
 

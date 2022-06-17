@@ -2,7 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.6.8'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
-	id 'java'
+	id 'war'
 }
 
 group = 'io.42pp'
@@ -15,6 +15,11 @@ configurations {
 	}
 }
 
+bootWar {
+	archivesBaseName = 'api'
+	archiveFileName = 'api.war'
+	archiveVersion = "0.0.1"
+}
 repositories {
 	mavenCentral()
 }
@@ -28,6 +33,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'

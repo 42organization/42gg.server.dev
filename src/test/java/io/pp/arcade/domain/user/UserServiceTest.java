@@ -56,7 +56,7 @@ class UserServiceTest {
         //when
         userService.addUser(UserAddDto.builder().intraId("jiyun2").build());
         UserDto userDto = userService.findByIntraId(UserFindDto.builder().intraId("jiyun2").build());
-g
+
         //then
         Assertions.assertThat(userDto.getIntraId()).isEqualTo("jiyun2");
     }

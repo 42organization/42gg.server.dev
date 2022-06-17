@@ -1,9 +1,6 @@
 package io.pp.arcade.domain.currentmatch;
 
-import io.pp.arcade.domain.currentmatch.dto.CurrentMatchAddDto;
-import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
-import io.pp.arcade.domain.currentmatch.dto.CurrentMatchModifyDto;
-import io.pp.arcade.domain.currentmatch.dto.CurrentMatchSaveGameDto;
+import io.pp.arcade.domain.currentmatch.dto.*;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.game.dto.GameDto;
@@ -172,8 +169,11 @@ class CurrentMatchServiceTest {
                 .user(user1)
                 .build());
 
+        CurrentMatchRemoveDto removeDto = CurrentMatchRemoveDto.builder()
+                .userId(user1.getId()).build();
+
         Assertions.assertThat(currentMatchRepository.findAll()).isNotEqualTo(Collections.EMPTY_LIST);
-        currentMatchService.removeCurrentMatch(user1.getId());
+        currentMatchService.removeCurrentMatch(removeDto);
         Assertions.assertThat(currentMatchRepository.findAll()).isEqualTo(Collections.EMPTY_LIST);
     }
 }
