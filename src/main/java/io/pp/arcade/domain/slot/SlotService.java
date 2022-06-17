@@ -1,22 +1,25 @@
 package io.pp.arcade.domain.slot;
 
-import io.pp.arcade.domain.admin.dto.create.SlotCreateDto;
-import io.pp.arcade.domain.admin.dto.update.SlotUpdateDto;
+import io.pp.arcade.domain.admin.dto.create.SlotCreateRequestDto;
+import io.pp.arcade.domain.admin.dto.delete.SlotDeleteDto;
+import io.pp.arcade.domain.admin.dto.update.SlotUpdateRequestDto;
 import io.pp.arcade.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
-import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.slot.dto.*;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -160,7 +163,7 @@ public class SlotService {
         return status;
     }
 
-    public void createSlotByAdmin(SlotCreateDto createDto) {
+    public void createSlotByAdmin(SlotCreateRequestDto createDto) {
         slotRepository.save(Slot.builder()
                 .tableId(createDto.getTableId())
                 .team1(teamRepository.getById(createDto.getTeam1Id()))
@@ -172,10 +175,21 @@ public class SlotService {
                 .build());
     }
 
-    public void updateSlotByAdmin(Integer id, SlotUpdateDto updateDto) {
-        Slot slot = slotRepository.findById(id).orElseThrow(null);
+    public void updateSlotByAdmin(SlotUpdateRequestDto updateDto) {
+        Slot slot = slotRepository.findById(updateDto.getId()).orElseThrow(null);
         slot.setGamePpp(updateDto.getGamePpp());
         slot.setHeadCount(updateDto.getHeadCount());
         slot.setType(updateDto.getType());
+    }
+
+    public void deleteSlotByAdmin(SlotDeleteDto deleteDto) {
+        Slot slot = slotRepository.findById(deleteDto.getId()).orElseThrow(null);
+        slotRepository.delete(slot);
+    }
+
+    public List<SlotDto> findSlotByAdmin(Pageable pageable) {
+        Page<Slot> slots = slotRepository.findAll(pageable);
+        List<SlotDto> slotDtos = slots.stream().map(SlotDto::from).collect(Collectors.toList());
+        return slotDtos;
     }
 }

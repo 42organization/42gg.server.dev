@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.game;
 
+import io.pp.arcade.domain.admin.dto.create.GameCreateDto;
 import io.pp.arcade.domain.game.dto.*;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.slot.Slot;
@@ -76,5 +77,19 @@ public class GameService {
                                                 .totalPage(games.getTotalPages())
                                                 .build();
         return resultPageDto;
+    }
+
+    public void gameCreateByAdmin(GameCreateDto createDto) {
+        Slot slot = slotRepository.findById(createDto.getSlotId()).orElseThrow(null);
+        Game game = Game.builder()
+                .slot(slot)
+                .team1(slot.getTeam1())
+                .team2(slot.getTeam2())
+                .time(slot.getTime())
+                .season(createDto.getSeasonId())
+                .time(slot.getTime())
+                .type(slot.getType())
+                .status(createDto.getStatus()).build();
+        gameRepository.save(game);
     }
 }
