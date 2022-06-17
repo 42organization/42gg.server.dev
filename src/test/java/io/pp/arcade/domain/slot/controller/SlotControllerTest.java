@@ -14,6 +14,7 @@ import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.scheduler.SlotGenerator;
+import io.pp.arcade.global.util.GameType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -168,7 +169,7 @@ class SlotControllerTest {
 
         // [Close] 슬롯 4 & 복식 - 유저(100p) -> 슬롯(900p) 접근
         slot = slotList.get(2);
-        addUser(slot, 4, "dobule", 900);
+        addUser(slot, 4, "double", 900);
 
         params = new LinkedMultiValueMap<>();
         params.add("type", "single");

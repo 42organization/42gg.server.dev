@@ -16,14 +16,13 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        show_sql: true
+        show_sql: false
         format_sql: false
         use_sql_comments: false
-    logging:
-      level:
-        org:
-          hibernate:
-            type:
-              descripter:
-                sql: trace
-            SQL: debug
+
+logging:
+  level:
+    org:
+      hibernate:
+#        SQL: debug
+#        type: trace

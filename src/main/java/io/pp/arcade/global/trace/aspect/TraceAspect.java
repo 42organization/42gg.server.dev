@@ -1,7 +1,7 @@
-package com.blind.api.global.Trace.aspect;
+package io.pp.arcade.global.trace.aspect;
 
-import com.blind.api.global.Trace.domain.TraceStatus;
-import com.blind.api.global.Trace.service.LogTrace;
+import io.pp.arcade.global.trace.domain.TraceStatus;
+import io.pp.arcade.global.trace.service.LogTrace;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -9,8 +9,9 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
 
 @Slf4j
 @Aspect
@@ -19,18 +20,20 @@ import org.springframework.stereotype.Component;
 public class TraceAspect {
     private final LogTrace logTrace;
 
-    @Pointcut("execution(* com.blind.api.domain..*(..))")
+    @Pointcut("execution(* io.pp.arcade.domain..*(..))")
     public void allDomain(){}
 
-    @Pointcut("execution(* com.blind.api.domain.security..*(..))")
-    public void securityDomain(){}
+//    @Pointcut("execution(* io.pp.arcade.domain.security..*(..))")
+//    public void securityDomain(){}
 
-    @Around("allDomain() && !securityDomain()")
+    //    @Around("allDomain() && !securityDomain()")
+    @Around("allDomain()")
     public Object doLog(ProceedingJoinPoint joinPoint) throws Throwable{
         TraceStatus status = null;
         MethodSignature method = (MethodSignature)joinPoint.getSignature();
+        Object[] methodArgs = joinPoint.getArgs();
         try{
-            status = logTrace.begin(method.getDeclaringType().getSimpleName() + "." + method.getName() + "()");
+            status = logTrace.begin(method.getDeclaringType().getSimpleName() + "." + method.getName() + "(): arguments = " + Arrays.toString(methodArgs));
             Object result = joinPoint.proceed();
             logTrace.end(status);
             return result;

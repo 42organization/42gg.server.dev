@@ -45,13 +45,27 @@ public class PChangeService {
     }
 
     @Transactional
-    public PChangePageDto findPChangeByUserId(PChangeFindDto findDto, Pageable pageable){
+    public PChangePageDto findPChangeByUserId(PChangeFindDto findDto){
         User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow();
-        Page<PChange> pChangePage = pChangeRepository.findAllByUserOrderByIdDesc(user, pageable);
+        Page<PChange> pChangePage = pChangeRepository.findAllByUserOrderByIdDesc(user, findDto.getPageable());
         PChangePageDto dto = PChangePageDto.builder()
                 .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()))
-                .totalPage(pChangePage.getTotalPages())
-                .currentPage(pChangePage.getPageable().getPageNumber())
+//                .totalPage(pChangePage.getTotalPages())
+//                .currentPage(pChangePage.getPageable().getPageNumber())
+                .build();
+        return dto;
+    }
+
+    @Transactional
+    public PChangePageDto findPChangeByUserIdAfterGameId(PChangeFindDto findDto){
+        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow();
+        Integer gameId = findDto.getGameId() == null ? Integer.MAX_VALUE : findDto.getGameId();
+
+        Page<PChange> pChangePage = pChangeRepository.findAllByUserAndGameIdLessThanOrderByIdDesc(user, gameId, findDto.getPageable());
+        PChangePageDto dto = PChangePageDto.builder()
+                .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()))
+//                .totalPage(pChangePage.getTotalPages())
+//                .currentPage(pChangePage.getPageable().getPageNumber())
                 .build();
         return dto;
     }

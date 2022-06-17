@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
+import io.pp.arcade.domain.game.GameService;
+import io.pp.arcade.domain.game.dto.GameDto;
 import io.pp.arcade.domain.game.dto.GameResultRequestDto;
 import io.pp.arcade.domain.pchange.PChange;
 import io.pp.arcade.domain.pchange.PChangeRepository;
@@ -72,7 +74,6 @@ class GameControllerTest {
     User user5;
     List<User> users;
     List<Slot> slotList;
-
     @BeforeEach
     void init() {
         user = User.builder().intraId("donghyuk").statusMessage("").ppp(1000).build();
@@ -157,7 +158,7 @@ class GameControllerTest {
         Team team1 = slot.getTeam1();
         Team team2 = slot.getTeam2();
         addUserInTeam(team1, user, true); //donghyuk
-        addUserInTeam(team2, user1, true); // nheo
+        addUserInTeam(team2, user4, true); // nheo
         Game game = saveGame(slot, team1, team2);
 
         //when
@@ -181,7 +182,7 @@ class GameControllerTest {
         addUserInTeam(team1, user3, false);
         addUserInTeam(team2, user4, true);
         addUserInTeam(team2, user5, false);
-        game = saveGame(slot, team1, team2);
+        Game game2 = saveGame(slot, team1, team2);
         
         //when2
         body = new HashMap<>();
@@ -189,7 +190,7 @@ class GameControllerTest {
         body.put("enemyTeamScore", "2");
 
         //then2
-        mockMvc.perform(post("/pingpong/games/"+ game.getId().toString() +"/result").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/pingpong/games/"+ game2.getId().toString() +"/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body)) // { "myTeamScore" : "2", ..}
                         .param("userId", user3.getId().toString()))
                 // ?userId=userId(donghyuk's userId) 어느 팀에 속한 유저인지 혹은 결과 입력이 필요한 유저가 맞는지 알기 위해서
@@ -198,12 +199,12 @@ class GameControllerTest {
         MultiValueMap<String, String> params;
         params = new LinkedMultiValueMap<>();
 //        Pageable pageable;
-        params.add("page", "1");
+        params.add("count", "10");
         params.add("status", "end");
-        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
-                        .params(params))
-                .andExpect(status().isOk())
-                .andDo(document("find-game-results"));
+//        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
+//                        .params(params))
+//                .andExpect(status().isOk())
+//                .andDo(document("find-game-results"));
 
         //given2 // 결과 재입력, 202에러 띄워야함
         //위의 게임을 그대로 씀
@@ -221,15 +222,29 @@ class GameControllerTest {
                 .andExpect(status().isAccepted())
                 .andDo(document("save-game-result-after-duplicated-request"));
         params = new LinkedMultiValueMap<>();
-//        Pageable pageable;
-        params.add("page", "1");
-        params.add("status", "end");
+//
+//        params.add("gameId", "1");
+        params.add("count", "10");
+//        params.add("status", "end");
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params))
                 .andExpect(status().isOk())
                 .andDo(document("find-game-results-after-duplicated-request"));
 
+        params = new LinkedMultiValueMap<>();
+//        Pageable pageable;
+        params.add("count", "10");
+        params.add("gameId", "3");
 
+        mockMvc.perform(get("/pingpong/users/" + user4.getIntraId() + "/games").contentType(MediaType.APPLICATION_JSON)
+                        .params(params))
+                .andExpect(status().isOk())
+                .andDo(document("find-game-results-after-duplicated-request2"));
+
+        mockMvc.perform(get("/pingpong/users/" + user5.getIntraId() + "/games").contentType(MediaType.APPLICATION_JSON)
+                        .params(params))
+                .andExpect(status().isOk())
+                .andDo(document("find-game-results-after-duplicated-request3"));
     }
 
 //    @Test

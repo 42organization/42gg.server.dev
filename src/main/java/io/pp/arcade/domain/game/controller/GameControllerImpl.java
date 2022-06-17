@@ -21,6 +21,7 @@ import io.pp.arcade.domain.user.dto.UserFindDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import io.pp.arcade.global.util.EloRating;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -83,24 +84,29 @@ public class GameControllerImpl implements GameController {
 
     @Override
     @GetMapping(value = "/games")
-    public GameResultResponseDto gameResultByIndexAndCount(Pageable pageable, String status) {
-        GameResultPageDto resultPageDto = gameService.findEndGames(pageable);
+    public GameResultResponseDto gameResultByGameIdAndCount(Integer count, Integer gameId, String status) {
+        Pageable pageable = PageRequest.of(0, count);
+        GameResultPageDto resultPageDto = gameService.findGamesAfterId(GameFindDto.builder().id(gameId).status(status).pageable(pageable).build());
         List<GameResultDto> gameResultList = new ArrayList<>();
         List<GameDto> gameLists = resultPageDto.getGameList();
-
+        Integer lastGameId;
+        if (gameLists.size() == 0) {
+            lastGameId = 0;
+        } else {
+            lastGameId = gameLists.get(gameLists.size() - 1).getId();
+        }
         putResultInGames(gameResultList, gameLists);
 
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
-                .currentPage(resultPageDto.getCurrentPage())
-                .totalPage(resultPageDto.getTotalPage())
+                .lastGameId(lastGameId)
                 .build();
         return gameResultResponse;
     }
 
     @Override
-    @GetMapping(value = "/games/{userId}")
-    public GameResultResponseDto gameResultByUserIdAndIndexAndCount(String userId, Pageable pageable, String type) {
+    @GetMapping(value = "/users/{userId}/games")
+    public GameResultResponseDto gameResultByUserIdAndByGameIdAndCount(String userId, Integer count, Integer gameId, String type) {
         //Pageable
         /*
          * 1. PChange에서 유저별 게임 목록을 가져온다
@@ -108,20 +114,30 @@ public class GameControllerImpl implements GameController {
          * 3. 얘네를 DTO로 만들어준다
          *
          */
+        Pageable pageable = PageRequest.of(0, count);
         PChangeFindDto findDto = PChangeFindDto.builder()
                 .userId(userId)
+                .gameId(gameId == null ? 0 : gameId)
+                .pageable(pageable)
                 .build();
-        PChangePageDto pChangePageDto = pChangeService.findPChangeByUserId(findDto, pageable);
+        PChangePageDto pChangePageDto = pChangeService.findPChangeByUserIdAfterGameId(findDto);
         List<PChangeDto> pChangeLists = pChangePageDto.getPChangeList();
         List<GameDto> gameLists = pChangeLists.stream().map(PChangeDto::getGame).collect(Collectors.toList());;
         List<GameResultDto> gameResultList = new ArrayList<>();
+        Integer lastGameId;
+        if (gameLists.size() == 0) {
+            lastGameId = 0;
+        } else {
+            lastGameId = gameLists.get(gameLists.size() - 1).getId();
+        }
 
         putResultInGames(gameResultList, gameLists);
 
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
-                .currentPage(pChangePageDto.getCurrentPage())
-                .totalPage(pChangePageDto.getTotalPage())
+                .lastGameId(lastGameId)
+//                .currentPage(pChangePageDto.getCurrentPage())
+//                .totalPage(pChangePageDto.getTotalPage())
                 .build();
         return gameResultResponse;
     }

@@ -1,7 +1,7 @@
-package com.blind.api.global.Trace.service;
+package io.pp.arcade.global.trace.service;
 
-import com.blind.api.global.Trace.domain.TraceId;
-import com.blind.api.global.Trace.domain.TraceStatus;
+import io.pp.arcade.global.trace.domain.TraceId;
+import io.pp.arcade.global.trace.domain.TraceStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

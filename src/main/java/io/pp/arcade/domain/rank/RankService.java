@@ -3,6 +3,7 @@ package io.pp.arcade.domain.rank;
 import io.pp.arcade.domain.rank.dto.*;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.global.util.GameType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,34 +18,30 @@ import java.util.Set;
 @Service
 @AllArgsConstructor
 public class RankService {
-    private final String CACHE_VALUE = "rank";
-    private final RankRepository rankRepository;
     private final UserRepository userRepository;
     private final RedisTemplate redisTemplate;
     private final RankRedisRepository rankRedisRepository;
 
     @Transactional
-    public RankFindListDto findRankList(Pageable pageable) {
-        // pageable.size() 반환 MAX값 필터링
+    public RankFindListDto findRankList(Pageable pageable, GameType type) {
         int pageNumber = pageable.getPageNumber() >= 0 ? pageable.getPageNumber() : 0;
         int pageSize = pageable.getPageSize();
-        int rankingIdx = pageNumber * pageable.getPageSize();
+        int userRanking = pageNumber * pageable.getPageSize();
         List<RankUserDto> rankList = new ArrayList<RankUserDto>();
-        Set<String> range = redisTemplate.opsForZSet().range(CACHE_VALUE, pageNumber * pageSize, pageNumber * pageSize * 2);
-
-        for (String key : range){
-            RankRedis userInfo = (RankRedis) redisTemplate.opsForValue().get(key);
+        Set<String> range = redisTemplate.opsForZSet().reverseRange(type.getKey(), pageNumber * pageSize, (pageNumber + 1) * pageSize);
+        for (String intraId : range){
+            userRanking = userRanking + 1;
+            RankRedis userInfo = (RankRedis) redisTemplate.opsForValue().get(intraId);
             rankList.add(RankUserDto.builder()
                         .intraId(userInfo.getIntraId())
                         .ppp(userInfo.getPpp())
-                        .rank(rankingIdx)
+                        .rank(userRanking)
                         .winRate(userInfo.getWinRate())
                         .build());
-            rankingIdx++;
         }
 
         int currentPage = pageable.getPageNumber();
-        int totalPage = redisTemplate.opsForZSet().size(CACHE_VALUE).intValue() / pageSize;
+        int totalPage = redisTemplate.opsForZSet().size(type.getKey()).intValue() / pageSize;
         RankFindListDto findListDto =  RankFindListDto.builder()
                 .currentPage(currentPage > totalPage ? totalPage : currentPage) // 최대값은 totalPage
                 .totalPage(totalPage)
@@ -57,8 +54,7 @@ public class RankService {
     public RankUserDto findRankById(RankFindDto findDto) {
         String key = getKey(findDto.getIntraId(), findDto.getGameType());
         RankRedis userRankInfo = (RankRedis) redisTemplate.opsForValue().get(key);
-        Long userRanking = redisTemplate.opsForZSet().reverseRank(CACHE_VALUE, key);
-
+        Long userRanking = redisTemplate.opsForZSet().reverseRank(findDto.getGameType().getKey(), key);
         RankUserDto infoDto = RankUserDto.builder()
                 .intraId(userRankInfo.getIntraId())
                 .ppp(userRankInfo.getPpp())
@@ -70,13 +66,12 @@ public class RankService {
     }
 
     @Transactional
-    public void modifyRankPpp(RankModifyPppDto modifyDto){
+    public void modifyRank(RankModifyDto modifyDto){
         String key = getKey(modifyDto.getIntraId(), modifyDto.getGameType());
         RankRedis rank = (RankRedis)redisTemplate.opsForValue().get(key);
-        rank.setPpp(modifyDto.getPpp());
+        rank.update(modifyDto.getIsWin(),modifyDto.getPpp());
         redisTemplate.opsForValue().set(key, rank);
-        redisTemplate.opsForZSet().add(CACHE_VALUE, key, modifyDto.getPpp());
-
+        redisTemplate.opsForZSet().add(modifyDto.getGameType().getKey(), key, modifyDto.getPpp());
     }
 
     @Transactional
@@ -90,18 +85,20 @@ public class RankService {
     @Transactional
     public void addRank(RankAddDto addDto){
         User user = userRepository.findById(addDto.getUserId()).orElseThrow(()->new IllegalArgumentException("잘못된 요청입니다."));
-        RankRedis singleRank =  RankRedis.from(user,"single");
-        RankRedis doubleRank =  RankRedis.from(user,"double");
+        RankRedis singleRank =  RankRedis.from(user, GameType.SINGLE);
+        RankRedis doubleRank =  RankRedis.from(user, GameType.DOUBLE);
 
-        redisTemplate.opsForValue().set(user.getIntraId() + "single", singleRank);
-        redisTemplate.opsForValue().set(user.getIntraId() + "double", doubleRank);
-        redisTemplate.opsForZSet().add(CACHE_VALUE, user.getIntraId() + "single" , user.getPpp());
-        redisTemplate.opsForZSet().add(CACHE_VALUE, user.getIntraId() + "double" , user.getPpp());
+        redisTemplate.opsForValue().set(user.getIntraId() + GameType.SINGLE, singleRank);
+        redisTemplate.opsForValue().set(user.getIntraId() + GameType.DOUBLE, doubleRank);
+        redisTemplate.opsForZSet().add(GameType.SINGLE.getKey(), user.getIntraId() + GameType.SINGLE , user.getPpp());
+        redisTemplate.opsForZSet().add(GameType.DOUBLE.getKey(), user.getIntraId() + GameType.DOUBLE , user.getPpp());
     }
-    // MyRank 조회
-    // 유저 statusMessage 업데이트
 
-    private String getKey(String intraId, String GameType){
-        return intraId + GameType;
+    @Transactional
+    public void saveAllRankToRDB(RankSaveAllDto saveAllDto){
+        //userRepository.saveAll();
+    }
+    private String getKey(String intraId, GameType GameType){
+        return intraId + GameType.getKey();
     }
 }

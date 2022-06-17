@@ -2,6 +2,7 @@ package io.pp.arcade.domain.rank;
 
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.global.util.RacketType;
+import io.pp.arcade.global.util.GameType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,13 +26,12 @@ public class RankRedis implements Serializable {
     @Indexed
     private String intraId;
 
-    @Setter
     private Integer ppp;
 
     private RacketType racketType;
 
     @Indexed
-    private String gameType;
+    private GameType gameType;
 
     private Integer wins;
 
@@ -42,8 +42,9 @@ public class RankRedis implements Serializable {
     @Setter
     private String statusMessage;
 
+
     @Builder
-    public RankRedis(String intraId, Integer ppp, RacketType racketType, String gameType, Integer wins, Integer losses, double winRate, String statusMessage) {
+    public RankRedis(String intraId, Integer ppp, RacketType racketType, GameType gameType, Integer wins, Integer losses, double winRate, String statusMessage) {
         this.intraId = intraId;
         this.ppp = ppp;
         this.racketType = racketType;
@@ -54,7 +55,7 @@ public class RankRedis implements Serializable {
         this.statusMessage = statusMessage;
     }
 
-    public static RankRedis from (User user, String gameType){
+    public static RankRedis from (User user, GameType gameType){
         return RankRedis.builder()
                 .intraId(user.getIntraId())
                 .ppp(user.getPpp())
@@ -65,5 +66,15 @@ public class RankRedis implements Serializable {
                 .losses(0)
                 .winRate(0)
                 .build();
+    }
+
+    public void update(Boolean isWin, Integer ppp){
+        if (isWin == true) {
+            this.wins++;
+        } else {
+            this.losses++;
+        }
+        this.ppp = ppp;
+        this.winRate = wins / (double)(wins + losses);
     }
 }

@@ -1,0 +1,98 @@
+[2022-06-18 01:32:50:5836][main] DEBUG org.hibernate.SQL - alter table current_match drop foreign key FKmaa4irkiicemkq2gl3t0bqn6a
+[2022-06-18 01:32:50:5882][main] DEBUG org.hibernate.SQL - alter table current_match drop foreign key FK4qtnfmeqkj0iy1qeghm6ywb6n
+[2022-06-18 01:32:50:5886][main] DEBUG org.hibernate.SQL - alter table current_match drop foreign key FKl53dqtyiaemmm1tqdsdj55ng2
+[2022-06-18 01:32:50:5889][main] DEBUG org.hibernate.SQL - alter table game drop foreign key FKgb66of4ini2gvvu76o8pufcr5
+[2022-06-18 01:32:50:5898][main] DEBUG org.hibernate.SQL - alter table game drop foreign key FKjnhlg2dqkrjvaai3e70ymw339
+[2022-06-18 01:32:50:5903][main] DEBUG org.hibernate.SQL - alter table game drop foreign key FKehwjicpbm71ks5yyuo7co77qj
+[2022-06-18 01:32:50:5908][main] DEBUG org.hibernate.SQL - alter table noti drop foreign key FKehey4772h8bhsaix4x6tkrjjc
+[2022-06-18 01:32:50:5911][main] DEBUG org.hibernate.SQL - alter table noti drop foreign key FKbjyk0xemxlmv8f6n7nxvx2akk
+[2022-06-18 01:32:50:5914][main] DEBUG org.hibernate.SQL - alter table pchange drop foreign key FKqu8jxac7ewvc26oc7hukcixxd
+[2022-06-18 01:32:50:5918][main] DEBUG org.hibernate.SQL - alter table pchange drop foreign key FKjld3ge0jy4tjbqxso9wpck9r1
+[2022-06-18 01:32:50:5921][main] DEBUG org.hibernate.SQL - alter table ranks drop foreign key FK9baj7lwqe9acxbeplowb01mn9
+[2022-06-18 01:32:50:5925][main] DEBUG org.hibernate.SQL - alter table slot drop foreign key FKhs33om0wvyi8uqhn6nusyreuw
+[2022-06-18 01:32:50:5929][main] DEBUG org.hibernate.SQL - alter table slot drop foreign key FK4cc14u3pb35q8d1pbbbu2e6wg
+[2022-06-18 01:32:50:5933][main] DEBUG org.hibernate.SQL - alter table team drop foreign key FKeo0siujn1a48s7c78xcr1q36s
+[2022-06-18 01:32:50:5937][main] DEBUG org.hibernate.SQL - alter table team drop foreign key FKhowcyg7s7wv73ds320qsmtnn4
+[2022-06-18 01:32:50:5941][main] DEBUG org.hibernate.SQL - drop table if exists current_match
+[2022-06-18 01:32:50:5945][main] DEBUG org.hibernate.SQL - drop table if exists game
+[2022-06-18 01:32:50:5947][main] DEBUG org.hibernate.SQL - drop table if exists noti
+[2022-06-18 01:32:50:5949][main] DEBUG org.hibernate.SQL - drop table if exists pchange
+[2022-06-18 01:32:50:5951][main] DEBUG org.hibernate.SQL - drop table if exists ranks
+[2022-06-18 01:32:50:5952][main] DEBUG org.hibernate.SQL - drop table if exists season
+[2022-06-18 01:32:50:5954][main] DEBUG org.hibernate.SQL - drop table if exists slot
+[2022-06-18 01:32:50:5957][main] DEBUG org.hibernate.SQL - drop table if exists team
+[2022-06-18 01:32:50:5961][main] DEBUG org.hibernate.SQL - drop table if exists user
+[2022-06-18 01:32:50:5965][main] DEBUG org.hibernate.SQL - create table current_match (id integer not null auto_increment, created_at datetime not null, modified_at datetime, is_matched bit, match_imminent bit, game_id integer, slot_id integer not null, user_id varchar(255) not null, primary key (id)) engine=InnoDB
+[2022-06-18 01:32:50:5969][main] DEBUG org.hibernate.SQL - create table game (id integer not null auto_increment, season integer not null, status varchar(255) not null, time datetime not null, type varchar(255) not null, slot_id integer not null, team1_id integer not null, team2_id integer not null, primary key (id)) engine=InnoDB
+[2022-06-18 01:32:50:5973][main] DEBUG org.hibernate.SQL - create table noti (id integer not null auto_increment, created_at datetime not null, modified_at datetime, is_checked bit not null, message varchar(255), noti_type varchar(255) not null, slot_id integer, user_id varchar(255), primary key (id)) engine=InnoDB
+[2022-06-18 01:32:50:5976][main] DEBUG org.hibernate.SQL - create table pchange (id integer not null auto_increment, created_at datetime not null, modified_at datetime, ppp_change integer not null, ppp_result integer not null, game_id integer not null, user_id varchar(255) not null, primary key (id)) engine=InnoDB
+[2022-06-18 01:32:50:5981][main] DEBUG org.hibernate.SQL - create table ranks (id integer not null auto_increment, created_at datetime not null, modified_at datetime, losses integer not null, ppp integer not null, racket_type integer not null, ranking integer, season_id integer not null, wins integer not null, user_id varchar(255) not null, primary key (id)) engine=InnoDB
+[2022-06-18 01:32:50:5984][main] DEBUG org.hibernate.SQL - create table season (id integer not null auto_increment, end_time datetime not null, season_name varchar(255) not null, start_ppp integer not null, start_time datetime not null, primary key (id)) engine=InnoDB
+[2022-06-18 01:32:50:5987][main] DEBUG org.hibernate.SQL - create table slot (id integer not null auto_increment, created_at datetime not null, modified_at datetime, game_ppp integer, head_count integer not null, table_id integer not null, time datetime not null, type varchar(255), team1_id integer not null, team2_id integer not null, primary key (id)) engine=InnoDB
+[2022-06-18 01:32:50:5990][main] DEBUG org.hibernate.SQL - create table team (id integer not null auto_increment, head_count integer not null, score integer not null, team_ppp integer not null, win bit, user1_id integer, user2_id integer, primary key (id)) engine=InnoDB
+[2022-06-18 01:32:50:5993][main] DEBUG org.hibernate.SQL - create table user (id integer not null auto_increment, created_at datetime not null, modified_at datetime, e_mail varchar(255), image_uri varchar(255), intra_id varchar(255) not null, ppp integer not null, racket_type integer, status_message varchar(255) not null, primary key (id)) engine=InnoDB
+[2022-06-18 01:32:50:5996][main] DEBUG org.hibernate.SQL - alter table user add constraint UK_l5220ph2ndjh75g6ya39wy519 unique (intra_id)
+[2022-06-18 01:32:50:5999][main] DEBUG org.hibernate.SQL - alter table current_match add constraint FKmaa4irkiicemkq2gl3t0bqn6a foreign key (game_id) references game (id)
+[2022-06-18 01:32:50:6006][main] DEBUG org.hibernate.SQL - alter table current_match add constraint FK4qtnfmeqkj0iy1qeghm6ywb6n foreign key (slot_id) references slot (id)
+[2022-06-18 01:32:50:6017][main] DEBUG org.hibernate.SQL - alter table current_match add constraint FKl53dqtyiaemmm1tqdsdj55ng2 foreign key (user_id) references user (intra_id)
+[2022-06-18 01:32:50:6024][main] DEBUG org.hibernate.SQL - alter table game add constraint FKgb66of4ini2gvvu76o8pufcr5 foreign key (slot_id) references slot (id)
+[2022-06-18 01:32:50:6032][main] DEBUG org.hibernate.SQL - alter table game add constraint FKjnhlg2dqkrjvaai3e70ymw339 foreign key (team1_id) references team (id)
+[2022-06-18 01:32:50:6044][main] DEBUG org.hibernate.SQL - alter table game add constraint FKehwjicpbm71ks5yyuo7co77qj foreign key (team2_id) references team (id)
+[2022-06-18 01:32:50:6054][main] DEBUG org.hibernate.SQL - alter table noti add constraint FKehey4772h8bhsaix4x6tkrjjc foreign key (slot_id) references slot (id)
+[2022-06-18 01:32:50:6069][main] DEBUG org.hibernate.SQL - alter table noti add constraint FKbjyk0xemxlmv8f6n7nxvx2akk foreign key (user_id) references user (intra_id)
+[2022-06-18 01:32:50:6079][main] DEBUG org.hibernate.SQL - alter table pchange add constraint FKqu8jxac7ewvc26oc7hukcixxd foreign key (game_id) references game (id)
+[2022-06-18 01:32:50:6087][main] DEBUG org.hibernate.SQL - alter table pchange add constraint FKjld3ge0jy4tjbqxso9wpck9r1 foreign key (user_id) references user (intra_id)
+[2022-06-18 01:32:50:6098][main] DEBUG org.hibernate.SQL - alter table ranks add constraint FK9baj7lwqe9acxbeplowb01mn9 foreign key (user_id) references user (intra_id)
+[2022-06-18 01:32:50:6110][main] DEBUG org.hibernate.SQL - alter table slot add constraint FKhs33om0wvyi8uqhn6nusyreuw foreign key (team1_id) references team (id)
+[2022-06-18 01:32:50:6123][main] DEBUG org.hibernate.SQL - alter table slot add constraint FK4cc14u3pb35q8d1pbbbu2e6wg foreign key (team2_id) references team (id)
+[2022-06-18 01:32:50:6133][main] DEBUG org.hibernate.SQL - alter table team add constraint FKeo0siujn1a48s7c78xcr1q36s foreign key (user1_id) references user (id)
+[2022-06-18 01:32:50:6141][main] DEBUG org.hibernate.SQL - alter table team add constraint FKhowcyg7s7wv73ds320qsmtnn4 foreign key (user2_id) references user (id)
+[2022-06-18 01:36:19:4488][main] DEBUG org.hibernate.SQL - alter table current_match drop foreign key FKmaa4irkiicemkq2gl3t0bqn6a
+[2022-06-18 01:36:19:4518][main] DEBUG org.hibernate.SQL - alter table current_match drop foreign key FK4qtnfmeqkj0iy1qeghm6ywb6n
+[2022-06-18 01:36:19:4525][main] DEBUG org.hibernate.SQL - alter table current_match drop foreign key FKl53dqtyiaemmm1tqdsdj55ng2
+[2022-06-18 01:36:19:4533][main] DEBUG org.hibernate.SQL - alter table game drop foreign key FKgb66of4ini2gvvu76o8pufcr5
+[2022-06-18 01:36:19:4541][main] DEBUG org.hibernate.SQL - alter table game drop foreign key FKjnhlg2dqkrjvaai3e70ymw339
+[2022-06-18 01:36:19:4548][main] DEBUG org.hibernate.SQL - alter table game drop foreign key FKehwjicpbm71ks5yyuo7co77qj
+[2022-06-18 01:36:19:4554][main] DEBUG org.hibernate.SQL - alter table noti drop foreign key FKehey4772h8bhsaix4x6tkrjjc
+[2022-06-18 01:36:19:4558][main] DEBUG org.hibernate.SQL - alter table noti drop foreign key FKbjyk0xemxlmv8f6n7nxvx2akk
+[2022-06-18 01:36:19:4561][main] DEBUG org.hibernate.SQL - alter table pchange drop foreign key FKqu8jxac7ewvc26oc7hukcixxd
+[2022-06-18 01:36:19:4564][main] DEBUG org.hibernate.SQL - alter table pchange drop foreign key FKjld3ge0jy4tjbqxso9wpck9r1
+[2022-06-18 01:36:19:4567][main] DEBUG org.hibernate.SQL - alter table ranks drop foreign key FK9baj7lwqe9acxbeplowb01mn9
+[2022-06-18 01:36:19:4571][main] DEBUG org.hibernate.SQL - alter table slot drop foreign key FKhs33om0wvyi8uqhn6nusyreuw
+[2022-06-18 01:36:19:4575][main] DEBUG org.hibernate.SQL - alter table slot drop foreign key FK4cc14u3pb35q8d1pbbbu2e6wg
+[2022-06-18 01:36:19:4579][main] DEBUG org.hibernate.SQL - alter table team drop foreign key FKeo0siujn1a48s7c78xcr1q36s
+[2022-06-18 01:36:19:4583][main] DEBUG org.hibernate.SQL - alter table team drop foreign key FKhowcyg7s7wv73ds320qsmtnn4
+[2022-06-18 01:36:19:4588][main] DEBUG org.hibernate.SQL - drop table if exists current_match
+[2022-06-18 01:36:19:4591][main] DEBUG org.hibernate.SQL - drop table if exists game
+[2022-06-18 01:36:19:4594][main] DEBUG org.hibernate.SQL - drop table if exists noti
+[2022-06-18 01:36:19:4596][main] DEBUG org.hibernate.SQL - drop table if exists pchange
+[2022-06-18 01:36:19:4598][main] DEBUG org.hibernate.SQL - drop table if exists ranks
+[2022-06-18 01:36:19:4599][main] DEBUG org.hibernate.SQL - drop table if exists season
+[2022-06-18 01:36:19:4602][main] DEBUG org.hibernate.SQL - drop table if exists slot
+[2022-06-18 01:36:19:4606][main] DEBUG org.hibernate.SQL - drop table if exists team
+[2022-06-18 01:36:19:4609][main] DEBUG org.hibernate.SQL - drop table if exists user
+[2022-06-18 01:36:19:4613][main] DEBUG org.hibernate.SQL - create table current_match (id integer not null auto_increment, created_at datetime not null, modified_at datetime, is_matched bit, match_imminent bit, game_id integer, slot_id integer not null, user_id varchar(255) not null, primary key (id)) engine=InnoDB
+[2022-06-18 01:36:19:4621][main] DEBUG org.hibernate.SQL - create table game (id integer not null auto_increment, season integer not null, status varchar(255) not null, time datetime not null, type varchar(255) not null, slot_id integer not null, team1_id integer not null, team2_id integer not null, primary key (id)) engine=InnoDB
+[2022-06-18 01:36:19:4626][main] DEBUG org.hibernate.SQL - create table noti (id integer not null auto_increment, created_at datetime not null, modified_at datetime, is_checked bit not null, message varchar(255), noti_type varchar(255) not null, slot_id integer, user_id varchar(255), primary key (id)) engine=InnoDB
+[2022-06-18 01:36:19:4628][main] DEBUG org.hibernate.SQL - create table pchange (id integer not null auto_increment, created_at datetime not null, modified_at datetime, ppp_change integer not null, ppp_result integer not null, game_id integer not null, user_id varchar(255) not null, primary key (id)) engine=InnoDB
+[2022-06-18 01:36:19:4631][main] DEBUG org.hibernate.SQL - create table ranks (id integer not null auto_increment, created_at datetime not null, modified_at datetime, losses integer not null, ppp integer not null, racket_type integer not null, ranking integer, season_id integer not null, wins integer not null, user_id varchar(255) not null, primary key (id)) engine=InnoDB
+[2022-06-18 01:36:19:4634][main] DEBUG org.hibernate.SQL - create table season (id integer not null auto_increment, end_time datetime not null, season_name varchar(255) not null, start_ppp integer not null, start_time datetime not null, primary key (id)) engine=InnoDB
+[2022-06-18 01:36:19:4638][main] DEBUG org.hibernate.SQL - create table slot (id integer not null auto_increment, created_at datetime not null, modified_at datetime, game_ppp integer, head_count integer not null, table_id integer not null, time datetime not null, type varchar(255), team1_id integer not null, team2_id integer not null, primary key (id)) engine=InnoDB
+[2022-06-18 01:36:19:4640][main] DEBUG org.hibernate.SQL - create table team (id integer not null auto_increment, head_count integer not null, score integer not null, team_ppp integer not null, win bit, user1_id integer, user2_id integer, primary key (id)) engine=InnoDB
+[2022-06-18 01:36:19:4644][main] DEBUG org.hibernate.SQL - create table user (id integer not null auto_increment, created_at datetime not null, modified_at datetime, e_mail varchar(255), image_uri varchar(255), intra_id varchar(255) not null, ppp integer not null, racket_type integer, status_message varchar(255) not null, primary key (id)) engine=InnoDB
+[2022-06-18 01:36:19:4647][main] DEBUG org.hibernate.SQL - alter table user add constraint UK_l5220ph2ndjh75g6ya39wy519 unique (intra_id)
+[2022-06-18 01:36:19:4651][main] DEBUG org.hibernate.SQL - alter table current_match add constraint FKmaa4irkiicemkq2gl3t0bqn6a foreign key (game_id) references game (id)
+[2022-06-18 01:36:19:4658][main] DEBUG org.hibernate.SQL - alter table current_match add constraint FK4qtnfmeqkj0iy1qeghm6ywb6n foreign key (slot_id) references slot (id)
+[2022-06-18 01:36:19:4665][main] DEBUG org.hibernate.SQL - alter table current_match add constraint FKl53dqtyiaemmm1tqdsdj55ng2 foreign key (user_id) references user (intra_id)
+[2022-06-18 01:36:19:4674][main] DEBUG org.hibernate.SQL - alter table game add constraint FKgb66of4ini2gvvu76o8pufcr5 foreign key (slot_id) references slot (id)
+[2022-06-18 01:36:19:4687][main] DEBUG org.hibernate.SQL - alter table game add constraint FKjnhlg2dqkrjvaai3e70ymw339 foreign key (team1_id) references team (id)
+[2022-06-18 01:36:19:4695][main] DEBUG org.hibernate.SQL - alter table game add constraint FKehwjicpbm71ks5yyuo7co77qj foreign key (team2_id) references team (id)
+[2022-06-18 01:36:19:4703][main] DEBUG org.hibernate.SQL - alter table noti add constraint FKehey4772h8bhsaix4x6tkrjjc foreign key (slot_id) references slot (id)
+[2022-06-18 01:36:19:4709][main] DEBUG org.hibernate.SQL - alter table noti add constraint FKbjyk0xemxlmv8f6n7nxvx2akk foreign key (user_id) references user (intra_id)
+[2022-06-18 01:36:19:4716][main] DEBUG org.hibernate.SQL - alter table pchange add constraint FKqu8jxac7ewvc26oc7hukcixxd foreign key (game_id) references game (id)
+[2022-06-18 01:36:19:4722][main] DEBUG org.hibernate.SQL - alter table pchange add constraint FKjld3ge0jy4tjbqxso9wpck9r1 foreign key (user_id) references user (intra_id)
+[2022-06-18 01:36:19:4729][main] DEBUG org.hibernate.SQL - alter table ranks add constraint FK9baj7lwqe9acxbeplowb01mn9 foreign key (user_id) references user (intra_id)
+[2022-06-18 01:36:19:4739][main] DEBUG org.hibernate.SQL - alter table slot add constraint FKhs33om0wvyi8uqhn6nusyreuw foreign key (team1_id) references team (id)
+[2022-06-18 01:36:19:4749][main] DEBUG org.hibernate.SQL - alter table slot add constraint FK4cc14u3pb35q8d1pbbbu2e6wg foreign key (team2_id) references team (id)
+[2022-06-18 01:36:19:4758][main] DEBUG org.hibernate.SQL - alter table team add constraint FKeo0siujn1a48s7c78xcr1q36s foreign key (user1_id) references user (id)
+[2022-06-18 01:36:19:4767][main] DEBUG org.hibernate.SQL - alter table team add constraint FKhowcyg7s7wv73ds320qsmtnn4 foreign key (user2_id) references user (id)

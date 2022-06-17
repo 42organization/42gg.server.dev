@@ -25,7 +25,7 @@ public class PChange extends BaseTimeEntity {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "intra_id")
     private User user;
 
     @NotNull

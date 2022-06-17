@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: test
+    active: local
   mvc:
     hiddenmethod:
       filter:
@@ -28,3 +28,10 @@ spring:
             enable: true
             required: true
           auth: true
+
+  cache:
+    type: redis
+
+  redis:
+    host: 127.0.0.1
+    port: 6379

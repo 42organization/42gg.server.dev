@@ -1,9 +1,9 @@
-package com.blind.api.global.Trace.pointcut;
+package io.pp.arcade.global.trace.pointcut;
 
 import org.aspectj.lang.annotation.Pointcut;
 
 public class TracePointcut {
-    @Pointcut("execution(* com.blind.api.domain..*(..))")
+    @Pointcut("execution(* io.pp.arcade.domain..*(..))")
     public void allDomain(){}
 
     //타입 패턴이 *Service
