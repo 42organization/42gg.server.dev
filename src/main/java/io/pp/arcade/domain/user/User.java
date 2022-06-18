@@ -1,7 +1,7 @@
 package io.pp.arcade.domain.user;
 
 import io.pp.arcade.global.util.BaseTimeEntity;
-import io.pp.arcade.global.util.RacketType;
+import io.pp.arcade.global.type.RacketType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +22,7 @@ public class User extends BaseTimeEntity {
     @Column(name = "intra_id")
     private String intraId;
 
-
+    @Setter
     @Column(name = "e_mail")
     private String eMail;
 

@@ -11,6 +11,9 @@ import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
+import io.pp.arcade.domain.rank.RankService;
+import io.pp.arcade.domain.rank.dto.RankFindDto;
+import io.pp.arcade.domain.rank.dto.RankUserDto;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.team.dto.TeamModifyGameResultDto;
@@ -19,6 +22,8 @@ import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserFindDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
+import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.util.EloRating;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -40,6 +45,7 @@ public class GameControllerImpl implements GameController {
     private final UserService userService;
     private final PChangeService pChangeService;
     private final CurrentMatchService currentMatchService;
+    private final RankService rankService;
 
     @Override
     @GetMapping(value = "/games/{gameId}/result")
@@ -117,7 +123,7 @@ public class GameControllerImpl implements GameController {
         Pageable pageable = PageRequest.of(0, count);
         PChangeFindDto findDto = PChangeFindDto.builder()
                 .userId(userId)
-                .gameId(gameId == null ? 0 : gameId)
+                .gameId(gameId)
                 .pageable(pageable)
                 .build();
         PChangePageDto pChangePageDto = pChangeService.findPChangeByUserIdAfterGameId(findDto);
@@ -166,7 +172,7 @@ public class GameControllerImpl implements GameController {
             team2Score = requestDto.getMyTeamScore();
             team1Score = requestDto.getEnemyTeamScore();
         } else {
-            throw new IllegalArgumentException("잘못된 요청입니다");
+            throw new BusinessException("{invalid.request}");
         }
         List<TeamModifyGameResultDto> modifyList = new ArrayList<>();
         modifyList.add(TeamModifyGameResultDto.builder()
@@ -288,14 +294,21 @@ public class GameControllerImpl implements GameController {
         if (user == null) {
             return;
         } else {
-            PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().gameId(game.getId()).userId(user.getIntraId()).build());
+            Integer pppChange;
+            if (!"end".equals(game.getStatus())) {
+                pppChange = null;
+            } else {
+                PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().gameId(game.getId()).userId(user.getIntraId()).build());
+                pppChange = pChangeDto.getPppChange();
+            }
+            RankUserDto userRankDto = rankService.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(GameType.valueOf(game.getType())).build());
             GamePlayerDto gamePlayerDto = GamePlayerDto.builder()
                     .userId(user.getIntraId())
                     .userImageUri(user.getImageUri())
-                    .wins(null)
-                    .losses(null)
-                    .winRate(null)
-                    .pppChange(pChangeDto.getPppChange())
+                    .wins(userRankDto.getWins())
+                    .losses(userRankDto.getLosses())
+                    .winRate(userRankDto.getWinRate())
+                    .pppChange(pppChange)
                     .build();
             gamePlayerList.add(gamePlayerDto);
         }

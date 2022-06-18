@@ -29,9 +29,14 @@ spring:
             required: true
           auth: true
 
+  # Message 설정
+  messages:
+    basename: 'messages/validation'
+    encoding: UTF-8
+
+  # Redis 설정
   cache:
     type: redis
-
   redis:
     host: 127.0.0.1
     port: 6379

@@ -9,6 +9,7 @@ import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.global.exception.BusinessException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -110,7 +111,7 @@ class GameServiceTest {
                 .build();
         //when
         gameService.modifyGameStatus(modifyDto);
-        Game game1 = gameRepository.findById(game.getId()).orElseThrow();
+        Game game1 = gameRepository.findById(game.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
 
         //then
         Assertions.assertThat(game1.getStatus()).isEqualTo("end");

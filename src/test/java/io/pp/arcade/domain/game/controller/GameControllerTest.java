@@ -201,10 +201,10 @@ class GameControllerTest {
 //        Pageable pageable;
         params.add("count", "10");
         params.add("status", "end");
-//        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
-//                        .params(params))
-//                .andExpect(status().isOk())
-//                .andDo(document("find-game-results"));
+        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
+                        .params(params))
+                .andExpect(status().isOk())
+                .andDo(document("find-game-results"));
 
         //given2 // 결과 재입력, 202에러 띄워야함
         //위의 게임을 그대로 씀

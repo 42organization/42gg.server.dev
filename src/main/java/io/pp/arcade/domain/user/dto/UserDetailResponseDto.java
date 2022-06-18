@@ -1,6 +1,6 @@
 package io.pp.arcade.domain.user.dto;
 
-import io.pp.arcade.global.util.RacketType;
+import io.pp.arcade.global.type.RacketType;
 import lombok.Builder;
 import lombok.Getter;
 

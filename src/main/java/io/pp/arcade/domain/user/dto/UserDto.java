@@ -1,12 +1,10 @@
 package io.pp.arcade.domain.user.dto;
 
 import io.pp.arcade.domain.user.User;
-import io.pp.arcade.global.util.RacketType;
+import io.pp.arcade.global.type.RacketType;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.Column;
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 @Getter

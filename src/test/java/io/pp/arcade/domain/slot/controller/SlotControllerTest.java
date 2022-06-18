@@ -4,19 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
-import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.*;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
-import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
-import io.pp.arcade.domain.user.UserService;
-import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.scheduler.SlotGenerator;
-import io.pp.arcade.global.util.GameType;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -24,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -42,6 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
 @Import(RestDocsConfiguration.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@RecordApplicationEvents
 class SlotControllerTest {
 
     @Autowired
@@ -67,14 +64,19 @@ class SlotControllerTest {
 
     List<Slot> slotList;
 
+//    @AfterEach
+//    void after() throws InterruptedException {
+//        Thread.sleep(10000);
+//    }
+
     @BeforeEach
     void init() {
-        user = User.builder().intraId("donghyuk").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(1000).build();
-        user1 = User.builder().intraId("nheo").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(1000).build();
-        user2 = User.builder().intraId("jekim").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(1000).build();
-        user3 = User.builder().intraId("jiyun").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(1000).build();
-        user4 = User.builder().intraId("wochae").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(1000).build();
-        user5 = User.builder().intraId("hakim").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(1000).build();
+        user = User.builder().intraId("donghyuk").eMail("hakim@student.42seoul.kr").statusMessage("").ppp(1000).build();
+        user1 = User.builder().intraId("nheo").eMail("hakim@student.42seoul.kr").statusMessage("").ppp(1000).build();
+        user2 = User.builder().intraId("jekim").eMail("hakim@student.42seoul.kr").statusMessage("").ppp(1000).build();
+        user3 = User.builder().intraId("jiyun").eMail("hakim@student.42seoul.kr").statusMessage("").ppp(1000).build();
+        user4 = User.builder().intraId("wochae").eMail("hakim@student.42seoul.kr").statusMessage("").ppp(1000).build();
+        user5 = User.builder().intraId("hakim").eMail("hakim@student.42seoul.kr").statusMessage("").ppp(1000).build();
         users = new ArrayList<>();
         users.add(user);
         users.add(user1);

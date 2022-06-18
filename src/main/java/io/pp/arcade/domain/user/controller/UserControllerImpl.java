@@ -12,6 +12,7 @@ import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.*;
+import io.pp.arcade.global.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -100,7 +101,7 @@ public class UserControllerImpl implements UserController {
     public void userModifyProfile(Integer userId, String intraId) {
         UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
         if (!(user.getIntraId().equals(intraId))) {
-            throw new IllegalArgumentException("?!");
+            throw new BusinessException("{invalid.request}");
         }
         userService.modifyUserProfile(UserModifyProfileDto.builder()
                 .userId(user.getId())
@@ -109,6 +110,7 @@ public class UserControllerImpl implements UserController {
                 .statusMessage(user.getStatusMessage()).build());
     }
 
+    @Override
     @GetMapping(value = "/users/searches")
     public UserSearchResultResponseDto userSearchResult(String inquiringString) {
         List<String> users = userService.findByPartsOfIntraId(UserSearchDto.builder().intraId(inquiringString).build())
@@ -116,15 +118,21 @@ public class UserControllerImpl implements UserController {
         return UserSearchResultResponseDto.builder().users(users).build();
     }
 
+    @Override
     @GetMapping(value = "/users/{intraId}/live")
     public UserLiveInfoResponseDto userLiveInfo(String intraId, Integer userId) {
-        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUserId(userId);
+        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByIntraId(intraId);
         GameDto currentMatchGame = currentMatch == null ? null : currentMatch.getGame();
+        String event = currentMatch == null ? null : "match";
+        if ("match".equals(event) && currentMatch.getGame() != null) {
+            event = "game";
+        }
         UserDto user = userService.findByIntraId(UserFindDto.builder().intraId(intraId).build());
         NotiCountDto notiCount = notiService.countAllNByUser(NotiFindDto.builder().user(user).build());
         UserLiveInfoResponseDto userLiveInfoResponse = UserLiveInfoResponseDto.builder()
-                .notiCount(notiCount.getNotiCount()) //
-                .gameId(currentMatchGame == null ? null : currentMatchGame.getId())
+                .notiCount(notiCount.getNotiCount())
+//               .gameId(currentMatchGame == null ? null : currentMatchGame.getId())
+                .event(event)
                 .build();
         return userLiveInfoResponse;
     }
