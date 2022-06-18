@@ -18,6 +18,7 @@ import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.slot.dto.SlotStatusResponseDto;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserFindDto;
+import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.util.NotiGenerater;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +57,7 @@ public class SlotControllerImpl implements SlotController {
 
     private List<SlotGroupDto> groupingSlots(List<SlotStatusDto> slots) {
         if (slots.size() == 0) {
-            throw new IllegalArgumentException("?");
+            throw new BusinessException("{invalid.request}");
         }
         List<SlotGroupDto> slotGroups = new ArrayList<>();
         List<SlotStatusDto> oneGroup = new ArrayList<>();
@@ -89,7 +90,7 @@ public class SlotControllerImpl implements SlotController {
         //user가 매치를 이미 가지고 있는지 myTable에서 user 필터하기
         CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUserId(userId);
         if (matchDto != null) {
-            throw new IllegalArgumentException("잘못된 요청입니다.");
+            throw new BusinessException("{invalid.request}");
         }
 
         SlotAddUserDto addDto = SlotAddUserDto.builder()
@@ -173,7 +174,7 @@ public class SlotControllerImpl implements SlotController {
                 teamId = team2.getId();
             }
         } else {
-            throw new IllegalArgumentException("잘못된 요청입니다.");
+            throw new BusinessException("{invalid.request}");
         }
         TeamAddUserDto teamAddUserDto = TeamAddUserDto.builder()
                 .teamId(teamId)

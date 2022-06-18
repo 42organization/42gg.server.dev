@@ -1,17 +1,11 @@
 package io.pp.arcade.domain.rank.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pp.arcade.RestDocsConfiguration;
-import io.pp.arcade.domain.game.GameRepository;
-import io.pp.arcade.domain.pchange.PChangeRepository;
 import io.pp.arcade.domain.rank.RankRedis;
-import io.pp.arcade.domain.rank.RankService;
-import io.pp.arcade.domain.slot.SlotRepository;
-import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
-import io.pp.arcade.global.util.GameType;
-import io.pp.arcade.global.util.RacketType;
+import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.RacketType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +19,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import javax.transaction.Transactional;
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,6 +49,12 @@ class RankControllerTest {
     User user6;
     HashMap<String, User> users ;
 
+    @Transactional
+    void init_user()
+    {
+
+    }
+
     @BeforeEach
     void init(){
         user = userRepository.save(User.builder().ppp(0).statusMessage("").intraId("donghyuk").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
@@ -64,7 +64,13 @@ class RankControllerTest {
         user5 = userRepository.save(User.builder().ppp(400).statusMessage("").intraId("jekim").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
         user6 = userRepository.save(User.builder().ppp(500).statusMessage("").intraId("wochae").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
 
+
         users = new HashMap<>();
+        for (int i = 0; i < 10; i++){
+            String testIntraId = "test" + i;
+            User testUser = userRepository.save(User.builder().ppp(500).statusMessage("").intraId(testIntraId).eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
+            users.put(testIntraId, testUser);
+        }
         users.put("donghyuk", user);
         users.put("nheo", user2);
         users.put("hakim", user3);
@@ -91,6 +97,6 @@ class RankControllerTest {
         mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
                 .params(params)))
                 .andExpect(status().isOk())
-                .andDo(document("Ranking-List"));
+                .andDo(document("ranking-List"));
     }
 }

@@ -38,7 +38,7 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
     }
 
     private CurrentMatchResponseDto getCurrentMatchResponseDto(CurrentMatchDto currentMatch, UserDto curUser) {
-        /*
+         /*
           유저의 예약 경기가 있는가?
            - 유저의 예약 경기 정보를 반환한다.
              ㄴ 유저의 경기는 5분전인가?

@@ -8,6 +8,7 @@ import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.global.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,8 +27,8 @@ public class PChangeService {
 
     @Transactional
     public void addPChange(PChangeAddDto addDto) {
-        Game game = gameRepository.findById(addDto.getGameId()).orElseThrow();
-        User user = userRepository.findById(addDto.getUserId()).orElseThrow();
+        Game game = gameRepository.findById(addDto.getGameId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(addDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         pChangeRepository.save(PChange.builder()
                 .game(game)
                 .user(user)
@@ -39,14 +40,14 @@ public class PChangeService {
 
     @Transactional
     public List<PChangeDto> findPChangeByGameId(PChangeFindDto findDto) {
-        Game game = gameRepository.findById(findDto.getGameId()).orElseThrow();
-        List<PChange> pChangeList = pChangeRepository.findAllByGame(game).orElseThrow(() -> new IllegalArgumentException("?"));
+        Game game = gameRepository.findById(findDto.getGameId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        List<PChange> pChangeList = pChangeRepository.findAllByGame(game).orElseThrow(() -> new BusinessException("{invalid.request}"));
         return pChangeList.stream().map(PChangeDto::from).collect(Collectors.toList());
     }
 
     @Transactional
     public PChangePageDto findPChangeByUserId(PChangeFindDto findDto){
-        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow();
+        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         Page<PChange> pChangePage = pChangeRepository.findAllByUserOrderByIdDesc(user, findDto.getPageable());
         PChangePageDto dto = PChangePageDto.builder()
                 .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()))
@@ -58,7 +59,7 @@ public class PChangeService {
 
     @Transactional
     public PChangePageDto findPChangeByUserIdAfterGameId(PChangeFindDto findDto){
-        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow();
+        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         Integer gameId = findDto.getGameId() == null ? Integer.MAX_VALUE : findDto.getGameId();
 
         Page<PChange> pChangePage = pChangeRepository.findAllByUserAndGameIdLessThanOrderByIdDesc(user, gameId, findDto.getPageable());
@@ -72,9 +73,9 @@ public class PChangeService {
 
     @Transactional
     public PChangeDto findPChangeByUserAndGame(PChangeFindDto findDto) {
-        Game game = gameRepository.findById(findDto.getGameId()).orElseThrow();
-        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow();
-        PChangeDto pChangeDto = PChangeDto.from(pChangeRepository.findByUserAndGame(user, game).orElseThrow());
+        Game game = gameRepository.findById(findDto.getGameId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        PChangeDto pChangeDto = PChangeDto.from(pChangeRepository.findByUserAndGame(user, game).orElseThrow(() -> new BusinessException("{invalid.request}")));
         return  pChangeDto;
     }
 }

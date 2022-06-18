@@ -9,6 +9,8 @@ public class RankUserDto {
     private String intraId;
     private Integer rank;
     private Integer ppp;
+    private Integer wins;
+    private Integer losses;
     private String statusMessage;
     private double winRate;
 }

@@ -2,7 +2,7 @@ package io.pp.arcade.domain.rank.dto;
 
 import io.pp.arcade.domain.rank.Rank;
 import io.pp.arcade.domain.user.dto.UserDto;
-import io.pp.arcade.global.util.RacketType;
+import io.pp.arcade.global.type.RacketType;
 import lombok.Builder;
 import lombok.Getter;
 

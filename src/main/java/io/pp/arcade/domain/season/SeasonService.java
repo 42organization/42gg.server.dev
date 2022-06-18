@@ -3,6 +3,7 @@ package io.pp.arcade.domain.season;
 import io.pp.arcade.domain.season.dto.SeasonAddDto;
 import io.pp.arcade.domain.season.dto.SeasonDeleteDto;
 import io.pp.arcade.domain.season.dto.SeasonDto;
+import io.pp.arcade.global.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,13 +27,13 @@ public class SeasonService {
 
     @Transactional
     public void deleteCurrentSeason(SeasonDeleteDto deleteDto) {
-        Season season = seasonRepository.findById(deleteDto.getSeasonId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
+        Season season = seasonRepository.findById(deleteDto.getSeasonId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         seasonRepository.delete(season);
     }
 
     public SeasonDto findCurrentSeason() {
         LocalDateTime now = LocalDateTime.now();
-        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElseThrow();
+        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElseThrow(() -> new BusinessException("{invalid.request}"));
         return SeasonDto.from(season);
     }
 }

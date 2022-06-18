@@ -2,6 +2,7 @@ package io.pp.arcade.domain.user;
 
 import io.pp.arcade.domain.admin.dto.create.UserCreateDto;
 import io.pp.arcade.domain.user.dto.*;
+import io.pp.arcade.global.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,13 +19,13 @@ public class UserService {
 
     @Transactional
     public UserDto findByIntraId(UserFindDto findDto) {
-        User user = userRepository.findByIntraId(findDto.getIntraId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
+        User user = userRepository.findByIntraId(findDto.getIntraId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         return UserDto.from(user);
     }
 
     @Transactional
     public UserDto findById(UserFindDto findDto) {
-        User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
+        User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         return UserDto.from(user);
     }
 
@@ -43,13 +44,14 @@ public class UserService {
     /* 유저 ppp 변경 */
     @Transactional
     public void modifyUserPpp(UserModifyPppDto modifyDto) {
-        User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수 입니다."));
+        User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         user.setPpp(modifyDto.getPpp());
     }
 
     /* 유저 정보 업데이트 */
     public void modifyUserProfile(UserModifyProfileDto modifyDto) {
-        User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수 입니다."));
+        User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        user.setEMail(modifyDto.getEmail());
         user.setImageUri(modifyDto.getUserImageUri());
         user.setRacketType(modifyDto.getRacketType());
         user.setStatusMessage(modifyDto.getStatusMessage());

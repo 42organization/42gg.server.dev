@@ -1,22 +1,18 @@
 package io.pp.arcade.domain.user.controller;
 
+import io.pp.arcade.domain.currentmatch.CurrentMatch;
+import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.pchange.PChange;
 import io.pp.arcade.domain.pchange.PChangeRepository;
-import io.pp.arcade.domain.pchange.PChangeService;
-import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
-import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.RestDocsConfiguration;
-import io.pp.arcade.domain.user.dto.UserDto;
-import io.pp.arcade.global.util.RacketType;
-import net.bytebuddy.implementation.bytecode.Throw;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,6 +52,9 @@ class UserControllerTest {
     private SlotRepository slotRepository;
 
     @Autowired
+    private CurrentMatchRepository currentMatchRepository;
+
+    @Autowired
     private MockMvc mockMvc;
 
     User user;
@@ -64,6 +63,8 @@ class UserControllerTest {
     User user4;
 
     Game game;
+    CurrentMatch currentMatch;
+    CurrentMatch currentMatch2;
     Team team1;
     Team team2;
 
@@ -140,36 +141,49 @@ class UserControllerTest {
                 .build()
         );
         PChange pChange;
-        for (int i = 0; i < 10; i++) {
-            Team team1 = teamRepository.save(Team.builder().teamPpp(0)
-                    .user1(user).headCount(1).score(0).build());
-            Team team2 = teamRepository.save(Team.builder().teamPpp(0)
-                    .user1(user2).headCount(1).score(0).build());
-            Slot slot = slotRepository.save(Slot.builder()
-                    .team1(team1)
-                    .team2(team2)
-                    .headCount(2)
-                    .type("single")
-                    .tableId(1)
-                    .time(LocalDateTime.now().plusDays(1))
-                    .gamePpp(50)
-                    .build());
-            game = gameRepository.save(Game.builder().slot(slot).team1(team1).team2(team2).type(slot.getType()).time(slot.getTime()).season(1).status("end").build());
+        Team team1 = teamRepository.save(Team.builder().teamPpp(0)
+                .user1(user).headCount(1).score(0).build());
+        Team team2 = teamRepository.save(Team.builder().teamPpp(0)
+                .user1(user2).headCount(1).score(0).build());
+        Slot slot = slotRepository.save(Slot.builder()
+                .team1(team1)
+                .team2(team2)
+                .headCount(2)
+                .type("single")
+                .tableId(1)
+                .time(LocalDateTime.now().plusDays(1))
+                .gamePpp(50)
+                .build());
+        game = gameRepository.save(Game.builder().slot(slot).team1(team1).team2(team2).type(slot.getType()).time(slot.getTime()).season(1).status("end").build());
 
-            pChange = pChangeRepository.save(PChange.builder()
-                    .game(game)
-                    .user(user)
-                    .pppChange(2)
-                    .pppResult(2 + user.getPpp())
-                    .build());
-        }
+        pChange = pChangeRepository.save(PChange.builder()
+                .game(game)
+                .user(user)
+                .pppChange(2)
+                .pppResult(2 + user.getPpp())
+                .build());
+        currentMatch = currentMatchRepository.save(CurrentMatch.builder()
+                .game(game)
+                .slot(slot)
+                .user(user)
+                .matchImminent(false)
+                .isMatched(false)
+                .build());
+
+        currentMatch2 = currentMatchRepository.save(CurrentMatch.builder()
+                .game(null)
+                .slot(slot)
+                .user(user4)
+                .matchImminent(false)
+                .isMatched(false)
+                .build());
     }
 
     @Test
     @Transactional
     void findUser() throws Exception {
         mockMvc.perform(get("/pingpong/users").contentType(MediaType.APPLICATION_JSON)
-                .param("userId",user.getId().toString()))
+                        .param("userId", user.getId().toString()))
                 .andExpect(status().isOk())
                 .andDo(document("find-user"));
     }
@@ -177,8 +191,8 @@ class UserControllerTest {
     @Test
     @Transactional
     void findDetailUser() throws Exception {
-        mockMvc.perform(get("/pingpong/users/"+ user.getIntraId().toString() +"/detail").contentType(MediaType.APPLICATION_JSON)
-                .param("currentUserId",user.getId().toString()))
+        mockMvc.perform(get("/pingpong/users/" + user.getIntraId().toString() + "/detail").contentType(MediaType.APPLICATION_JSON)
+                        .param("currentUserId", user.getId().toString()))
                 .andExpect(status().isOk())
                 .andDo(document("find-user-detail"));
     }
@@ -186,7 +200,7 @@ class UserControllerTest {
     @Test
     @Transactional
     void findUserHistorics() throws Exception {
-        mockMvc.perform(get("/pingpong/users/"+ user.getIntraId().toString() +"/historics").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/pingpong/users/" + user.getIntraId().toString() + "/historics").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("find-user-historics"));
     }
@@ -195,9 +209,26 @@ class UserControllerTest {
     @Transactional
     void findByPartsOfIntraId() throws Exception {
         mockMvc.perform(get("/pingpong/users/searches").contentType(MediaType.APPLICATION_JSON)
-                .param("userId", "zzang"))
+                        .param("userId", "k"))
                 .andExpect(status().isOk())
                 .andDo(document("search-user-with-partial-string"));
+    }
+
+    @Test
+    @Transactional
+    void userLiveInfo() throws Exception {
+        mockMvc.perform(get("/pingpong/users/" + "jinoh" + "/live").contentType(MediaType.APPLICATION_JSON)
+                        .param("userId", "1"))
+                .andExpect(status().isOk())
+                .andDo(document("find-user-live1"));
+        mockMvc.perform(get("/pingpong/users/" + user3.getIntraId() + "/live").contentType(MediaType.APPLICATION_JSON)
+                        .param("userId", "1"))
+                .andExpect(status().isOk())
+                .andDo(document("find-user-live2"));
+        mockMvc.perform(get("/pingpong/users/" + user4.getIntraId() + "/live").contentType(MediaType.APPLICATION_JSON)
+                .param("userId", "1"))
+                .andExpect(status().isOk())
+                .andDo(document("find-user-live3"));
     }
 
     @Test
