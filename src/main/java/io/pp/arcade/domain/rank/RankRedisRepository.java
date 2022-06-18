@@ -1,6 +1,5 @@
 package io.pp.arcade.domain.rank;
 
-import io.pp.arcade.global.util.RacketType;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

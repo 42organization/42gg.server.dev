@@ -11,6 +11,7 @@ import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.global.exception.BusinessException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -103,7 +104,7 @@ class CurrentMatchServiceTest {
                 .userId(user1.getId())
                 .build();
         currentMatchService.addCurrentMatch(addDto);
-        CurrentMatch match = currentMatchRepository.findByUser(user1).orElseThrow();
+        CurrentMatch match = currentMatchRepository.findByUser(user1).orElseThrow(() -> new BusinessException("{invalid.request}"));
 
         Assertions.assertThat(match.getUser()).isEqualTo(user1);
     }
@@ -124,7 +125,7 @@ class CurrentMatchServiceTest {
                 .build();
 
         currentMatchService.modifyCurrentMatch(modifyDto);
-        currentMatch = currentMatchRepository.findById(currentMatch.getId()).orElseThrow();
+        currentMatch = currentMatchRepository.findById(currentMatch.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         Assertions.assertThat(currentMatch.getIsMatched()).isEqualTo(true);
         Assertions.assertThat(currentMatch.getMatchImminent()).isEqualTo(false);
     }
@@ -142,7 +143,7 @@ class CurrentMatchServiceTest {
                 .build();
 
         currentMatchService.saveGameInCurrentMatch(saveGameDto);
-        currentMatch = currentMatchRepository.findById(currentMatch.getId()).orElseThrow();
+        currentMatch = currentMatchRepository.findById(currentMatch.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         Assertions.assertThat(currentMatch.getGame()).isEqualTo(game);
     }
 

@@ -10,6 +10,7 @@ import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.global.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,7 +58,7 @@ public class SlotService {
 
     @Transactional
     public void addUserInSlot(SlotAddUserDto addUserDto) {
-        Slot slot = slotRepository.findById(addUserDto.getSlotId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
+        Slot slot = slotRepository.findById(addUserDto.getSlotId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         Integer headCountResult = slot.getHeadCount() + 1; // entity라 반영이 안되어서 미리 뺀 값을 써줘야함
         if (slot.getHeadCount() == 0) {
             slot.setType(addUserDto.getType());
@@ -70,7 +71,7 @@ public class SlotService {
 
     @Transactional
     public void removeUserInSlot(SlotRemoveUserDto removeUserDto) {
-        Slot slot = slotRepository.findById(removeUserDto.getSlotId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
+        Slot slot = slotRepository.findById(removeUserDto.getSlotId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         Integer headCountResult = slot.getHeadCount() - 1; // entity라 반영이 안되어서 미리 뺀 값을 써줘야함
         if (headCountResult == 0) {
             slot.setType(null);
@@ -82,7 +83,7 @@ public class SlotService {
     }
 
     public SlotDto findSlotById(Integer slotId) {
-        Slot slot = slotRepository.findById(slotId).orElseThrow(() -> new IllegalArgumentException("?"));
+        Slot slot = slotRepository.findById(slotId).orElseThrow(() -> new BusinessException("{invalid.request}"));
         return SlotDto.from(slot);
     }
 
@@ -92,7 +93,7 @@ public class SlotService {
         LocalDateTime todayStartTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 0);
         List<Slot> slots = slotRepository.findAllByCreatedAtAfter(todayStartTime);
 
-        User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("?!"));
+        User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
         Integer userSlotId = currentMatch == null ? null : currentMatch.getId();
 
@@ -177,14 +178,14 @@ public class SlotService {
     }
 
     public void updateSlotByAdmin(SlotUpdateRequestDto updateDto) {
-        Slot slot = slotRepository.findById(updateDto.getId()).orElseThrow(null);
+        Slot slot = slotRepository.findById(updateDto.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         slot.setGamePpp(updateDto.getGamePpp());
         slot.setHeadCount(updateDto.getHeadCount());
         slot.setType(updateDto.getType());
     }
 
     public void deleteSlotByAdmin(SlotDeleteDto deleteDto) {
-        Slot slot = slotRepository.findById(deleteDto.getId()).orElseThrow(null);
+        Slot slot = slotRepository.findById(deleteDto.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         slotRepository.delete(slot);
     }
 

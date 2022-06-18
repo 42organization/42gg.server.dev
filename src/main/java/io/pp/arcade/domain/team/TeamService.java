@@ -10,6 +10,7 @@ import io.pp.arcade.domain.team.dto.*;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.global.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,14 +28,14 @@ public class TeamService {
 
     @Transactional
     public TeamDto findById(Integer id) {
-        Team team = teamRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
+        Team team = teamRepository.findById(id).orElseThrow(() -> new BusinessException("{invalid.request}"));
         return TeamDto.from(team);
     }
 
     @Transactional
     public void addUserInTeam(TeamAddUserDto dto) {
-        User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
-        Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
+        User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
 
         if (team.getUser1() == null) {
             team.setUser1(user);
@@ -47,8 +48,8 @@ public class TeamService {
 
     @Transactional
     public void removeUserInTeam(TeamRemoveUserDto dto) {
-        User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
-        Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
+        User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
 
         if (team.getUser1().equals(user)) {
             team.setUser1(null);
@@ -67,7 +68,7 @@ public class TeamService {
 
     @Transactional
     public void saveGameResultInTeam(TeamSaveGameResultDto dto) {
-        Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
+        Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
 
         team.setScore(dto.getScore());
         team.setWin(dto.getWin());
@@ -75,7 +76,7 @@ public class TeamService {
 
     @Transactional
     public void modifyGameResultInTeam(TeamModifyGameResultDto dto) {
-        Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
+        Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
 
         team.setScore(dto.getScore());
         team.setWin(dto.getWin());
@@ -92,7 +93,7 @@ public class TeamService {
             myTeamDto = team2;
             enemyTeamDto = team1;
         } else {
-            throw new IllegalArgumentException("?");
+            throw new BusinessException("{invalid.request}");
         }
         TeamPosDto dto = TeamPosDto.builder()
                 .myTeam(myTeamDto)

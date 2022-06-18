@@ -2,7 +2,7 @@ package io.pp.arcade.domain.rank;
 
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.global.util.BaseTimeEntity;
-import io.pp.arcade.global.util.RacketType;
+import io.pp.arcade.global.type.RacketType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,9 +21,10 @@ public class Rank extends BaseTimeEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    //@JoinColumn(name = "user_id", referencedColumnName = "intra_id")
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "intra_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @NotNull

@@ -11,6 +11,7 @@ import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.global.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,7 +32,7 @@ public class GameService {
     @Transactional
     public GameDto findById(Integer gameId) {
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new IllegalArgumentException("gameId를 찾을 수 없다."));
+                .orElseThrow(() -> new BusinessException("{invalid.request}"));
         GameDto dto = GameDto.from(game);
         return dto;
     }
@@ -39,9 +40,9 @@ public class GameService {
     @Transactional
     public void addGame(GameAddDto addDto) {
         SlotDto slotDto = addDto.getSlotDto();
-        Slot slot = slotRepository.findById(slotDto.getId()).orElseThrow();
-        Team team1 = teamRepository.findById(slotDto.getTeam1().getId()).orElseThrow(() -> new IllegalArgumentException("?"));
-        Team team2 = teamRepository.findById(slotDto.getTeam2().getId()).orElseThrow(() -> new IllegalArgumentException("?"));
+        Slot slot = slotRepository.findById(slotDto.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Team team1 = teamRepository.findById(slotDto.getTeam1().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Team team2 = teamRepository.findById(slotDto.getTeam2().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         gameRepository.save(Game.builder()
                 .slot(slot)
                 .team1(team1)
@@ -56,14 +57,14 @@ public class GameService {
 
     @Transactional
     public void modifyGameStatus(GameModifyStatusDto modifyStatusDto) {
-        Game game = gameRepository.findById(modifyStatusDto.getGameId()).orElseThrow(() -> new IllegalArgumentException("?"));
+        Game game = gameRepository.findById(modifyStatusDto.getGameId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         game.setStatus(modifyStatusDto.getStatus());
     }
 
     @Transactional
     public GameDto findBySlot(Integer slotId) {
-        Slot slot = slotRepository.findById(slotId).orElseThrow();
-        GameDto game = GameDto.from(gameRepository.findBySlot(slot).orElseThrow());
+        Slot slot = slotRepository.findById(slotId).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        GameDto game = GameDto.from(gameRepository.findBySlot(slot).orElseThrow(() -> new BusinessException("{invalid.request}")));
         return game;
     }
 
@@ -85,7 +86,7 @@ public class GameService {
     }
 
     public void gameCreateByAdmin(GameCreateDto createDto) {
-        Slot slot = slotRepository.findById(createDto.getSlotId()).orElseThrow(null);
+        Slot slot = slotRepository.findById(createDto.getSlotId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         Game game = Game.builder()
                 .slot(slot)
                 .team1(slot.getTeam1())

@@ -5,9 +5,12 @@ import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.util.AsyncMailSender;
 import lombok.AllArgsConstructor;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -23,13 +26,14 @@ public class NotiService {
     private final UserRepository userRepository;
     private final SlotRepository slotRepository;
     private final JavaMailSender javaMailSender;
+    private final AsyncMailSender asyncMailSender;
 
     @Transactional
     public void addNoti(NotiAddDto notiAddDto) throws MessagingException {
-        User user = userRepository.findById(notiAddDto.getUser().getId()).orElseThrow();
+        User user = userRepository.findById(notiAddDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         Slot slot = null;
         if (notiAddDto.getSlot() != null) {
-            slot = slotRepository.findById(notiAddDto.getSlot().getId()).orElseThrow();
+            slot = slotRepository.findById(notiAddDto.getSlot().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         }
         Noti noti = Noti.builder()
                 .user(user)
@@ -43,13 +47,13 @@ public class NotiService {
         helper.setSubject("핑퐁요정으로부터 온 편지");
         helper.setTo(user.getEMail());
         helper.setText("New Notification : " + notiAddDto.getNotiType() + "\nYou Have New Noti in 42PingPong!");
-        javaMailSender.send(message);
+        asyncMailSender.send(message);
         notiRepository.save(noti);
     }
 
     @Transactional
     public List<NotiDto> findNotiByUser(NotiFindDto findDto) {
-        User user = userRepository.findById(findDto.getUser().getId()).orElseThrow();
+        User user = userRepository.findById(findDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         List<Noti> notis = notiRepository.findAllByUser(user);
         List<NotiDto> notiDtoList = notis.stream().map(NotiDto::from).collect(Collectors.toList());
         return notiDtoList;
@@ -57,7 +61,7 @@ public class NotiService {
 
     @Transactional
     public NotiCountDto countAllNByUser(NotiFindDto findDto) {
-        User user = userRepository.findById(findDto.getUser().getId()).orElseThrow();
+        User user = userRepository.findById(findDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         Integer count = notiRepository.countAllNByUser(user);
         NotiCountDto countDto = NotiCountDto.builder().notiCount(count).build();
         return countDto;
@@ -65,14 +69,14 @@ public class NotiService {
 
     @Transactional
     public void modifyNotiChecked(NotiModifyDto modifyDto) {
-        User user = userRepository.findById(modifyDto.getUser().getId()).orElseThrow();
+        User user = userRepository.findById(modifyDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         List<Noti> notis = notiRepository.findAllByUser(user);
         notis.forEach(noti -> {noti.setIsChecked(true);});
     }
 
     @Transactional
     public void removeAllNotisByUser(NotiDeleteDto deleteDto) {
-        User user = userRepository.findById(deleteDto.getUser().getId()).orElseThrow();
+        User user = userRepository.findById(deleteDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         notiRepository.deleteAllByUser(user);
     }
 

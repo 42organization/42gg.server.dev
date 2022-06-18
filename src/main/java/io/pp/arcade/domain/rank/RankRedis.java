@@ -1,8 +1,8 @@
 package io.pp.arcade.domain.rank;
 
 import io.pp.arcade.domain.user.User;
-import io.pp.arcade.global.util.RacketType;
-import io.pp.arcade.global.util.GameType;
+import io.pp.arcade.global.type.RacketType;
+import io.pp.arcade.global.type.GameType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +11,7 @@ import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Objects;
 
 @RedisHash("user")
 @Getter

@@ -6,6 +6,7 @@ import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 
+import io.pp.arcade.global.exception.BusinessException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -89,7 +90,7 @@ class SlotServiceTest {
 
         //when
         slotService.addUserInSlot(dto);
-        Slot s1 = slotRepository.findById(slot.getId()).orElseThrow();
+        Slot s1 = slotRepository.findById(slot.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
 
         //then
         Assertions.assertThat(s1.getHeadCount()).isEqualTo(1);
@@ -105,7 +106,7 @@ class SlotServiceTest {
 
         //when
         slotService.addUserInSlot(dto1);
-        Slot s2 = slotRepository.findById(slot.getId()).orElseThrow();
+        Slot s2 = slotRepository.findById(slot.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
 
         //then
         Assertions.assertThat(s2.getHeadCount()).isEqualTo(2);
@@ -124,7 +125,7 @@ class SlotServiceTest {
                 .build();
         // when
         slotService.removeUserInSlot(dto);
-        Slot removedUserSlot = slotRepository.findById(slot1.getId()).orElseThrow();
+        Slot removedUserSlot = slotRepository.findById(slot1.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
 
         // then
         Assertions.assertThat(removedUserSlot.getGamePpp()).isEqualTo(100);
@@ -133,7 +134,7 @@ class SlotServiceTest {
 
         // when
         slotService.removeUserInSlot(dto);
-        Slot removedUserSlot2 = slotRepository.findById(slot1.getId()).orElseThrow();
+        Slot removedUserSlot2 = slotRepository.findById(slot1.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
 
         // then
         Assertions.assertThat(removedUserSlot2.getGamePpp()).isEqualTo(null);

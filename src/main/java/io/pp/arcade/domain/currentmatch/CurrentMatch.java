@@ -20,9 +20,10 @@ public class CurrentMatch extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    //@JoinColumn(name = "user_id", referencedColumnName = "intra_id")
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "intra_id")
+    @JoinColumn(name = "user_id")
     private User user;
 
     @NotNull
