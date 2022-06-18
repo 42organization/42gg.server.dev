@@ -3,12 +3,15 @@ package io.pp.arcade.global.exception.handler;
 import io.pp.arcade.global.exception.AccessException;
 import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.exception.entity.ExceptionReponse;
+import io.pp.arcade.global.util.AsyncMailSender;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.net.URI;
@@ -27,6 +32,8 @@ import java.util.Locale;
 @AllArgsConstructor
 public class ControllerExceptionAdvice {
     private final MessageSource messageSource;
+    private final JavaMailSender javaMailSender;
+    private final AsyncMailSender asyncMailSender;
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ExceptionReponse> constraintViolationExceptionHandle(ConstraintViolationException ex) {
@@ -80,9 +87,10 @@ public class ControllerExceptionAdvice {
     }
 
     @ExceptionHandler(BusinessException.class)
-    protected ResponseEntity<ExceptionReponse> httpRequestMethodNotSupportedExceptionHandle(BusinessException ex) {
+    protected ResponseEntity<ExceptionReponse> httpRequestMethodNotSupportedExceptionHandle(BusinessException ex) throws MessagingException {
         log.error("BusinessException", ex);
         String message = messageSource.getMessage(filter(ex.getMessage()), null, Locale.KOREA);
+        sendMail(message);
         ExceptionReponse response = ExceptionReponse.from("E0001", message);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -99,5 +107,15 @@ public class ControllerExceptionAdvice {
         message = message.replace("{", "");
         message = message.replace("}", "");
         return message;
+    }
+
+    private void sendMail(String err) throws MessagingException {
+        MimeMessage message = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message);
+        helper.setSubject("핑퐁요정으로부터 온 편지");
+        helper.setTo("42seoularcade@gmail.com");
+        helper.setText("New ERROR!!!!\n" +
+                "\t" + err + "\nYou Have New ERROR in 42PingPong!");
+        asyncMailSender.send(message);
     }
 }
