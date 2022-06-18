@@ -35,6 +35,7 @@ public class UserAdminControllerImpl implements UserAdminController {
         userService.modifyUserPpp(UserModifyPppDto.builder().userId(id).ppp(userUpdateDto.getPpp()).build());
         UserModifyProfileDto modifyProfileDto = UserModifyProfileDto.builder()
                 .userId(id)
+                .email(userUpdateDto.getEmail())
                 .userImageUri(userUpdateDto.getUserImageUri())
                 .racketType(userUpdateDto.getRacketType())
                 .statusMessage(userUpdateDto.getStatusMessage())

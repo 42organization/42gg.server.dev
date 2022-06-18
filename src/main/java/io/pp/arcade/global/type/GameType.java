@@ -1,4 +1,4 @@
-package io.pp.arcade.global.util;
+package io.pp.arcade.global.type;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

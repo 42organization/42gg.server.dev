@@ -1,7 +1,8 @@
 package io.pp.arcade.domain.user;
 
 import io.pp.arcade.domain.user.dto.*;
-import io.pp.arcade.global.util.RacketType;
+import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.RacketType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,7 @@ class UserServiceTest {
     @Transactional
     void findById() {
         //given
-        User user = userRepository.findByIntraId("jiyun").orElseThrow(() -> new IllegalArgumentException("haha"));
+        User user = userRepository.findByIntraId("jiyun").orElseThrow(() -> new BusinessException("{invalid.request}"));
 
         //when
         UserDto userDto = userService.findById(UserFindDto.builder().userId(user.getId()).build());
@@ -92,7 +93,7 @@ class UserServiceTest {
                 .statusMessage("선출 아님").build();
         //when
         userService.modifyUserProfile(dto);
-        User user = userRepository.findByIntraId("jiyun").orElseThrow();
+        User user = userRepository.findByIntraId("jiyun").orElseThrow(() -> new BusinessException("{invalid.request}"));
 
         //then
         Assertions.assertThat(user.getImageUri()).isEqualTo("image");

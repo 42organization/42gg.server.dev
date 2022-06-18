@@ -1,21 +1,16 @@
 package io.pp.arcade.domain.rank.controller;
 
-import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.rank.RankService;
 import io.pp.arcade.domain.rank.dto.*;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserFindDto;
-import io.pp.arcade.global.util.GameType;
-import lombok.AllArgsConstructor;
+import io.pp.arcade.global.type.GameType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor

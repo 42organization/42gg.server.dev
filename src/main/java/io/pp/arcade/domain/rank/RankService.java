@@ -3,7 +3,8 @@ package io.pp.arcade.domain.rank;
 import io.pp.arcade.domain.rank.dto.*;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
-import io.pp.arcade.global.util.GameType;
+import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.GameType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,26 +21,24 @@ import java.util.Set;
 public class RankService {
     private final UserRepository userRepository;
     private final RedisTemplate redisTemplate;
-    private final RankRedisRepository rankRedisRepository;
 
     @Transactional
     public RankFindListDto findRankList(Pageable pageable, GameType type) {
         int pageNumber = pageable.getPageNumber() >= 0 ? pageable.getPageNumber() : 0;
         int pageSize = pageable.getPageSize();
-        int userRanking = pageNumber * pageable.getPageSize();
         List<RankUserDto> rankList = new ArrayList<RankUserDto>();
         Set<String> range = redisTemplate.opsForZSet().reverseRange(type.getKey(), pageNumber * pageSize, (pageNumber + 1) * pageSize);
         for (String intraId : range){
-            userRanking = userRanking + 1;
             RankRedis userInfo = (RankRedis) redisTemplate.opsForValue().get(intraId);
+            Integer totalGames = userInfo.getLosses() + userInfo.getWins();
+            Integer rank = (totalGames == 0) ? -1 : redisTemplate.opsForZSet().reverseRank(type.getKey(),  intraId + type).intValue();
             rankList.add(RankUserDto.builder()
-                        .intraId(userInfo.getIntraId())
+                        .intraId(intraId)
                         .ppp(userInfo.getPpp())
-                        .rank(userRanking)
+                        .rank(rank)
                         .winRate(userInfo.getWinRate())
                         .build());
         }
-
         int currentPage = pageable.getPageNumber();
         int totalPage = redisTemplate.opsForZSet().size(type.getKey()).intValue() / pageSize;
         RankFindListDto findListDto =  RankFindListDto.builder()
@@ -58,6 +57,8 @@ public class RankService {
         RankUserDto infoDto = RankUserDto.builder()
                 .intraId(userRankInfo.getIntraId())
                 .ppp(userRankInfo.getPpp())
+                .wins(userRankInfo.getWins())
+                .losses(userRankInfo.getLosses())
                 .winRate(userRankInfo.getWinRate())
                 .rank(userRanking.intValue())
                 .statusMessage(userRankInfo.getStatusMessage())
@@ -84,7 +85,7 @@ public class RankService {
 
     @Transactional
     public void addRank(RankAddDto addDto){
-        User user = userRepository.findById(addDto.getUserId()).orElseThrow(()->new IllegalArgumentException("잘못된 요청입니다."));
+        User user = userRepository.findById(addDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         RankRedis singleRank =  RankRedis.from(user, GameType.SINGLE);
         RankRedis doubleRank =  RankRedis.from(user, GameType.DOUBLE);
 
