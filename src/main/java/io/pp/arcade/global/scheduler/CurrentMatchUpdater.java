@@ -9,6 +9,7 @@ import io.pp.arcade.domain.noti.dto.NotiAddDto;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.dto.TeamDto;
+import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.util.NotiGenerater;
 import lombok.AllArgsConstructor;
@@ -24,8 +25,7 @@ public class CurrentMatchUpdater {
     private final SlotService slotService;
     private final NotiGenerater notiGenerater;
     private final CurrentMatchService currentMatchService;
-    private final NotiService notiService;
-    private final String startTime = "15";
+    private final String startTime = "12";
     private final String endTime = "18";
     private final String intervalTime = "5";
 
@@ -35,11 +35,29 @@ public class CurrentMatchUpdater {
         now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute() + 5, 0);
 
         SlotDto slot = slotService.findByTime(now);
-        if (slot != null) {
+        Integer maxHeadCount = slot.getType().equals("single") ? 2 : 4;
+        if (slot != null && slot.getHeadCount().equals(maxHeadCount)) {
             TeamDto team1 = slot.getTeam1();
             TeamDto team2 = slot.getTeam2();
 
+            currentMatchSetter(team1.getUser1());
+            currentMatchSetter(team1.getUser2());
+            currentMatchSetter(team2.getUser1());
+            currentMatchSetter(team2.getUser2());
             notiGenerater.addMatchNotisBySlot(slot);
+        }
+    }
+
+    private void currentMatchSetter(UserDto user) {
+
+        if (user != null) {
+            CurrentMatchModifyDto modifyDto = CurrentMatchModifyDto.builder()
+                    .userId(user.getId())
+                    .isMatched(true)
+                    .matchImminent(true)
+                    .build();
+
+            currentMatchService.modifyCurrentMatch(modifyDto);
         }
     }
 }
