@@ -7,6 +7,7 @@ import io.pp.arcade.domain.currentmatch.dto.CurrentMatchModifyDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchRemoveDto;
 import io.pp.arcade.domain.noti.NotiService;
 import io.pp.arcade.domain.noti.dto.NotiAddDto;
+import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.*;
 import io.pp.arcade.domain.team.TeamService;
@@ -19,11 +20,13 @@ import io.pp.arcade.domain.slot.dto.SlotStatusResponseDto;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserFindDto;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.util.HeaderUtil;
 import io.pp.arcade.global.util.NotiGenerater;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,19 +36,19 @@ import java.util.List;
 @RequestMapping(value = "/pingpong")
 public class SlotControllerImpl implements SlotController {
     private final SlotService slotService;
-    private final UserService userService;
     private final TeamService teamService;
-    private final NotiService notiService;
     private final CurrentMatchService currentMatchService;
     private final NotiGenerater notiGenerater;
+    private final TokenService tokenService;
 
     @Override
     @GetMapping(value = "/match/tables/{tableId}")
-    public SlotStatusResponseDto slotStatusList(Integer tableId, String type, Integer userId) {
+    public SlotStatusResponseDto slotStatusList(Integer tableId, String type, HttpServletRequest request) {
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         List<SlotStatusDto> slots;
         List<SlotGroupDto> slotGroups;
         SlotFindStatusDto findDto = SlotFindStatusDto.builder()
-                .userId(userId)
+                .userId(user.getId())
                 .type(type)
                 .currentTime(LocalDateTime.now())
                 .build();
@@ -55,38 +58,11 @@ public class SlotControllerImpl implements SlotController {
         return responseDto;
     }
 
-    private List<SlotGroupDto> groupingSlots(List<SlotStatusDto> slots) {
-        if (slots.size() == 0) {
-            throw new BusinessException("{invalid.request}");
-        }
-        List<SlotGroupDto> slotGroups = new ArrayList<>();
-        List<SlotStatusDto> oneGroup = new ArrayList<>();
-        int groupTime = slots.get(0).getTime().getHour();
-
-        for(SlotStatusDto slot: slots) {
-            if (slot.getTime().getHour() == groupTime) {
-                oneGroup.add(SlotStatusDto.builder()
-                        .slotId(slot.getSlotId())
-                        .time(slot.getTime())
-                        .headCount(slot.getHeadCount())
-                        .status(slot.getStatus()).build());
-            } else {
-                slotGroups.add(SlotGroupDto.builder()
-                        .slots(oneGroup).build());
-                oneGroup = new ArrayList<>(); //다음 그루핑을 위한 그룹 생성
-                groupTime = slot.getTime().getHour(); //시간 갱신
-            }
-        }
-        slotGroups.add(SlotGroupDto.builder()
-                .slots(oneGroup).build());
-
-        return slotGroups;
-    }
-
     @Override
     @PostMapping(value = "/match/tables/{tableId}")
-    public void slotAddUser(Integer tableId, SlotAddUserRequestDto addReqDto, Integer userId) throws MessagingException {
-        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
+    public void slotAddUser(Integer tableId, SlotAddUserRequestDto addReqDto, HttpServletRequest request) throws MessagingException {
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        Integer userId = user.getId();
         //user가 매치를 이미 가지고 있는지 myTable에서 user 필터하기
         CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUserId(userId);
         if (matchDto != null) {
@@ -119,9 +95,9 @@ public class SlotControllerImpl implements SlotController {
 
     @Override
     @DeleteMapping(value = "/match/tables/{tableId}")
-    public void slotRemoveUser(Integer tableId, Integer slotId, Integer pUserId) throws MessagingException {
+    public void slotRemoveUser(Integer tableId, Integer slotId, HttpServletRequest request) throws MessagingException {
         // slotId , tableId 유효성 검사
-        UserDto user = userService.findById(UserFindDto.builder().userId(pUserId).build());
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         // 유저 조회, 슬롯 조회, 팀 조회( 슬롯에 헤드 카운트 -, 팀에서 유저 퇴장 )
         SlotDto slot = slotService.findSlotById(slotId);
 
@@ -133,12 +109,40 @@ public class SlotControllerImpl implements SlotController {
         notiGenerater.addCancelNotisBySlot(slot);
     }
 
+    private List<SlotGroupDto> groupingSlots(List<SlotStatusDto> slots) {
+        if (slots.size() == 0) {
+            throw new BusinessException("{invalid.request}");
+        }
+        List<SlotGroupDto> slotGroups = new ArrayList<>();
+        List<SlotStatusDto> oneGroup = new ArrayList<>();
+        int groupTime = slots.get(0).getTime().getHour();
+
+        for(SlotStatusDto slot: slots) {
+            if (slot.getTime().getHour() == groupTime) {
+                oneGroup.add(SlotStatusDto.builder()
+                        .slotId(slot.getSlotId())
+                        .time(slot.getTime())
+                        .headCount(slot.getHeadCount())
+                        .status(slot.getStatus()).build());
+            } else {
+                slotGroups.add(SlotGroupDto.builder()
+                        .slots(oneGroup).build());
+                oneGroup = new ArrayList<>(); //다음 그루핑을 위한 그룹 생성
+                groupTime = slot.getTime().getHour(); //시간 갱신
+            }
+        }
+        slotGroups.add(SlotGroupDto.builder()
+                .slots(oneGroup).build());
+
+        return slotGroups;
+    }
+
     private void modifyUsersCurrentMatchStatus(UserDto user, SlotDto slot) {
         TeamDto team1 = slot.getTeam1();
         TeamDto team2 = slot.getTeam2();
         Integer maxSlotHeadCount = "single".equals(slot.getType()) ? 2 : 4;
-        Boolean isMatched = slot.getHeadCount().equals(maxSlotHeadCount) ? true : false;
-        Boolean isImminent = slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5)) ? true : false;
+        Boolean isMatched = slot.getHeadCount().equals(maxSlotHeadCount);
+        Boolean isImminent = slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5));
         CurrentMatchModifyDto matchModifyDto = CurrentMatchModifyDto.builder()
                 .userId(user.getId())
                 .isMatched(isMatched)
