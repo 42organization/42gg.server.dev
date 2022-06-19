@@ -1,14 +1,10 @@
-package io.pp.arcade.domain.admin.dto.create;
+package io.pp.arcade.domain.admin.dto.update;
 
-import lombok.Builder;
 import lombok.Getter;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
 @Getter
-@Builder
-public class NotiCreateDto {
+public class NotiUpdateRequestDto {
+    private Integer notiId;
     private Integer userId;
     private Integer slotId;
     private String notiType;
