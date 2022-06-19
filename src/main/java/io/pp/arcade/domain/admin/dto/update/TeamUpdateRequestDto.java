@@ -1,9 +1,11 @@
-package io.pp.arcade.domain.admin.dto.create;
+package io.pp.arcade.domain.admin.dto.update;
 
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class TeamCreateDto {
+public class TeamUpdateRequestDto {
+    private Integer teamId;
     private Integer user1Id;
     private Integer user2Id;
     private Integer teamPpp;
