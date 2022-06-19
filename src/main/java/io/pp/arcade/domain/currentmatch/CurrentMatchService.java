@@ -1,5 +1,8 @@
 package io.pp.arcade.domain.currentmatch;
 
+import io.pp.arcade.domain.admin.dto.create.CurrentMatchCreateRequestDto;
+import io.pp.arcade.domain.admin.dto.delete.CurrentMatchDeleteDto;
+import io.pp.arcade.domain.admin.dto.update.CurrentMatchUpdateRequestDto;
 import io.pp.arcade.domain.currentmatch.dto.*;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
@@ -10,9 +13,11 @@ import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -100,5 +105,41 @@ public class CurrentMatchService {
     public void removeCurrentMatch(CurrentMatchRemoveDto removeDto) {
         User user = userRepository.findById(removeDto.getUserId()).orElseThrow();
         currentMatchRepository.deleteByUser(user);
+    }
+
+    @Transactional
+    public void createCurrentMatchByAdmin(CurrentMatchCreateRequestDto createRequestDto) {
+        User user = userRepository.findById(createRequestDto.getUserId()).orElseThrow();
+        Slot slot = slotRepository.findById(createRequestDto.getSlotId()).orElseThrow();
+        Game game = gameRepository.findById(createRequestDto.getGameId()).orElseThrow();
+        CurrentMatch currentMatch = CurrentMatch.builder()
+                .user(user)
+                .slot(slot)
+                .game(game)
+                .matchImminent(createRequestDto.getMatchImminent())
+                .isMatched(createRequestDto.getIsMatched()).build();
+        currentMatchRepository.save(currentMatch);
+    }
+
+    @Transactional
+    public void updateCurrentMatchByAdmin(CurrentMatchUpdateRequestDto updateRequestDto) {
+        CurrentMatch currentMatch = currentMatchRepository.findById(updateRequestDto.getCurrenMatchId()).orElseThrow();
+        Game game = gameRepository.findById(updateRequestDto.getGameId()).orElseThrow();
+        currentMatch.setGame(game);
+        currentMatch.setMatchImminent(updateRequestDto.getMatchImminent());
+        currentMatch.setIsMatched(updateRequestDto.getIsMatched());
+    }
+
+    @Transactional
+    public void deleteCurrentMatchByAdmin(CurrentMatchDeleteDto deleteDto) {
+        CurrentMatch currentMatch = currentMatchRepository.findById(deleteDto.getCurrentMatchId()).orElseThrow();
+        currentMatchRepository.delete(currentMatch);
+    }
+
+    @Transactional
+    public List<CurrentMatchDto> findCurrentMatchByAdmin(Pageable pageable) {
+        Page<CurrentMatch> currentMatches = currentMatchRepository.findAll(pageable);
+        List<CurrentMatchDto> currentMatchDtos = currentMatches.stream().map(CurrentMatchDto::from).collect(Collectors.toList());
+        return currentMatchDtos;
     }
 }

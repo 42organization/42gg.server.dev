@@ -8,7 +8,6 @@ import lombok.Getter;
 @Builder
 public class UserModifyProfileDto {
     private Integer userId;
-    private String userImageUri;
     private RacketType racketType;
     private String statusMessage;
 }

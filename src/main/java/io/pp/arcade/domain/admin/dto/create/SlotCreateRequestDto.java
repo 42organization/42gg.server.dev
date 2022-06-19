@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class SlotCreateRequestDto {
+    private Integer slotId;
     private Integer tableId;
     private Integer team1Id;
     private Integer team2Id;

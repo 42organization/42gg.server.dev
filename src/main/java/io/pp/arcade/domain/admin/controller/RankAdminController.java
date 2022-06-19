@@ -1,15 +1,20 @@
 package io.pp.arcade.domain.admin.controller;
 
-import io.pp.arcade.domain.admin.dto.all.RankAllDto;
-import io.pp.arcade.domain.admin.dto.create.RankCreateDto;
+import io.pp.arcade.domain.admin.dto.create.RankCreateRequestDto;
 import io.pp.arcade.domain.admin.dto.delete.RankDeleteDto;
-import io.pp.arcade.domain.admin.dto.update.RankUpdateDto;
+import io.pp.arcade.domain.admin.dto.update.RankUpdateRequestDto;
+import io.pp.arcade.domain.rank.dto.RankDto;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 public interface RankAdminController {
-    void rankCreate(RankCreateDto rankCreateDto, HttpServletRequest request);
-    void rankUpdate(RankUpdateDto rankUpdateDto, HttpServletRequest request);
-    void rankDelete(RankDeleteDto rankDeleteDto, HttpServletRequest request);
-    void rankAll(RankAllDto rankAllDto, HttpServletRequest request);
+    void rankCreate(@RequestBody RankCreateRequestDto rankCreateRequestDto, HttpServletRequest request);
+    void rankUpdate(@RequestBody RankUpdateRequestDto rankUpdateDto, HttpServletRequest request);
+    void rankDelete(@PathVariable Integer rankId, HttpServletRequest request);
+    List<RankDto> rankAll(Pageable pageable, HttpServletRequest request);
 }

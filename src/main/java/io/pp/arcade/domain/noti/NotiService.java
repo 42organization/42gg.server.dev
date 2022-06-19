@@ -1,18 +1,23 @@
 package io.pp.arcade.domain.noti;
 
+import io.pp.arcade.domain.admin.dto.create.NotiCreateDto;
+import io.pp.arcade.domain.admin.dto.create.NotiCreateRequestDto;
+import io.pp.arcade.domain.admin.dto.update.NotiUpdateRequestDto;
 import io.pp.arcade.domain.noti.dto.*;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -79,5 +84,38 @@ public class NotiService {
     @Transactional
     public void removeNotiById(NotiDeleteDto deleteDto) {
         notiRepository.deleteById(deleteDto.getNotiId());
+    }
+
+    @Transactional
+    public void createNotiByAdmin(NotiCreateRequestDto createRequestDto) {
+        Slot slot = slotRepository.findById(createRequestDto.getSlotId()).orElseThrow();
+        User user = userRepository.findById(createRequestDto.getUserId()).orElseThrow();
+        Noti noti = Noti.builder()
+                .slot(slot)
+                .user(user)
+                .notiType(createRequestDto.getNotiType())
+                .message(createRequestDto.getMessage())
+                .isChecked(createRequestDto.getIsChecked())
+                .build();
+        notiRepository.save(noti);
+    }
+
+    @Transactional
+    public void updateNotiByAdmin(NotiUpdateRequestDto updateRequestDto) {
+        Noti noti = notiRepository.findById(updateRequestDto.getNotiId()).orElseThrow();
+        noti.setIsChecked(updateRequestDto.getIsChecked()); // 더 고칠게 있을까요
+    }
+
+    @Transactional
+    public void deleteNotibyAdmin(NotiDeleteDto deleteDto) {
+        Noti noti = notiRepository.findById(deleteDto.getNotiId()).orElseThrow();
+        notiRepository.delete(noti);
+    }
+
+    @Transactional
+    public List<NotiDto> findNotiByAdmin(Pageable pageable) {
+        Page<Noti> notis = notiRepository.findAll(pageable);
+        List<NotiDto> notiDtos = notis.stream().map(NotiDto::from).collect(Collectors.toList());
+        return notiDtos;
     }
 }

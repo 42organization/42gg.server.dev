@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @Builder
 public class TeamDeleteDto {
-    Integer id;
+    Integer teamId;
 }

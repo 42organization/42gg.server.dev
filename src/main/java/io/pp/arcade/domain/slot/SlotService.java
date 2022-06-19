@@ -2,6 +2,7 @@ package io.pp.arcade.domain.slot;
 
 import io.pp.arcade.domain.admin.dto.create.SlotCreateRequestDto;
 import io.pp.arcade.domain.admin.dto.delete.SlotDeleteDto;
+import io.pp.arcade.domain.admin.dto.update.SlotUpdateDto;
 import io.pp.arcade.domain.admin.dto.update.SlotUpdateRequestDto;
 import io.pp.arcade.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
@@ -15,7 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -164,10 +165,24 @@ public class SlotService {
     }
 
     public void createSlotByAdmin(SlotCreateRequestDto createDto) {
+        Team team1 = teamRepository.save(Team.builder()
+                .teamPpp(0)
+                .headCount(0)
+                .score(0)
+                .build()
+        );
+
+        Team team2 = teamRepository.save(Team.builder()
+                .teamPpp(0)
+                .headCount(0)
+                .score(0)
+                .build()
+        );
+
         slotRepository.save(Slot.builder()
                 .tableId(createDto.getTableId())
-                .team1(teamRepository.getById(createDto.getTeam1Id()))
-                .team2(teamRepository.getById(createDto.getTeam2Id()))
+                .team1(team1)
+                .team2(team2)
                 .time(createDto.getTime())
                 .gamePpp(createDto.getGamePpp())
                 .headCount(createDto.getHeadCount())
@@ -175,11 +190,11 @@ public class SlotService {
                 .build());
     }
 
-    public void updateSlotByAdmin(SlotUpdateRequestDto updateDto) {
-        Slot slot = slotRepository.findById(updateDto.getId()).orElseThrow(null);
-        slot.setGamePpp(updateDto.getGamePpp());
-        slot.setHeadCount(updateDto.getHeadCount());
+    public void updateSlotByAdmin(SlotUpdateDto updateDto) {
+        Slot slot = slotRepository.findById(updateDto.getSlotId()).orElseThrow(null);
         slot.setType(updateDto.getType());
+        slot.setHeadCount(updateDto.getHeadCount());
+        slot.setGamePpp(updateDto.getGamePpp());
     }
 
     public void deleteSlotByAdmin(SlotDeleteDto deleteDto) {

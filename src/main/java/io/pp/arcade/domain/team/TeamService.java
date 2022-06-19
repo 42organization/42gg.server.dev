@@ -1,11 +1,10 @@
 package io.pp.arcade.domain.team;
 
 
-import io.pp.arcade.domain.admin.dto.create.TeamCreateDto;
+import io.pp.arcade.domain.admin.dto.create.TeamCreateRequestDto;
 import io.pp.arcade.domain.admin.dto.delete.TeamDeleteDto;
 import io.pp.arcade.domain.admin.dto.update.TeamUpdateDto;
-import io.pp.arcade.domain.game.dto.GameDto;
-import io.pp.arcade.domain.slot.dto.SlotDto;
+import io.pp.arcade.domain.admin.dto.update.TeamUpdateRequestDto;
 import io.pp.arcade.domain.team.dto.*;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
@@ -15,7 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -102,10 +101,8 @@ public class TeamService {
     }
 
     @Transactional
-    public void createTeamByAdmin(TeamCreateDto teamCreateDto) {
+    public void createTeamByAdmin(TeamCreateRequestDto teamCreateDto) {
         teamRepository.save(Team.builder()
-                .user1(userRepository.findById(teamCreateDto.getUser1Id()).orElse(null))
-                .user2(userRepository.findById(teamCreateDto.getUser2Id()).orElse(null))
                 .teamPpp(teamCreateDto.getTeamPpp())
                 .headCount(teamCreateDto.getHeadCount())
                 .score(teamCreateDto.getScore())
@@ -115,7 +112,7 @@ public class TeamService {
 
     @Transactional
     public void updateTeamByAdmin(TeamUpdateDto teamUpdateDto) {
-        Team team = teamRepository.findById(teamUpdateDto.getId()).orElse(null);
+        Team team = teamRepository.findById(teamUpdateDto.getTeamId()).orElse(null);
         team.setUser1(userRepository.findById(teamUpdateDto.getUser1Id()).orElse(null));
         team.setUser2(userRepository.findById(teamUpdateDto.getUser2Id()).orElse(null));
         team.setTeamPpp(teamUpdateDto.getTeamPpp());
@@ -133,7 +130,7 @@ public class TeamService {
 
     @Transactional
     public void deleteTeamByAdmin(TeamDeleteDto teamDeleteDto) {
-        teamRepository.deleteById(teamDeleteDto.getId());
+        teamRepository.deleteById(teamDeleteDto.getTeamId());
     }
 
     /* 아이디를 통한 팀 추가 */

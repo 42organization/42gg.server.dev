@@ -73,9 +73,9 @@ public class UserControllerImpl implements UserController {
      * */
     @Override
     @GetMapping(value = "/users/{userId}/historics")
-    public UserHistoricResponseDto userFindHistorics(String userId, Pageable pageable) {
+    public UserHistoricResponseDto userFindHistorics(String intraId, Pageable pageable) {
         PChangePageDto pChangePage = pChangeService.findPChangeByUserId(PChangeFindDto.builder()
-                .userId(userId)
+                .intraId(intraId)
                 .build(), pageable);
         List<PChangeDto> pChangeList = pChangePage.getPChangeList();
         List<UserHistoricDto> historicDtos = new ArrayList<UserHistoricDto>();
@@ -95,16 +95,19 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @PutMapping(value = "/users/{intraId}/detail")
-    public void userModifyProfile(Integer userId, String intraId) {
-        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
+    public void userModifyProfile(UserModifyProfileRequestDto modifyRequestDto, String intraId) { //modifyPrfileRequestDto
+        UserDto user = userService.findByIntraId(UserFindDto.builder()
+                .intraId(intraId)
+                .build());
         if (!(user.getIntraId().equals(intraId))) {
             throw new IllegalArgumentException("?!");
         }
-        userService.modifyUserProfile(UserModifyProfileDto.builder()
+        UserModifyProfileDto modifyDto = UserModifyProfileDto.builder()
                 .userId(user.getId())
-                .userImageUri(user.getImageUri())
-                .racketType(user.getRacketType())
-                .statusMessage(user.getStatusMessage()).build());
+                .racketType(modifyRequestDto.getRacketType())
+                .statusMessage(modifyRequestDto.getStatusMessage())
+                .build();
+        userService.modifyUserProfile(modifyDto);
     }
 
     @GetMapping(value = "/users/searches")

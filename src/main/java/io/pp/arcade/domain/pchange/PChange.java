@@ -6,6 +6,7 @@ import io.pp.arcade.global.util.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -29,10 +30,12 @@ public class PChange extends BaseTimeEntity {
     private User user;
 
     @NotNull
+    @Setter
     @Column(name = "ppp_change")
     private  Integer pppChange;
 
     @NotNull
+    @Setter
     @Column(name = "ppp_result")
     private  Integer pppResult;
 
@@ -43,4 +46,5 @@ public class PChange extends BaseTimeEntity {
         this.pppChange = pppChange;
         this.pppResult = pppResult;
     }
+
 }

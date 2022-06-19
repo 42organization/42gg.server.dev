@@ -1,6 +1,0 @@
-[source,bash]
-----
-$ curl 'http://localhost:8080/pingpong/users/jiyun1/detail' -i -X PUT \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -d 'userId=43'
-----

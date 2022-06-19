@@ -1,13 +1,14 @@
 package io.pp.arcade.domain.user;
 
-import io.pp.arcade.domain.admin.dto.create.UserCreateDto;
+import io.pp.arcade.domain.admin.dto.create.UserCreateRequestDto;
+import io.pp.arcade.domain.admin.dto.update.UserUpdateRequestDto;
 import io.pp.arcade.domain.user.dto.*;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,7 +51,6 @@ public class UserService {
     /* 유저 정보 업데이트 */
     public void modifyUserProfile(UserModifyProfileDto modifyDto) {
         User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수 입니다."));
-        user.setImageUri(modifyDto.getUserImageUri());
         user.setRacketType(modifyDto.getRacketType());
         user.setStatusMessage(modifyDto.getStatusMessage());
     }
@@ -63,7 +63,7 @@ public class UserService {
     }
 
     @Transactional
-    public void createUserByAdmin(UserCreateDto userCreateDto) {
+    public void createUserByAdmin(UserCreateRequestDto userCreateDto) {
         User user = User.builder()
                 .intraId(userCreateDto.getIntraId())
                 .eMail(userCreateDto.getEMail())
@@ -73,6 +73,15 @@ public class UserService {
                 .ppp(userCreateDto.getPpp() == null ? 0 : userCreateDto.getPpp())
                 .build();
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateUserByAdmin(UserUpdateRequestDto updateRequestDto) {
+        User user = userRepository.findById(updateRequestDto.getUserId()).orElseThrow();
+        user.setImageUri(updateRequestDto.getUserImageUri());
+        user.setRacketType(updateRequestDto.getRacketType());
+        user.setStatusMessage(updateRequestDto.getStatusMessage());
+        user.setPpp(updateRequestDto.getPpp());
     }
 
     @Transactional

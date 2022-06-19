@@ -1,17 +1,22 @@
 package io.pp.arcade.domain.rank;
 
+import io.pp.arcade.domain.admin.dto.create.RankCreateRequestDto;
+import io.pp.arcade.domain.admin.dto.delete.RankDeleteDto;
+import io.pp.arcade.domain.admin.dto.update.RankUpdateRequestDto;
 import io.pp.arcade.domain.rank.dto.*;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -103,5 +108,39 @@ public class RankService {
 
     private String getKey(String intraId, String GameType){
         return intraId + GameType;
+    }
+
+    @Transactional
+    public void createRankByAdmin(RankCreateRequestDto createRequestDto) {
+        User user = userRepository.findById(createRequestDto.getUserId()).orElseThrow();
+        Rank rank = Rank.builder()
+                .user(user)
+                .seasonId(createRequestDto.getSeasonId())
+                .racketType(createRequestDto.getRacketType())
+                .ppp(createRequestDto.getPpp())
+                .ranking(createRequestDto.getRangking())
+                .wins(createRequestDto.getWins())
+                .losses(createRequestDto.getLosses())
+                .build();
+        rankRepository.save(rank);
+    }
+
+    @Transactional
+    public void updateRankByAdmin(RankUpdateRequestDto updateRequestDto) {
+        Rank rank = rankRepository.findById(updateRequestDto.getRankId()).orElseThrow();
+        rank.setPpp(updateRequestDto.getPpp());
+    }
+
+    @Transactional
+    public void deleteRankByAdmin(RankDeleteDto deleteDto) {
+        Rank rank = rankRepository.findById(deleteDto.getRankId()).orElseThrow();
+        rankRepository.delete(rank);
+    }
+
+    @Transactional
+    public List<RankDto> findRankByAdmin(Pageable pageable) {
+        Page<Rank> ranks = rankRepository.findAll(pageable);
+        List<RankDto> rankDtos = ranks.stream().map(RankDto::from).collect(Collectors.toList());
+        return rankDtos;
     }
 }

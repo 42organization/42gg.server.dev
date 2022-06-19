@@ -100,7 +100,7 @@ public class GameControllerImpl implements GameController {
 
     @Override
     @GetMapping(value = "/games/{userId}")
-    public GameResultResponseDto gameResultByUserIdAndIndexAndCount(String userId, Pageable pageable, String type) {
+    public GameResultResponseDto gameResultByUserIdAndIndexAndCount(String intraId, Pageable pageable, String type) {
         //Pageable
         /*
          * 1. PChange에서 유저별 게임 목록을 가져온다
@@ -109,7 +109,7 @@ public class GameControllerImpl implements GameController {
          *
          */
         PChangeFindDto findDto = PChangeFindDto.builder()
-                .userId(userId)
+                .intraId(intraId)
                 .build();
         PChangePageDto pChangePageDto = pChangeService.findPChangeByUserId(findDto, pageable);
         List<PChangeDto> pChangeLists = pChangePageDto.getPChangeList();
@@ -272,7 +272,7 @@ public class GameControllerImpl implements GameController {
         if (user == null) {
             return;
         } else {
-            PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().gameId(game.getId()).userId(user.getIntraId()).build());
+            PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().gameId(game.getId()).intraId(user.getIntraId()).build());
             GamePlayerDto gamePlayerDto = GamePlayerDto.builder()
                     .userId(user.getIntraId())
                     .userImageUri(user.getImageUri())

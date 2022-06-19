@@ -14,6 +14,7 @@ public class PChangeDto {
     private Integer pppChange;
     private Integer pppResult;
 
+    // entity를 dto로
     public static PChangeDto from(PChange pChange){
         return PChangeDto.builder()
                 .game(GameDto.from(pChange.getGame()))
