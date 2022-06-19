@@ -1,11 +1,9 @@
-package io.pp.arcade.domain.admin.dto.update;
+package io.pp.arcade.domain.admin.dto.create;
 
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
-public class PChangeUpdateDto {
+public class PChangeCreateRequestDto {
     private Integer pChangeId;
     private Integer gameId;
     private Integer userId;

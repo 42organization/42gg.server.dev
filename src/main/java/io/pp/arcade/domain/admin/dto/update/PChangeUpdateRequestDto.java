@@ -1,14 +1,12 @@
 package io.pp.arcade.domain.admin.dto.update;
 
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
-public class PChangeUpdateDto {
+public class PChangeUpdateRequestDto {
     private Integer pChangeId;
     private Integer gameId;
-    private Integer userId;
+    private Integer userId; //userId랑 intraId 중에 뭘 남겨야 할지 모르겠다
     private String intraId;
     private Integer pppChange;
     private Integer pppResult;

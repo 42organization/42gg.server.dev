@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CurrentMatchDeleteDto {
-    private Integer currentMatchId;
+public class SeasonDeleteDto {
+    private Integer seasonId;
 }
