@@ -7,9 +7,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 
 public interface SlotController {
-    SlotStatusResponseDto slotStatusList(@PathVariable Integer tableId, @RequestParam String type, @RequestParam Integer userId);
-    void slotAddUser(@PathVariable Integer tableId, @RequestBody SlotAddUserRequestDto addReqDto, @RequestParam Integer userId) throws MessagingException;
-    void slotRemoveUser(@PathVariable Integer tableId, @RequestParam Integer slotId, @RequestParam Integer pUserId) throws MessagingException;
+    SlotStatusResponseDto slotStatusList(@PathVariable Integer tableId, @RequestParam String type, HttpServletRequest request);
+    void slotAddUser(@PathVariable Integer tableId, @RequestBody SlotAddUserRequestDto addReqDto, HttpServletRequest request) throws MessagingException;
+    void slotRemoveUser(@PathVariable Integer tableId, @RequestParam Integer slotId, HttpServletRequest request) throws MessagingException;
 }

@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.user;
 
+import io.pp.arcade.global.type.RoleType;
 import io.pp.arcade.global.util.BaseTimeEntity;
 import io.pp.arcade.global.type.RacketType;
 import lombok.Builder;
@@ -44,13 +45,18 @@ public class User extends BaseTimeEntity {
     @Column(name = "ppp")
     private Integer ppp;
 
+    @NotNull
+    @Column(name = "role_type")
+    private RoleType roleType;
+
     @Builder
-    public User(String intraId, String eMail, String imageUri, RacketType racketType, String statusMessage, Integer ppp) {
+    public User(String intraId, String eMail, String imageUri, RacketType racketType, String statusMessage, Integer ppp, RoleType roleType) {
         this.intraId = intraId;
         this.eMail = eMail;
         this.imageUri = imageUri;
         this.racketType = racketType;
         this.statusMessage = statusMessage;
+        this.roleType = roleType;
         this.ppp = ppp;
     }
 }
