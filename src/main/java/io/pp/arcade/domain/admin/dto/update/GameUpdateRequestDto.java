@@ -1,13 +1,11 @@
 package io.pp.arcade.domain.admin.dto.update;
 
-import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Builder
-public class GameUpdateDto {
+public class GameUpdateRequestDto {
     private Integer gameId;
     private Integer slotId;
     private Integer team1Id;
