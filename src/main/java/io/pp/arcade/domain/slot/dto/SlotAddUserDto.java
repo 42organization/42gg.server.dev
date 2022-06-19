@@ -1,5 +1,7 @@
 package io.pp.arcade.domain.slot.dto;
 
+import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.SlotStatusType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -7,6 +9,6 @@ import lombok.Getter;
 @Builder
 public class SlotAddUserDto {
     private Integer slotId;
-    private String type;
+    private GameType type;
     private Integer joinUserPpp;
 }

@@ -26,8 +26,13 @@ public class RankService {
     public RankFindListDto findRankList(Pageable pageable, GameType type) {
         int pageNumber = pageable.getPageNumber() >= 0 ? pageable.getPageNumber() : 0;
         int pageSize = pageable.getPageSize();
-        List<RankUserDto> rankList = new ArrayList<RankUserDto>();
         Set<String> range = redisTemplate.opsForZSet().reverseRange(type.getKey(), pageNumber * pageSize, (pageNumber + 1) * pageSize);
+
+        /* 랭킹리스트를 조회할 수 없을 경우 에러 반환*/
+        if (range.isEmpty())
+            throw new BusinessException("{server.internal.error}");
+
+        List<RankUserDto> rankList = new ArrayList<RankUserDto>();
         for (String intraId : range){
             RankRedis userInfo = (RankRedis) redisTemplate.opsForValue().get(intraId);
             Integer totalGames = userInfo.getLosses() + userInfo.getWins();
@@ -67,7 +72,7 @@ public class RankService {
     }
 
     @Transactional
-    public void modifyRank(RankModifyDto modifyDto){
+    public void modifyUserPpp(RankModifyDto modifyDto){
         String key = getKey(modifyDto.getIntraId(), modifyDto.getGameType());
         RankRedis rank = (RankRedis)redisTemplate.opsForValue().get(key);
         rank.update(modifyDto.getIsWin(),modifyDto.getPpp());

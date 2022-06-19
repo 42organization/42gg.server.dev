@@ -1,8 +1,7 @@
 package io.pp.arcade.domain.game.dto;
 
 import lombok.Getter;
-import reactor.util.annotation.Nullable;
-
+import org.springframework.lang.Nullable;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 

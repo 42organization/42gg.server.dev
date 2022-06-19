@@ -3,6 +3,7 @@ package io.pp.arcade.domain.currentmatch.controller;
 import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchResponseDto;
+import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.TeamService;
@@ -11,11 +12,13 @@ import io.pp.arcade.domain.team.dto.TeamPosDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserFindDto;
+import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,15 +28,15 @@ import java.util.List;
 @RequestMapping(value = "/pingpong")
 public class CurrentMatchControllerImpl implements CurrentMatchController {
     private final CurrentMatchService currentMatchService;
-    private final UserService userService;
     private final TeamService teamService;
+    private final TokenService tokenService;
 
     @Override
     @GetMapping(value = "/match/current")
-    public CurrentMatchResponseDto currentMatchFind(Integer userId) {
-        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUserId(userId);
-        UserDto curUser = userService.findById(UserFindDto.builder().userId(userId).build());
-        CurrentMatchResponseDto responseDto = getCurrentMatchResponseDto(currentMatch, curUser);
+    public CurrentMatchResponseDto currentMatchFind(HttpServletRequest request) {
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUserId(user.getId());;
+        CurrentMatchResponseDto responseDto = getCurrentMatchResponseDto(currentMatch, user);
         return responseDto;
     }
 

@@ -1,5 +1,7 @@
 package io.pp.arcade.domain.slot.dto;
 
+import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.SlotStatusType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,8 +13,8 @@ public class SlotFilterDto {
     private Integer slotId;
     private Integer userSlotId;
     private LocalDateTime slotTime;
-    private String slotType;
-    private String requestType;
+    private GameType slotType;
+    private GameType gameType;
     private Integer userPpp;
     private Integer gamePpp;
     private Integer headCount;

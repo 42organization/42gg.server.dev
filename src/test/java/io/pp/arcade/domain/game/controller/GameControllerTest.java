@@ -17,6 +17,8 @@ import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.StatusType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -125,10 +127,10 @@ class GameControllerTest {
                 .slot(slot)
                 .team1(team1)
                 .team2(team2)
-                .type("single")
+                .type(GameType.DOUBLE)
                 .time(slot.getTime())
                 .season(1)
-                .status("not end")
+                .status(StatusType.LIVE)
                 .build();
         gameRepository.save(game);
         return game;
@@ -200,7 +202,7 @@ class GameControllerTest {
         params = new LinkedMultiValueMap<>();
 //        Pageable pageable;
         params.add("count", "10");
-        params.add("status", "end");
+        params.add("status", StatusType.END.toString());
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params))
                 .andExpect(status().isOk())

@@ -15,7 +15,7 @@ public class TokenService {
 
     public UserDto findUserByAccessToken(String accessToken){
         User user = repository.findByAccessToken(accessToken)
-                .orElseThrow(() -> new BusinessException("{token.notfound}"))
+                .orElseThrow(() -> new AccessException("{front.url}"))
                 .getUser();
         return UserDto.from(user);
     }

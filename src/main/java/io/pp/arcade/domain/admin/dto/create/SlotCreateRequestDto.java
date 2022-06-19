@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.admin.dto.create;
 
+import io.pp.arcade.global.type.GameType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,5 +14,5 @@ public class SlotCreateRequestDto {
     private LocalDateTime time;
     private Integer gamePpp;
     private Integer headCount;
-    private String type;
+    private GameType type;
 }

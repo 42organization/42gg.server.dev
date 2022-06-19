@@ -2,13 +2,14 @@ package io.pp.arcade.domain.game;
 
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.team.Team;
+import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.StatusType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -37,7 +38,7 @@ public class Game {
 
     @NotNull
     @Column(name = "type")
-    private String type;
+    private GameType type;
 
     @NotNull
     @Column(name = "time")
@@ -50,10 +51,10 @@ public class Game {
     @NotNull
     @Setter
     @Column(name = "status")
-    private String status;
+    private StatusType status;
 
     @Builder
-    public Game(Slot slot, Team team1, Team team2, String type, LocalDateTime time, Integer season, String status) {
+    public Game(Slot slot, Team team1, Team team2, GameType type, LocalDateTime time, Integer season, StatusType status) {
         this.slot = slot;
         this.team1 = team1;
         this.team2 = team2;

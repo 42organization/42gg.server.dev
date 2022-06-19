@@ -2,23 +2,18 @@ package io.pp.arcade.domain.game;
 
 import io.pp.arcade.domain.admin.dto.create.GameCreateDto;
 import io.pp.arcade.domain.game.dto.*;
-import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
-import io.pp.arcade.domain.team.dto.TeamDto;
-import io.pp.arcade.domain.user.User;
-import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.StatusType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,7 +44,7 @@ public class GameService {
                 .team2(team2)
                 .type(slotDto.getType())
                 .time(slotDto.getTime())
-                .status("live")
+                .status(StatusType.LIVE)
                 .season(1) //season 추가
                 .build()
         );

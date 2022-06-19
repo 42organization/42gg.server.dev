@@ -10,6 +10,7 @@ import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.global.type.GameType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -77,7 +78,7 @@ class NotiServiceTest {
                 .tableId(1)
                 .team1(team1)
                 .team2(team2)
-                .type("double")
+                .type(GameType.DOUBLE)
                 .time(LocalDateTime.now())
                 .headCount(4)
                 .build());
