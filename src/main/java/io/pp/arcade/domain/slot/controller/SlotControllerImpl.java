@@ -100,6 +100,10 @@ public class SlotControllerImpl implements SlotController {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         // 유저 조회, 슬롯 조회, 팀 조회( 슬롯에 헤드 카운트 -, 팀에서 유저 퇴장 )
         SlotDto slot = slotService.findSlotById(slotId);
+        CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUserId(user.getId());
+        if (matchDto.getMatchImminent()) {
+            throw new BusinessException("{invalid.request}");
+        }
 
         CurrentMatchRemoveDto currentMatchRemoveDto = CurrentMatchRemoveDto.builder()
                 .userId(user.getId()).build();
