@@ -46,17 +46,17 @@ public class User extends BaseTimeEntity {
     private Integer ppp;
 
     @NotNull
-    @Column(name = "role")
+    @Column(name = "role_type")
     private RoleType roleType;
 
     @Builder
-    public User(String intraId, String eMail, String imageUri, RacketType racketType, String statusMessage, Integer ppp, GameType.RoleType role) {
+    public User(String intraId, String eMail, String imageUri, RacketType racketType, String statusMessage, Integer ppp, RoleType roleType) {
         this.intraId = intraId;
         this.eMail = eMail;
         this.imageUri = imageUri;
         this.racketType = racketType;
         this.statusMessage = statusMessage;
-        this.role = role;
+        this.roleType = roleType;
         this.ppp = ppp;
     }
 }
