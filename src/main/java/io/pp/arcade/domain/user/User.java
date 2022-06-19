@@ -15,7 +15,7 @@ import java.io.Serializable;
 @Entity
 @Getter
 @NoArgsConstructor
-public class User extends BaseTimeEntity implements Serializable {
+public class User extends BaseTimeEntity implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

@@ -1,5 +1,7 @@
 package io.pp.arcade.domain.noti;
 
+import io.pp.arcade.domain.admin.dto.create.NotiCreateRequestDto;
+import io.pp.arcade.domain.admin.dto.update.NotiUpdateRequestDto;
 import io.pp.arcade.domain.noti.dto.*;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
@@ -8,6 +10,8 @@ import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.util.AsyncMailSender;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -38,7 +42,7 @@ public class NotiService {
         Noti noti = Noti.builder()
                 .user(user)
                 .slot(slot)
-                .notiType(notiAddDto.getNotiType())
+                .type(notiAddDto.getType())
                 .message(notiAddDto.getMessage())
                 .isChecked(false)
                 .build();
@@ -46,7 +50,7 @@ public class NotiService {
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setSubject("핑퐁요정으로부터 온 편지");
         helper.setTo(user.getEMail());
-        helper.setText("New Notification : " + notiAddDto.getNotiType() + "\nYou Have New Noti in 42PingPong!");
+        helper.setText("New Notification : " + notiAddDto.getType() + "\nYou Have New Noti in 42PingPong!");
         asyncMailSender.send(message);
         notiRepository.save(noti);
     }
@@ -83,5 +87,38 @@ public class NotiService {
     @Transactional
     public void removeNotiById(NotiDeleteDto deleteDto) {
         notiRepository.deleteById(deleteDto.getNotiId());
+    }
+
+    @Transactional
+    public void createNotiByAdmin(NotiCreateRequestDto createRequestDto) {
+        Slot slot = slotRepository.findById(createRequestDto.getSlotId()).orElseThrow();
+        User user = userRepository.findById(createRequestDto.getUserId()).orElseThrow();
+        Noti noti = Noti.builder()
+                .slot(slot)
+                .user(user)
+                .type(createRequestDto.getNotiType())
+                .message(createRequestDto.getMessage())
+                .isChecked(createRequestDto.getIsChecked())
+                .build();
+        notiRepository.save(noti);
+    }
+
+    @Transactional
+    public void updateNotiByAdmin(NotiUpdateRequestDto updateRequestDto) {
+        Noti noti = notiRepository.findById(updateRequestDto.getNotiId()).orElseThrow();
+        noti.setIsChecked(updateRequestDto.getIsChecked()); // 더 고칠게 있을까요
+    }
+
+    @Transactional
+    public void deleteNotibyAdmin(NotiDeleteDto deleteDto) {
+        Noti noti = notiRepository.findById(deleteDto.getNotiId()).orElseThrow();
+        notiRepository.delete(noti);
+    }
+
+    @Transactional
+    public List<NotiDto> findNotiByAdmin(Pageable pageable) {
+        Page<Noti> notis = notiRepository.findAll(pageable);
+        List<NotiDto> notiDtos = notis.stream().map(NotiDto::from).collect(Collectors.toList());
+        return notiDtos;
     }
 }

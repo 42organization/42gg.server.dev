@@ -2,7 +2,7 @@ package io.pp.arcade.domain.admin.controller;
 
 import io.pp.arcade.domain.admin.dto.create.SeasonCreateRequestDto;
 import io.pp.arcade.domain.season.SeasonService;
-import io.pp.arcade.domain.admin.dto.delete.SeasonDeleteDto;
+import io.pp.arcade.domain.season.dto.SeasonDeleteDto;
 import io.pp.arcade.domain.season.dto.SeasonDto;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;

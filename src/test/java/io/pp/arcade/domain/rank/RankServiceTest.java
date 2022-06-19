@@ -5,6 +5,7 @@ import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.RacketType;
+import io.pp.arcade.global.type.RoleType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,12 +43,12 @@ class RankServiceTest {
 
     @BeforeEach
     void init(){
-        user = userRepository.save(User.builder().ppp(0).statusMessage("").intraId("donghyuk").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
-        user2 = userRepository.save(User.builder().ppp(100).statusMessage("").intraId("nheo").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
-        user3 = userRepository.save(User.builder().ppp(200).statusMessage("").intraId("hakim").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
-        user4 = userRepository.save(User.builder().ppp(300).statusMessage("").intraId("jiyun").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
-        user5 = userRepository.save(User.builder().ppp(400).statusMessage("").intraId("jekim").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
-        user6 = userRepository.save(User.builder().ppp(500).statusMessage("").intraId("wochae").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
+        user = userRepository.save(User.builder().ppp(0).statusMessage("").intraId("donghyuk").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).roleType(RoleType.USER).build());
+        user2 = userRepository.save(User.builder().ppp(100).statusMessage("").intraId("nheo").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).roleType(RoleType.USER).build());
+        user3 = userRepository.save(User.builder().ppp(200).statusMessage("").intraId("hakim").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).roleType(RoleType.USER).build());
+        user4 = userRepository.save(User.builder().ppp(300).statusMessage("").intraId("jiyun").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).roleType(RoleType.USER).build());
+        user5 = userRepository.save(User.builder().ppp(400).statusMessage("").intraId("jekim").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).roleType(RoleType.USER).build());
+        user6 = userRepository.save(User.builder().ppp(500).statusMessage("").intraId("wochae").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).roleType(RoleType.USER).build());
 
         users = new HashMap<>();
         users.put("donghyuk", user);
@@ -75,11 +76,11 @@ class RankServiceTest {
     @Transactional
     void addRank() {
         RankAddDto addDto = RankAddDto.builder().userId(user.getId()).ppp(0).build();
-        RankModifyDto modifyPppDto = RankModifyDto.builder().intraId(user.getIntraId()).Ppp(100).gameType(GameType.SINGLE).build();
+        RankModifyDto modifyPppDto = RankModifyDto.builder().isWin(true).intraId(user.getIntraId()).Ppp(100).gameType(GameType.SINGLE).build();
         // when
         rankService.addRank(addDto);
         rankService.modifyUserPpp(modifyPppDto);
-        modifyPppDto = RankModifyDto.builder().intraId(user.getIntraId()).Ppp(200).gameType(GameType.SINGLE).build();
+        modifyPppDto = RankModifyDto.builder().isWin(true).intraId(user.getIntraId()).Ppp(200).gameType(GameType.SINGLE).build();
         rankService.modifyUserPpp(modifyPppDto);
         rankService.modifyRankStatusMessage(RankModifyStatusMessageDto.builder().statusMessage("ㅎㅎ").gameType(GameType.SINGLE).intraId(user.getIntraId()).build());
         //rankService.modifyRankStatusMessage(RankModifyStatusMessageDto.builder().intraId(user.getIntraId()).statusMessage("상태메시지 수정").gametype(GameType.SINGLE).build());

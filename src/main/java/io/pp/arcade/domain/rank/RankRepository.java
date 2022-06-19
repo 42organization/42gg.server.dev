@@ -7,7 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface RankRepository extends JpaRepository<Rank,Integer> {
-    Rank findByUserId(Integer userId);
-    Rank findByUserIdAndRacketType(Integer userId, RacketType type);
     List<Rank> findAllBySeasonId(Integer seasonId);
 }
