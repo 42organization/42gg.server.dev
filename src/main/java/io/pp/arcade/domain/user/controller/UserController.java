@@ -10,11 +10,13 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface UserController {
-    UserResponseDto userFind(@RequestParam Integer userId);
-    UserDetailResponseDto userFindDetail(@PathVariable String targetUserId, @RequestParam Integer currentUserId);
+    UserResponseDto userFind(HttpServletRequest request);
+    UserDetailResponseDto userFindDetail(@PathVariable String targetUserId, HttpServletRequest request);
     UserHistoricResponseDto userFindHistorics(@PathVariable String userId, @PageableDefault(size = 10) Pageable pageable);
-    void userModifyProfile(Integer userId, @PathVariable String intraId);
+    void userModifyProfile(@PathVariable String intraId, HttpServletRequest request);
     UserSearchResultResponseDto userSearchResult(@RequestParam(value="userId", required = false) String inquiringString); // 유효성 검사 해야함
-    UserLiveInfoResponseDto userLiveInfo(@PathVariable String intraId, Integer userId);
+    UserLiveInfoResponseDto userLiveInfo(HttpServletRequest request);
 }
