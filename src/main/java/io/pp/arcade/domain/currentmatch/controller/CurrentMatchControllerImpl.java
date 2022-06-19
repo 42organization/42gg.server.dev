@@ -83,8 +83,10 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
         List<String> teamUsers = new ArrayList<>();
         UserDto user1 = teamDto.getUser1();
         UserDto user2 = teamDto.getUser2();
-        teamUsers.add(user1 != null ? user1.getIntraId() : null);
-        teamUsers.add(user2 != null ? user2.getIntraId() : null);
+        teamUsers.add(user1.getIntraId());
+        if (user2 != null) {
+            teamUsers.add(user2.getIntraId());
+        }
         return teamUsers;
     }
 }
