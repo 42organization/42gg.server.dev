@@ -11,6 +11,7 @@ import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.NotiType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -89,7 +90,7 @@ class NotiServiceTest {
     @Transactional
     void addNoti() throws MessagingException {
         NotiAddDto addDto = NotiAddDto.builder()
-                .notiType("announce")
+                .type(NotiType.ANNOUNCE)
                 .user(UserDto.from(user1))
                 .message("hi").build();
         notiService.addNoti(addDto);
@@ -102,25 +103,25 @@ class NotiServiceTest {
     void findNotiByUser() {
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("matched")
+                .type(NotiType.MATCHED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("canceled")
+                .type(NotiType.CANCELED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("matched")
+                .type(NotiType.MATCHED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("imminent")
+                .type(NotiType.IMMINENT)
                 .isChecked(false)
                 .slot(slot)
                 .build());
@@ -138,25 +139,25 @@ class NotiServiceTest {
     void countAllNByUser() {
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("matched")
+                .type(NotiType.MATCHED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("canceled")
+                .type(NotiType.CANCELED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("matched")
+                .type(NotiType.MATCHED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("imminent")
+                .type(NotiType.IMMINENT)
                 .isChecked(false)
                 .slot(slot)
                 .build());
@@ -174,25 +175,25 @@ class NotiServiceTest {
     void modifyNotiChecked() {
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("matched")
+                .type(NotiType.MATCHED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("canceled")
+                .type(NotiType.CANCELED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("matched")
+                .type(NotiType.MATCHED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("imminent")
+                .type(NotiType.IMMINENT)
                 .isChecked(false)
                 .slot(slot)
                 .build());
@@ -210,25 +211,25 @@ class NotiServiceTest {
     void removeAllNotisByUser() {
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("matched")
+                .type(NotiType.MATCHED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("canceled")
+                .type(NotiType.CANCELED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("matched")
+                .type(NotiType.MATCHED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("imminent")
+                .type(NotiType.IMMINENT)
                 .isChecked(false)
                 .slot(slot)
                 .build());
@@ -245,25 +246,25 @@ class NotiServiceTest {
     void removeNotiById() {
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("matched")
+                .type(NotiType.MATCHED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("canceled")
+                .type(NotiType.CANCELED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("matched")
+                .type(NotiType.MATCHED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("imminent")
+                .type(NotiType.IMMINENT)
                 .isChecked(false)
                 .slot(slot)
                 .build());

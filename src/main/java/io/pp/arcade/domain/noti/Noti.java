@@ -1,8 +1,8 @@
 package io.pp.arcade.domain.noti;
 
 import io.pp.arcade.domain.slot.Slot;
-import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.user.User;
+import io.pp.arcade.global.type.NotiType;
 import io.pp.arcade.global.util.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,7 +11,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -31,7 +30,7 @@ public class Noti extends BaseTimeEntity {
 
     @NotNull
     @Column(name = "noti_type")
-    private String notiType;
+    private NotiType type;
 
     @Column(name = "message")
     private String message;
@@ -42,10 +41,10 @@ public class Noti extends BaseTimeEntity {
     private Boolean isChecked;
 
     @Builder
-    public Noti(User user, Slot slot, String notiType, String message, Boolean isChecked) {
+    public Noti(User user, Slot slot, NotiType type, String message, Boolean isChecked) {
         this.user = user;
         this.slot = slot;
-        this.notiType = notiType;
+        this.type = type;
         this.message = message;
         this.isChecked = isChecked;
     }

@@ -17,7 +17,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "USER_REFRESH_TOKEN")
 public class Token {
-    @JsonIgnore
     @Id
     @Column(name = "refresh_token_seq")
     @NotNull

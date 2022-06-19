@@ -1,7 +1,7 @@
 package io.pp.arcade.domain.team;
 
 
-import io.pp.arcade.domain.admin.dto.create.TeamCreateDto;
+import io.pp.arcade.domain.admin.dto.create.TeamCreateRequestDto;
 import io.pp.arcade.domain.admin.dto.delete.TeamDeleteDto;
 import io.pp.arcade.domain.admin.dto.update.TeamUpdateDto;
 import io.pp.arcade.domain.game.dto.GameDto;
@@ -103,7 +103,7 @@ public class TeamService {
     }
 
     @Transactional
-    public void createTeamByAdmin(TeamCreateDto teamCreateDto) {
+    public void createTeamByAdmin(TeamCreateRequestDto teamCreateDto) {
         teamRepository.save(Team.builder()
                 .user1(userRepository.findById(teamCreateDto.getUser1Id()).orElse(null))
                 .user2(userRepository.findById(teamCreateDto.getUser2Id()).orElse(null))
@@ -116,7 +116,7 @@ public class TeamService {
 
     @Transactional
     public void updateTeamByAdmin(TeamUpdateDto teamUpdateDto) {
-        Team team = teamRepository.findById(teamUpdateDto.getId()).orElse(null);
+        Team team = teamRepository.findById(teamUpdateDto.getTeamId()).orElse(null);
         team.setUser1(userRepository.findById(teamUpdateDto.getUser1Id()).orElse(null));
         team.setUser2(userRepository.findById(teamUpdateDto.getUser2Id()).orElse(null));
         team.setTeamPpp(teamUpdateDto.getTeamPpp());
@@ -134,7 +134,7 @@ public class TeamService {
 
     @Transactional
     public void deleteTeamByAdmin(TeamDeleteDto teamDeleteDto) {
-        teamRepository.deleteById(teamDeleteDto.getId());
+        teamRepository.deleteById(teamDeleteDto.getTeamId());
     }
 
     /* 아이디를 통한 팀 추가 */

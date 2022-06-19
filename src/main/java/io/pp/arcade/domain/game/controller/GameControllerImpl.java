@@ -12,7 +12,9 @@ import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.domain.rank.RankService;
+import io.pp.arcade.domain.rank.dto.RankFindDto;
 import io.pp.arcade.domain.rank.dto.RankModifyDto;
+import io.pp.arcade.domain.rank.dto.RankUserDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamDto;
@@ -328,13 +330,13 @@ public class GameControllerImpl implements GameController {
                 PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().gameId(game.getId()).userId(user.getIntraId()).build());
                 pppChange = pChangeDto.getPppChange();
             }
-            //RankUserDto userRankDto = rankService.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(GameType.valueOf(game.getType())).build());
+            RankUserDto userRankDto = rankService.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(game.getType()).build());
             GamePlayerDto gamePlayerDto = GamePlayerDto.builder()
                     .userId(user.getIntraId())
                     .userImageUri(user.getImageUri())
-                    //.wins(userRankDto.getWins())
-                    //.losses(userRankDto.getLosses())
-                    //.winRate(userRankDto.getWinRate())
+                    .wins(userRankDto.getWins())
+                    .losses(userRankDto.getLosses())
+                    .winRate(userRankDto.getWinRate())
                     .pppChange(pppChange)
                     .build();
             gamePlayerList.add(gamePlayerDto);

@@ -16,4 +16,6 @@ public abstract class OAuthUserInfo {
     public abstract String getIntraId();
 
     public abstract String getEmail();
+
+    public abstract String getImageUrl();
 }

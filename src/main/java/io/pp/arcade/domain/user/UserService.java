@@ -1,19 +1,24 @@
 package io.pp.arcade.domain.user;
 
-import io.pp.arcade.domain.admin.dto.create.UserCreateDto;
+import io.pp.arcade.domain.admin.dto.create.UserCreateRequestDto;
+import io.pp.arcade.domain.admin.dto.update.UserUpdateRequestDto;
 import io.pp.arcade.domain.user.dto.*;
 import io.pp.arcade.global.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+
+
+@Transactional
 public class UserService {
     private final UserRepository userRepository;
 
@@ -65,7 +70,7 @@ public class UserService {
     }
 
     @Transactional
-    public void createUserByAdmin(UserCreateDto userCreateDto) {
+    public void createUserByAdmin(UserCreateRequestDto userCreateDto) {
         User user = User.builder()
                 .intraId(userCreateDto.getIntraId())
                 .eMail(userCreateDto.getEMail())
@@ -75,6 +80,15 @@ public class UserService {
                 .ppp(userCreateDto.getPpp() == null ? 0 : userCreateDto.getPpp())
                 .build();
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void updateUserByAdmin(UserUpdateRequestDto updateRequestDto) {
+        User user = userRepository.findById(updateRequestDto.getUserId()).orElseThrow();
+        user.setImageUri(updateRequestDto.getUserImageUri());
+        user.setRacketType(updateRequestDto.getRacketType());
+        user.setStatusMessage(updateRequestDto.getStatusMessage());
+        user.setPpp(updateRequestDto.getPpp());
     }
 
     @Transactional
