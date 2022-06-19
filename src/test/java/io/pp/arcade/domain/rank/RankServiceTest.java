@@ -78,11 +78,11 @@ class RankServiceTest {
         RankModifyDto modifyPppDto = RankModifyDto.builder().intraId(user.getIntraId()).Ppp(100).gameType(GameType.SINGLE).build();
         // when
         rankService.addRank(addDto);
-        rankService.modifyRank(modifyPppDto);
+        rankService.modifyUserPpp(modifyPppDto);
         modifyPppDto = RankModifyDto.builder().intraId(user.getIntraId()).Ppp(200).gameType(GameType.SINGLE).build();
-        rankService.modifyRank(modifyPppDto);
+        rankService.modifyUserPpp(modifyPppDto);
         rankService.modifyRankStatusMessage(RankModifyStatusMessageDto.builder().statusMessage("ㅎㅎ").gameType(GameType.SINGLE).intraId(user.getIntraId()).build());
-        //rankService.modifyRankStatusMessage(RankModifyStatusMessageDto.builder().intraId(user.getIntraId()).statusMessage("상태메시지 수정").gameType("single").build());
+        //rankService.modifyRankStatusMessage(RankModifyStatusMessageDto.builder().intraId(user.getIntraId()).statusMessage("상태메시지 수정").gametype(GameType.SINGLE).build());
         // then
     }
 

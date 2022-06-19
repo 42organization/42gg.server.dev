@@ -2,6 +2,8 @@ package io.pp.arcade.domain.slot;
 
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.team.Team;
+import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.SlotStatusType;
 import io.pp.arcade.global.util.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
@@ -50,10 +52,10 @@ public class Slot extends BaseTimeEntity {
 
     @Setter
     @Column(name = "type")
-    private String type;
+    private GameType type;
 
     @Builder
-    public Slot(Integer tableId, Team team1, Team team2, LocalDateTime time, Integer gamePpp, Integer headCount, String type) {
+    public Slot(Integer tableId, Team team1, Team team2, LocalDateTime time, Integer gamePpp, Integer headCount, GameType type) {
         this.tableId = tableId;
         this.team1 = team1;
         this.team2 = team2;

@@ -9,6 +9,8 @@ import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.StatusType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -66,7 +68,7 @@ class PChangeServiceTest {
                 .tableId(1)
                 .team1(team1)
                 .team2(team2)
-                .type("double")
+                .type(GameType.DOUBLE)
                 .time(LocalDateTime.now())
                 .headCount(4)
                 .build());
@@ -77,7 +79,7 @@ class PChangeServiceTest {
                 .time(slot.getTime())
                 .type(slot.getType())
                 .season(1)
-                .status("live")
+                .status(StatusType.LIVE)
                 .build());
     }
 

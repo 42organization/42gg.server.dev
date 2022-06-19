@@ -10,6 +10,8 @@ import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.StatusType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -69,7 +71,7 @@ class GameServiceTest {
                 .tableId(1)
                 .team1(team1)
                 .team2(team2)
-                .type("double")
+                .type(GameType.DOUBLE)
                 .time(LocalDateTime.now())
                 .headCount(4)
                 .build());
@@ -101,19 +103,19 @@ class GameServiceTest {
                 .slot(slot)
                 .type(slot.getType())
                 .time(slot.getTime())
-                .status("live")
+                .status(StatusType.LIVE)
                 .season(1) //season 추가
                 .build());
 
         GameModifyStatusDto modifyDto = GameModifyStatusDto.builder()
                 .gameId(game.getId())
-                .status("end")
+                .status(StatusType.END)
                 .build();
         //when
         gameService.modifyGameStatus(modifyDto);
         Game game1 = gameRepository.findById(game.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
 
         //then
-        Assertions.assertThat(game1.getStatus()).isEqualTo("end");
+        Assertions.assertThat(game1.getStatus()).isEqualTo(StatusType.END);
     }
 }

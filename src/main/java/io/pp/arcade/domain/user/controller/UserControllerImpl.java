@@ -44,7 +44,7 @@ public class UserControllerImpl implements UserController {
         UserResponseDto responseDto = UserResponseDto.builder()
                 .intraId(user.getIntraId())
                 .userImageUri(user.getImageUri())
-                .build();// notiCount 추가 필요!
+                .build();
         return responseDto;
     }
 

@@ -12,6 +12,7 @@ import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.global.type.GameType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +92,7 @@ class NotiControllerTest {
                 .tableId(1)
                 .team1(team1)
                 .team2(team2)
-                .type("double")
+                .type(GameType.DOUBLE)
                 .time(LocalDateTime.now())
                 .headCount(4)
                 .build());

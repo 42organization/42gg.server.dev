@@ -2,6 +2,7 @@ package io.pp.arcade.domain.noti.controller;
 
 import io.pp.arcade.domain.noti.NotiService;
 import io.pp.arcade.domain.noti.dto.*;
+import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamPosDto;
@@ -9,12 +10,14 @@ import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserFindDto;
+import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +27,12 @@ import java.util.List;
 public class NotiControllerImpl implements NotiController {
     private final NotiService notiService;
     private final TeamService teamService;
-    private final UserService userService;
+    private final TokenService tokenService;
 
     @Override
     @GetMapping(value = "/notifications")
-    public NotiResponseDto notiFindByUser(Integer userId) {
-        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
+    public NotiResponseDto notiFindByUser(HttpServletRequest request) {
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         NotiFindDto notiFindDto = NotiFindDto.builder()
                 .user(user).build();
         List<NotiDto> notis = notiService.findNotiByUser(notiFindDto);
@@ -106,8 +109,8 @@ public class NotiControllerImpl implements NotiController {
 
     @Override
     @DeleteMapping(value = "/notifications")
-    public void notiRemoveAll(Integer userId) {
-        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
+    public void notiRemoveAll(HttpServletRequest request) {
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         NotiDeleteDto deleteDto = NotiDeleteDto.builder()
                         .user(user)
                         .build();

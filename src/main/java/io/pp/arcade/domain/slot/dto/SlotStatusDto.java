@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.slot.dto;
 
+import io.pp.arcade.global.type.SlotStatusType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,6 +11,6 @@ import java.time.LocalDateTime;
 public class SlotStatusDto {
     private Integer slotId;
     private LocalDateTime time;
-    private String status;
+    private SlotStatusType status;
     private Integer headCount;
 }

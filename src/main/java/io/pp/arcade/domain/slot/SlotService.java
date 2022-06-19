@@ -11,6 +11,8 @@ import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.SlotStatusType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -104,7 +106,7 @@ public class SlotService {
                     .userSlotId(userSlotId)
                     .slotTime(slot.getTime())
                     .slotType(slot.getType())
-                    .requestType(findDto.getType())
+                    .gameType(findDto.getType())
                     .userPpp(user.getPpp())
                     .gamePpp(slot.getGamePpp())
                     .headCount(slot.getHeadCount())
@@ -126,7 +128,7 @@ public class SlotService {
         return slotDto;
     }
 
-    public String getStatus(SlotFilterDto dto) {
+    public SlotStatusType getStatus(SlotFilterDto dto) {
         /* if currentTime > slotTime
             then status == close
            else if requestType != slotType
@@ -138,9 +140,9 @@ public class SlotService {
          */
         Integer slotId = dto.getSlotId();
         Integer userSlotId = dto.getUserSlotId();
-        String slotType = dto.getSlotType();
+        GameType slotType = dto.getSlotType();
         LocalDateTime slotTime = dto.getSlotTime();
-        String requestType = dto.getRequestType();
+        GameType gameType = dto.getGameType();
         Integer gamePpp = dto.getGamePpp();
         Integer userPpp = dto.getUserPpp();
         Integer headCount = dto.getHeadCount();
@@ -150,17 +152,17 @@ public class SlotService {
         if (slotType != null && slotType.equals("double")) {
             maxCount = 4;
         }
-        String status = "open";
+        SlotStatusType status = SlotStatusType.OPEN;
         if (currentTime.isAfter(slotTime)) {
-            status = "close";
+            status = SlotStatusType.CLOSE;
         } else if (slotId.equals(userSlotId)) {
-            status = "mytable";
-        } else if (slotType != null && !requestType.equals(slotType)) {
-            status = "close";
+            status = SlotStatusType.MYTABLE;
+        } else if (slotType != null && !gameType.equals(slotType)) {
+            status = SlotStatusType.CLOSE;
         } else if (gamePpp != null && Math.abs(userPpp - gamePpp) > 100) {
-            status = "close";
+            status = SlotStatusType.CLOSE;
         } else if (headCount.equals(maxCount)) {
-            status = "close";
+            status = SlotStatusType.CLOSE;
         }
         return status;
     }
