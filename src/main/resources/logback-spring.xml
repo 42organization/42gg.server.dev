@@ -1,123 +1,125 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration debug="true">
+
+
+    <appender name="Connection" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>log/connection-%d{yyyy-MM-dd}.%i.txt.zip</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS}-%green(%-5level)-%logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="Config" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>log/config-%d{yyyy-MM-dd}.%i.txt.zip</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS}-%green(%-5level)-%logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+
+    <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- rollover daily -->
+            <fileNamePattern>log/apilog-%d{yyyy-MM-dd}.%i.txt.zip</fileNamePattern>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <!-- or whenever the file size reaches 100MB -->
+                <maxFileSize>100MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS}-%green(%-5level)-%logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
-            <Pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{36} - %msg%n</Pattern>
+            <Pattern>%d{HH:mm:ss.SSS}-%green(%-5level)-%logger{36} - %msg%n</Pattern>
         </layout>
     </appender>
 
-    <appender name="ALL_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
-        <file>./logs/all.log</file>
-        <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} - %msg%n</pattern>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>./was-logs/all.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>180</maxHistory>
-        </rollingPolicy>
-    </appender>
+    <!-- Loggers -->
+    <logger name="org.springframework.core">
+        <level value="info"/>
 
-    <appender name="INFO_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    </logger>
+    <logger name="org.springframework.beans">
+        <level value="info"/>
 
-        <file>./logs/info.log</file>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>INFO</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
-        </filter>
-        <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} - %msg%n</pattern>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>./was-logs/info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>180</maxHistory>
-        </rollingPolicy>
-    </appender>
+    </logger>
+    <logger name="org.springframework.context">
+        <level value="info"/>
 
-    <appender name="DEBUG_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    </logger>
+    <logger name="org.springframework.web">
+        <level value="info"/>
 
-        <file>./logs/debug.log</file>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>DEBUG</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
-        </filter>
-        <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} - %msg%n</pattern>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>./was-logs/debug.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>180</maxHistory>
-        </rollingPolicy>
-    </appender>
+    </logger>
+    <logger name="com.example.web">
+        <level value="debug"/>
 
-    <appender name="HIBER_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    </logger>
 
-        <file>./logs/hiber.log</file>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>DEBUG</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
-        </filter>
-        <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} - %msg%n</pattern>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>./was-logs/hiber.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>180</maxHistory>
-        </rollingPolicy>
-    </appender>
 
-    <appender name="ERROR_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <!-- SQL문만을 로그로 남기며, PreparedStatement일 경우 관련된 argument 값으로 대체된 SQL문이 보여진다. -->
+    <logger name="jdbc.sqlonly" additivity="false">
+        <appender-ref ref="ROLLING"/>
+        <appender-ref ref="STDOUT"/>
+        <level value="OFF"/>
+    </logger>
+    <!-- SQL문과 해당 SQL을 실행시키는데 수행된 시간 정보(milliseconds)를 포함한다. -->
+    <logger name="jdbc.sqltiming" additivity="false">
+        <appender-ref ref="ROLLING"/>
+        <appender-ref ref="STDOUT"/>
+        <level value="DEBUG"/>
+    </logger>
+    <logger name="jdbc.resultset" additivity="false">
+        <appender-ref ref="ROLLING"/>
+        <appender-ref ref="STDOUT"/>
+        <level value="OFF"/>
 
-        <file>./logs/error.log</file>
-        <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>error</level>
-            <onMatch>ACCEPT</onMatch>
-            <onMismatch>DENY</onMismatch>
-        </filter>
-        <encoder>
-            <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} - %msg%n</pattern>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>./was-logs/error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>180</maxHistory>
-        </rollingPolicy>
-    </appender>
+    </logger>
+    <logger name="jdbc.resultsettable" additivity="false">
+        <appender-ref ref="ROLLING"/>
+        <appender-ref ref="STDOUT"/>
+        <level value="DEBUG"/>
 
-    <root level="INFO">
-        <appender-ref ref="ALL_LOG" />
-        <appender-ref ref="INFO_LOG" />
-        <appender-ref ref="ERROR_LOG" />
+    </logger>
+    <logger name="jdbc.connection" additivity="false">
+        <appender-ref ref="ROLLING"/>
+        <level value="OFF"/>
+    </logger>
+    <logger name="jdbc.audit" additivity="false">
+        <appender-ref ref="ROLLING"/>
+        <appender-ref ref="STDOUT"/>
+        <level value="OFF"/>
+    </logger>
+
+
+    <logger name="Connection" level="INFO" additivity="false">
+        <appender-ref ref="Connection" />
+    </logger>
+    <logger name="Config" level="INFO" additivity="false">
+        <appender-ref ref="Config" />
+    </logger>
+
+
+    <root level="info">
+        <appender-ref ref="ROLLING"/>
         <appender-ref ref="STDOUT"/>
     </root>
-
-    <logger name="LogController" additivity="false">
-        <level value = "DEBUG" />
-        <appender-ref ref="ALL_LOG" />
-        <appender-ref ref="DEBUG_LOG" />
-        <appender-ref ref="ERROR_LOG" />
-    </logger>
-
-    <logger name="org.hibernate.SQL" additivity="false">
-        <level value = "DEBUG" />
-        <appender-ref ref="HIBER_LOG" />
-    </logger>
-
 </configuration>

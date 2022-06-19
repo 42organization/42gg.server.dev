@@ -10,6 +10,7 @@ import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.scheduler.SlotGenerator;
+import io.pp.arcade.global.type.GameType;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -105,7 +106,7 @@ class SlotControllerTest {
     }
 
     @Transactional
-    void addUser(Slot slot, Integer headCount, String type, Integer gamePpp) {
+    void addUser(Slot slot, Integer headCount, GameType type, Integer gamePpp) {
         slot.setHeadCount(headCount);
         slot.setType(type);
         slot.setGamePpp(gamePpp);
@@ -129,12 +130,12 @@ class SlotControllerTest {
         SlotFindStatusDto slotFindStatusDto = SlotFindStatusDto.builder()
                 .currentTime(LocalDateTime.now())
                 .userId(user.getId())
-                .type("single").build();
+                .type(GameType.SINGLE).build();
 
 
         // [Close] 슬롯1 & 단식 - 유저 2명
         Slot slot = slotList.get(1);
-        addUser(slot, 2, "single", 950);
+        addUser(slot, 2, GameType.SINGLE, 950);
 
         params = new LinkedMultiValueMap<>();
         params.add("type", "single");
@@ -147,7 +148,7 @@ class SlotControllerTest {
         // [Close] 슬롯 2 & 단식 - 유저(100p) -> 슬롯(900p) 접근
         slot = slotList.get(2);
 
-        addUser(slot, 1, "single", 900);
+        addUser(slot, 1, GameType.SINGLE, 900);
 
         params = new LinkedMultiValueMap<>();
         params.add("type", "single");
@@ -159,7 +160,7 @@ class SlotControllerTest {
 
         // [Close] 슬롯 3 & 복식 - 유저 4명
         slot = slotList.get(3);
-        addUser(slot, 4, "double", 750);
+        addUser(slot, 4, GameType.DOUBLE, 750);
 
         params = new LinkedMultiValueMap<>();
         params.add("type", "double");
@@ -171,7 +172,7 @@ class SlotControllerTest {
 
         // [Close] 슬롯 4 & 복식 - 유저(100p) -> 슬롯(900p) 접근
         slot = slotList.get(2);
-        addUser(slot, 4, "double", 900);
+        addUser(slot, 4, GameType.DOUBLE, 900);
 
         params = new LinkedMultiValueMap<>();
         params.add("type", "single");
@@ -253,7 +254,7 @@ class SlotControllerTest {
     void slotRemoveUser() throws Exception {
         // 슬롯에 유저 두 명 추가했다가, 한 명 제거하기
         Slot slot = slotList.get(3);
-        addUser(slot, 2, "single", 1000);
+        addUser(slot, 2, GameType.SINGLE, 1000);
         Team team1 = slot.getTeam1();
         addUserInTeam(team1, user);
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();

@@ -4,8 +4,10 @@ import io.pp.arcade.domain.noti.dto.NotiResponseDto;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+
 public interface NotiController {
-    NotiResponseDto notiFindByUser(@RequestParam Integer userId);
+    NotiResponseDto notiFindByUser(HttpServletRequest request);
     void notiRemoveOne(@PathVariable Integer notiId);
-    void notiRemoveAll(@RequestParam Integer userId);
+    void notiRemoveAll(HttpServletRequest request);
 }

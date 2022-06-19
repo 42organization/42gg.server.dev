@@ -3,6 +3,8 @@ package io.pp.arcade.domain.game.dto;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.dto.TeamDto;
+import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.StatusType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,10 +17,10 @@ public class GameDto {
     private SlotDto slot;
     private TeamDto team1;
     private TeamDto team2;
-    private String type;
+    private GameType type;
     private LocalDateTime time;
     private Integer season;
-    private String status;
+    private StatusType status;
 
     public static GameDto from(Game game) {
         return GameDto.builder()

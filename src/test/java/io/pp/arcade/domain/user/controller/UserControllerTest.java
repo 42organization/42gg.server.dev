@@ -13,6 +13,8 @@ import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.RestDocsConfiguration;
+import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.StatusType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -149,12 +151,12 @@ class UserControllerTest {
                 .team1(team1)
                 .team2(team2)
                 .headCount(2)
-                .type("single")
+                .type(GameType.SINGLE)
                 .tableId(1)
                 .time(LocalDateTime.now().plusDays(1))
                 .gamePpp(50)
                 .build());
-        game = gameRepository.save(Game.builder().slot(slot).team1(team1).team2(team2).type(slot.getType()).time(slot.getTime()).season(1).status("end").build());
+        game = gameRepository.save(Game.builder().slot(slot).team1(team1).team2(team2).type(slot.getType()).time(slot.getTime()).season(1).status(StatusType.END).build());
 
         pChange = pChangeRepository.save(PChange.builder()
                 .game(game)

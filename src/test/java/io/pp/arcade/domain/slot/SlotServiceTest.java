@@ -7,6 +7,7 @@ import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.GameType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -84,7 +85,7 @@ class SlotServiceTest {
         //given
         SlotAddUserDto dto = SlotAddUserDto.builder()
                 .slotId(slot.getId())
-                .type("single")
+                .type(GameType.SINGLE)
                 .joinUserPpp(user1.getPpp())
                 .build();
 
@@ -100,7 +101,7 @@ class SlotServiceTest {
         //given
         SlotAddUserDto dto1 = SlotAddUserDto.builder()
                 .slotId(slot.getId())
-                .type("single")
+                .type(GameType.SINGLE)
                 .joinUserPpp(user2.getPpp())
                 .build();
 
@@ -118,7 +119,7 @@ class SlotServiceTest {
     @Transactional
     void removeUserInSlot() {
         // given
-        Slot slot1 = slotRepository.save(Slot.builder().tableId(1).team1(team1).team2(team2).time(LocalDateTime.now()).headCount(2).gamePpp(80).type("single").build());
+        Slot slot1 = slotRepository.save(Slot.builder().tableId(1).team1(team1).team2(team2).time(LocalDateTime.now()).headCount(2).gamePpp(80).type(GameType.SINGLE).build());
         SlotRemoveUserDto dto = SlotRemoveUserDto.builder()
                 .slotId(slot1.getId())
                 .exitUserPpp(60)
@@ -174,16 +175,16 @@ class SlotServiceTest {
             slotService.addSlot(dto);
         }
         List<Slot> slots =  slotRepository.findAll();
-        slots.get(0).setType("double");
+        slots.get(0).setType(GameType.DOUBLE);
         slots.get(0).setHeadCount(3);
-        slots.get(1).setType("single");
+        slots.get(1).setType(GameType.SINGLE);
         slots.get(1).setHeadCount(2);
-        slots.get(2).setType("single");
+        slots.get(2).setType(GameType.SINGLE);
         slots.get(2).setHeadCount(1);
 
         //when
         SlotFindStatusDto dto = SlotFindStatusDto.builder()
-                .type("single")
+                .type(GameType.SINGLE)
                 .currentTime(LocalDateTime.of(1999,10,10,0,0,0))
                 .userId(user1.getId())
                 .build();

@@ -5,8 +5,6 @@ import io.pp.arcade.domain.currentmatch.dto.CurrentMatchAddDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchModifyDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchRemoveDto;
-import io.pp.arcade.domain.noti.NotiService;
-import io.pp.arcade.domain.noti.dto.NotiAddDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.*;
@@ -15,11 +13,11 @@ import io.pp.arcade.domain.team.dto.TeamAddUserDto;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.team.dto.TeamPosDto;
 import io.pp.arcade.domain.team.dto.TeamRemoveUserDto;
-import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.slot.dto.SlotStatusResponseDto;
 import io.pp.arcade.domain.user.dto.UserDto;
-import io.pp.arcade.domain.user.dto.UserFindDto;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.SlotStatusType;
 import io.pp.arcade.global.util.HeaderUtil;
 import io.pp.arcade.global.util.NotiGenerater;
 import lombok.AllArgsConstructor;
@@ -42,8 +40,8 @@ public class SlotControllerImpl implements SlotController {
     private final TokenService tokenService;
 
     @Override
-    @GetMapping(value = "/match/tables/{tableId}")
-    public SlotStatusResponseDto slotStatusList(Integer tableId, String type, HttpServletRequest request) {
+    @GetMapping(value = "/match/tables/{tableId}/{type}")
+    public SlotStatusResponseDto slotStatusList(Integer tableId, GameType type, HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         List<SlotStatusDto> slots;
         List<SlotGroupDto> slotGroups;
@@ -59,8 +57,8 @@ public class SlotControllerImpl implements SlotController {
     }
 
     @Override
-    @PostMapping(value = "/match/tables/{tableId}")
-    public void slotAddUser(Integer tableId, SlotAddUserRequestDto addReqDto, HttpServletRequest request) throws MessagingException {
+    @PostMapping(value = "/match/tables/{tableId}/{type}")
+    public void slotAddUser(Integer tableId, GameType type, SlotAddUserRequestDto addReqDto, HttpServletRequest request) throws MessagingException {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         Integer userId = user.getId();
         //user가 매치를 이미 가지고 있는지 myTable에서 user 필터하기
@@ -71,11 +69,11 @@ public class SlotControllerImpl implements SlotController {
 
         SlotAddUserDto addDto = SlotAddUserDto.builder()
                 .slotId(addReqDto.getSlotId())
-                .type(addReqDto.getType())
+                .type(type)
                 .joinUserPpp(user.getPpp())
                 .build();
         SlotDto slot = slotService.findSlotById(addDto.getSlotId());
-        TeamAddUserDto teamAddUserDto = getTeamAddUserDto(slot, addReqDto.getType(), user);
+        TeamAddUserDto teamAddUserDto = getTeamAddUserDto(slot, type, user);
 
         //유저가 슬롯에 입장하면 currentMatch에 등록된다.
         CurrentMatchAddDto matchAddDto = CurrentMatchAddDto.builder()
@@ -94,16 +92,16 @@ public class SlotControllerImpl implements SlotController {
     }
 
     @Override
-    @DeleteMapping(value = "/match/tables/{tableId}")
-    public void slotRemoveUser(Integer tableId, Integer slotId, HttpServletRequest request) throws MessagingException {
+    @DeleteMapping(value = "/match")
+    public void slotRemoveUser(HttpServletRequest request) throws MessagingException {
         // slotId , tableId 유효성 검사
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         // 유저 조회, 슬롯 조회, 팀 조회( 슬롯에 헤드 카운트 -, 팀에서 유저 퇴장 )
-        SlotDto slot = slotService.findSlotById(slotId);
-        CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUserId(user.getId());
-        if (matchDto.getMatchImminent()) {
+        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUserId(user.getId());
+        if (currentMatch == null) {
             throw new BusinessException("{invalid.request}");
         }
+        SlotDto slot = currentMatch.getSlot();
 
         CurrentMatchRemoveDto currentMatchRemoveDto = CurrentMatchRemoveDto.builder()
                 .userId(user.getId()).build();
@@ -158,9 +156,9 @@ public class SlotControllerImpl implements SlotController {
         modifyCurrentMatch(team2.getUser2(), matchModifyDto);
     }
 
-    private TeamAddUserDto getTeamAddUserDto(SlotDto slot, String reqType, UserDto user) {
+    private TeamAddUserDto getTeamAddUserDto(SlotDto slot, GameType gameType, UserDto user) {
         Integer teamId;
-        String slotType = slot.getType();
+        GameType slotType = slot.getType();
         TeamDto team1 = slot.getTeam1();
         TeamDto team2 = slot.getTeam2();
         Integer headCount = slot.getHeadCount();
@@ -170,7 +168,7 @@ public class SlotControllerImpl implements SlotController {
                 .slotId(slot.getId())
                 .slotTime(slot.getTime())
                 .slotType(slot.getType())
-                .requestType(reqType)
+                .gameType(gameType)
                 .userPpp(user.getPpp())
                 .gamePpp(slot.getGamePpp())
                 .headCount(slot.getHeadCount())
