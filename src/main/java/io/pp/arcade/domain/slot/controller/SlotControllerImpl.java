@@ -142,7 +142,7 @@ public class SlotControllerImpl implements SlotController {
     private void modifyUsersCurrentMatchStatus(UserDto user, SlotDto slot) {
         TeamDto team1 = slot.getTeam1();
         TeamDto team2 = slot.getTeam2();
-        Integer maxSlotHeadCount = "single".equals(slot.getType()) ? 2 : 4;
+        Integer maxSlotHeadCount = GameType.SINGLE.equals(slot.getType()) ? 2 : 4;
         Boolean isMatched = slot.getHeadCount().equals(maxSlotHeadCount);
         Boolean isImminent = slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5));
         CurrentMatchModifyDto matchModifyDto = CurrentMatchModifyDto.builder()
@@ -162,7 +162,7 @@ public class SlotControllerImpl implements SlotController {
         TeamDto team1 = slot.getTeam1();
         TeamDto team2 = slot.getTeam2();
         Integer headCount = slot.getHeadCount();
-        Integer maxTeamHeadCount = "single".equals(slotType) ? 1 : 2;
+        Integer maxTeamHeadCount = GameType.SINGLE.equals(slotType) ? 1 : 2;
 
         SlotFilterDto slotFilterDto = SlotFilterDto.builder()
                 .slotId(slot.getId())
@@ -173,7 +173,7 @@ public class SlotControllerImpl implements SlotController {
                 .gamePpp(slot.getGamePpp())
                 .headCount(slot.getHeadCount())
                 .build();
-        if (slotService.getStatus(slotFilterDto).equals("open")) {
+        if (slotService.getStatus(slotFilterDto).equals(SlotStatusType.OPEN)) {
             if (team1.getHeadCount() < maxTeamHeadCount) {
                 teamId = team1.getId();
             } else {

@@ -9,6 +9,7 @@ import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.util.NotiGenerater;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -34,7 +35,7 @@ public class GameGenerator {
         LocalDateTime now = LocalDateTime.now();
         now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
         SlotDto slotDto = slotService.findByTime(now);
-        if (slotDto.getType().equals("double")) {
+        if (slotDto != null && GameType.DOUBLE.equals(slotDto.getType())) {
             maxHeadCount = 4;
         }
         if (slotDto != null) {

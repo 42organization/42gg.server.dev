@@ -11,6 +11,7 @@ import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.util.NotiGenerater;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -35,8 +36,11 @@ public class CurrentMatchUpdater {
         now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute() + 5, 0);
 
         SlotDto slot = slotService.findByTime(now);
-        Integer maxHeadCount = slot.getType().equals("single") ? 2 : 4;
-        if (slot != null && slot.getHeadCount().equals(maxHeadCount)) {
+        if (slot == null) {
+            return;
+        }
+        Integer maxHeadCount = GameType.SINGLE.equals(slot.getType()) ? 2 : 4;
+        if (maxHeadCount.equals(slot.getHeadCount())) {
             TeamDto team1 = slot.getTeam1();
             TeamDto team2 = slot.getTeam2();
 
