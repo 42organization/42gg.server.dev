@@ -7,6 +7,5 @@ import lombok.Getter;
 @Getter
 public class UserLiveInfoResponseDto { 
     Integer notiCount;
-//    Integer gameId;
     String event;
 }

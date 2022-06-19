@@ -10,13 +10,16 @@ import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
+import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.*;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -29,14 +32,15 @@ public class UserControllerImpl implements UserController {
     private final PChangeService pChangeService;
     private final NotiService notiService;
     private final CurrentMatchService currentMatchService;
+    private final TokenService tokenService;
     /* *
      * [메인 페이지]
      * 유저 기본 정보 조회
      * */
     @Override
     @GetMapping(value = "/users")
-    public UserResponseDto userFind(Integer userId) {
-        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
+    public UserResponseDto userFind(HttpServletRequest request) {
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         UserResponseDto responseDto = UserResponseDto.builder()
                 .intraId(user.getIntraId())
                 .userImageUri(user.getImageUri())
@@ -49,10 +53,10 @@ public class UserControllerImpl implements UserController {
      * 유저 프로필 정보 조회
      * */
     @Override
-    @GetMapping(value = "/users/{targetUserId}/detail")
-    public UserDetailResponseDto userFindDetail(String targetUserId, Integer currentUserId) {
+    @GetMapping(value = "/users/{userId}/detail")
+    public UserDetailResponseDto userFindDetail(String targetUserId, HttpServletRequest request) {
         /* 상대 전적 비교 */
-        UserDto curUser = userService.findById(UserFindDto.builder().userId(currentUserId).build());
+        UserDto curUser = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         UserDto targetUser = userService.findByIntraId(UserFindDto.builder().intraId(targetUserId).build());
 
         UserDetailResponseDto responseDto = UserDetailResponseDto.builder()
@@ -98,8 +102,8 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @PutMapping(value = "/users/{intraId}/detail")
-    public void userModifyProfile(Integer userId, String intraId) {
-        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
+    public void userModifyProfile(String intraId, HttpServletRequest request) {
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         if (!(user.getIntraId().equals(intraId))) {
             throw new BusinessException("{invalid.request}");
         }
@@ -119,19 +123,18 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @GetMapping(value = "/users/{intraId}/live")
-    public UserLiveInfoResponseDto userLiveInfo(String intraId, Integer userId) {
-        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByIntraId(intraId);
+    @GetMapping(value = "/users/live")
+    public UserLiveInfoResponseDto userLiveInfo(HttpServletRequest request) {
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByIntraId(user.getIntraId());
         GameDto currentMatchGame = currentMatch == null ? null : currentMatch.getGame();
         String event = currentMatch == null ? null : "match";
         if ("match".equals(event) && currentMatch.getGame() != null) {
             event = "game";
         }
-        UserDto user = userService.findByIntraId(UserFindDto.builder().intraId(intraId).build());
         NotiCountDto notiCount = notiService.countAllNByUser(NotiFindDto.builder().user(user).build());
         UserLiveInfoResponseDto userLiveInfoResponse = UserLiveInfoResponseDto.builder()
                 .notiCount(notiCount.getNotiCount())
-//               .gameId(currentMatchGame == null ? null : currentMatchGame.getId())
                 .event(event)
                 .build();
         return userLiveInfoResponse;
