@@ -4,6 +4,7 @@ import io.pp.arcade.domain.noti.NotiService;
 import io.pp.arcade.domain.noti.dto.NotiAddDto;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.global.type.GameType;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +17,7 @@ public class NotiGenerater {
     private final NotiService notiService;
 
     public void addMatchNotisBySlot(SlotDto slot) throws MessagingException {
-        Integer maxSlotHeadCount = "single".equals(slot.getType()) ? 2 : 4;
+        Integer maxSlotHeadCount = GameType.SINGLE.toString().equals(slot.getType()) ? 2 : 4;
         Boolean isMatched = slot.getHeadCount().equals(maxSlotHeadCount) ? true : false;
         Boolean isImminent = isMatched && slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5)) ? true : false;
         if (isImminent == true) {

@@ -1,12 +1,14 @@
 package io.pp.arcade.domain.rank;
 
 import io.pp.arcade.domain.rank.dto.*;
+import io.pp.arcade.domain.season.SeasonRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.GameType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +22,9 @@ import java.util.Set;
 @AllArgsConstructor
 public class RankService {
     private final UserRepository userRepository;
+    private final RankRepository rankRepository;
     private final RedisTemplate redisTemplate;
+    private final SeasonRepository seasonRepository;
 
     @Transactional
     public RankFindListDto findRankList(Pageable pageable, GameType type) {
@@ -102,8 +106,20 @@ public class RankService {
 
     @Transactional
     public void saveAllRankToRDB(RankSaveAllDto saveAllDto){
+        List<Rank> ranks = rankRepository.findAllBySeasonId(saveAllDto.getSeasonId());
+        ListOperations listOperations = redisTemplate.opsForList();
+        // 랭크 테이블에 해당 시즌의 정보가 있을 경우 유저정보 업데이트
+        // 랭크 테이블에 해당 시즌의 정보가 없을 경우 새로운 유저 생성
+
+        rankRepository.saveAll(ranks);
+    }
+
+    @Transactional
+    public void loadAllRankFromRDB(RankSaveAllDto saveAllDto){
         //userRepository.saveAll();
     }
+
+
     private String getKey(String intraId, GameType GameType){
         return intraId + GameType.getKey();
     }

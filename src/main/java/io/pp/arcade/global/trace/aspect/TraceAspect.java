@@ -26,10 +26,10 @@ public class TraceAspect {
     @Pointcut("execution(* io.pp.arcade.global.trace..*(..))")
     public void traceDomain(){}
 
-//    @Pointcut("execution(* io.pp.arcade.domain.security..*(..))")
-//    public void securityDomain(){}
+    @Pointcut("execution(* io.pp.arcade.domain.security..*(..))")
+    public void securityDomain(){}
 
-    @Around("allDomain() && !traceDomain()")
+    @Around("allDomain() && !traceDomain() && !securityDomain()")
     public Object doLog(ProceedingJoinPoint joinPoint) throws Throwable {
         TraceStatus status = null;
         MethodSignature method = (MethodSignature)joinPoint.getSignature();

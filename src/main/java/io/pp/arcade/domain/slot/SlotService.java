@@ -97,7 +97,7 @@ public class SlotService {
 
         User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
-        Integer userSlotId = currentMatch == null ? null : currentMatch.getId();
+        Integer userSlotId = currentMatch == null ? null : currentMatch.getSlot().getId();
 
         List<SlotStatusDto> slotDtos = new ArrayList<>();
         for (Slot slot : slots) {
@@ -149,7 +149,7 @@ public class SlotService {
 
         LocalDateTime currentTime = LocalDateTime.now();
         Integer maxCount = 2;
-        if (slotType != null && slotType.equals("double")) {
+        if (slotType != null && slotType.equals(GameType.DOUBLE)) {
             maxCount = 4;
         }
         SlotStatusType status = SlotStatusType.OPEN;

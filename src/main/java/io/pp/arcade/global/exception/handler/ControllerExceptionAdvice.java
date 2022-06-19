@@ -97,7 +97,8 @@ public class ControllerExceptionAdvice {
 
     @ExceptionHandler(AccessException.class)
     protected ResponseEntity<Object> customAccessExceptionHandle(AccessException ex) throws URISyntaxException {
-        URI redirectUri = new URI(ex.getRedirectUrl());
+        String message = messageSource.getMessage(filter(ex.getRedirectUrl()), null, Locale.KOREA);
+        URI redirectUri = new URI(message);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(redirectUri);
         return new ResponseEntity<>(httpHeaders, HttpStatus.FORBIDDEN);

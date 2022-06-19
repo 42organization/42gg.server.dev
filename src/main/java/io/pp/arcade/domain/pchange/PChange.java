@@ -23,10 +23,9 @@ public class PChange extends BaseTimeEntity {
     @JoinColumn(name = "game_id")
     private Game game;
 
-    //@JoinColumn(name = "user_id", referencedColumnName = "intra_id")
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "intra_id")
     private User user;
 
     @NotNull

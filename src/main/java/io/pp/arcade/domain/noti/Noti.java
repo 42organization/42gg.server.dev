@@ -21,9 +21,8 @@ public class Noti extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    //@JoinColumn(name = "user_id", referencedColumnName = "intra_id")
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", referencedColumnName = "intra_id")
     private User user;
 
     @ManyToOne

@@ -8,6 +8,7 @@ import io.pp.arcade.domain.user.UserRepository;
 
 import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.SlotStatusType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -96,7 +97,7 @@ class SlotServiceTest {
         //then
         Assertions.assertThat(s1.getHeadCount()).isEqualTo(1);
         Assertions.assertThat(s1.getGamePpp()).isEqualTo(user1.getPpp());
-        Assertions.assertThat(s1.getType()).isEqualTo("single");
+        Assertions.assertThat(s1.getType()).isEqualTo(GameType.SINGLE.toString());
 
         //given
         SlotAddUserDto dto1 = SlotAddUserDto.builder()
@@ -112,7 +113,7 @@ class SlotServiceTest {
         //then
         Assertions.assertThat(s2.getHeadCount()).isEqualTo(2);
         Assertions.assertThat(s2.getGamePpp()).isEqualTo((user1.getPpp() + user2.getPpp()) / 2);
-        Assertions.assertThat(s2.getType()).isEqualTo("single");
+        Assertions.assertThat(s2.getType()).isEqualTo(GameType.SINGLE.toString());
     }
 
     @Test
@@ -131,7 +132,7 @@ class SlotServiceTest {
         // then
         Assertions.assertThat(removedUserSlot.getGamePpp()).isEqualTo(100);
         Assertions.assertThat(removedUserSlot.getHeadCount()).isEqualTo(1);
-        Assertions.assertThat(removedUserSlot.getType()).isEqualTo("single");
+        Assertions.assertThat(removedUserSlot.getType()).isEqualTo(GameType.SINGLE.toString());
 
         // when
         slotService.removeUserInSlot(dto);
@@ -195,9 +196,9 @@ class SlotServiceTest {
         Integer closeCount = 0;
         for (SlotStatusDto resDto : responseDtos) {
             System.out.println(resDto.getStatus());
-            if (resDto.getStatus().equals("open")) {
+            if (resDto.getStatus().equals(SlotStatusType.OPEN)) {
                 openCount++;
-            } else if (resDto.getStatus().equals("close")) {
+            } else if (resDto.getStatus().equals(SlotStatusType.CLOSE)) {
                 closeCount++;
             }
         }

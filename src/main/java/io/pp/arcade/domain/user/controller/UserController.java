@@ -17,6 +17,6 @@ public interface UserController {
     UserDetailResponseDto userFindDetail(@PathVariable String targetUserId, HttpServletRequest request);
     UserHistoricResponseDto userFindHistorics(@PathVariable String userId, @PageableDefault(size = 10) Pageable pageable);
     void userModifyProfile(@PathVariable String intraId, HttpServletRequest request);
-    UserSearchResultResponseDto userSearchResult(@RequestParam(value="userId", required = false) String inquiringString); // 유효성 검사 해야함
+    UserSearchResultResponseDto userSearchResult(@RequestParam(value="q") String inquiringString); // 유효성 검사 해야함
     UserLiveInfoResponseDto userLiveInfo(HttpServletRequest request);
 }

@@ -120,7 +120,7 @@ class SlotControllerTest {
         // userPpp = 1000;
         MultiValueMap<String, String> params;
         params = new LinkedMultiValueMap<>();
-        params.add("type", "single");
+        params.add("type", GameType.SINGLE.toString());
         params.add("userId", user.getId().toString());
         mockMvc.perform(get("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
                         .params(params))
@@ -138,7 +138,7 @@ class SlotControllerTest {
         addUser(slot, 2, GameType.SINGLE, 950);
 
         params = new LinkedMultiValueMap<>();
-        params.add("type", "single");
+        params.add("type", GameType.SINGLE.toString());
         params.add("userId", user.getId().toString());
         mockMvc.perform(get("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
                         .params(params))
@@ -151,7 +151,7 @@ class SlotControllerTest {
         addUser(slot, 1, GameType.SINGLE, 900);
 
         params = new LinkedMultiValueMap<>();
-        params.add("type", "single");
+        params.add("type", GameType.SINGLE.toString());
         params.add("userId", babyUser.getId().toString());
         mockMvc.perform(get("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
                         .params(params))
@@ -163,7 +163,7 @@ class SlotControllerTest {
         addUser(slot, 4, GameType.DOUBLE, 750);
 
         params = new LinkedMultiValueMap<>();
-        params.add("type", "double");
+        params.add("type", GameType.DOUBLE.toString());
         params.add("userId", user.getId().toString());
         mockMvc.perform(get("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
                         .params(params))
@@ -175,7 +175,7 @@ class SlotControllerTest {
         addUser(slot, 4, GameType.DOUBLE, 900);
 
         params = new LinkedMultiValueMap<>();
-        params.add("type", "single");
+        params.add("type", GameType.SINGLE.toString());
         params.add("userId", babyUser.getId().toString());
         mockMvc.perform(get("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
                         .params(params))
@@ -189,11 +189,11 @@ class SlotControllerTest {
         Map<String, String> body1 = new HashMap<>();
         Slot slotA = slotList.get(1);
         body1.put("slotId", slotA.getId().toString());
-        body1.put("type", "single");
+        body1.put("type", GameType.SINGLE.toString());
 
         Map<String, String> body2 = new HashMap<>();
         body2.put("slotId", slotA.getId().toString());
-        body2.put("type", "single");
+        body2.put("type", GameType.SINGLE.toString());
         mockMvc.perform(post("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body1))
                         .param("userId", user4.getId().toString()))
@@ -212,7 +212,7 @@ class SlotControllerTest {
         }
         MultiValueMap<String, String> params;
         params = new LinkedMultiValueMap<>();
-        params.add("type", "single");
+        params.add("type", GameType.SINGLE.toString());
         params.add("userId", user.getId().toString());
         mockMvc.perform(get("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
                         .params(params))
@@ -265,7 +265,7 @@ class SlotControllerTest {
                 .andExpect(status().isOk());
 
         MultiValueMap<String, String> newParams = new LinkedMultiValueMap<>();
-        newParams.add("type", "single");
+        newParams.add("type", GameType.SINGLE.toString());
         newParams.add("userId", user.getId().toString());
         mockMvc.perform(get("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
                         .params(newParams))

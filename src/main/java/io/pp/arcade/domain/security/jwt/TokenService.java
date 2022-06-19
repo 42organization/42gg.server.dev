@@ -19,6 +19,7 @@ public class TokenService {
                 .getUser();
         return UserDto.from(user);
     }
+
     public UserDto findAdminByAccessToken(String accessToken){
         User user = repository.findByAccessToken(accessToken)
                 .orElseThrow(() -> new AccessException("{front.url}"))
@@ -27,6 +28,7 @@ public class TokenService {
             throw new AccessException("{front.url}");
         return UserDto.from(user);
     }
+
     public Token findByAccessToken(String accessToken){
         return repository.findByAccessToken(accessToken)
                 .orElseThrow(() -> new BusinessException("{token.notfound}"));
