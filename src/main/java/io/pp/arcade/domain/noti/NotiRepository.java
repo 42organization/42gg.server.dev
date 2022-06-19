@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface NotiRepository extends JpaRepository<Noti, Integer> {
     List<Noti> findAllByUser(User user);
-    Integer countAllNByUser(User user);
+    Integer countAllNByUserAndIsChecked(User user, Boolean isChecked);
     void deleteAllByUser(User user);
     void deleteById(Integer id);
 }
