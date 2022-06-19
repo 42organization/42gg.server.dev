@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.security.oauth.v2.config.security;
 
+import io.pp.arcade.domain.rank.RankService;
 import io.pp.arcade.domain.security.oauth.v2.config.properties.AppProperties;
 import io.pp.arcade.domain.security.oauth.v2.config.properties.CorsProperties;
 import io.pp.arcade.domain.security.oauth.v2.exception.RestAuthenticationEntryPoint;
@@ -43,6 +44,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final UserRepository userRepository;
     private final ApplicationYmlRead applicationYmlRead;
+    private final RankService rankService;
     /*
      * UserDetailsService 설정
      * */
@@ -101,6 +103,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+
     /*
      * 토큰 필터 설정
      * */
@@ -125,6 +128,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public OAuthAuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
         return new OAuthAuthenticationSuccessHandler(
+                rankService,
                 tokenProvider,
                 userRepository,
                 appProperties,

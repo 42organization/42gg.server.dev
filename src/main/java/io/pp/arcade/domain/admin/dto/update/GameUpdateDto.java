@@ -1,5 +1,7 @@
 package io.pp.arcade.domain.admin.dto.update;
 
+import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.StatusType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,8 +14,8 @@ public class GameUpdateDto {
     private Integer slotId;
     private Integer team1Id;
     private Integer team2Id;
-    private String type;
+    private GameType type;
     private LocalDateTime time;
     private Integer seasonId;
-    private String status;
+    private StatusType status;
 }

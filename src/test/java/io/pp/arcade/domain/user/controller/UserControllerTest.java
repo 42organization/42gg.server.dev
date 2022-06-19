@@ -6,6 +6,8 @@ import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.pchange.PChange;
 import io.pp.arcade.domain.pchange.PChangeRepository;
+import io.pp.arcade.domain.security.jwt.Token;
+import io.pp.arcade.domain.security.jwt.TokenRepository;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.team.Team;
@@ -58,6 +60,9 @@ class UserControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private TokenRepository tokenRepository;
 
     User user;
     User user2;

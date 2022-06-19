@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.noti.dto;
 
+import io.pp.arcade.global.type.NotiType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,7 +11,7 @@ import java.util.List;
 @Builder
 public class NotiImminentMatchDto {
     private Integer id;
-    private String type;
+    private NotiType type;
     private LocalDateTime time;
     private Boolean isChecked;
     private List<String> myTeam;

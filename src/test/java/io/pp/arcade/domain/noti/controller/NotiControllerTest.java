@@ -13,6 +13,7 @@ import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.NotiType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,25 +100,25 @@ class NotiControllerTest {
 
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("matched")
+                .type(NotiType.MATCHED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("canceled")
+                .type(NotiType.CANCELED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("matched")
+                .type(NotiType.MATCHED)
                 .isChecked(false)
                 .slot(slot)
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .notiType("imminent")
+                .type(NotiType.IMMINENT)
                 .isChecked(false)
                 .slot(slot)
                 .build());

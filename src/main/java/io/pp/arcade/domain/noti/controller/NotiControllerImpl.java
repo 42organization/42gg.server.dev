@@ -10,6 +10,7 @@ import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserFindDto;
+import io.pp.arcade.global.type.NotiType;
 import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +39,7 @@ public class NotiControllerImpl implements NotiController {
         List<NotiDto> notis = notiService.findNotiByUser(notiFindDto);
         List<Object> notiDtos = new ArrayList<>();
         notis.forEach(noti -> {
-            if (noti.getType().equals("announce")) {
+            if (noti.getType().equals(NotiType.ANNOUNCE)) {
                 notiDtos.add(NotiAnnounceDto.builder()
                         .id(noti.getId())
                         .type(noti.getType())
@@ -46,7 +47,7 @@ public class NotiControllerImpl implements NotiController {
                         .message(noti.getMessage())
                         .createdAt(noti.getCreatdDate())
                         .build());
-            } else if (noti.getType().equals("matched")) {
+            } else if (noti.getType().equals(NotiType.MATCHED)) {
                 notiDtos.add(NotiMatchedDto.builder()
                         .id(noti.getId())
                         .type(noti.getType())
@@ -54,7 +55,7 @@ public class NotiControllerImpl implements NotiController {
                         .isChecked(noti.getIsChecked())
                         .createdAt(noti.getCreatdDate())
                         .build());
-            } else if (noti.getType().equals("imminent")) {
+            } else if (noti.getType().equals(NotiType.IMMINENT)) {
                 TeamPosDto teamPosDto = teamService.getTeamPosNT(user, noti.getSlot().getTeam1(), noti.getSlot().getTeam2());
                 List<String> myTeam = new ArrayList<>();
                 List<String> enemyTeam = new ArrayList<>();
@@ -79,7 +80,7 @@ public class NotiControllerImpl implements NotiController {
                         .enemyTeam(enemyTeam)
                         .createdAt(noti.getCreatdDate())
                         .build());
-            } else if (noti.getType().equals("canceled")) {
+            } else if (noti.getType().equals(NotiType.CANCELED)) {
                 notiDtos.add(NotiCanceledDto.builder()
                         .id(noti.getId())
                         .type(noti.getType())
