@@ -102,6 +102,7 @@ public class SlotControllerImpl implements SlotController {
             throw new BusinessException("{invalid.request}");
         }
         SlotDto slot = currentMatch.getSlot();
+
         CurrentMatchRemoveDto currentMatchRemoveDto = CurrentMatchRemoveDto.builder()
                 .userId(user.getId()).build();
         currentMatchService.removeCurrentMatch(currentMatchRemoveDto);
