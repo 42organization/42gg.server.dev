@@ -100,7 +100,7 @@ public class ControllerExceptionAdvice {
         URI redirectUri = new URI(ex.getRedirectUrl());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(redirectUri);
-        return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.FORBIDDEN);
     }
 
     private String filter(String message){
