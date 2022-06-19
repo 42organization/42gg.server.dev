@@ -5,6 +5,7 @@ import io.pp.arcade.domain.noti.dto.NotiAddDto;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.NotiType;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -21,31 +22,31 @@ public class NotiGenerater {
         Boolean isMatched = slot.getHeadCount().equals(maxSlotHeadCount) ? true : false;
         Boolean isImminent = isMatched && slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5)) ? true : false;
         if (isImminent == true) {
-            addNoti(slot.getTeam1().getUser1(), slot, "imminent");
-            addNoti(slot.getTeam1().getUser2(), slot, "imminent");
-            addNoti(slot.getTeam2().getUser1(), slot, "imminent");
-            addNoti(slot.getTeam2().getUser2(), slot, "imminent");
+            addNoti(slot.getTeam1().getUser1(), slot, NotiType.IMMINENT);
+            addNoti(slot.getTeam1().getUser2(), slot, NotiType.IMMINENT);
+            addNoti(slot.getTeam2().getUser1(), slot, NotiType.IMMINENT);
+            addNoti(slot.getTeam2().getUser2(), slot, NotiType.IMMINENT);
         } else if (isMatched == true) {
-            addNoti(slot.getTeam1().getUser1(), slot, "matched");
-            addNoti(slot.getTeam1().getUser2(), slot, "matched");
-            addNoti(slot.getTeam2().getUser1(), slot, "matched");
-            addNoti(slot.getTeam2().getUser2(), slot, "matched");
+            addNoti(slot.getTeam1().getUser1(), slot, NotiType.MATCHED);
+            addNoti(slot.getTeam1().getUser2(), slot, NotiType.MATCHED);
+            addNoti(slot.getTeam2().getUser1(), slot, NotiType.MATCHED);
+            addNoti(slot.getTeam2().getUser2(), slot, NotiType.MATCHED);
         }
     }
 
     public void addCancelNotisBySlot(SlotDto slot) throws MessagingException {
-        addNoti(slot.getTeam1().getUser1(), slot, "canceled");
-        addNoti(slot.getTeam1().getUser2(), slot, "canceled");
-        addNoti(slot.getTeam2().getUser1(), slot, "canceled");
-        addNoti(slot.getTeam2().getUser2(), slot, "canceled");
+        addNoti(slot.getTeam1().getUser1(), slot, NotiType.CANCELED);
+        addNoti(slot.getTeam1().getUser2(), slot, NotiType.CANCELED);
+        addNoti(slot.getTeam2().getUser1(), slot, NotiType.CANCELED);
+        addNoti(slot.getTeam2().getUser2(), slot, NotiType.CANCELED);
     }
 
-    private void addNoti(UserDto user, SlotDto slot, String type) throws MessagingException {
+    private void addNoti(UserDto user, SlotDto slot, NotiType type) throws MessagingException {
         if (user != null) {
             NotiAddDto notiAddDto = NotiAddDto.builder()
                     .user(user)
                     .slot(slot)
-                    .notiType(type)
+                    .type(type)
                     .build();
             notiService.addNoti(notiAddDto);
         }

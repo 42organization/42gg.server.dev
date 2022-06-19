@@ -10,10 +10,10 @@ spring:
     username: 42gg
     password: pingPongpower42#
 
-  jpa:
+    jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     properties:
       hibernate:
         show_sql: true
@@ -22,3 +22,23 @@ spring:
     logging:
       level:
         org.hibernate.SQL: debug
+
+
+  security:
+    oauth2.client:
+      registration:
+        42:
+          client-id: "cd1431e55cd272b41ed09874172e04833b1918749ee6642acaef5b45f19c0b27"
+          client-secret: "16f1c09b9b394017e87c4aeb55829647b6e0d69d6bba96f024b15cbdb723d529"
+
+  # cors 설정
+  cors:
+    allowed-origins: 'http://localthos:3000'
+    allowed-methods: GET,POST,PUT,DELETE,OPTIONS,PATCH
+    allowed-headers: '*'
+    allowed-Credentials: false
+    max-age: 3600
+
+  info:
+    web:
+      frontUrl: 'http://localhost:3000'

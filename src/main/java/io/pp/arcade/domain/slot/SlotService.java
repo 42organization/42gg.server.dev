@@ -2,6 +2,7 @@ package io.pp.arcade.domain.slot;
 
 import io.pp.arcade.domain.admin.dto.create.SlotCreateRequestDto;
 import io.pp.arcade.domain.admin.dto.delete.SlotDeleteDto;
+import io.pp.arcade.domain.admin.dto.update.SlotUpdateDto;
 import io.pp.arcade.domain.admin.dto.update.SlotUpdateRequestDto;
 import io.pp.arcade.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
@@ -179,8 +180,8 @@ public class SlotService {
                 .build());
     }
 
-    public void updateSlotByAdmin(SlotUpdateRequestDto updateDto) {
-        Slot slot = slotRepository.findById(updateDto.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+    public void updateSlotByAdmin(SlotUpdateDto updateDto) {
+        Slot slot = slotRepository.findById(updateDto.getSlotId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         slot.setGamePpp(updateDto.getGamePpp());
         slot.setHeadCount(updateDto.getHeadCount());
         slot.setType(updateDto.getType());

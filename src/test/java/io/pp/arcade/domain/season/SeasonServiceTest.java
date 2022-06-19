@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.season;
 
+import io.pp.arcade.domain.admin.dto.create.SeasonCreateRequestDto;
 import io.pp.arcade.domain.season.dto.SeasonAddDto;
 import io.pp.arcade.domain.season.dto.SeasonDeleteDto;
 import io.pp.arcade.domain.season.dto.SeasonDto;
@@ -9,9 +10,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+
 
 @SpringBootTest
 public class SeasonServiceTest {
@@ -55,14 +57,14 @@ public class SeasonServiceTest {
     @Test
     @Transactional
     void addCurrentSeason() {
-        SeasonAddDto dto = SeasonAddDto.builder()
+        SeasonCreateRequestDto dto = SeasonCreateRequestDto.builder()
                 .seasonName("now")
                 .startTime(season_present.getStartTime())
                 .endTime(season_present.getEndTime())
                 .startPpp(100)
                 .build();
 
-        seasonService.addCurrentSeason(dto);
+        seasonService.createSeasonByAdmin(dto);
         Season foundSeason = seasonRepository.findAll().get(3);
 
         Assertions.assertThat(foundSeason.getStartTime()).isEqualTo(season_present.getStartTime());
@@ -75,7 +77,7 @@ public class SeasonServiceTest {
     @Transactional
     void deleteCurrentSeason() {
         SeasonDeleteDto deleteDto = SeasonDeleteDto.builder().seasonId(season_past.getId()).build();
-        seasonService.deleteCurrentSeason(deleteDto);
+        seasonService.deleteSeasonByAdmin(deleteDto);
 
         List<Season> foundSeasons = seasonRepository.findAll();
         Assertions.assertThat(foundSeasons.size()).isEqualTo(2);

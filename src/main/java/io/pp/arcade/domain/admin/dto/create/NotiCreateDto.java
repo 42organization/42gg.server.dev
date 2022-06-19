@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.admin.dto.create;
 
+import io.pp.arcade.global.type.NotiType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 public class NotiCreateDto {
     private Integer userId;
     private Integer slotId;
-    private String notiType;
+    private NotiType notiType;
     private Boolean isChecked;
     private String message;
 }

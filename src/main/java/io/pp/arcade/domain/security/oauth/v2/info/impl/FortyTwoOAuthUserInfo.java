@@ -18,4 +18,6 @@ public class FortyTwoOAuthUserInfo extends OAuthUserInfo {
     public String getEmail() {
         return attributes.get("email").toString();
     }
+
+    public String getImageUrl() { return attributes.get("image_url").toString(); }
 }
