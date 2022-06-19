@@ -12,8 +12,8 @@ import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.domain.rank.RankService;
-import io.pp.arcade.domain.rank.dto.RankFindDto;
-import io.pp.arcade.domain.rank.dto.RankUserDto;
+import io.pp.arcade.domain.rank.dto.RankModifyDto;
+import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.team.dto.TeamModifyGameResultDto;
@@ -24,7 +24,9 @@ import io.pp.arcade.domain.user.dto.UserFindDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.StatusType;
 import io.pp.arcade.global.util.EloRating;
+import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +34,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -46,12 +49,20 @@ public class GameControllerImpl implements GameController {
     private final PChangeService pChangeService;
     private final CurrentMatchService currentMatchService;
     private final RankService rankService;
+    private final TokenService tokenService;
 
     @Override
-    @GetMapping(value = "/games/{gameId}/result")
-    public GameUserInfoResponseDto gameUserInfo(Integer gameId, Integer userId) {
-        GameDto game = gameService.findById(gameId);
-        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
+    @GetMapping(value = "/games/result")
+    public GameUserInfoResponseDto gameUserInfo(HttpServletRequest request) {
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUserId(user.getId());
+        if (currentMatch == null) {
+            throw new BusinessException("{invalid.request}");
+        }
+        GameDto game = currentMatch.getGame();
+        if (game == null) {
+            throw new BusinessException("{invalid.request}");
+        }
         List<GameUserInfoDto> myTeams = new ArrayList<>();
         List<GameUserInfoDto> enemyTeams = new ArrayList<>();
 
@@ -67,30 +78,37 @@ public class GameControllerImpl implements GameController {
     }
 
     @Override
-    @PostMapping(value = "/games/{gameId}/result")
-    public void gameResultSave(Integer gameId, GameResultRequestDto requestDto, Integer userId) {
-        GameDto game = gameService.findById(gameId);
-        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
+    @PostMapping(value = "/games/result")
+    public void gameResultSave(GameResultRequestDto requestDto, HttpServletRequest request) {
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUserId(user.getId());
+        if (currentMatch == null) {
+            throw new BusinessException("{invalid.request}");
+        }
+        GameDto game = currentMatch.getGame();
+        if (game == null) {
+            throw new BusinessException("{invalid.request}");
+        }
         TeamDto team1 = game.getTeam1();
         TeamDto team2 = game.getTeam2();
         // if the result already exists, throw 202 error
         checkIfResultExists(game);
-        //figuring out team number for myteam and enemyteam
+        // figuring out team number for myteam and enemyteam
         List<TeamModifyGameResultDto> eachTeamModifyDto = getTeamModifyDto(team1, team2, requestDto, user);
-        //modify team with game result
+        // modify team with game result
         for (TeamModifyGameResultDto dto : eachTeamModifyDto) {
             teamService.modifyGameResultInTeam(dto);
         }
-        //modify users with game result
+        // modify users with game result
         modifyUsersPppAndPChange(game, team1, team2);
         endGameStatus(game);
         removCurrentMatch(game);
-        //modify users' ranks with game result
+        // modify users' ranks with game result
     }
 
     @Override
     @GetMapping(value = "/games")
-    public GameResultResponseDto gameResultByGameIdAndCount(Integer count, Integer gameId, String status) {
+    public GameResultResponseDto gameResultByGameIdAndCount(Integer count, Integer gameId, StatusType status) {
         Pageable pageable = PageRequest.of(0, count);
         GameResultPageDto resultPageDto = gameService.findGamesAfterId(GameFindDto.builder().id(gameId).status(status).pageable(pageable).build());
         List<GameResultDto> gameResultList = new ArrayList<>();
@@ -111,18 +129,17 @@ public class GameControllerImpl implements GameController {
     }
 
     @Override
-    @GetMapping(value = "/users/{userId}/games")
-    public GameResultResponseDto gameResultByUserIdAndByGameIdAndCount(String userId, Integer count, Integer gameId, String type) {
+    @GetMapping(value = "/users/{intraId}/games")
+    public GameResultResponseDto gameResultByUserIdAndByGameIdAndCount(String intraId, Integer count, Integer gameId, GameType type) {
         //Pageable
         /*
          * 1. PChange에서 유저별 게임 목록을 가져온다
          * 2. 얘네를 바탕으로 게임을 다 긁어온다.
          * 3. 얘네를 DTO로 만들어준다
-         *
          */
         Pageable pageable = PageRequest.of(0, count);
         PChangeFindDto findDto = PChangeFindDto.builder()
-                .userId(userId)
+                .userId(intraId)
                 .gameId(gameId)
                 .pageable(pageable)
                 .build();
@@ -151,14 +168,14 @@ public class GameControllerImpl implements GameController {
 
     // 이하 분리된 메서드
     private void checkIfResultExists(GameDto game) {
-        if ("end".equals(game.getStatus()))
+        if (StatusType.END.equals(game.getStatus()))
             throw new ResponseStatusException(HttpStatus.ACCEPTED, "이미 입력해짜나~~");
     }
 
     private void endGameStatus(GameDto game) {
         GameModifyStatusDto modifyStatusDto = GameModifyStatusDto.builder()
                 .gameId(game.getId())
-                .status("end").build();
+                .status(StatusType.END).build();
         gameService.modifyGameStatus(modifyStatusDto);
     }
 
@@ -193,37 +210,47 @@ public class GameControllerImpl implements GameController {
     private void modifyUsersPppAndPChange(GameDto game, TeamDto team1, TeamDto team2) {
         TeamDto savedTeam1 = teamService.findById(team1.getId());
         TeamDto savedTeam2 = teamService.findById(team2.getId());
-        modifyUserPppAndAddPchange(game.getId(), team1.getUser1(), savedTeam2);
-        modifyUserPppAndAddPchange(game.getId(), team1.getUser2(), savedTeam2);
-        modifyUserPppAndAddPchange(game.getId(), team2.getUser1(), savedTeam1);
-        modifyUserPppAndAddPchange(game.getId(), team2.getUser2(), savedTeam1);
+        modifyUserPppAndAddPchangeAndRank(game.getId(), team1.getUser1(), savedTeam2);
+        modifyUserPppAndAddPchangeAndRank(game.getId(), team1.getUser2(), savedTeam2);
+        modifyUserPppAndAddPchangeAndRank(game.getId(), team2.getUser1(), savedTeam1);
+        modifyUserPppAndAddPchangeAndRank(game.getId(), team2.getUser2(), savedTeam1);
+        
     }
     
-    private void modifyUserPppAndAddPchange(Integer gameId, UserDto user, TeamDto enemyTeam) {
+    private void modifyUserPppAndAddPchangeAndRank(Integer gameId, UserDto user, TeamDto enemyTeam) {
         if (user == null) {
             return;
         }
         Integer pppChange = EloRating.pppChange(user.getPpp(), enemyTeam.getTeamPpp(), !enemyTeam.getWin());
+        Integer ppp = (user.getPpp() + pppChange);
+        Integer userPpp = ppp > 0 ? ppp : 0;
         UserModifyPppDto modifyPppDto = UserModifyPppDto.builder()
                 .userId(user.getId())
-                .ppp(user.getPpp() + pppChange)
+                .ppp(userPpp)
                 .build();
         userService.modifyUserPpp(modifyPppDto);
         PChangeAddDto pChangeAddDto = PChangeAddDto.builder()
                 .gameId(gameId)
                 .userId(user.getId())
                 .pppChange(pppChange)
-                .pppResult(user.getPpp() + pppChange)
+                .pppResult(userPpp)
                 .build();
         pChangeService.addPChange(pChangeAddDto);
-    }
-
-    private void removCurrentMatch(GameDto game) {
-        CurrentMatchFindDto findDto = CurrentMatchFindDto.builder()
-                .game(game)
+        GameType gameType = gameService.findById(gameId).getType();
+        RankModifyDto rankModifyDto =  RankModifyDto.builder()
+                .gameType(gameType)
+                .Ppp(userPpp)
+                .intraId(user.getIntraId())
+                .isWin(!enemyTeam.getWin())
                 .build();
-        List<CurrentMatchDto> currentMatchDtos = currentMatchService.findCurrentMatchByGame(findDto);
-        currentMatchDtos.forEach(currentMatchDto -> {
+        rankService.modifyUserPpp(rankModifyDto);
+    }
+    private void removCurrentMatch(GameDto game) {
+    CurrentMatchFindDto findDto = CurrentMatchFindDto.builder()
+            .game(game)
+            .build();
+    List<CurrentMatchDto> currentMatchDtos = currentMatchService.findCurrentMatchByGame(findDto);
+    currentMatchDtos.forEach(currentMatchDto -> {
             CurrentMatchRemoveDto removeDto = CurrentMatchRemoveDto.builder()
                     .userId(currentMatchDto.getUserId()).build();
             currentMatchService.removeCurrentMatch(removeDto);
@@ -295,19 +322,19 @@ public class GameControllerImpl implements GameController {
             return;
         } else {
             Integer pppChange;
-            if (!"end".equals(game.getStatus())) {
+            if (!StatusType.END.equals(game.getStatus())) {
                 pppChange = null;
             } else {
                 PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().gameId(game.getId()).userId(user.getIntraId()).build());
                 pppChange = pChangeDto.getPppChange();
             }
-            RankUserDto userRankDto = rankService.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(GameType.valueOf(game.getType())).build());
+            //RankUserDto userRankDto = rankService.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(GameType.valueOf(game.getType())).build());
             GamePlayerDto gamePlayerDto = GamePlayerDto.builder()
                     .userId(user.getIntraId())
                     .userImageUri(user.getImageUri())
-                    .wins(userRankDto.getWins())
-                    .losses(userRankDto.getLosses())
-                    .winRate(userRankDto.getWinRate())
+                    //.wins(userRankDto.getWins())
+                    //.losses(userRankDto.getLosses())
+                    //.winRate(userRankDto.getWinRate())
                     .pppChange(pppChange)
                     .build();
             gamePlayerList.add(gamePlayerDto);

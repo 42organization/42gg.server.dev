@@ -12,6 +12,8 @@ import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.StatusType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -90,9 +92,9 @@ class CurrentMatchServiceTest {
                 .team2(team2)
                 .slot(slot)
                 .season(1)
-                .status("live")
+                .status(StatusType.LIVE)
                 .time(slot.getTime())
-                .type("single")
+                .type(GameType.SINGLE)
                 .build());
     }
 
