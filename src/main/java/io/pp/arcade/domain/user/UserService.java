@@ -4,6 +4,7 @@ import io.pp.arcade.domain.admin.dto.create.UserCreateRequestDto;
 import io.pp.arcade.domain.admin.dto.update.UserUpdateRequestDto;
 import io.pp.arcade.domain.user.dto.*;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.RoleType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,6 +41,7 @@ public class UserService {
         User user = User.builder()
                 .intraId(addDto.getIntraId())
                 .eMail(addDto.getEMail())
+                .roleType(RoleType.USER)
                 .statusMessage("")
                 .ppp(0)
                 .build();

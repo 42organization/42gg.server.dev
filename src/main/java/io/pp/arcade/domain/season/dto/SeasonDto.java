@@ -14,6 +14,7 @@ public class SeasonDto {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Integer startPpp;
+    private Integer pppGap;
 
     public static SeasonDto from(Season season) {
         return SeasonDto.builder()
@@ -22,6 +23,7 @@ public class SeasonDto {
                 .startTime(season.getStartTime())
                 .endTime(season.getEndTime())
                 .startPpp(season.getStartPpp())
+                .pppGap(season.getPppGap())
                 .build();
     }
 }

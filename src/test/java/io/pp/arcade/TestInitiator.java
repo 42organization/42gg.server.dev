@@ -65,7 +65,7 @@ public class TestInitiator {
         users[7] = userRepository.save(User.builder().intraId("jihyukim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(992).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[8] = userRepository.save(User.builder().intraId("daekim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(996).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[9] = userRepository.save(User.builder().intraId("sujpark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(994).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
-        users[10] = userRepository.save(User.builder().intraId("kipark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1008).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
+        users[10] = userRepository.save(User.builder().intraId("kipark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(100).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
 
         tokens = new Token[11];
         for (Integer i = 0; i < 11; i++) {

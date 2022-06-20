@@ -1,7 +1,6 @@
 package io.pp.arcade.domain.noti;
 
 import io.pp.arcade.domain.game.GameRepository;
-import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.noti.dto.*;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
@@ -23,8 +22,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class NotiServiceTest {
@@ -79,7 +76,7 @@ class NotiServiceTest {
                 .tableId(1)
                 .team1(team1)
                 .team2(team2)
-                .type(GameType.DOUBLE)
+                .type(GameType.BUNGLE)
                 .time(LocalDateTime.now())
                 .headCount(4)
                 .build());

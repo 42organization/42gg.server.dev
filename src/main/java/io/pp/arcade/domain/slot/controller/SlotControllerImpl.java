@@ -5,6 +5,7 @@ import io.pp.arcade.domain.currentmatch.dto.CurrentMatchAddDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchModifyDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchRemoveDto;
+import io.pp.arcade.domain.season.SeasonService;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.*;
@@ -37,6 +38,7 @@ public class SlotControllerImpl implements SlotController {
     private final TeamService teamService;
     private final CurrentMatchService currentMatchService;
     private final NotiGenerater notiGenerater;
+    private final SeasonService seasonService;
     private final TokenService tokenService;
 
     @Override
@@ -162,6 +164,7 @@ public class SlotControllerImpl implements SlotController {
         TeamDto team1 = slot.getTeam1();
         TeamDto team2 = slot.getTeam2();
         Integer headCount = slot.getHeadCount();
+        Integer pppGap = seasonService.findCurrentSeason().getPppGap();
         Integer maxTeamHeadCount = GameType.SINGLE.equals(slotType) ? 1 : 2;
 
         SlotFilterDto slotFilterDto = SlotFilterDto.builder()
@@ -171,9 +174,10 @@ public class SlotControllerImpl implements SlotController {
                 .gameType(gameType)
                 .userPpp(user.getPpp())
                 .gamePpp(slot.getGamePpp())
+                .pppGap(pppGap)
                 .headCount(slot.getHeadCount())
                 .build();
-        if (slotService.getStatus(slotFilterDto).equals(SlotStatusType.OPEN)) {
+        if (SlotStatusType.OPEN.equals(slotService.getStatus(slotFilterDto))) {
             if (team1.getHeadCount() < maxTeamHeadCount) {
                 teamId = team1.getId();
             } else {

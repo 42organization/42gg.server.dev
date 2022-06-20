@@ -180,7 +180,7 @@ class SlotServiceTest {
 //            slotService.addSlot(dto);
 //        }
         List<Slot> slots =  slotRepository.findAll();
-        slots.get(0).setType(GameType.DOUBLE);
+        slots.get(0).setType(GameType.BUNGLE);
         slots.get(0).setHeadCount(3);
         slots.get(1).setType(GameType.SINGLE);
         slots.get(1).setHeadCount(2);
