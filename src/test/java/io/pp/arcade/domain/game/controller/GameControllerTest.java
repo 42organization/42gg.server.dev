@@ -3,6 +3,8 @@ package io.pp.arcade.domain.game.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.TestInitiator;
+import io.pp.arcade.domain.currentmatch.CurrentMatch;
+import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.pchange.PChangeRepository;
@@ -52,22 +54,16 @@ class GameControllerTest {
     @Autowired
     private GameRepository gameRepository;
     @Autowired
-    private TeamRepository teamRepository;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private SlotRepository slotRepository;
-    @Autowired
-    private PChangeRepository pChangeRepository;
+    private CurrentMatchRepository currentMatchRepository;
     @Autowired
     TestInitiator initiator;
 
-    User user;
     User user1;
     User user2;
     User user3;
     User user4;
     User user5;
+    User user6;
 
     Slot slot;
     Team team1;
@@ -80,6 +76,8 @@ class GameControllerTest {
         user2 = initiator.users[1];
         user3 = initiator.users[2];
         user4 = initiator.users[3];
+        user5 = initiator.users[4];
+        user6 = initiator.users[5];
 
         slot = initiator.slots[0];
         team1 = slot.getTeam1();
@@ -94,6 +92,17 @@ class GameControllerTest {
             team.setUser2(user);
         team.setTeamPpp(user.getPpp());
         team.setHeadCount(1);
+    }
+
+    @Transactional
+    void addCurrentMatch(Game game, User user) {
+        currentMatchRepository.save(CurrentMatch.builder()
+                .matchImminent(true)
+                .isMatched(true)
+                .game(game)
+                .slot(game.getSlot())
+                .user(user)
+                .build());
     }
 
     @Transactional
@@ -116,12 +125,15 @@ class GameControllerTest {
     void gameUserInfo() throws Exception {
         Team team1 = slot.getTeam1();
         Team team2 = slot.getTeam2();
-        addUserInTeam(team1, user, true);
-        addUserInTeam(team2, user1, true);
+        addUserInTeam(team1, user1, true);
+        addUserInTeam(team2, user2, true);
         Game game = saveGame(slot, team1, team2);
+        addCurrentMatch(game, user1);
+        addCurrentMatch(game, user2);
 
-        mockMvc.perform(get("/pingpong/games/"+ game.getId().toString() +"/result").contentType(MediaType.APPLICATION_JSON)
-                .param("userId", user.getId().toString()))
+
+        mockMvc.perform(get("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(document("game-user-info"));
     }
@@ -132,20 +144,22 @@ class GameControllerTest {
         //given
         Team team1 = slot.getTeam1();
         Team team2 = slot.getTeam2();
-        addUserInTeam(team1, user, true); //donghyuk
+        addUserInTeam(team1, user1, true); //donghyuk
         addUserInTeam(team2, user4, true); // nheo
         Game game = saveGame(slot, team1, team2);
+        addCurrentMatch(game, user1);
+        addCurrentMatch(game, user4);
 
         //when
         Map<String, String> body = new HashMap<>();
         body.put("myTeamScore", "2");
         body.put("enemyTeamScore", "1");
 
+
         //then
-        mockMvc.perform(post("/pingpong/games/"+ game.getId().toString() +"/result").contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body)) // { "myTeamScore" : "2", ..}
-                .param("userId", user.getId().toString()))
-                // ?userId=userId(donghyuk's userId) 어느 팀에 속한 유저인지 혹은 결과 입력이 필요한 유저가 맞는지 알기 위해서
+        mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body)) // { "myTeamScore" : "2", ..}
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(document("save-game-result-single"));
 
@@ -155,20 +169,24 @@ class GameControllerTest {
         team2 = slot.getTeam2();
         addUserInTeam(team1, user2, true);
         addUserInTeam(team1, user3, false);
-        addUserInTeam(team2, user4, true);
-        addUserInTeam(team2, user5, false);
+        addUserInTeam(team2, user5, true);
+        addUserInTeam(team2, user6, false);
         Game game2 = saveGame(slot, team1, team2);
-        
+        addCurrentMatch(game2, user2);
+        addCurrentMatch(game2, user3);
+
+        addCurrentMatch(game2, user5);
+        addCurrentMatch(game2, user6);
+
         //when2
         body = new HashMap<>();
         body.put("myTeamScore", "1");
         body.put("enemyTeamScore", "2");
 
         //then2
-        mockMvc.perform(post("/pingpong/games/"+ game2.getId().toString() +"/result").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body)) // { "myTeamScore" : "2", ..}
-                        .param("userId", user3.getId().toString()))
-                // ?userId=userId(donghyuk's userId) 어느 팀에 속한 유저인지 혹은 결과 입력이 필요한 유저가 맞는지 알기 위해서
+                        .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(document("save-game-result-double"));
         MultiValueMap<String, String> params;
@@ -190,9 +208,9 @@ class GameControllerTest {
         body.put("enemyTeamScore", "1");
 
         //then2
-        mockMvc.perform(post("/pingpong/games/"+ game.getId().toString() +"/result").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body)) // { "myTeamScore" : "2", ..}
-                        .param("userId", user4.getId().toString()))
+                        .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
                 // ?userId=userId(donghyuk's userId) 어느 팀에 속한 유저인지 혹은 결과 입력이 필요한 유저가 맞는지 알기 위해서
                 .andExpect(status().isAccepted())
                 .andDo(document("save-game-result-after-duplicated-request"));
