@@ -1,5 +1,5 @@
 package io.pp.arcade.global.type;
 
 public enum RacketType {
-    PENHOLDER, SHAKEHAND, DUAL;
+    PENHOLDER, SHAKEHAND, DUAL, NONE;
 }
