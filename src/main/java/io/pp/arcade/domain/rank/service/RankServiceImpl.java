@@ -15,7 +15,6 @@ import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.GameType;
 import lombok.AllArgsConstructor;
-import org.apache.tomcat.jni.Local;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.ListOperations;
@@ -35,16 +34,19 @@ import java.util.stream.Collectors;
 public class RankServiceImpl implements RankNTService {
     private final UserRepository userRepository;
     private final RankRepository rankRepository;
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, String> redisRank;
+    private final RedisTemplate<String, RankRedis> redisUserInfo;
     private final SeasonRepository seasonRepository;
 
     @Transactional
     public RankFindListDto findRankList(Pageable pageable, Integer count, GameType type) {
         int currentPage = pageable.getPageNumber();
-        int totalPage = redisTemplate.opsForZSet().size(type.getKey()).intValue() / count;
+        int totalPage = redisRank.opsForZSet().size(type.getKey()).intValue() / count;
         int start = currentPage * count;
         int end = start + count;
-        Set<String> reverseRange = redisTemplate.opsForZSet().reverseRange(type.getKey(), start, end);
+
+        Set<String> reverseRange = redisRank.opsForZSet().reverseRange(getRankKey(type), start, end);
+
         List<RankUserDto> rankList = getUserRankList(reverseRange, type);
         RankFindListDto findListDto = RankFindListDto.builder()
                 .currentPage(currentPage > totalPage ? totalPage : currentPage) // 최대값은 totalPage
@@ -57,9 +59,9 @@ public class RankServiceImpl implements RankNTService {
     @Transactional
     public RankUserDto findRankById(RankFindDto findDto) {
         String userKey = getUserKey(findDto.getIntraId(), findDto.getGameType());
-        String rankKey = getRankKey(findDto.getIntraId(), findDto.getGameType());
-        RankRedis userRankInfo = (RankRedis) redisTemplate.opsForValue().get(userKey);
-        Long userRanking = redisTemplate.opsForZSet().reverseRank(findDto.getGameType().getKey(), rankKey);
+        String rankKey = getUserRankKey(findDto.getIntraId(), findDto.getGameType());
+        RankRedis userRankInfo = redisUserInfo.opsForValue().get(userKey);
+        Long userRanking = redisRank.opsForZSet().reverseRank(findDto.getGameType().getKey(), rankKey);
 
         if (userRanking == null) {
             throw new BusinessException("{server.internal.error}");
@@ -70,7 +72,7 @@ public class RankServiceImpl implements RankNTService {
                 .ppp(userRankInfo.getPpp())
                 .wins(userRankInfo.getWins()).losses(userRankInfo.getLosses())
                 .winRate(userRankInfo.getWinRate())
-                .rank(userRanking.intValue())
+                .rank(getRanking(userRankInfo, findDto.getGameType()))
                 .statusMessage(userRankInfo.getStatusMessage())
                 .build();
         return infoDto;
@@ -79,19 +81,19 @@ public class RankServiceImpl implements RankNTService {
     @Transactional
     public void modifyUserPpp(RankModifyDto modifyDto) {
         String userKey = getUserKey(modifyDto.getIntraId(), modifyDto.getGameType());
-        String rankKey = getRankKey(modifyDto.getIntraId(), modifyDto.getGameType());
-        RankRedis rank = (RankRedis) redisTemplate.opsForValue().get(userKey);
+        String rankKey = getUserRankKey(modifyDto.getIntraId(), modifyDto.getGameType());
+        RankRedis rank = redisUserInfo.opsForValue().get(userKey);
         rank.update(modifyDto.getIsWin(), modifyDto.getPpp());
-        redisTemplate.opsForValue().set(userKey, rank);
-        redisTemplate.opsForZSet().add(modifyDto.getGameType().getKey(), rankKey, modifyDto.getPpp());
+        redisUserInfo.opsForValue().set(userKey, rank);
+        redisRank.opsForZSet().add(modifyDto.getGameType().getKey(), rankKey, modifyDto.getPpp());
     }
 
     @Transactional
     public void modifyRankStatusMessage(RankModifyStatusMessageDto modifyDto) {
         String userKey = getUserKey(modifyDto.getIntraId(), modifyDto.getGameType());
-        RankRedis rank = (RankRedis) redisTemplate.opsForValue().get(userKey);
+        RankRedis rank = redisUserInfo.opsForValue().get(userKey);
         rank.setStatusMessage(modifyDto.getStatusMessage());
-        redisTemplate.opsForValue().set(userKey, rank);
+        redisUserInfo.opsForValue().set(userKey, rank);
     }
 
     @Transactional
@@ -100,7 +102,7 @@ public class RankServiceImpl implements RankNTService {
         Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElseThrow(() -> new BusinessException("{server.internal.error}"));
         List<Rank> ranks = rankRepository.findAllBySeasonId(season.getId());
         if (ranks.isEmpty()) {
-            ListOperations listOperations = redisTemplate.opsForList();
+            ListOperations listOperations = redisRank.opsForList();
 
         }
 
@@ -114,30 +116,38 @@ public class RankServiceImpl implements RankNTService {
 
     @Transactional
     public Boolean isEmpty() {
-        return !redisTemplate.hasKey(Key.SINGLE);
+        return !redisRank.hasKey(Key.SINGLE);
     }
 
     @Transactional
     public void loadAllFromRDB() {
-        LocalDateTime now = LocalDateTime.now();
-        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElseThrow(() -> new BusinessException("{server.internal.error}"));
-        List<Rank> ranks = rankRepository.findAllBySeasonId(season.getId());
+        List<Rank> ranks = rankRepository.findAll();
         ranks.forEach(rank -> {
             rankToRedisRank(rank);
         });
+        /*
+        LocalDateTime now = LocalDateTime.now();
+        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElse(null);
+        if (season != null) {
+            List<Rank> ranks = rankRepository.findAllBySeasonId(season.getId());
+            ranks.forEach(rank -> {
+                rankToRedisRank(rank);
+            });
+        }
+        */
     }
 
     @Transactional
     public void userToRedisRank(User user) {
         String intraId = user.getIntraId();
-        if (redisTemplate.opsForValue().get(intraId + Key.SINGLE) == null) {
+        if (redisUserInfo.opsForValue().get(getUserKey(intraId, GameType.valueOf(Key.SINGLE))) == null) {
             RankRedis singleRank = RankRedis.from(user, Key.SINGLE);
             RankRedis doubleRank = RankRedis.from(user, Key.DOUBLE);
-            redisTemplate.opsForValue().set(getUserKey(intraId, GameType.valueOf(Key.SINGLE)), singleRank);
-            redisTemplate.opsForValue().set(getUserKey(intraId, GameType.valueOf(Key.DOUBLE)), doubleRank);
+            redisUserInfo.opsForValue().set(getUserKey(intraId, GameType.valueOf(Key.SINGLE)), singleRank);
+            redisUserInfo.opsForValue().set(getUserKey(intraId, GameType.valueOf(Key.DOUBLE)), doubleRank);
         }
-        redisTemplate.opsForZSet().add(Key.SINGLE, getRankKey(intraId, GameType.valueOf(Key.SINGLE)), user.getPpp());
-        redisTemplate.opsForZSet().add(Key.DOUBLE, getRankKey(intraId, GameType.valueOf(Key.DOUBLE)), user.getPpp());
+        redisRank.opsForZSet().add(Key.SINGLE, getUserRankKey(intraId, GameType.valueOf(Key.SINGLE)), user.getPpp());
+        redisRank.opsForZSet().add(Key.DOUBLE, getUserRankKey(intraId, GameType.valueOf(Key.DOUBLE)), user.getPpp());
     }
 
 
@@ -188,33 +198,42 @@ public class RankServiceImpl implements RankNTService {
     /* Private Method */
 
     private List<RankUserDto> getUserRankList(Set<String> range, GameType type) {
-        List<RankUserDto> rankList = new ArrayList<>();
-        range.forEach(intraId -> {
-            String userKey = getUserKey(intraId, type);
-            RankRedis userInfo = (RankRedis) redisTemplate.opsForValue().get(userKey);
-            Integer totalGames = userInfo.getLosses() + userInfo.getWins();
-            Integer rank = (totalGames == 0) ? -1 : redisTemplate.opsForZSet().reverseRank(type.getKey(), getRankKey(intraId, type)).intValue();
+        List<RankUserDto> rankList = new ArrayList<RankUserDto>();
+        range.forEach(key -> {
+            String userKey = getUserKey(key);
+            RankRedis userRankInfo = redisUserInfo.opsForValue().get(userKey);
             rankList.add(RankUserDto.builder()
-                    .intraId(userInfo.getIntraId())
-                    .ppp(userInfo.getPpp())
-                    .rank(rank + 1)
-                    .statusMessage(userInfo.getStatusMessage())
-                    .losses(userInfo.getLosses())
-                    .wins(userInfo.getWins())
-                    .winRate(userInfo.getWinRate())
+                    .intraId(userRankInfo.getIntraId())
+                    .ppp(userRankInfo.getPpp())
+                    .rank(getRanking(userRankInfo, type))
+                    .statusMessage(userRankInfo.getStatusMessage())
+                    .losses(userRankInfo.getLosses())
+                    .wins(userRankInfo.getWins())
+                    .winRate(userRankInfo.getWinRate())
                     .build());
         });
         return rankList;
     }
 
+    private String getUserKey(String key) { return Key.RANK_USER + key; }
+
     private String getUserKey(String intraId, GameType gameType) {
         return Key.RANK_USER + intraId + gameType.getKey();
     }
 
-    private String getRankKey(String intraId, GameType gameType) {
+    private String getUserRankKey(String intraId, GameType gameType) {
         return intraId + gameType.getKey();
     }
 
+    private String getRankKey(GameType gameType) {
+        return gameType.getKey();
+    }
+
+    private Integer getRanking(RankRedis userInfo ,GameType gameType){
+        Integer totalGames = userInfo.getLosses() + userInfo.getWins();
+        Integer ranking= (totalGames == 0) ? -1 : redisRank.opsForZSet().reverseRank(getRankKey(gameType), getUserRankKey(userInfo.getIntraId(), gameType)).intValue() + 1;
+        return ranking;
+    }
     private void rankToRedisRank(Rank rank) {
         User user = rank.getUser();
         userToRedisRank(user);

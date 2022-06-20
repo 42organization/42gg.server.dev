@@ -59,7 +59,7 @@ public class UserControllerImpl implements UserController {
      * 유저 프로필 정보 조회
      * */
     @Override
-    @GetMapping(value = "/users/{userId}/detail")
+    @GetMapping(value = "/users/{targetUserId}/detail")
     public UserDetailResponseDto userFindDetail(String targetUserId, HttpServletRequest request) {
         UserDto curUser = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         UserDto targetUser = userService.findByIntraId(UserFindDto.builder().intraId(targetUserId).build());
