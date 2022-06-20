@@ -6,6 +6,7 @@ import io.pp.arcade.domain.admin.dto.update.SlotUpdateDto;
 import io.pp.arcade.domain.admin.dto.update.SlotUpdateRequestDto;
 import io.pp.arcade.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
+import io.pp.arcade.domain.season.SeasonRepository;
 import io.pp.arcade.domain.slot.dto.*;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
@@ -31,6 +32,7 @@ public class SlotService {
     private final SlotRepository slotRepository;
     private final TeamRepository teamRepository;
     private final UserRepository userRepository;
+    private final SeasonRepository seasonRepository;
     private final CurrentMatchRepository currentMatchRepository;
 
     @Transactional
@@ -97,6 +99,7 @@ public class SlotService {
         List<Slot> slots = slotRepository.findAllByCreatedAtAfter(todayStartTime);
 
         User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Integer pppGap = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(LocalDateTime.now(), LocalDateTime.now()).orElseThrow(() -> new BusinessException("{invalid.request}")).getPppGap();
         CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
         Integer userSlotId = currentMatch == null ? null : currentMatch.getSlot().getId();
 
@@ -111,6 +114,7 @@ public class SlotService {
                     .userPpp(user.getPpp())
                     .gamePpp(slot.getGamePpp())
                     .headCount(slot.getHeadCount())
+                    .pppGap(pppGap)
                     .build();
             slotDtos.add(SlotStatusDto.builder()
                     .slotId(slot.getId())
@@ -147,7 +151,7 @@ public class SlotService {
         Integer gamePpp = dto.getGamePpp();
         Integer userPpp = dto.getUserPpp();
         Integer headCount = dto.getHeadCount();
-
+        Integer pppGap = dto.getPppGap();
         LocalDateTime currentTime = LocalDateTime.now();
         Integer maxCount = 2;
         if (slotType != null && slotType.equals(GameType.DOUBLE)) {
@@ -160,7 +164,8 @@ public class SlotService {
             status = SlotStatusType.MYTABLE;
         } else if (slotType != null && !gameType.equals(slotType)) {
             status = SlotStatusType.CLOSE;
-        } else if (gamePpp != null && Math.abs(userPpp - gamePpp) > 100) {
+        } else if (gamePpp != null && Math.abs(userPpp - gamePpp) > pppGap) {
+//        } else if (gamePpp != null && Math.abs(userPpp - gamePpp) > 100) {
             status = SlotStatusType.CLOSE;
         } else if (headCount.equals(maxCount)) {
             status = SlotStatusType.CLOSE;

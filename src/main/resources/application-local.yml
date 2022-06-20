@@ -13,7 +13,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         show_sql: false
@@ -25,12 +25,12 @@ spring:
     oauth2.client:
       registration:
         42:
-          client-id: "cd1431e55cd272b41ed09874172e04833b1918749ee6642acaef5b45f19c0b27"
-          client-secret: "16f1c09b9b394017e87c4aeb55829647b6e0d69d6bba96f024b15cbdb723d529"
+          client-id: "07036ff026b85153a047cf5188ce23a007d3e645b3293f71c4267f7c90917e04"
+          client-secret: "b98634d8305b9d6a4750427bc3d6ecc403a7394916facb4947b4d9377b506bc7"
 
 # cors 설정
 cors:
-  allowed-origins: 'http://localthos:8080'
+  allowed-origins: 'http://localhost:8080'
   allowed-methods: GET,POST,PUT,DELETE,OPTIONS,PATCH
   allowed-headers: '*'
   allowed-Credentials: false
