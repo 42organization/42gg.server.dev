@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum GameType {
-    SINGLE(Key.SINGLE), DOUBLE(Key.DOUBLE);
+    SINGLE(Key.SINGLE), BUNGLE(Key.DOUBLE);
 
     private final String key;
 }

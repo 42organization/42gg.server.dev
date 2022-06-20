@@ -37,6 +37,7 @@ public class SeasonServiceTest {
                 .startTime(time_start)
                 .endTime(time_end)
                 .startPpp(150)
+                .pppGap(150)
                 .build());
 
         season_present = seasonRepository.save(Season.builder()
@@ -44,6 +45,7 @@ public class SeasonServiceTest {
                 .startTime(time_start.minusMonths(2))
                 .endTime(time_end.minusMonths(2))
                 .startPpp(100)
+                .pppGap(150)
                 .build());
 
         season_past = seasonRepository.save(Season.builder()
@@ -51,6 +53,7 @@ public class SeasonServiceTest {
                 .startTime(time_start.minusMonths(4))
                 .endTime(time_end.minusMonths(4))
                 .startPpp(50)
+                .pppGap(150)
                 .build());
     }
 
