@@ -83,8 +83,8 @@ class RankControllerTest {
     @Test
     void rankList() throws Exception {
         for (User user : users.values()) {
-            RankRedis singleRank = RankRedis.from(user, GameType.SINGLE);
-            RankRedis doubleRank = RankRedis.from(user, GameType.DOUBLE);
+            RankRedis singleRank = RankRedis.from(user, GameType.SINGLE.getKey());
+            RankRedis doubleRank = RankRedis.from(user, GameType.DOUBLE.getKey());
             redisTemplate.opsForValue().set(user.getIntraId() + GameType.SINGLE.getKey(), singleRank);
             redisTemplate.opsForValue().set(user.getIntraId() + GameType.DOUBLE.getKey(), doubleRank);
             redisTemplate.opsForZSet().add(GameType.SINGLE.getKey(), user.getIntraId() + GameType.SINGLE, user.getPpp());
