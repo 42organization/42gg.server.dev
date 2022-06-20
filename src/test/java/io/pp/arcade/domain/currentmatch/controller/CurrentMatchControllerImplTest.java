@@ -1,6 +1,7 @@
 package io.pp.arcade.domain.currentmatch.controller;
 
 import io.pp.arcade.RestDocsConfiguration;
+import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
 import io.pp.arcade.domain.game.Game;
@@ -57,6 +58,9 @@ class CurrentMatchControllerImplTest {
     @Autowired
     private GameRepository gameRepository;
 
+    @Autowired
+    TestInitiator initiator;
+
     User user;
     User user1;
     User user2;
@@ -64,44 +68,19 @@ class CurrentMatchControllerImplTest {
     User user4;
     User user5;
     User user6;
-    List<User> users;
-    List<Slot> slotList;
+    Slot[] slotList;
 
     @BeforeEach
     void init() {
-        user = User.builder().intraId("donghyuk").statusMessage("").ppp(1000).build();
-        user1 = User.builder().intraId("nheo").statusMessage("").ppp(1000).build();
-        user2 = User.builder().intraId("jekim").statusMessage("").ppp(1000).build();
-        user3 = User.builder().intraId("jiyun").statusMessage("").ppp(1000).build();
-        user4 = User.builder().intraId("wochae").statusMessage("").ppp(1000).build();
-        user5 = User.builder().intraId("hakim").statusMessage("").ppp(1000).build();
-        user6 = User.builder().intraId("new").statusMessage("").ppp(1000).build();
-        users = new ArrayList<>();
-        users.add(user);
-        users.add(user1);
-        users.add(user2);
-        users.add(user3);
-        users.add(user4);
-        users.add(user5);
-        users.add(user6);
-        for (User u : users) {
-            userRepository.save(u);
-        }
-        LocalDateTime now = LocalDateTime.now().plusDays(1);
-        for (int i = 0; i < 18; i++) {
-            Team team1 = teamRepository.save(Team.builder().teamPpp(0).headCount(0).score(0).build());
-            Team team2 = teamRepository.save(Team.builder().teamPpp(0).headCount(0).score(0).build());
-            LocalDateTime time = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
-                    15 + i / 6, (i * 10) % 60, 0); // 3시부터 10분 간격으로 18개 슬롯 생성
-            slotRepository.save(Slot.builder()
-                    .team1(team1)
-                    .team2(team2)
-                    .tableId(1)
-                    .headCount(0)
-                    .time(time)
-                    .build());
-        }
-        slotList = slotRepository.findAll();
+        initiator.letsgo();
+        user = initiator.users[0];
+        user1 = initiator.users[1];
+        user2 = initiator.users[2];
+        user3 = initiator.users[3];
+        user4 = initiator.users[4];
+        user5 = initiator.users[5];
+        user6 = initiator.users[6];
+        slotList = initiator.slots;
     }
 
     @Transactional
@@ -148,7 +127,7 @@ class CurrentMatchControllerImplTest {
         // 해당 유저가 예약된 경기가 없을 경우
         // 유저 : user
         mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON)
-                        .param("userId", user.getId().toString()))
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(document("current-match-info-none"));
 
@@ -163,7 +142,7 @@ class CurrentMatchControllerImplTest {
         slot = saveSlot(slot);
         currentMatchSave(null, slot, user1, false, false);
         mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON)
-                        .param("userId", user1.getId().toString()))
+                        .header("Authorization", "Bearer " + initiator.tokens[1].getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(document("current-match-info-standby-not-Imminent"));
 
@@ -178,7 +157,7 @@ class CurrentMatchControllerImplTest {
         slot = saveSlot(slot);
         currentMatchSave(null, slot, user2, true, false);
         mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON)
-                        .param("userId", user2.getId().toString()))
+                        .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(document("current-match-info-standby-Imminent"));
 
@@ -194,7 +173,7 @@ class CurrentMatchControllerImplTest {
 
         currentMatchSave(null, slot, user3, true, true);
         mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON)
-                        .param("userId", user3.getId().toString()))
+                        .header("Authorization", "Bearer " + initiator.tokens[3].getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(document("current-match-info-matching-Imminent"));
 
@@ -211,7 +190,7 @@ class CurrentMatchControllerImplTest {
         game = saveGame(game);
         currentMatchSave(game, slot, user4, true, true);
         mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON)
-                        .param("userId", user4.getId().toString()))
+                        .header("Authorization", "Bearer " + initiator.tokens[4].getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(document("current-match-info-gaming"));
     }
