@@ -1,6 +1,6 @@
 package io.pp.arcade.domain.security.oauth.v2.config.security;
 
-import io.pp.arcade.domain.rank.RankService;
+import io.pp.arcade.domain.rank.service.RankServiceImpl;
 import io.pp.arcade.domain.security.oauth.v2.config.properties.AppProperties;
 import io.pp.arcade.domain.security.oauth.v2.config.properties.CorsProperties;
 import io.pp.arcade.domain.security.oauth.v2.exception.RestAuthenticationEntryPoint;
@@ -14,7 +14,6 @@ import io.pp.arcade.domain.security.oauth.v2.service.CustomOAuth2UserService;
 import io.pp.arcade.domain.security.oauth.v2.service.CustomUserDetailsService;
 import io.pp.arcade.domain.security.oauth.v2.token.AuthTokenProvider;
 import io.pp.arcade.domain.user.UserRepository;
-import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.global.util.ApplicationYmlRead;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -44,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final UserRepository userRepository;
     private final ApplicationYmlRead applicationYmlRead;
-    private final RankService rankService;
+    private final RankServiceImpl rankServiceImpl;
     /*
      * UserDetailsService 설정
      * */
@@ -128,7 +127,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public OAuthAuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
         return new OAuthAuthenticationSuccessHandler(
-                rankService,
+                rankServiceImpl,
                 tokenProvider,
                 userRepository,
                 appProperties,

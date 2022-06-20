@@ -1,7 +1,6 @@
 package io.pp.arcade.domain.security.oauth.v2.handler;
 
-import io.pp.arcade.domain.rank.RankService;
-import io.pp.arcade.domain.rank.dto.RankAddDto;
+import io.pp.arcade.domain.rank.service.RankServiceImpl;
 import io.pp.arcade.domain.security.jwt.Token;
 import io.pp.arcade.domain.security.oauth.v2.config.properties.AppProperties;
 import io.pp.arcade.domain.security.oauth.v2.domain.ProviderType;
@@ -39,7 +38,7 @@ import java.util.Optional;
 public class OAuthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
     private final String REFRESH_TOKEN = "refresh_token";
-    private final RankService rankService;
+    private final RankServiceImpl rankServiceImpl;
     private final AuthTokenProvider tokenProvider;
     private final UserRepository userRepository;
     private final AppProperties appProperties;
