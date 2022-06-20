@@ -9,6 +9,7 @@ import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.type.GameType;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
@@ -43,7 +45,6 @@ class RankControllerTest {
 
     @Autowired
     private RedisTemplate redisTemplate;
-
 
     @Autowired
     private RedisTemplate<String, RankRedis> redisRank;
@@ -83,21 +84,31 @@ class RankControllerTest {
         */
         //rankRepository.save(Rank.builder().user(user).ranking(0).losses(0).wins(0).ppp(0).racketType(RacketType.SHAKEHAND).seasonId(0).build());
     }
+    @AfterEach
+    void end(){
+        redisTemplate.unwatch();
+        redisRank.unwatch();
+    }
 
     @Test
+    @Transactional
     void rankList() throws Exception {
         /* 유저가 존재히지 않을 경우 */
+        /*
         mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
                         .param("page","1"))
                         .header("Authorization", "Bearer " + 0))
-                .andExpect(jsonPath("$[0].myRank").value(null))
-                .andExpect(jsonPath("$[0].currentPage").value(1))
-                .andExpect(jsonPath("$[0].totalPage").value(1))
-                .andExpect(jsonPath("$[0].rankList").isEmpty())
+                .andExpect(jsonPath("$.myRank").value(null))
+                .andExpect(jsonPath("$.currentPage").value(1))
+                .andExpect(jsonPath("$.totalPage").value(1))
+                .andExpect(jsonPath("$.rankList").isEmpty())
                 .andExpect(status().isOk());
+         */
 
         /* 유저가 존재할 경우 */
+
         User client = users[0];
+        /*
         for (User user : Arrays.stream(users).collect(Collectors.toList())) {
             RankRedis singleRank = RankRedis.from(user, GameType.SINGLE.getKey());
             RankRedis doubleRank = RankRedis.from(user, GameType.BUNGLE.getKey());
@@ -105,21 +116,22 @@ class RankControllerTest {
             redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.BUNGLE), doubleRank);
             redisTemplate.opsForZSet().add(getRankKey(GameType.SINGLE), getUserRankKey(user.getIntraId(), GameType.SINGLE), user.getPpp());
             redisTemplate.opsForZSet().add(getRankKey(GameType.BUNGLE), getUserRankKey(user.getIntraId(), GameType.BUNGLE), user.getPpp());
-        }
+        }*/
+
         GameType type = GameType.SINGLE;
         RankRedis userRankInfo = RankRedis.from(client, type.getKey());
         mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
                 .param("page","1"))
                 .header("Authorization", "Bearer " + 0))
-                .andExpect(jsonPath("$[0].myRank").value(getRanking(userRankInfo, type)))
-                .andExpect(jsonPath("$[0].currentPage").value(1))
-                .andExpect(jsonPath("$[0].totalPage").value(1))
-                .andExpect(jsonPath("$[0].rankList[0].intraId").value(userRankInfo.getIntraId()))
-                .andExpect(jsonPath("$[0].rankList[0].ppp").value(userRankInfo.getPpp()))
-                .andExpect(jsonPath("$[0].rankList[0].statusMessage").value(userRankInfo.getStatusMessage()))
-                .andExpect(jsonPath("$[0].rankList[0].losses").value(userRankInfo.getLosses()))
-                .andExpect(jsonPath("$[0].rankList[0].wins").value(userRankInfo.getWins()))
-                .andExpect(jsonPath("$[0].rankList[0].winRate").value(userRankInfo.getWinRate()))
+                .andExpect(jsonPath("$.myRank").value(getRanking(userRankInfo, type)))
+                .andExpect(jsonPath("$.currentPage").value(1))
+                .andExpect(jsonPath("$.totalPage").value(1))
+                .andExpect(jsonPath("$.rankList[0].intraId").value(userRankInfo.getIntraId()))
+                .andExpect(jsonPath("$.rankList[0].ppp").value(userRankInfo.getPpp()))
+                .andExpect(jsonPath("$.rankList[0].statusMessage").value(userRankInfo.getStatusMessage()))
+                .andExpect(jsonPath("$.rankList[0].losses").value(userRankInfo.getLosses()))
+                .andExpect(jsonPath("$.rankList[0].wins").value(userRankInfo.getWins()))
+                .andExpect(jsonPath("$.rankList[0].winRate").value(userRankInfo.getWinRate()))
                 .andExpect(status().isOk())
                 .andDo(document("ranking-List"));
     }

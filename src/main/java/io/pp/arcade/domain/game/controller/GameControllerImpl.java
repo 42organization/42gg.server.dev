@@ -83,8 +83,10 @@ public class GameControllerImpl implements GameController {
     public void gameResultSave(GameResultRequestDto requestDto, HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUserId(user.getId());
+
+        // if the result already exists, throw 202 error
         if (currentMatch == null) {
-            throw new BusinessException("{invalid.request}");
+            throw new ResponseStatusException(HttpStatus.ACCEPTED, "");
         }
         GameDto game = currentMatch.getGame();
         if (game == null) {
@@ -92,8 +94,6 @@ public class GameControllerImpl implements GameController {
         }
         TeamDto team1 = game.getTeam1();
         TeamDto team2 = game.getTeam2();
-        // if the result already exists, throw 202 error
-        checkIfResultExists(game);
         // figuring out team number for myteam and enemyteam
         List<TeamModifyGameResultDto> eachTeamModifyDto = getTeamModifyDto(team1, team2, requestDto, user);
         // modify team with game result
@@ -164,13 +164,6 @@ public class GameControllerImpl implements GameController {
 //                .totalPage(pChangePageDto.getTotalPage())
                 .build();
         return gameResultResponse;
-    }
-
-
-    // 이하 분리된 메서드
-    private void checkIfResultExists(GameDto game) {
-        if (StatusType.END.equals(game.getStatus()))
-            throw new ResponseStatusException(HttpStatus.ACCEPTED, "이미 입력해짜나~~");
     }
 
     private void endGameStatus(GameDto game) {
