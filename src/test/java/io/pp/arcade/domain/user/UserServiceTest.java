@@ -1,8 +1,10 @@
 package io.pp.arcade.domain.user;
 
+import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.user.dto.*;
 import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.RacketType;
+import io.pp.arcade.global.type.RoleType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,18 +16,15 @@ import javax.transaction.Transactional;
 @SpringBootTest
 class UserServiceTest {
     @Autowired
+    TestInitiator testInitiator;
+    @Autowired
     UserService userService;
     @Autowired
     UserRepository userRepository;
 
     @BeforeEach
     void init() {
-        userRepository.save(User.builder()
-                .intraId("jiyun")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
+        testInitiator.letsgo();
     }
 
     @Test

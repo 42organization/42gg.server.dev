@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.team;
 
+import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.team.dto.*;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
@@ -25,6 +26,9 @@ class TeamServiceTest {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    TestInitiator testInitiator;
+
     User user1;
     User user2;
 
@@ -36,8 +40,9 @@ class TeamServiceTest {
 
     @BeforeEach
     void init() {
-        user1 = userRepository.save(User.builder().intraId("jiyun1").statusMessage("").ppp(42).build());
-        user2 = userRepository.save(User.builder().intraId("jiyun2").statusMessage("").ppp(3).build());
+        testInitiator.letsgo();
+        user1 = userRepository.findByIntraId("hakim").orElse(null);
+        user2 = userRepository.findByIntraId("daekim").orElse(null);
         team0 = teamRepository.save(Team.builder()
                 .teamPpp(0)
                 .headCount(0)
