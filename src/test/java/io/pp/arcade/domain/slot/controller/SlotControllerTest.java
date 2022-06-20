@@ -2,6 +2,9 @@ package io.pp.arcade.domain.slot.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pp.arcade.RestDocsConfiguration;
+import io.pp.arcade.TestInitiator;
+import io.pp.arcade.domain.currentmatch.CurrentMatch;
+import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.slot.dto.*;
@@ -45,15 +48,15 @@ class SlotControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
-    private TeamRepository teamRepository;
-    @Autowired
     private SlotRepository slotRepository;
-    @Autowired
-    private SlotGenerator slotGenerator;
     @Autowired
     private UserRepository userRepository;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private CurrentMatchRepository currentMatchRepository;
+    @Autowired
+    TestInitiator testInitiator;
 
     User user;
     User user1;
@@ -61,55 +64,28 @@ class SlotControllerTest {
     User user3;
     User user4;
     User user5;
-    List<User> users;
 
     List<Slot> slotList;
 
-//    @AfterEach
-//    void after() throws InterruptedException {
-//        Thread.sleep(10000);
-//    }
 
     @BeforeEach
     void init() {
-        user = User.builder().intraId("donghyuk").eMail("hakim@student.42seoul.kr").statusMessage("").ppp(1000).build();
-        user1 = User.builder().intraId("nheo").eMail("hakim@student.42seoul.kr").statusMessage("").ppp(1000).build();
-        user2 = User.builder().intraId("jekim").eMail("hakim@student.42seoul.kr").statusMessage("").ppp(1000).build();
-        user3 = User.builder().intraId("jiyun").eMail("hakim@student.42seoul.kr").statusMessage("").ppp(1000).build();
-        user4 = User.builder().intraId("wochae").eMail("hakim@student.42seoul.kr").statusMessage("").ppp(1000).build();
-        user5 = User.builder().intraId("hakim").eMail("hakim@student.42seoul.kr").statusMessage("").ppp(1000).build();
-        users = new ArrayList<>();
-        users.add(user);
-        users.add(user1);
-        users.add(user2);
-        users.add(user3);
-        users.add(user4);
-        users.add(user5);
-        for (User u : users) {
-            userRepository.save(u);
-        }
-        LocalDateTime now = LocalDateTime.now().plusDays(1);
-        for (int i = 0; i < 18; i++) {
-            Team team1 = teamRepository.save(Team.builder().teamPpp(0).headCount(0).score(0).build());
-            Team team2 = teamRepository.save(Team.builder().teamPpp(0).headCount(0).score(0).build());
-            LocalDateTime time = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
-                    15 + i / 6, (i * 10) % 60, 0); // 3시부터 10분 간격으로 18개 슬롯 생성
-            slotRepository.save(Slot.builder()
-                    .team1(team1)
-                    .team2(team2)
-                    .tableId(1)
-                    .headCount(0)
-                    .time(time)
-                    .build());
-        }
+        testInitiator.letsgo();
+        user = userRepository.findByIntraId("donghyuk").orElse(null);
+        user1 = userRepository.findByIntraId("nheo").orElse(null);
+        user2 = userRepository.findByIntraId("jekim").orElse(null);
+        user3 = userRepository.findByIntraId("jiyun").orElse(null);
+        user4 = userRepository.findByIntraId("wochae").orElse(null);
+        user5 = userRepository.findByIntraId("hakim").orElse(null);
         slotList = slotRepository.findAll();
     }
 
     @Transactional
-    void addUser(Slot slot, Integer headCount, GameType type, Integer gamePpp) {
+    void addUser(Slot slot, Integer headCount, GameType type, Integer gamePpp, User user) {
         slot.setHeadCount(headCount);
         slot.setType(type);
         slot.setGamePpp(gamePpp);
+        currentMatchRepository.save(CurrentMatch.builder().slot(slot).game(null).user(user).matchImminent(false).isMatched(false).build());
     }
 
     @Test
@@ -135,7 +111,7 @@ class SlotControllerTest {
 
         // [Close] 슬롯1 & 단식 - 유저 2명
         Slot slot = slotList.get(1);
-        addUser(slot, 2, GameType.SINGLE, 950);
+        addUser(slot, 2, GameType.SINGLE, 950, user);
 
         params = new LinkedMultiValueMap<>();
         params.add("type", GameType.SINGLE.toString());
@@ -148,7 +124,7 @@ class SlotControllerTest {
         // [Close] 슬롯 2 & 단식 - 유저(100p) -> 슬롯(900p) 접근
         slot = slotList.get(2);
 
-        addUser(slot, 1, GameType.SINGLE, 900);
+        addUser(slot, 1, GameType.SINGLE, 900, babyUser);
 
         params = new LinkedMultiValueMap<>();
         params.add("type", GameType.SINGLE.toString());
@@ -160,7 +136,7 @@ class SlotControllerTest {
 
         // [Close] 슬롯 3 & 복식 - 유저 4명
         slot = slotList.get(3);
-        addUser(slot, 4, GameType.DOUBLE, 750);
+        addUser(slot, 4, GameType.DOUBLE, 750, user);
 
         params = new LinkedMultiValueMap<>();
         params.add("type", GameType.DOUBLE.toString());
@@ -172,7 +148,7 @@ class SlotControllerTest {
 
         // [Close] 슬롯 4 & 복식 - 유저(100p) -> 슬롯(900p) 접근
         slot = slotList.get(2);
-        addUser(slot, 4, GameType.DOUBLE, 900);
+        addUser(slot, 4, GameType.DOUBLE, 900, babyUser);
 
         params = new LinkedMultiValueMap<>();
         params.add("type", GameType.SINGLE.toString());
@@ -254,21 +230,15 @@ class SlotControllerTest {
     void slotRemoveUser() throws Exception {
         // 슬롯에 유저 두 명 추가했다가, 한 명 제거하기
         Slot slot = slotList.get(3);
-        addUser(slot, 2, GameType.SINGLE, 1000);
+        addUser(slot, 2, GameType.SINGLE, 1000, user);
         Team team1 = slot.getTeam1();
         addUserInTeam(team1, user);
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("slotId", slot.getId().toString());
-        params.add("pUserId", user.getId().toString());
-        mockMvc.perform(delete("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
-                        .params(params))
+        mockMvc.perform(delete("/pingpong/match").contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer 2"))
                 .andExpect(status().isOk());
 
-        MultiValueMap<String, String> newParams = new LinkedMultiValueMap<>();
-        newParams.add("type", GameType.SINGLE.toString());
-        newParams.add("userId", user.getId().toString());
-        mockMvc.perform(get("/pingpong/match/tables/1").contentType(MediaType.APPLICATION_JSON)
-                        .params(newParams))
+        mockMvc.perform(get("/pingpong/match/tables/1/" + slot.getType().toString()).contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer 2"))
                 .andExpect(status().isOk())
                 .andDo(document("remove-user-in-slot"));
     }
