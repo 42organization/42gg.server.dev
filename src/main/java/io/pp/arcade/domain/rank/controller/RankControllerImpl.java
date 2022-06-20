@@ -26,16 +26,19 @@ public class RankControllerImpl implements RankController {
     @GetMapping(value = "/ranks/{gameType}")
     public RankListResponseDto rankList(Pageable pageable, Integer count, GameType gameType, HttpServletRequest request) {
         // 아무런 값이 없을 떄 테스트 해보기
+        UserDto user = null;
+        RankUserDto userRank = null;
         RankFindListDto rankListDto = rankServiceImpl.findRankList(pageable, count, gameType);
-        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        RankUserDto userRank = rankServiceImpl.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(gameType).build());
-
+        if (rankListDto.getRankList().size() > 0 ) {
+            user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+            userRank = rankServiceImpl.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(gameType).build());
+        }
         RankListResponseDto rankListResponseDto = RankListResponseDto.builder()
-                .myRank(userRank.getRank())
-                .currentPage(rankListDto.getCurrentPage())
-                .totalPage(rankListDto.getTotalPage())
-                .rankList(rankListDto.getRankList())
-                .build();
+                    .myRank((userRank != null) ? userRank.getRank() : null)
+                    .currentPage(rankListDto.getCurrentPage())
+                    .totalPage(rankListDto.getTotalPage())
+                    .rankList(rankListDto.getRankList())
+                    .build();
         return rankListResponseDto;
     }
 
