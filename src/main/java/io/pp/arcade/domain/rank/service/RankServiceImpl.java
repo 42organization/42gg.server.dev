@@ -40,7 +40,7 @@ public class RankServiceImpl implements RankNTService {
 
     @Transactional
     public RankFindListDto findRankList(Pageable pageable, Integer count, GameType type) {
-        int currentPage = pageable.getPageNumber();
+        int currentPage = (pageable.getPageNumber() == 0) ? 0 : (pageable.getPageNumber() - 1);
         int totalPage = redisRank.opsForZSet().size(type.getKey()).intValue() / count;
         int start = currentPage * count;
         int end = start + count;

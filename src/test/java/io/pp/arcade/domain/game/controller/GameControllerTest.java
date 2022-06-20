@@ -2,21 +2,16 @@ package io.pp.arcade.domain.game.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pp.arcade.RestDocsConfiguration;
+import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
-import io.pp.arcade.domain.game.GameService;
-import io.pp.arcade.domain.game.dto.GameDto;
-import io.pp.arcade.domain.game.dto.GameResultRequestDto;
-import io.pp.arcade.domain.pchange.PChange;
 import io.pp.arcade.domain.pchange.PChangeRepository;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
-import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
-import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.StatusType;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,9 +21,7 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -64,9 +57,10 @@ class GameControllerTest {
     private UserRepository userRepository;
     @Autowired
     private SlotRepository slotRepository;
-
     @Autowired
     private PChangeRepository pChangeRepository;
+    @Autowired
+    TestInitiator initiator;
 
     User user;
     User user1;
@@ -74,41 +68,22 @@ class GameControllerTest {
     User user3;
     User user4;
     User user5;
-    List<User> users;
-    List<Slot> slotList;
+
+    Slot slot;
+    Team team1;
+    Team team2;
+
     @BeforeEach
     void init() {
-        user = User.builder().intraId("donghyuk").statusMessage("").ppp(1000).build();
-        user1 = User.builder().intraId("nheo").statusMessage("").ppp(1000).build();
-        user2 = User.builder().intraId("jekim").statusMessage("").ppp(1000).build();
-        user3 = User.builder().intraId("jiyun").statusMessage("").ppp(1000).build();
-        user4 = User.builder().intraId("wochae").statusMessage("").ppp(1000).build();
-        user5 = User.builder().intraId("hakim").statusMessage("").ppp(1000).build();
-        users = new ArrayList<>();
-        users.add(user);
-        users.add(user1);
-        users.add(user2);
-        users.add(user3);
-        users.add(user4);
-        users.add(user5);
-        for (User u : users) {
-            userRepository.save(u);
-        }
-        LocalDateTime now = LocalDateTime.now().plusDays(1);
-        for (int i = 0; i < 18; i++) {
-            Team team1 = teamRepository.save(Team.builder().teamPpp(0).headCount(0).score(0).build());
-            Team team2 = teamRepository.save(Team.builder().teamPpp(0).headCount(0).score(0).build());
-            LocalDateTime time = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
-                    15 + i / 6, (i * 10) % 60, 0); // 3시부터 10분 간격으로 18개 슬롯 생성
-            slotRepository.save(Slot.builder()
-                    .team1(team1)
-                    .team2(team2)
-                    .tableId(1)
-                    .headCount(0)
-                    .time(time)
-                    .build());
-        }
-        slotList = slotRepository.findAll();
+        initiator.letsgo();
+        user1 = initiator.users[0];
+        user2 = initiator.users[1];
+        user3 = initiator.users[2];
+        user4 = initiator.users[3];
+
+        slot = initiator.slots[0];
+        team1 = slot.getTeam1();
+        team2 = slot.getTeam2();
     }
 
     @Transactional
@@ -127,7 +102,7 @@ class GameControllerTest {
                 .slot(slot)
                 .team1(team1)
                 .team2(team2)
-                .type(GameType.DOUBLE)
+                .type(GameType.BUNGLE)
                 .time(slot.getTime())
                 .season(1)
                 .status(StatusType.LIVE)
@@ -139,7 +114,6 @@ class GameControllerTest {
     @Test
     @Transactional
     void gameUserInfo() throws Exception {
-        Slot slot = slotList.get(0);
         Team team1 = slot.getTeam1();
         Team team2 = slot.getTeam2();
         addUserInTeam(team1, user, true);
@@ -156,7 +130,6 @@ class GameControllerTest {
     @Transactional
     void saveGameResult() throws Exception {
         //given
-        Slot slot = slotList.get(0);
         Team team1 = slot.getTeam1();
         Team team2 = slot.getTeam2();
         addUserInTeam(team1, user, true); //donghyuk
@@ -177,7 +150,7 @@ class GameControllerTest {
                 .andDo(document("save-game-result-single"));
 
         //given2
-        slot = slotList.get(1);
+        slot = initiator.slots[1];
         team1 = slot.getTeam1();
         team2 = slot.getTeam2();
         addUserInTeam(team1, user2, true);

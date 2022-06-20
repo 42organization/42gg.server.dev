@@ -28,7 +28,6 @@ import javax.transaction.Transactional;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -93,7 +92,7 @@ class NotiControllerTest {
                 .tableId(1)
                 .team1(team1)
                 .team2(team2)
-                .type(GameType.DOUBLE)
+                .type(GameType.BUNGLE)
                 .time(LocalDateTime.now())
                 .headCount(4)
                 .build());

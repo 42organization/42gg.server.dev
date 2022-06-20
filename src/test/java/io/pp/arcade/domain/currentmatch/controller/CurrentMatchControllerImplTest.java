@@ -207,7 +207,7 @@ class CurrentMatchControllerImplTest {
         saveTeam(team2);
         slot = Slot.builder().tableId(1).team1(team1).team2(team2).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
         slot = saveSlot(slot);
-        Game game = Game.builder().team1(team1).team2(team2).type(GameType.DOUBLE).season(1).slot(slot).time(slot.getTime()).status(StatusType.LIVE).build();
+        Game game = Game.builder().team1(team1).team2(team2).type(GameType.BUNGLE).season(1).slot(slot).time(slot.getTime()).status(StatusType.LIVE).build();
         game = saveGame(game);
         currentMatchSave(game, slot, user4, true, true);
         mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON)

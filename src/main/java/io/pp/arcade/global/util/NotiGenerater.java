@@ -18,7 +18,7 @@ public class NotiGenerater {
     private final NotiService notiService;
 
     public void addMatchNotisBySlot(SlotDto slot) throws MessagingException {
-        Integer maxSlotHeadCount = GameType.SINGLE.toString().equals(slot.getType()) ? 2 : 4;
+        Integer maxSlotHeadCount = GameType.SINGLE.equals(slot.getType()) ? 2 : 4;
         Boolean isMatched = slot.getHeadCount().equals(maxSlotHeadCount) ? true : false;
         Boolean isImminent = isMatched && slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5)) ? true : false;
         if (isImminent == true) {

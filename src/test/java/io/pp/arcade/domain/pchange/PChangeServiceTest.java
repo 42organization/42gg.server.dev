@@ -68,7 +68,7 @@ class PChangeServiceTest {
                 .tableId(1)
                 .team1(team1)
                 .team2(team2)
-                .type(GameType.DOUBLE)
+                .type(GameType.BUNGLE)
                 .time(LocalDateTime.now())
                 .headCount(4)
                 .build());
