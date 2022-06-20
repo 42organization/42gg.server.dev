@@ -10,10 +10,14 @@ import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
+import io.pp.arcade.domain.rank.dto.RankFindDto;
+import io.pp.arcade.domain.rank.dto.RankUserDto;
+import io.pp.arcade.domain.rank.service.RankServiceImpl;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.*;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +37,8 @@ public class UserControllerImpl implements UserController {
     private final NotiService notiService;
     private final CurrentMatchService currentMatchService;
     private final TokenService tokenService;
+    private final RankServiceImpl rankService;
+
     /* *
      * [메인 페이지]
      * 유저 기본 정보 조회
@@ -55,20 +61,20 @@ public class UserControllerImpl implements UserController {
     @Override
     @GetMapping(value = "/users/{userId}/detail")
     public UserDetailResponseDto userFindDetail(String targetUserId, HttpServletRequest request) {
-        /* 상대 전적 비교 */
         UserDto curUser = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         UserDto targetUser = userService.findByIntraId(UserFindDto.builder().intraId(targetUserId).build());
-
+        // 일단 게임타입은 SINGLE로 구현
+        RankUserDto rankDto = rankService.findRankById(RankFindDto.builder().intraId(targetUserId).gameType(GameType.SINGLE).build());
         UserDetailResponseDto responseDto = UserDetailResponseDto.builder()
                 .userId(targetUser.getIntraId())
                 .userImageUri(targetUser.getImageUri())
                 .racketType(targetUser.getRacketType())
                 .ppp(targetUser.getPpp())
                 .statusMessage(targetUser.getStatusMessage())
-                .wins(1)        // 추
-                .losses(0)      // 후
-                .winRate(100.0) // 구
-                .rank(1)        // 현
+                .wins(rankDto.getWins())        // 추
+                .losses(rankDto.getLosses())      // 후
+                .winRate(rankDto.getWinRate()) // 구
+                .rank(rankDto.getRank())        // 현
                 .build();
         return responseDto;
     }

@@ -13,13 +13,14 @@ import org.springframework.data.redis.core.index.Indexed;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@RedisHash("user")
+
 @Getter
+@RedisHash("user")
 @NoArgsConstructor
 public class RankRedis implements Serializable {
 
     @Id
-    private String id;
+    private Integer id;
 
     @Indexed
     private String intraId;
@@ -42,7 +43,8 @@ public class RankRedis implements Serializable {
 
 
     @Builder
-    public RankRedis(String intraId, Integer ppp, RacketType racketType, GameType gameType, Integer wins, Integer losses, double winRate, String statusMessage) {
+    public RankRedis(Integer id, String intraId, Integer ppp, RacketType racketType, GameType gameType, Integer wins, Integer losses, double winRate, String statusMessage) {
+        this.id = id;
         this.intraId = intraId;
         this.ppp = ppp;
         this.racketType = racketType;
@@ -53,12 +55,13 @@ public class RankRedis implements Serializable {
         this.statusMessage = statusMessage;
     }
 
-    public static RankRedis from (User user, GameType gameType){
+    public static RankRedis from (User user, String gameType){
         return RankRedis.builder()
+                .id(user.getId())
                 .intraId(user.getIntraId())
                 .ppp(user.getPpp())
                 .statusMessage(user.getStatusMessage())
-                .gameType(gameType)
+                .gameType(GameType.valueOf(gameType))
                 .racketType(user.getRacketType())
                 .wins(0)
                 .losses(0)
@@ -73,6 +76,6 @@ public class RankRedis implements Serializable {
             this.losses++;
         }
         this.ppp = ppp;
-        this.winRate = wins / (double)(wins + losses);
+        this.winRate = (double)wins / (wins + losses);
     }
 }

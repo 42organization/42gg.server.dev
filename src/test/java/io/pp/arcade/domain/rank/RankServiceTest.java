@@ -1,9 +1,11 @@
 package io.pp.arcade.domain.rank;
 
 import io.pp.arcade.domain.rank.dto.*;
+import io.pp.arcade.domain.rank.service.RankServiceImpl;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.type.RacketType;
 import io.pp.arcade.global.type.RoleType;
 import org.assertj.core.api.Assertions;
@@ -28,7 +30,7 @@ class RankServiceTest {
     private UserRepository userRepository;
 
     @Autowired
-    private RankService rankService;
+    private RankServiceImpl rankServiceImpl;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -64,10 +66,10 @@ class RankServiceTest {
     @Transactional
     void findRankById() {
         // given
-        RankFindDto findUserDto =  RankFindDto.builder().intraId(user.getIntraId()).gameType(GameType.SINGLE).build();
+        RankFindDto findUserDto =  RankFindDto.builder().intraId(user.getIntraId()).gameType(GameType.valueOf(Key.SINGLE)).build();
 
         // when
-        RankUserDto RankUserRankingDto = rankService.findRankById(findUserDto);
+        RankUserDto RankUserRankingDto = rankServiceImpl.findRankById(findUserDto);
         // then
         Assertions.assertThat(RankUserRankingDto.getStatusMessage()).isEqualTo(findUserDto.getIntraId());
     }
@@ -76,14 +78,14 @@ class RankServiceTest {
     @Transactional
     void addRank() {
         RankAddDto addDto = RankAddDto.builder().userId(user.getId()).ppp(0).build();
-        RankModifyDto modifyPppDto = RankModifyDto.builder().isWin(true).intraId(user.getIntraId()).Ppp(100).gameType(GameType.SINGLE).build();
+        RankModifyDto modifyPppDto = RankModifyDto.builder().isWin(true).intraId(user.getIntraId()).Ppp(100).gameType(GameType.valueOf(Key.SINGLE)).build();
         // when
-        rankService.addRank(addDto);
-        rankService.modifyUserPpp(modifyPppDto);
-        modifyPppDto = RankModifyDto.builder().isWin(true).intraId(user.getIntraId()).Ppp(200).gameType(GameType.SINGLE).build();
-        rankService.modifyUserPpp(modifyPppDto);
-        rankService.modifyRankStatusMessage(RankModifyStatusMessageDto.builder().statusMessage("ㅎㅎ").gameType(GameType.SINGLE).intraId(user.getIntraId()).build());
-        //rankService.modifyRankStatusMessage(RankModifyStatusMessageDto.builder().intraId(user.getIntraId()).statusMessage("상태메시지 수정").gametype(GameType.SINGLE).build());
+        //rankServiceImpl.addRank(addDto);
+        rankServiceImpl.modifyUserPpp(modifyPppDto);
+        modifyPppDto = RankModifyDto.builder().isWin(true).intraId(user.getIntraId()).Ppp(200).gameType(GameType.valueOf(Key.SINGLE)).build();
+        rankServiceImpl.modifyUserPpp(modifyPppDto);
+        rankServiceImpl.modifyRankStatusMessage(RankModifyStatusMessageDto.builder().statusMessage("message").gameType(GameType.valueOf(Key.SINGLE)).intraId(user.getIntraId()).build());
+        //rankService.modifyRankStatusMessage(RankModifyStatusMessageDto.builder().intraId(user.getIntraId()).statusMessage("상태메시지 수정").gametype(RankKey.SINGLE).build());
         // then
     }
 
@@ -96,14 +98,14 @@ class RankServiceTest {
     @Transactional
     void findRank() {
         // given
-        RankRedis singleRank =  RankRedis.from(user, GameType.SINGLE);
-        RankRedis doubleRank =  RankRedis.from(user, GameType.DOUBLE);
+        RankRedis singleRank =  RankRedis.from(user, Key.SINGLE);
+        RankRedis doubleRank =  RankRedis.from(user, Key.DOUBLE);
 
-        redisTemplate.opsForValue().set(user.getIntraId() + GameType.SINGLE, singleRank);
-        redisTemplate.opsForValue().set(user.getIntraId() + GameType.DOUBLE, doubleRank);
-        redisTemplate.opsForZSet().add(GameType.SINGLE.getKey(), user.getIntraId() + GameType.SINGLE , user.getPpp());
-        redisTemplate.opsForZSet().add(GameType.DOUBLE.getKey(), user.getIntraId() + GameType.DOUBLE , user.getPpp());
-        RankFindDto rankFindDto = RankFindDto.builder().intraId(user.getIntraId()).gameType(GameType.SINGLE).build();
+        redisTemplate.opsForValue().set(user.getIntraId() + Key.SINGLE, singleRank);
+        redisTemplate.opsForValue().set(user.getIntraId() + Key.DOUBLE, doubleRank);
+        redisTemplate.opsForZSet().add(Key.SINGLE, user.getIntraId() + Key.SINGLE , user.getPpp());
+        redisTemplate.opsForZSet().add(Key.DOUBLE, user.getIntraId() + Key.DOUBLE , user.getPpp());
+        RankFindDto rankFindDto = RankFindDto.builder().intraId(user.getIntraId()).gameType(GameType.valueOf(Key.SINGLE)).build();
 
 
         // when
@@ -124,16 +126,16 @@ class RankServiceTest {
         // given
         /* page가 -값일 경우*/
         for (User user : users.values()) {
-            RankRedis singleRank = RankRedis.from(user, GameType.SINGLE);
-            RankRedis doubleRank = RankRedis.from(user, GameType.DOUBLE);
-            redisTemplate.opsForValue().set(user.getIntraId() + GameType.SINGLE, singleRank);
-            redisTemplate.opsForValue().set(user.getIntraId() + GameType.DOUBLE, doubleRank);
-            redisTemplate.opsForZSet().add(GameType.SINGLE.getKey(), user.getIntraId() + GameType.SINGLE, user.getPpp());
-            redisTemplate.opsForZSet().add(GameType.DOUBLE.getKey(), user.getIntraId() + GameType.DOUBLE, user.getPpp());
+            RankRedis singleRank = RankRedis.from(user, Key.SINGLE);
+            RankRedis doubleRank = RankRedis.from(user, Key.DOUBLE);
+            redisTemplate.opsForValue().set(user.getIntraId() + Key.SINGLE, singleRank);
+            redisTemplate.opsForValue().set(user.getIntraId() + Key.DOUBLE, doubleRank);
+            redisTemplate.opsForZSet().add(Key.SINGLE, user.getIntraId() + Key.SINGLE, user.getPpp());
+            redisTemplate.opsForZSet().add(Key.DOUBLE, user.getIntraId() + Key.DOUBLE, user.getPpp());
         }
         // when
         Pageable pageable = PageRequest.of(1,20);
-        RankFindListDto rankList = rankService.findRankList(pageable, GameType.SINGLE);
+        RankFindListDto rankList = rankServiceImpl.findRankList(pageable, 10, GameType.valueOf(Key.SINGLE) );
 
         // then
         Assertions.assertThat(rankList.getCurrentPage()).isEqualTo(0);

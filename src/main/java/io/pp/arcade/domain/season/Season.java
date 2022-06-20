@@ -32,11 +32,16 @@ public class Season {
     @Column(name = "start_ppp")
     private Integer startPpp;
 
+    @NotNull
+    @Column(name = "ppp_gap")
+    private Integer pppGap;
+
     @Builder
-    public Season(String seasonName, LocalDateTime startTime, LocalDateTime endTime, Integer startPpp) {
+    public Season(String seasonName, LocalDateTime startTime, LocalDateTime endTime, Integer startPpp, Integer pppGap) {
         this.seasonName = seasonName;
         this.startTime = startTime;
         this.endTime = endTime;
         this.startPpp = startPpp;
+        this.pppGap = pppGap;
     }
 }
