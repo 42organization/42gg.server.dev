@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.user.controller;
 
+import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
 import io.pp.arcade.domain.game.Game;
@@ -41,6 +42,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(RestDocsConfiguration.class)
 class UserControllerTest {
     @Autowired
+    TestInitiator testInitiator;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -77,76 +81,12 @@ class UserControllerTest {
 
     @BeforeEach
     void init() {
-        user = userRepository.save(User.builder().intraId("jiyun1").statusMessage("").ppp(42).build());
-        user2 = userRepository.save(User.builder().intraId("jiyun2").statusMessage("").ppp(24).build());
-        user3 = userRepository.save(User.builder().intraId("nheo1").statusMessage("").ppp(60).build());
-        user4 = userRepository.save(User.builder().intraId("nheo2").statusMessage("").ppp(30).build());
-        userRepository.save(User.builder()
-                .intraId("hakim")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-        userRepository.save(User.builder()
-                .intraId("nheo")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-        userRepository.save(User.builder()
-                .intraId("donghyuk")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-        userRepository.save(User.builder()
-                .intraId("wochae")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-        userRepository.save(User.builder()
-                .intraId("jekim")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-        userRepository.save(User.builder()
-                .intraId("jihyukim")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-        userRepository.save(User.builder()
-                .intraId("jabae")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-        userRepository.save(User.builder()
-                .intraId("kipark")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-        userRepository.save(User.builder()
-                .intraId("daekim")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-        userRepository.save(User.builder()
-                .intraId("sujpark")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-        userRepository.save(User.builder()
-                .intraId("Polarbear")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
+        testInitiator.letsgo();
+        user = userRepository.findByIntraId("hakim").orElse(null);
+        user2 = userRepository.findByIntraId("daekim").orElse(null);
+        user3 = userRepository.findByIntraId("donghyuk").orElse(null);
+        user4 = userRepository.findByIntraId("kipark").orElse(null);
+
         PChange pChange;
         Team team1 = teamRepository.save(Team.builder().teamPpp(0)
                 .user1(user).headCount(1).score(0).build());
@@ -190,16 +130,17 @@ class UserControllerTest {
     @Transactional
     void findUser() throws Exception {
         mockMvc.perform(get("/pingpong/users").contentType(MediaType.APPLICATION_JSON)
-                        .param("userId", user.getId().toString()))
+                        .param("userId", user.getId().toString())
+                            .header("Authorization", "Bearer 1"))
                 .andExpect(status().isOk())
                 .andDo(document("find-user"));
     }
 
     @Test
     @Transactional
-    void findDetailUser() throws Exception {
-        mockMvc.perform(get("/pingpong/users/" + user.getIntraId().toString() + "/detail").contentType(MediaType.APPLICATION_JSON)
-                        .param("currentUserId", user.getId().toString()))
+    void findDetailUser() throws Exception { // rank가 문제라서 안됐다!
+        mockMvc.perform(get("/pingpong/users/" + user.getIntraId() + "/detail").contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer 2"))
                 .andExpect(status().isOk())
                 .andDo(document("find-user-detail"));
     }
@@ -207,7 +148,8 @@ class UserControllerTest {
     @Test
     @Transactional
     void findUserHistorics() throws Exception {
-        mockMvc.perform(get("/pingpong/users/" + user.getIntraId().toString() + "/historics").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/pingpong/users/" + user.getIntraId().toString() + "/historics").contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer 1"))
                 .andExpect(status().isOk())
                 .andDo(document("find-user-historics"));
     }
@@ -216,7 +158,8 @@ class UserControllerTest {
     @Transactional
     void findByPartsOfIntraId() throws Exception {
         mockMvc.perform(get("/pingpong/users/searches").contentType(MediaType.APPLICATION_JSON)
-                        .param("userId", "k"))
+                        .param("q", "k")
+                .header("Authorization", "Bearer 1"))
                 .andExpect(status().isOk())
                 .andDo(document("search-user-with-partial-string"));
     }
@@ -224,16 +167,16 @@ class UserControllerTest {
     @Test
     @Transactional
     void userLiveInfo() throws Exception {
-        mockMvc.perform(get("/pingpong/users/" + "jinoh" + "/live").contentType(MediaType.APPLICATION_JSON)
-                        .param("userId", "1"))
+        mockMvc.perform(get("/pingpong/users/live").contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer 1"))
                 .andExpect(status().isOk())
                 .andDo(document("find-user-live1"));
-        mockMvc.perform(get("/pingpong/users/" + user3.getIntraId() + "/live").contentType(MediaType.APPLICATION_JSON)
-                        .param("userId", "1"))
+        mockMvc.perform(get("/pingpong/users/live").contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer 1"))
                 .andExpect(status().isOk())
                 .andDo(document("find-user-live2"));
-        mockMvc.perform(get("/pingpong/users/" + user4.getIntraId() + "/live").contentType(MediaType.APPLICATION_JSON)
-                .param("userId", "1"))
+        mockMvc.perform(get("/pingpong/users/live").contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer 1"))
                 .andExpect(status().isOk())
                 .andDo(document("find-user-live3"));
     }
@@ -242,7 +185,8 @@ class UserControllerTest {
     @Transactional
     void modifyProfile() throws Exception {
         mockMvc.perform(put("/pingpong/users/" + user.getIntraId() + "/detail").contentType(MediaType.APPLICATION_JSON)
-                        .param("userId", user.getId().toString()))
+                        .param("userId", user.getId().toString())
+                .header("Authorization", "Bearer 0"))
                 .andExpect(status().isOk())
                 .andDo(document("modify-user-profile"));
     }
