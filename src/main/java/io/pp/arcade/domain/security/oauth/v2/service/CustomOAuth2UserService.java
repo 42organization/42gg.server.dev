@@ -7,6 +7,7 @@ import io.pp.arcade.domain.security.oauth.v2.info.OAuthUserInfo;
 import io.pp.arcade.domain.security.oauth.v2.info.OAuthUserInfoFactory;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.global.type.RacketType;
 import io.pp.arcade.global.type.RoleType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -64,6 +65,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .roleType(RoleType.USER)
                 .imageUri(userInfo.getImageUrl())
                 .statusMessage("")
+                .racketType(RacketType.NONE)
                 .ppp(1000)
                 .eMail(userInfo.getEmail())
                 .build();
