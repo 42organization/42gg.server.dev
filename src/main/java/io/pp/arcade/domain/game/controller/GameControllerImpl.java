@@ -11,7 +11,7 @@ import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
-import io.pp.arcade.domain.rank.RankService;
+import io.pp.arcade.domain.rank.service.RankServiceImpl;
 import io.pp.arcade.domain.rank.dto.RankFindDto;
 import io.pp.arcade.domain.rank.dto.RankModifyDto;
 import io.pp.arcade.domain.rank.dto.RankUserDto;
@@ -22,7 +22,6 @@ import io.pp.arcade.domain.team.dto.TeamModifyGameResultDto;
 import io.pp.arcade.domain.team.dto.TeamPosDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
-import io.pp.arcade.domain.user.dto.UserFindDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.GameType;
@@ -50,7 +49,7 @@ public class GameControllerImpl implements GameController {
     private final UserService userService;
     private final PChangeService pChangeService;
     private final CurrentMatchService currentMatchService;
-    private final RankService rankService;
+    private final RankServiceImpl rankServiceImpl;
     private final TokenService tokenService;
 
     @Override
@@ -245,7 +244,7 @@ public class GameControllerImpl implements GameController {
                 .intraId(user.getIntraId())
                 .isWin(!enemyTeam.getWin())
                 .build();
-        rankService.modifyUserPpp(rankModifyDto);
+        rankServiceImpl.modifyUserPpp(rankModifyDto);
     }
     private void removCurrentMatch(GameDto game) {
     CurrentMatchFindDto findDto = CurrentMatchFindDto.builder()
@@ -330,7 +329,7 @@ public class GameControllerImpl implements GameController {
                 PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().gameId(game.getId()).userId(user.getIntraId()).build());
                 pppChange = pChangeDto.getPppChange();
             }
-            RankUserDto userRankDto = rankService.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(game.getType()).build());
+            RankUserDto userRankDto = rankServiceImpl.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(game.getType()).build());
             GamePlayerDto gamePlayerDto = GamePlayerDto.builder()
                     .userId(user.getIntraId())
                     .userImageUri(user.getImageUri())

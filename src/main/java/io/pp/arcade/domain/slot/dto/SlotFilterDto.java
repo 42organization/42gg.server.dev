@@ -18,4 +18,5 @@ public class SlotFilterDto {
     private Integer userPpp;
     private Integer gamePpp;
     private Integer headCount;
+    private Integer pppGap;
 }
