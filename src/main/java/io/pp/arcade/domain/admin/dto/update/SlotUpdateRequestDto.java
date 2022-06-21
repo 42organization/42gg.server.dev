@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 public class SlotUpdateRequestDto {
     private Integer slotId;
     private Integer gamePpp;

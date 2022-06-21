@@ -31,7 +31,7 @@ public class PChangeAdminControllerImpl implements PChangeAdminController {
     }
 
     @Override
-    @DeleteMapping(value = "/pChange/{id}")
+    @DeleteMapping(value = "/pChange/{pChangeId}")
     public void pChangeDelete(Integer pChangeId, HttpServletRequest request) {
         PChangeDeleteDto deleteDto = PChangeDeleteDto.builder().pChangeId(pChangeId).build();
         pChangeService.deletePChangeByAdmin(deleteDto);

@@ -3,6 +3,7 @@ package io.pp.arcade.domain.admin.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pp.arcade.RestDocsConfiguration;
+import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.pchange.PChangeRepository;
 import io.pp.arcade.domain.slot.SlotRepository;
@@ -37,6 +38,8 @@ public class UserAdminControllerTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    TestInitiator testInitiator;
 
     @Autowired
     private UserRepository userRepository;
@@ -56,30 +59,11 @@ public class UserAdminControllerTest {
 
     @BeforeEach
     void init() {
-        user1 = userRepository.save(User.builder()
-                .intraId("hakim")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-        user2 = userRepository.save(User.builder()
-                .intraId("nheo")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-        user3 = userRepository.save(User.builder()
-                .intraId("donghyuk")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-        user4 = userRepository.save(User.builder()
-                .intraId("wochae")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
+        testInitiator.letsgo();
+        user1 = testInitiator.users[0];
+        user2 = testInitiator.users[1];
+        user3 = testInitiator.users[2];
+        user4 = testInitiator.users[3];
     }
 
     @Test
