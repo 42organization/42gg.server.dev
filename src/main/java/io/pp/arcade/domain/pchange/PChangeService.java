@@ -86,7 +86,7 @@ public class PChangeService {
     public void createPChangeByAdmin(PChangeCreateRequestDto createRequestDto) {
         PChange pChange = PChange.builder()
                 .game(gameRepository.findById(createRequestDto.getGameId()).orElseThrow(null))
-                .user(userRepository.findByIntraId(createRequestDto.getIntraId()).orElseThrow(null))
+                .user(userRepository.findById(createRequestDto.getUserId()).orElseThrow(null))
                 .pppChange(createRequestDto.getPppChange())
                 .pppResult(createRequestDto.getPppResult())
                 .build();
@@ -95,7 +95,7 @@ public class PChangeService {
 
     @Transactional
     public void updatePChangeByAdmin(PChangeUpdateRequestDto updateRequestDto) {
-        PChange pChange = pChangeRepository.findById(updateRequestDto.getPChangeId()).orElseThrow();
+        PChange pChange = pChangeRepository.findById(updateRequestDto.getPchangeId()).orElseThrow();
         pChange.setPppChange(updateRequestDto.getPppChange());
         pChange.setPppResult(updateRequestDto.getPppResult());
     }

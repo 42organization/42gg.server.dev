@@ -31,7 +31,7 @@ public class RankAdminControllerImpl implements RankAdminController {
     }
 
     @Override
-    @DeleteMapping(value = "/rank/{id}")
+    @DeleteMapping(value = "/rank/{rankId}")
     public void rankDelete(Integer rankId, HttpServletRequest request) {
         RankDeleteDto deleteDto = RankDeleteDto.builder().rankId(rankId).build();
         rankServiceImpl.deleteRankByAdmin(deleteDto);

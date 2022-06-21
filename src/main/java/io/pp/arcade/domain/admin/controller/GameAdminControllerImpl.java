@@ -29,6 +29,10 @@ public class GameAdminControllerImpl implements GameAdminController {
         SlotDto slotDto = slotService.findSlotById(createRequestDto.getSlotId());
         GameCreateDto createDto = GameCreateDto.builder()
                 .slotId(slotDto.getId())
+                .team1Id(slotDto.getTeam1().getId())
+                .team2Id(slotDto.getTeam2().getId())
+                .type(slotDto.getType())
+                .time(slotDto.getTime())
                 .seasonId(createRequestDto.getSeasonId())
                 .status(createRequestDto.getStatus())
                 .build();
@@ -52,7 +56,7 @@ public class GameAdminControllerImpl implements GameAdminController {
     }
 
     @Override
-    @DeleteMapping(value = "/game/{id}")
+    @DeleteMapping(value = "/game/{gameId}")
     public void gameDelete(Integer gameId, HttpServletRequest request) {
         GameDeleteDto deleteDto = GameDeleteDto.builder().gameId(gameId).build();
         gameService.deleteGameByAdmin(deleteDto);

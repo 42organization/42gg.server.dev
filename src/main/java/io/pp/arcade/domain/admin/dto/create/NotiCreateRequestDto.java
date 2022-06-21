@@ -5,7 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class NotiCreateRequestDto {
-    private Integer notiId;
     private Integer userId;
     private Integer slotId;
     private NotiType notiType;
