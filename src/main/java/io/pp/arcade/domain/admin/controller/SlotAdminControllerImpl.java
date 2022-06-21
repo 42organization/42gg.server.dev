@@ -38,10 +38,10 @@ public class SlotAdminControllerImpl implements SlotAdminController {
     }
 
     @Override
-    @DeleteMapping(value = "/slot/{id}")
+    @DeleteMapping(value = "/slot/{slotId}")
     public void slotDelete(Integer slotId, HttpServletRequest request) {
         SlotDeleteDto deleteDto = SlotDeleteDto.builder()
-                .id(slotId).build();
+                .slotId(slotId).build();
         slotService.deleteSlotByAdmin(deleteDto);
     }
 

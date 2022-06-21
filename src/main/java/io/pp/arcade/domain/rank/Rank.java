@@ -27,7 +27,6 @@ public class Rank extends BaseTimeEntity implements Serializable {
     private User user;
 
     @NotNull
-    @Setter
     @Column(name = "ppp")
     private Integer ppp;
 
@@ -57,6 +56,12 @@ public class Rank extends BaseTimeEntity implements Serializable {
         this.seasonId = seasonId;
         this.ranking = ranking;
         this.racketType = racketType;
+        this.wins = wins;
+        this.losses = losses;
+    }
+
+    public void update(Integer ppp, Integer wins, Integer losses) {
+        this.ppp = ppp;
         this.wins = wins;
         this.losses = losses;
     }
