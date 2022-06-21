@@ -122,7 +122,7 @@ class SlotControllerTest {
                 .andExpect(status().isOk())
                 .andDo(document("slot-status-list-5-after-enter-100p-in-900p"));
 
-        // [Close] 자신이 들어간 슬롯이 있는 경우
+        // [MyTable] 내가 들어간 슬롯
         slot = slots[5];
         addUser(slot, 1, GameType.BUNGLE, 100, babyUser);
 

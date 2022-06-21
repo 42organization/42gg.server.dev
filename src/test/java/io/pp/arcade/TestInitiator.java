@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -59,7 +60,7 @@ public class TestInitiator {
     public Token[] tokens;
     public Team[] teams;
     public Slot[] slots;
-
+    public RankRedis[] ranks;
     public void letsgo() {
         users = new User[11];
         users[0] = userRepository.save(User.builder().intraId("hakim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1040).roleType(RoleType.ADMIN).racketType(RacketType.SHAKEHAND).build());
@@ -79,9 +80,15 @@ public class TestInitiator {
             tokens[i] = tokenRepository.save(new Token(users[i], i.toString(), i.toString()));
         }
 
-        for (User user : Arrays.stream(users).collect(Collectors.toList())) {
+        ranks = new RankRedis[users.length * GameType.values().length];
+        List<User> userList = Arrays.stream(users).collect(Collectors.toList());
+        for (User user : userList) {
+            int idx = userList.indexOf(user);
             RankRedis singleRank = RankRedis.from(user, GameType.SINGLE.getKey());
             RankRedis doubleRank = RankRedis.from(user, GameType.BUNGLE.getKey());
+
+            ranks[idx] = singleRank;
+            ranks[users.length + idx] = doubleRank;
             redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.SINGLE), singleRank);
             redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.BUNGLE), doubleRank);
 
