@@ -24,7 +24,7 @@ public class SeasonAdminControllerImpl implements SeasonAdminController {
     }
 
     @Override
-    @DeleteMapping(value = "/season/{id}")
+    @DeleteMapping(value = "/season/{seasonId}")
     public void seasonDelete(Integer seasonId, HttpServletRequest request) {
         SeasonDeleteDto deleteDto = SeasonDeleteDto.builder()
                 .seasonId(seasonId).build();

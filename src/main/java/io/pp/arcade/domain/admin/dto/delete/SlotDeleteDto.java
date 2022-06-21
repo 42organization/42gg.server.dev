@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @Builder
 public class SlotDeleteDto {
-    private Integer id;
+    private Integer slotId;
 }

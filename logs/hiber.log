@@ -1,0 +1,4 @@
+[2022-06-20 15:28:25:13061][main] DEBUG org.hibernate.SQL - alter table current_match drop foreign key FKmaa4irkiicemkq2gl3t0bqn6a
+[2022-06-20 15:28:29:17217][main] DEBUG org.hibernate.SQL - alter table current_match drop foreign key FKmaa4irkiicemkq2gl3t0bqn6a
+[2022-06-20 15:28:32:20694][main] DEBUG org.hibernate.SQL - alter table current_match drop foreign key FKmaa4irkiicemkq2gl3t0bqn6a
+[2022-06-20 15:28:36:24517][main] DEBUG org.hibernate.SQL - alter table current_match drop foreign key FKmaa4irkiicemkq2gl3t0bqn6a
