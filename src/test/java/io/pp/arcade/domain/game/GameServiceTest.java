@@ -1,7 +1,10 @@
 package io.pp.arcade.domain.game;
 
+import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.game.dto.GameAddDto;
+import io.pp.arcade.domain.game.dto.GameFindDto;
 import io.pp.arcade.domain.game.dto.GameModifyStatusDto;
+import io.pp.arcade.domain.game.dto.GameResultPageDto;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.slot.dto.SlotDto;
@@ -17,10 +20,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import javax.transaction.Transactional;
 
-import java.time.LocalDateTime;
+import java.util.Collections;
 
 @SpringBootTest
 class GameServiceTest {
@@ -39,6 +44,9 @@ class GameServiceTest {
     @Autowired
     SlotRepository slotRepository;
 
+    @Autowired
+    TestInitiator initiator;
+
     Slot slot;
     Team team1;
     User user1;
@@ -49,38 +57,22 @@ class GameServiceTest {
 
     @BeforeEach
     void init() {
-        user1 = userRepository.save(User.builder().intraId("jiyun1").statusMessage("").ppp(42).build());
-        user2 = userRepository.save(User.builder().intraId("jiyun2").statusMessage("").ppp(24).build());
-        user3 = userRepository.save(User.builder().intraId("nheo1").statusMessage("").ppp(60).build());
-        user4 = userRepository.save(User.builder().intraId("nheo2").statusMessage("").ppp(30).build());
-        team1 = teamRepository.save(Team.builder()
-                .teamPpp(0)
-                .user1(user1)
-                .user2(user2)
-                .headCount(2)
-                .score(0)
-                .build());
-        team2 = teamRepository.save(Team.builder()
-                .teamPpp(0)
-                .user1(user3)
-                .user2(user4)
-                .headCount(2)
-                .score(0)
-                .build());
-        slot = slotRepository.save(Slot.builder()
-                .tableId(1)
-                .team1(team1)
-                .team2(team2)
-                .type(GameType.DOUBLE)
-                .time(LocalDateTime.now())
-                .headCount(4)
-                .build());
+        initiator.letsgo();
+        user1 = initiator.users[0];
+        user2 = initiator.users[1];
+        user3 = initiator.users[2];
+        user4 = initiator.users[3];
+
+        slot = initiator.slots[0];
+        team1 = slot.getTeam1();
+        team2 = slot.getTeam2();
     }
 
     @Test
     @Transactional
     void addGame() {
         //given
+        slot.setType(GameType.SINGLE);
         GameAddDto addDto = GameAddDto.builder()
                 .slotDto(SlotDto.from(slot))
                 .build();
@@ -97,6 +89,8 @@ class GameServiceTest {
     @Transactional
     void modifyGameStatus() {
         //given
+        slot.setType(GameType.SINGLE);
+
         Game game = gameRepository.save(Game.builder()
                 .team1(team1)
                 .team2(team2)
@@ -117,5 +111,45 @@ class GameServiceTest {
 
         //then
         Assertions.assertThat(game1.getStatus()).isEqualTo(StatusType.END);
+    }
+
+    @Test
+    @Transactional
+    void findGamesAfterId() {
+        slot.setType(GameType.SINGLE);
+
+        Game game = gameRepository.save(Game.builder()
+                .team1(team1)
+                .team2(team2)
+                .slot(slot)
+                .type(slot.getType())
+                .time(slot.getTime())
+                .status(StatusType.END)
+                .season(1) //season 추가
+                .build());
+
+        Game game2 = gameRepository.save(Game.builder()
+                .team1(team1)
+                .team2(team2)
+                .slot(slot)
+                .type(slot.getType())
+                .time(slot.getTime())
+                .status(StatusType.END)
+                .season(1) //season 추가
+                .build());
+
+        Pageable pageable = PageRequest.of(0, 100);
+
+        GameFindDto findDto = GameFindDto.builder()
+                .id(game2.getId())
+                .status(StatusType.END)
+                .pageable(pageable)
+                .build();
+
+        //when
+        GameResultPageDto pageDto = gameService.findGamesAfterId(findDto);
+
+        //then
+        Assertions.assertThat(pageDto.getGameList()).isNotEqualTo(Collections.EMPTY_LIST);
     }
 }

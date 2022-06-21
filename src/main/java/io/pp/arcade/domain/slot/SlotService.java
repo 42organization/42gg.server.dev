@@ -3,7 +3,6 @@ package io.pp.arcade.domain.slot;
 import io.pp.arcade.domain.admin.dto.create.SlotCreateRequestDto;
 import io.pp.arcade.domain.admin.dto.delete.SlotDeleteDto;
 import io.pp.arcade.domain.admin.dto.update.SlotUpdateDto;
-import io.pp.arcade.domain.admin.dto.update.SlotUpdateRequestDto;
 import io.pp.arcade.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
 import io.pp.arcade.domain.season.SeasonRepository;
@@ -154,7 +153,7 @@ public class SlotService {
         Integer pppGap = dto.getPppGap();
         LocalDateTime currentTime = LocalDateTime.now();
         Integer maxCount = 2;
-        if (slotType != null && slotType.equals(GameType.DOUBLE)) {
+        if (slotType != null && slotType.equals(GameType.BUNGLE)) {
             maxCount = 4;
         }
         SlotStatusType status = SlotStatusType.OPEN;

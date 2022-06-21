@@ -1,10 +1,10 @@
 package io.pp.arcade;
 
-import ch.qos.logback.core.joran.spi.NoAutoStart;
 import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
 import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.noti.NotiRepository;
 import io.pp.arcade.domain.pchange.PChangeRepository;
+import io.pp.arcade.domain.rank.RankRedis;
 import io.pp.arcade.domain.rank.RankRepository;
 import io.pp.arcade.domain.season.Season;
 import io.pp.arcade.domain.season.SeasonRepository;
@@ -16,14 +16,18 @@ import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.global.redis.Key;
+import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.RacketType;
 import io.pp.arcade.global.type.RoleType;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class TestInitiator {
@@ -47,15 +51,19 @@ public class TestInitiator {
     TeamRepository teamRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private RedisTemplate redisTemplate;
+    @Autowired
+    private RedisTemplate<String, RankRedis> redisRank;
 
     public User[] users;
     public Token[] tokens;
     public Team[] teams;
     public Slot[] slots;
-
+    public RankRedis[] ranks;
     public void letsgo() {
         users = new User[11];
-        users[0] = userRepository.save(User.builder().intraId("hakim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1004).roleType(RoleType.ADMIN).racketType(RacketType.SHAKEHAND).build());
+        users[0] = userRepository.save(User.builder().intraId("hakim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1040).roleType(RoleType.ADMIN).racketType(RacketType.SHAKEHAND).build());
         users[1] = userRepository.save(User.builder().intraId("nheo").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1030).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[2] = userRepository.save(User.builder().intraId("donghyuk").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1020).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[3] = userRepository.save(User.builder().intraId("jiyun").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1010).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
@@ -65,11 +73,27 @@ public class TestInitiator {
         users[7] = userRepository.save(User.builder().intraId("jihyukim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(992).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[8] = userRepository.save(User.builder().intraId("daekim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(996).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[9] = userRepository.save(User.builder().intraId("sujpark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(994).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
-        users[10] = userRepository.save(User.builder().intraId("kipark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1008).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
+        users[10] = userRepository.save(User.builder().intraId("kipark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(100).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
 
         tokens = new Token[11];
         for (Integer i = 0; i < 11; i++) {
             tokens[i] = tokenRepository.save(new Token(users[i], i.toString(), i.toString()));
+        }
+
+        ranks = new RankRedis[users.length * GameType.values().length];
+        List<User> userList = Arrays.stream(users).collect(Collectors.toList());
+        for (User user : userList) {
+            int idx = userList.indexOf(user);
+            RankRedis singleRank = RankRedis.from(user, GameType.SINGLE.getKey());
+            RankRedis doubleRank = RankRedis.from(user, GameType.BUNGLE.getKey());
+
+            ranks[idx] = singleRank;
+            ranks[users.length + idx] = doubleRank;
+            redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.SINGLE), singleRank);
+            redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.BUNGLE), doubleRank);
+
+            redisTemplate.opsForZSet().add(getRankKey(GameType.SINGLE), getUserRankKey(user.getIntraId(), GameType.SINGLE), user.getPpp());
+            redisTemplate.opsForZSet().add(getRankKey(GameType.BUNGLE), getUserRankKey(user.getIntraId(), GameType.BUNGLE), user.getPpp());
         }
 
         teams = new Team[8];
@@ -93,5 +117,26 @@ public class TestInitiator {
         }
 
         Season testSeason = seasonRepository.save(Season.builder().seasonName("Test").startTime(LocalDateTime.now().minusYears(1)).endTime(LocalDateTime.now().plusYears(1)).startPpp(1000).pppGap(150).build());
+    }
+
+    private String getUserKey(String key) { return Key.RANK_USER + key; }
+
+    private String getUserKey(String intraId, GameType gameType) {
+        return Key.RANK_USER + intraId + gameType.getKey();
+    }
+
+    private String getUserRankKey(String intraId, GameType gameType) {
+        return intraId + gameType.getKey();
+    }
+
+    private String getRankKey(GameType gameType) {
+        return gameType.getKey();
+    }
+
+
+    private Integer getRanking(RankRedis userInfo , GameType gameType){
+        Integer totalGames = userInfo.getLosses() + userInfo.getWins();
+        Integer ranking= (totalGames == 0) ? -1 : redisRank.opsForZSet().reverseRank(getRankKey(gameType), getUserRankKey(userInfo.getIntraId(), gameType)).intValue() + 1;
+        return ranking;
     }
 }

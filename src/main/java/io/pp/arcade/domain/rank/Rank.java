@@ -6,7 +6,6 @@ import io.pp.arcade.global.type.RacketType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -65,4 +64,5 @@ public class Rank extends BaseTimeEntity implements Serializable {
         this.wins = wins;
         this.losses = losses;
     }
+
 }

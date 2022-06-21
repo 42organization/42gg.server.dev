@@ -1,7 +1,7 @@
 package io.pp.arcade.domain.noti.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pp.arcade.RestDocsConfiguration;
+import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.noti.Noti;
 import io.pp.arcade.domain.noti.NotiRepository;
@@ -26,9 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
 
-import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -39,8 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Import(RestDocsConfiguration.class)
 class NotiControllerTest {
-    @Autowired
-    private ObjectMapper objectMapper;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
@@ -61,42 +57,25 @@ class NotiControllerTest {
     @Autowired
     SlotRepository slotRepository;
 
+    @Autowired
+    TestInitiator initiator;
+
     Slot slot;
-    Team team1;
     User user1;
     User user2;
-    Team team2;
     User user3;
     User user4;
+    Team team1;
+    Team team2;
 
     @BeforeEach
     void init() {
-        user1 = userRepository.save(User.builder().intraId("jiyun1").statusMessage("").ppp(42).build());
-        user2 = userRepository.save(User.builder().intraId("jiyun2").statusMessage("").ppp(24).build());
-        user3 = userRepository.save(User.builder().intraId("nheo1").statusMessage("").ppp(60).build());
-        user4 = userRepository.save(User.builder().intraId("nheo2").statusMessage("").ppp(30).build());
-        team1 = teamRepository.save(Team.builder()
-                .teamPpp(0)
-                .user1(user1)
-                .user2(user2)
-                .headCount(2)
-                .score(0)
-                .build());
-        team2 = teamRepository.save(Team.builder()
-                .teamPpp(0)
-                .user1(user3)
-                .user2(user4)
-                .headCount(2)
-                .score(0)
-                .build());
-        slot = slotRepository.save(Slot.builder()
-                .tableId(1)
-                .team1(team1)
-                .team2(team2)
-                .type(GameType.DOUBLE)
-                .time(LocalDateTime.now())
-                .headCount(4)
-                .build());
+        initiator.letsgo();
+        user1 = initiator.users[0];
+        user2 = initiator.users[1];
+        user3 = initiator.users[2];
+        user4 = initiator.users[3];
+        slot =initiator.slots[0];
 
         notiRepository.save(Noti.builder()
                 .user(user1)
@@ -122,17 +101,29 @@ class NotiControllerTest {
                 .isChecked(false)
                 .slot(slot)
                 .build());
+        notiRepository.save(Noti.builder()
+                .user(user1)
+                .type(NotiType.ANNOUNCE)
+                .message("공지사항")
+                .isChecked(false)
+                .slot(slot)
+                .build());
+        slot.setType(GameType.SINGLE);
+        team1 = slot.getTeam1();
+        team2 = slot.getTeam2();
+        team1.setUser1(user1);
+        team2.setUser1(user2);
     }
 
     @Test
     @Transactional
     void notiFindByUser() throws Exception {
         mockMvc.perform(get("/pingpong/notifications").contentType(MediaType.APPLICATION_JSON)
-                .param("userId", user1.getId().toString()))
+                    .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(document("find-notifications"));
         mockMvc.perform(get("/pingpong/notifications").contentType(MediaType.APPLICATION_JSON)
-                        .param("userId", user1.getId().toString()))
+                   .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(document("find-notifications-twice"));
     }
@@ -145,7 +136,7 @@ class NotiControllerTest {
                 .andDo(document("delete-one-notification"));
 
         mockMvc.perform(get("/pingpong/notifications").contentType(MediaType.APPLICATION_JSON)
-                        .param("userId", user1.getId().toString()))
+                    .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(document("after-delete-one-notification"));
     }
@@ -154,12 +145,12 @@ class NotiControllerTest {
     @Transactional
     void notiRemoveAll() throws Exception{
         mockMvc.perform(delete("/pingpong/notifications").contentType(MediaType.APPLICATION_JSON)
-                        .param("userId", user1.getId().toString()))
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(document("delete-all-notification"));
 
         mockMvc.perform(get("/pingpong/notifications").contentType(MediaType.APPLICATION_JSON)
-                        .param("userId", user1.getId().toString()))
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(document("after-delete-all-notification"));
     }

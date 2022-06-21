@@ -33,14 +33,14 @@ public class SeasonService {
 
     @Transactional
     public void deleteSeasonByAdmin(SeasonDeleteDto deleteDto) {
-        Season season = seasonRepository.findById(deleteDto.getSeasonId()).orElseThrow(() -> new IllegalArgumentException("잘못된 매개변수입니다."));
+        Season season = seasonRepository.findById(deleteDto.getSeasonId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         seasonRepository.delete(season);
     }
 
     @Transactional
     public SeasonDto findCurrentSeason() {
         LocalDateTime now = LocalDateTime.now();
-        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElseThrow();
+        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElseThrow(() -> new BusinessException("{invalid.request}"));
         return SeasonDto.from(season);
     }
 
