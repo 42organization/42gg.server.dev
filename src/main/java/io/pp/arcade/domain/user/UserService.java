@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -58,17 +59,21 @@ public class UserService {
     /* 유저 정보 업데이트 */
     public void modifyUserProfile(UserModifyProfileDto modifyDto) {
         User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        user.setEMail(modifyDto.getEmail());
-        user.setImageUri(modifyDto.getUserImageUri());
+        //user.setEMail(modifyDto.getEmail());
+        //user.setImageUri(modifyDto.getUserImageUri());
         user.setRacketType(modifyDto.getRacketType());
         user.setStatusMessage(modifyDto.getStatusMessage());
     }
 
     /* 문자열을 포함하는 intraId를 가진 유저 찾기 */
     @Transactional
-    public List<UserDto> findByPartsOfIntraId(UserSearchDto userSearchDto) {
-        List<User> users = userRepository.findByIntraIdContains(userSearchDto.getIntraId());
-        return users.stream().map(UserDto::from).collect(Collectors.toList());
+    public List<UserDto> findByPartsOfIntraId(UserSearchRequestDto userSearchDto) {
+        List<UserDto> result = new ArrayList<UserDto>();
+        if (!userSearchDto.getIntraId().isEmpty()){
+            List<User> users = userRepository.findByIntraIdContains(userSearchDto.getIntraId());
+            result.addAll(users.stream().map(UserDto::from).collect(Collectors.toList()));
+        }
+        return result;
     }
 
     @Transactional
