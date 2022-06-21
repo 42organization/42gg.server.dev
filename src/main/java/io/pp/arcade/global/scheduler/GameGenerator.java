@@ -35,7 +35,7 @@ public class GameGenerator {
         LocalDateTime now = LocalDateTime.now();
         now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
         SlotDto slotDto = slotService.findByTime(now);
-        if (slotDto != null && GameType.DOUBLE.equals(slotDto.getType())) {
+        if (slotDto != null && GameType.BUNGLE.equals(slotDto.getType())) {
             maxHeadCount = 4;
         }
         if (slotDto != null) {

@@ -1,11 +1,15 @@
 package io.pp.arcade.domain.rank.controller;
 
+import io.netty.channel.ChannelFuture;
 import io.pp.arcade.RestDocsConfiguration;
+import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.rank.RankRedis;
+import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.type.GameType;
-import io.pp.arcade.global.type.RacketType;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +20,15 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+
 
 import javax.transaction.Transactional;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -41,22 +46,21 @@ class RankControllerTest {
     @Autowired
     private RedisTemplate redisTemplate;
 
-    User user;
-    User user2;
-    User user3;
-    User user4;
-    User user5;
-    User user6;
-    HashMap<String, User> users ;
+    @Autowired
+    private RedisTemplate<String, RankRedis> redisRank;
 
-    @Transactional
-    void init_user()
-    {
+    @Autowired
+    private TestInitiator testInitiator;
 
-    }
-
+    User[] users;
+    Team[] teams;
+    //Slot[] slots;
     @BeforeEach
     void init(){
+        testInitiator.letsgo();
+        users = testInitiator.users;
+        teams = testInitiator.teams;
+        /*
         user = userRepository.save(User.builder().ppp(0).statusMessage("").intraId("donghyuk").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
         user2 = userRepository.save(User.builder().ppp(100).statusMessage("").intraId("nheo").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
         user3 = userRepository.save(User.builder().ppp(100).statusMessage("").intraId("hakim").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
@@ -77,26 +81,79 @@ class RankControllerTest {
         users.put("jiyun", user4);
         users.put("jekim", user5);
         users.put("wochae", user6);
+        */
         //rankRepository.save(Rank.builder().user(user).ranking(0).losses(0).wins(0).ppp(0).racketType(RacketType.SHAKEHAND).seasonId(0).build());
+    }
+    @AfterEach
+    void end(){
+        redisTemplate.unwatch();
+        redisRank.unwatch();
     }
 
     @Test
+    @Transactional
     void rankList() throws Exception {
-        for (User user : users.values()) {
-            RankRedis singleRank = RankRedis.from(user, GameType.SINGLE.getKey());
-            RankRedis doubleRank = RankRedis.from(user, GameType.DOUBLE.getKey());
-            redisTemplate.opsForValue().set(user.getIntraId() + GameType.SINGLE.getKey(), singleRank);
-            redisTemplate.opsForValue().set(user.getIntraId() + GameType.DOUBLE.getKey(), doubleRank);
-            redisTemplate.opsForZSet().add(GameType.SINGLE.getKey(), user.getIntraId() + GameType.SINGLE, user.getPpp());
-            redisTemplate.opsForZSet().add(GameType.DOUBLE.getKey(), user.getIntraId() + GameType.DOUBLE, user.getPpp());
-        }
-        MultiValueMap<String, String> params;
-        params = new LinkedMultiValueMap<>();
-        params.add("page", "1");
-        params.add("userId", user.getId().toString());
+        /* 유저가 존재히지 않을 경우 */
+        /*
         mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
-                .params(params)))
+                        .param("page","1"))
+                        .header("Authorization", "Bearer " + 0))
+                .andExpect(jsonPath("$.myRank").value(null))
+                .andExpect(jsonPath("$.currentPage").value(1))
+                .andExpect(jsonPath("$.totalPage").value(1))
+                .andExpect(jsonPath("$.rankList").isEmpty())
+                .andExpect(status().isOk());
+         */
+
+        /* 유저가 존재할 경우 */
+
+        User client = users[0];
+        /*
+        for (User user : Arrays.stream(users).collect(Collectors.toList())) {
+            RankRedis singleRank = RankRedis.from(user, GameType.SINGLE.getKey());
+            RankRedis doubleRank = RankRedis.from(user, GameType.BUNGLE.getKey());
+            redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.SINGLE), singleRank);
+            redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.BUNGLE), doubleRank);
+            redisTemplate.opsForZSet().add(getRankKey(GameType.SINGLE), getUserRankKey(user.getIntraId(), GameType.SINGLE), user.getPpp());
+            redisTemplate.opsForZSet().add(getRankKey(GameType.BUNGLE), getUserRankKey(user.getIntraId(), GameType.BUNGLE), user.getPpp());
+        }*/
+
+        GameType type = GameType.SINGLE;
+        RankRedis userRankInfo = RankRedis.from(client, type.getKey());
+        mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
+                .param("page","1"))
+                .header("Authorization", "Bearer " + 0))
+                .andExpect(jsonPath("$.myRank").value(getRanking(userRankInfo, type)))
+                .andExpect(jsonPath("$.currentPage").value(1))
+                .andExpect(jsonPath("$.totalPage").value(1))
+                .andExpect(jsonPath("$.rankList[0].intraId").value(userRankInfo.getIntraId()))
+                .andExpect(jsonPath("$.rankList[0].ppp").value(userRankInfo.getPpp()))
+                .andExpect(jsonPath("$.rankList[0].statusMessage").value(userRankInfo.getStatusMessage()))
+                .andExpect(jsonPath("$.rankList[0].losses").value(userRankInfo.getLosses()))
+                .andExpect(jsonPath("$.rankList[0].wins").value(userRankInfo.getWins()))
+                .andExpect(jsonPath("$.rankList[0].winRate").value(userRankInfo.getWinRate()))
                 .andExpect(status().isOk())
                 .andDo(document("ranking-List"));
+    }
+
+    private String getUserKey(String key) { return Key.RANK_USER + key; }
+
+    private String getUserKey(String intraId, GameType gameType) {
+        return Key.RANK_USER + intraId + gameType.getKey();
+    }
+
+    private String getUserRankKey(String intraId, GameType gameType) {
+        return intraId + gameType.getKey();
+    }
+
+    private String getRankKey(GameType gameType) {
+        return gameType.getKey();
+    }
+
+
+    private Integer getRanking(RankRedis userInfo ,GameType gameType){
+        Integer totalGames = userInfo.getLosses() + userInfo.getWins();
+        Integer ranking= (totalGames == 0) ? -1 : redisRank.opsForZSet().reverseRank(getRankKey(gameType), getUserRankKey(userInfo.getIntraId(), gameType)).intValue() + 1;
+        return ranking;
     }
 }

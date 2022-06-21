@@ -71,10 +71,10 @@ public class UserControllerImpl implements UserController {
                 .racketType(targetUser.getRacketType())
                 .ppp(targetUser.getPpp())
                 .statusMessage(targetUser.getStatusMessage())
-                .wins(rankDto.getWins())        // 추
-                .losses(rankDto.getLosses())      // 후
-                .winRate(rankDto.getWinRate()) // 구
-                .rank(rankDto.getRank())        // 현
+                .wins(rankDto.getWins())
+                .losses(rankDto.getLosses())
+                .winRate(rankDto.getWinRate())
+                .rank(rankDto.getRank())
                 .build();
         return responseDto;
     }
@@ -94,11 +94,8 @@ public class UserControllerImpl implements UserController {
         List<UserHistoricDto> historicDtos = new ArrayList<UserHistoricDto>();
         for (PChangeDto dto : pChangeList) {
             historicDtos.add(UserHistoricDto.builder()
-                    .gameId(dto.getGame().getId())
-                    .userId(dto.getUser().getId())
-                    .pppChange(dto.getPppChange())
-                    .pppResult(dto.getPppResult())
-                    .time(dto.getGame().getTime())
+                    .ppp(dto.getPppResult())
+                    .date(dto.getGame().getTime())
                     .build());
         }
         UserHistoricResponseDto responseDto = UserHistoricResponseDto.builder()
@@ -107,12 +104,9 @@ public class UserControllerImpl implements UserController {
     }
 
     @Override
-    @PutMapping(value = "/users/{intraId}/detail")
-    public void userModifyProfile(String intraId, HttpServletRequest request) {
+    @PutMapping(value = "/users/detail")
+    public void userModifyProfile(HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        if (!(user.getIntraId().equals(intraId))) {
-            throw new BusinessException("{invalid.request}");
-        }
         userService.modifyUserProfile(UserModifyProfileDto.builder()
                 .userId(user.getId())
                 .userImageUri(user.getImageUri())
@@ -123,7 +117,7 @@ public class UserControllerImpl implements UserController {
     @Override
     @GetMapping(value = "/users/searches")
     public UserSearchResultResponseDto userSearchResult(String inquiringString) {
-        List<String> users = userService.findByPartsOfIntraId(UserSearchDto.builder().intraId(inquiringString).build())
+        List<String> users = userService.findByPartsOfIntraId(UserSearchRequestDto.builder().intraId(inquiringString).build())
                 .stream().map(UserDto::getIntraId).collect(Collectors.toList());
         return UserSearchResultResponseDto.builder().users(users).build();
     }

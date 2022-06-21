@@ -94,22 +94,30 @@ class RankServiceTest {
 
     }
 
+
+    @Test
+    @Transactional
+    void isEmpty(){
+
+        Boolean isEmpty = rankServiceImpl.isEmpty();
+        Assertions.assertThat(isEmpty).isTrue();
+    }
     @Test
     @Transactional
     void findRank() {
         // given
         RankRedis singleRank =  RankRedis.from(user, Key.SINGLE);
-        RankRedis doubleRank =  RankRedis.from(user, Key.DOUBLE);
+        RankRedis doubleRank =  RankRedis.from(user, Key.BUNGLE);
 
         redisTemplate.opsForValue().set(user.getIntraId() + Key.SINGLE, singleRank);
-        redisTemplate.opsForValue().set(user.getIntraId() + Key.DOUBLE, doubleRank);
+        redisTemplate.opsForValue().set(user.getIntraId() + Key.BUNGLE, doubleRank);
         redisTemplate.opsForZSet().add(Key.SINGLE, user.getIntraId() + Key.SINGLE , user.getPpp());
-        redisTemplate.opsForZSet().add(Key.DOUBLE, user.getIntraId() + Key.DOUBLE , user.getPpp());
+        redisTemplate.opsForZSet().add(Key.BUNGLE, user.getIntraId() + Key.BUNGLE, user.getPpp());
         RankFindDto rankFindDto = RankFindDto.builder().intraId(user.getIntraId()).gameType(GameType.valueOf(Key.SINGLE)).build();
 
 
-        // when
         /*
+        // when
         RankUserDto userInfoDto = rankService.findRank(rankFindDto);
 
         // then
@@ -118,7 +126,8 @@ class RankServiceTest {
         Assertions.assertThat(userInfoDto.getWinRate()).isEqualTo(0);
         Assertions.assertThat(userInfoDto.getPpp()).isEqualTo(0);
         Assertions.assertThat(userInfoDto.getWins()).isEqualTo(0);
-        */
+
+         */
     }
 
     @Test
@@ -127,11 +136,11 @@ class RankServiceTest {
         /* page가 -값일 경우*/
         for (User user : users.values()) {
             RankRedis singleRank = RankRedis.from(user, Key.SINGLE);
-            RankRedis doubleRank = RankRedis.from(user, Key.DOUBLE);
+            RankRedis doubleRank = RankRedis.from(user, Key.BUNGLE);
             redisTemplate.opsForValue().set(user.getIntraId() + Key.SINGLE, singleRank);
-            redisTemplate.opsForValue().set(user.getIntraId() + Key.DOUBLE, doubleRank);
+            redisTemplate.opsForValue().set(user.getIntraId() + Key.BUNGLE, doubleRank);
             redisTemplate.opsForZSet().add(Key.SINGLE, user.getIntraId() + Key.SINGLE, user.getPpp());
-            redisTemplate.opsForZSet().add(Key.DOUBLE, user.getIntraId() + Key.DOUBLE, user.getPpp());
+            redisTemplate.opsForZSet().add(Key.BUNGLE, user.getIntraId() + Key.BUNGLE, user.getPpp());
         }
         // when
         Pageable pageable = PageRequest.of(1,20);

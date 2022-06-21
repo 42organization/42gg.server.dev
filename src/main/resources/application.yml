@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: test
+    active: local
 
   security:
     oauth2.client:
@@ -31,7 +31,7 @@ spring:
     web:
       pageable:
         default-page-size: 20
-        one-indexed-parameters: true
+        one-indexed-parameters: false
 
   mail:
     host: smtp.gmail.com
