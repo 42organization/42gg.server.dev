@@ -26,7 +26,8 @@ public class SeasonService {
                 .seasonName(createDto.getSeasonName())
                 .startTime(createDto.getStartTime())
                 .endTime(createDto.getEndTime())
-                .startPpp(createDto.getStartPpp()).build();
+                .startPpp(createDto.getStartPpp())
+                .pppGap(createDto.getPppGap()).build();
         seasonRepository.save(season);
     }
 

@@ -48,4 +48,12 @@ public class Noti extends BaseTimeEntity {
         this.message = message;
         this.isChecked = isChecked;
     }
+
+    public void update(User user, Slot slot, NotiType type, String message, Boolean isChecked) {
+        this.user = user;
+        this.slot = slot;
+        this.type = type;
+        this.message = message;
+        this.isChecked = isChecked;
+    }
 }

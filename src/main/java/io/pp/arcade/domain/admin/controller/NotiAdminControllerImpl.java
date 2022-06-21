@@ -32,7 +32,7 @@ public class NotiAdminControllerImpl implements NotiAdminController {
     }
 
     @Override
-    @DeleteMapping(value = "/noti/{id}")
+    @DeleteMapping(value = "/noti/{notiId}")
     public void notiDelete(Integer notiId, HttpServletRequest request) {
         NotiDeleteDto notiDeleteDto = NotiDeleteDto.builder().notiId(notiId).build();
         notiService.deleteNotibyAdmin(notiDeleteDto);

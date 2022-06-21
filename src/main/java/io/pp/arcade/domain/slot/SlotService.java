@@ -172,6 +172,7 @@ public class SlotService {
         return status;
     }
 
+    @Transactional
     public void createSlotByAdmin(SlotCreateRequestDto createDto) {
         slotRepository.save(Slot.builder()
                 .tableId(createDto.getTableId())
@@ -184,6 +185,7 @@ public class SlotService {
                 .build());
     }
 
+    @Transactional
     public void updateSlotByAdmin(SlotUpdateDto updateDto) {
         Slot slot = slotRepository.findById(updateDto.getSlotId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         slot.setGamePpp(updateDto.getGamePpp());
@@ -191,11 +193,13 @@ public class SlotService {
         slot.setType(updateDto.getType());
     }
 
+    @Transactional
     public void deleteSlotByAdmin(SlotDeleteDto deleteDto) {
-        Slot slot = slotRepository.findById(deleteDto.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Slot slot = slotRepository.findById(deleteDto.getSlotId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         slotRepository.delete(slot);
     }
 
+    @Transactional
     public List<SlotDto> findSlotByAdmin(Pageable pageable) {
         Page<Slot> slots = slotRepository.findAll(pageable);
         List<SlotDto> slotDtos = slots.stream().map(SlotDto::from).collect(Collectors.toList());
