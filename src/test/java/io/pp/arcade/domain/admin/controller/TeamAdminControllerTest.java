@@ -2,6 +2,7 @@ package io.pp.arcade.domain.admin.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pp.arcade.RestDocsConfiguration;
+import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
@@ -36,6 +37,8 @@ public class TeamAdminControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
+    TestInitiator testInitiator;
+    @Autowired
     private TeamRepository teamRepository;
     @Autowired
     private UserRepository userRepository;
@@ -48,24 +51,12 @@ public class TeamAdminControllerTest {
 
     @BeforeEach
     void init() {
-        user1 = userRepository.save(User.builder()
-                .intraId("hakim")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-        user2 = userRepository.save(User.builder()
-                .intraId("nheo")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
+        testInitiator.letsgo();
+        user1 = testInitiator.users[0];
+        user2 = testInitiator.users[1];
 
-        team1 = teamRepository.save(Team.builder().teamPpp(0)
-                .user1(user1).headCount(1).score(0).build());
-        team2 = teamRepository.save(Team.builder().teamPpp(0)
-                .user1(user2).headCount(1).score(0).build());
-
+        team1 = testInitiator.teams[0];
+        team2 = testInitiator.teams[1];
     }
 
     @Test

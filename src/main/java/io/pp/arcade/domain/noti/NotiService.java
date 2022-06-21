@@ -106,7 +106,10 @@ public class NotiService {
     @Transactional
     public void updateNotiByAdmin(NotiUpdateRequestDto updateRequestDto) {
         Noti noti = notiRepository.findById(updateRequestDto.getNotiId()).orElseThrow();
-        noti.setIsChecked(updateRequestDto.getIsChecked()); // 더 고칠게 있을까요
+
+        User user = userRepository.findById(updateRequestDto.getUserId()).orElseThrow(null);
+        Slot slot = slotRepository.findById(updateRequestDto.getSlotId()).orElseThrow(null);
+        noti.update(user, slot, updateRequestDto.getNotiType(), updateRequestDto.getMessage(), updateRequestDto.getIsChecked()); // 더 고칠게 있을까요
     }
 
     @Transactional
