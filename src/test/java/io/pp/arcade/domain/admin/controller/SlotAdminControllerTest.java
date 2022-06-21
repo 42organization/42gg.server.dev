@@ -2,12 +2,14 @@ package io.pp.arcade.domain.admin.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pp.arcade.RestDocsConfiguration;
+import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.global.type.GameType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +27,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -49,70 +51,77 @@ public class SlotAdminControllerTest {
     User user3;
     Team team1;
     Team team2;
-    Team team3;
+
     Slot slot;
+
+    @Autowired
+    TestInitiator testInitiator;
 
     @BeforeEach
     void init() {
-        user1 = userRepository.save(User.builder()
-                .intraId("hakim")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-        user2 = userRepository.save(User.builder()
-                .intraId("nheo")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
+        testInitiator.letsgo();
+        user1 = testInitiator.users[0];
+        user2 = testInitiator.users[1];
+        user3 = testInitiator.users[2];
 
-        user3 = userRepository.save(User.builder()
-                .intraId("woche")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-
-        team1 = teamRepository.save(Team.builder().teamPpp(0)
-                .user1(user1).headCount(1).score(0).build());
-        team2 = teamRepository.save(Team.builder().teamPpp(0)
-                .user1(user2).headCount(1).score(0).build());
-        team3 = teamRepository.save(Team.builder().teamPpp(0)
-                .user1(user3).headCount(1).score(0).build());
-
-        slot = slotRepository.save(Slot.builder()
-                .tableId(1)
-                .team1(team1)
-                .team2(team2)
-                .time(LocalDateTime.of(2022,6,18,15,10))
-                .headCount(2)
-                .gamePpp(0)
-                .build()
-        );
+        team1 = testInitiator.teams[0];
+        team2 = testInitiator.teams[1];
+        slot = testInitiator.slots[0];
     }
 
     @Test
     @Transactional
     public void slotCreate() throws Exception {
         LocalDateTime now = LocalDateTime.now();
+        LocalDateTime time = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute());
         Map<String, String> body = new HashMap<>();
         body.put("tableId", "1");
-        body.put("time", LocalDateTime.now().toString());
+        body.put("team1Id", team1.getId().toString());
+        body.put("team2Id", team2.getId().toString());
+        body.put("time", time.toString());
+        body.put("gamePpp", "0");
         body.put("headCount", "0");
-        body.put("type", "single");
+        body.put("type", GameType.SINGLE.toString());
 
         mockMvc.perform(post("/admin/slot").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body)))
                 .andExpect(status().isOk())
                 .andDo(document("admin-slot-create"));
 
-        Slot slot = slotRepository.findByTime(now).orElseThrow();
-        Assertions.assertThat(slot.getType()).isEqualTo("single");
+        Slot createdSlot = slotRepository.findByTime(time).orElseThrow(null);
+        Assertions.assertThat(createdSlot.getType()).isEqualTo(GameType.SINGLE);
     }
 
     @Test
     @Transactional
     public void slotUpdate() throws Exception {
+
+        Map<String, String> body = new HashMap<>();
+        body.put("slotId", slot.getId().toString());
+        body.put("gamePpp", "100");
+
+        mockMvc.perform(put("/admin/slot").contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(body)))
+                .andExpect(status().isOk())
+                .andDo(document("admin-slot-update"));
+
+        Slot updatedSlot = slotRepository.findById(slot.getId()).orElseThrow();
+        Assertions.assertThat(updatedSlot.getGamePpp()).isEqualTo(100);
     }
-}
+
+    @Test
+    @Transactional
+    public void slotDelete() throws Exception {
+        mockMvc.perform(delete("/admin/slot/" + slot.getId().toString()).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("admin-slot-delete"));
+    }
+
+    @Test
+    @Transactional
+    public void slotFind() throws Exception {
+        mockMvc.perform(get("/admin/slot").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("admin-slot-find-all"));
+    }
+ }

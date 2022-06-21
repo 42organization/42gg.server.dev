@@ -171,7 +171,7 @@ public class RankServiceImpl implements RankNTService {
     @Transactional
     public void updateRankByAdmin(RankUpdateRequestDto updateRequestDto) {
         Rank rank = rankRepository.findById(updateRequestDto.getRankId()).orElseThrow();
-        rank.setPpp(updateRequestDto.getPpp());
+        rank.update(updateRequestDto.getPpp(), updateRequestDto.getWins(), updateRequestDto.getLosses());
     }
 
     @Transactional
