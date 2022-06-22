@@ -92,7 +92,8 @@ public class UserControllerImpl implements UserController {
         Integer tarGetUserWin = 0;
         for (PChangeDto curUsers : curUserPChanges) {
             for (PChangeDto targetUsers : targetUserPChanges) {
-                if (curUsers.getGame().getId().equals(targetUsers.getGame().getId())) {
+                if (curUsers.getGame().getId().equals(targetUsers.getGame().getId())
+                        && (curUsers.getPppChange() * targetUsers.getPppChange() < 0)) {
                     if (curUsers.getPppChange() > 0) {
                         curUserWin += 1;
                     } else if (curUsers.getPppChange() < 0) {
