@@ -69,11 +69,10 @@ public class GameService {
     @Transactional
     public GameResultPageDto findGamesAfterId(GameFindDto findDto) {
         Page<Game> games;
-        Integer gameId = findDto.getId() == null ? Integer.MAX_VALUE : findDto.getId();
         if (findDto.getStatus() != null) {
-            games = gameRepository.findByIdLessThanAndStatusOrderByIdDesc(gameId, findDto.getStatus(), findDto.getPageable());
+            games = gameRepository.findByIdLessThanAndStatusOrderByIdDesc(findDto.getId(), findDto.getStatus(), findDto.getPageable());
         } else {
-            games = gameRepository.findByIdLessThanOrderByIdDesc(gameId, findDto.getPageable());
+            games = gameRepository.findByIdLessThanOrderByIdDesc(findDto.getId(), findDto.getPageable());
         }
         List<GameDto> gameDtoList = games.stream().map(GameDto::from).collect(Collectors.toList());
 
