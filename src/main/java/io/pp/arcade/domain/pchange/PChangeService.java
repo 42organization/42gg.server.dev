@@ -48,6 +48,13 @@ public class PChangeService {
         return pChangeList.stream().map(PChangeDto::from).collect(Collectors.toList());
     }
 
+
+    @Transactional
+    public List<PChangeDto> findPChangeByUserIdNotPage(PChangeFindDto findDto){
+        List<PChange> pChangeList = pChangeRepository.findAllByUserIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));;
+        return pChangeList.stream().map(PChangeDto::from).collect(Collectors.toList());
+    }
+
     @Transactional
     public PChangePageDto findPChangeByUserId(PChangeFindDto findDto){
         User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
