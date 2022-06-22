@@ -1,7 +1,6 @@
 package io.pp.arcade.domain.game.dto;
 
 import lombok.Getter;
-
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;

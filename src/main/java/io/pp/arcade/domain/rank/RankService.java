@@ -30,7 +30,7 @@ public class RankService {
     public RankFindListDto findRankList(Pageable pageable, GameType type) {
         int pageNumber = pageable.getPageNumber() >= 0 ? pageable.getPageNumber() : 0;
         int pageSize = pageable.getPageSize();
-        Set<String> range = redisTemplate.opsForZSet().reverseRange(type.getKey(), pageNumber * pageSize, (pageNumber + 1) * pageSize);
+        Set<String> range = redisTemplate.opsForZSet().reverseRange(type.getCode(), pageNumber * pageSize, (pageNumber + 1) * pageSize);
 
         /* 랭킹리스트를 조회할 수 없을 경우 에러 반환*/
         if (range.isEmpty())
@@ -40,7 +40,7 @@ public class RankService {
         for (String intraId : range){
             RankRedis userInfo = (RankRedis) redisTemplate.opsForValue().get(intraId);
             Integer totalGames = userInfo.getLosses() + userInfo.getWins();
-            Integer rank = (totalGames == 0) ? -1 : redisTemplate.opsForZSet().reverseRank(type.getKey(),  intraId + type).intValue();
+            Integer rank = (totalGames == 0) ? -1 : redisTemplate.opsForZSet().reverseRank(type.getCode(),  intraId + type).intValue();
             rankList.add(RankUserDto.builder()
                         .intraId(intraId)
                         .ppp(userInfo.getPpp())
@@ -49,7 +49,7 @@ public class RankService {
                         .build());
         }
         int currentPage = pageable.getPageNumber();
-        int totalPage = redisTemplate.opsForZSet().size(type.getKey()).intValue() / pageSize;
+        int totalPage = redisTemplate.opsForZSet().size(type.getCode()).intValue() / pageSize;
         RankFindListDto findListDto =  RankFindListDto.builder()
                 .currentPage(currentPage > totalPage ? totalPage : currentPage) // 최대값은 totalPage
                 .totalPage(totalPage)
@@ -62,7 +62,7 @@ public class RankService {
     public RankUserDto findRankById(RankFindDto findDto) {
         String key = getKey(findDto.getIntraId(), findDto.getGameType());
         RankRedis userRankInfo = (RankRedis) redisTemplate.opsForValue().get(key);
-        Long userRanking = redisTemplate.opsForZSet().reverseRank(findDto.getGameType().getKey(), key);
+        Long userRanking = redisTemplate.opsForZSet().reverseRank(findDto.getGameType().getCode(), key);
         RankUserDto infoDto = RankUserDto.builder()
                 .intraId(userRankInfo.getIntraId())
                 .ppp(userRankInfo.getPpp())
@@ -81,7 +81,7 @@ public class RankService {
         RankRedis rank = (RankRedis)redisTemplate.opsForValue().get(key);
         rank.update(modifyDto.getIsWin(),modifyDto.getPpp());
         redisTemplate.opsForValue().set(key, rank);
-        redisTemplate.opsForZSet().add(modifyDto.getGameType().getKey(), key, modifyDto.getPpp());
+        redisTemplate.opsForZSet().add(modifyDto.getGameType().getCode(), key, modifyDto.getPpp());
     }
 
     @Transactional
@@ -95,13 +95,13 @@ public class RankService {
     @Transactional
     public void addRank(RankAddDto addDto){
         User user = userRepository.findById(addDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        RankRedis singleRank =  RankRedis.from(user, GameType.SINGLE.getKey());
-        RankRedis doubleRank =  RankRedis.from(user, GameType.BUNGLE.getKey());
+        RankRedis singleRank =  RankRedis.from(user, GameType.SINGLE.getCode());
+        RankRedis doubleRank =  RankRedis.from(user, GameType.BUNGLE.getCode());
 
         redisTemplate.opsForValue().set(user.getIntraId() + GameType.SINGLE, singleRank);
         redisTemplate.opsForValue().set(user.getIntraId() + GameType.BUNGLE, doubleRank);
-        redisTemplate.opsForZSet().add(GameType.SINGLE.getKey(), user.getIntraId() + GameType.SINGLE , user.getPpp());
-        redisTemplate.opsForZSet().add(GameType.BUNGLE.getKey(), user.getIntraId() + GameType.BUNGLE , user.getPpp());
+        redisTemplate.opsForZSet().add(GameType.SINGLE.getCode(), user.getIntraId() + GameType.SINGLE , user.getPpp());
+        redisTemplate.opsForZSet().add(GameType.BUNGLE.getCode(), user.getIntraId() + GameType.BUNGLE , user.getPpp());
     }
 
     @Transactional
@@ -121,6 +121,6 @@ public class RankService {
 
 
     private String getKey(String intraId, GameType GameType){
-        return intraId + GameType.getKey();
+        return intraId + GameType.getCode();
     }
 }
