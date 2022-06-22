@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -16,5 +17,6 @@ public class UserHistoricDto {
     private LocalDateTime time;
     */
     private Integer ppp;
+
     private LocalDateTime date;
 }

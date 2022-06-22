@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.game;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.global.type.GameType;
