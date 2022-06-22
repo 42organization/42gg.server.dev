@@ -53,8 +53,7 @@ public class TestInitiator {
     UserRepository userRepository;
     @Autowired
     private RedisTemplate redisTemplate;
-    @Autowired
-    private RedisTemplate<String, RankRedis> redisRank;
+
 
     public User[] users;
     public Token[] tokens;
@@ -84,8 +83,8 @@ public class TestInitiator {
         List<User> userList = Arrays.stream(users).collect(Collectors.toList());
         for (User user : userList) {
             int idx = userList.indexOf(user);
-            RankRedis singleRank = RankRedis.from(user, GameType.SINGLE.getKey());
-            RankRedis doubleRank = RankRedis.from(user, GameType.BUNGLE.getKey());
+            RankRedis singleRank = RankRedis.from(user, GameType.SINGLE.getCode());
+            RankRedis doubleRank = RankRedis.from(user, GameType.BUNGLE.getCode());
 
             ranks[idx] = singleRank;
             ranks[users.length + idx] = doubleRank;
@@ -119,24 +118,15 @@ public class TestInitiator {
         Season testSeason = seasonRepository.save(Season.builder().seasonName("Test").startTime(LocalDateTime.now().minusYears(1)).endTime(LocalDateTime.now().plusYears(1)).startPpp(1000).pppGap(150).build());
     }
 
-    private String getUserKey(String key) { return Key.RANK_USER + key; }
-
     private String getUserKey(String intraId, GameType gameType) {
-        return Key.RANK_USER + intraId + gameType.getKey();
+        return Key.RANK_USER + intraId + gameType.getCode();
     }
 
     private String getUserRankKey(String intraId, GameType gameType) {
-        return intraId + gameType.getKey();
+        return intraId + gameType.getCode();
     }
 
     private String getRankKey(GameType gameType) {
-        return gameType.getKey();
-    }
-
-
-    private Integer getRanking(RankRedis userInfo , GameType gameType){
-        Integer totalGames = userInfo.getLosses() + userInfo.getWins();
-        Integer ranking= (totalGames == 0) ? -1 : redisRank.opsForZSet().reverseRank(getRankKey(gameType), getUserRankKey(userInfo.getIntraId(), gameType)).intValue() + 1;
-        return ranking;
+        return gameType.getCode();
     }
 }

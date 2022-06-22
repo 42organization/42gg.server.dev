@@ -85,7 +85,7 @@ public class RankServiceImpl implements RankNTService {
         RankRedis rank = redisUserInfo.opsForValue().get(userKey);
         rank.update(modifyDto.getIsWin(), modifyDto.getPpp());
         redisUserInfo.opsForValue().set(userKey, rank);
-        redisRank.opsForZSet().add(modifyDto.getGameType().getKey(), rankKey, modifyDto.getPpp());
+        redisRank.opsForZSet().add(modifyDto.getGameType().getCode(), rankKey, modifyDto.getPpp());
     }
 
     @Transactional
@@ -218,15 +218,15 @@ public class RankServiceImpl implements RankNTService {
     private String getUserKey(String key) { return Key.RANK_USER + key; }
 
     private String getUserKey(String intraId, GameType gameType) {
-        return Key.RANK_USER + intraId + gameType.getKey();
+        return Key.RANK_USER + intraId + gameType.getCode();
     }
 
     private String getUserRankKey(String intraId, GameType gameType) {
-        return intraId + gameType.getKey();
+        return intraId + gameType.getCode();
     }
 
     private String getRankKey(GameType gameType) {
-        return gameType.getKey();
+        return gameType.getCode();
     }
 
     private Integer getRanking(RankRedis userInfo ,GameType gameType){
