@@ -120,7 +120,7 @@ public class GameControllerImpl implements GameController {
         } else {
             lastGameId = gameLists.get(gameLists.size() - 1).getId();
         }
-        putResultInGames(gameResultList, gameLists);
+        putResultInGames(gameResultList, gameLists, null);
 
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
@@ -155,7 +155,7 @@ public class GameControllerImpl implements GameController {
             lastGameId = gameLists.get(gameLists.size() - 1).getId();
         }
 
-        putResultInGames(gameResultList, gameLists);
+        putResultInGames(gameResultList, gameLists, intraId);
 
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
@@ -239,6 +239,7 @@ public class GameControllerImpl implements GameController {
                 .build();
         rankServiceImpl.modifyUserPpp(rankModifyDto);
     }
+
     private void removCurrentMatch(GameDto game) {
     CurrentMatchFindDto findDto = CurrentMatchFindDto.builder()
             .game(game)
@@ -275,7 +276,7 @@ public class GameControllerImpl implements GameController {
         }
     }
   
-    private void putResultInGames(List<GameResultDto> gameResultList, List<GameDto> gameLists) {
+    private void putResultInGames(List<GameResultDto> gameResultList, List<GameDto> gameLists, String curUserId) {
         TeamDto team1;
         TeamDto team2;
         GameTeamDto teamDto1;
@@ -283,7 +284,12 @@ public class GameControllerImpl implements GameController {
         for (GameDto game : gameLists) {
             team1 = game.getTeam1();
             team2 = game.getTeam2();
-
+            /* 왼 쪽 정 렬 */
+            if (curUserId.equals(team2.getUser1().getIntraId()) || curUserId.equals(team2.getUser2().getIntraId()))
+            {
+                team1 = game.getTeam2();
+                team2 = game.getTeam1();
+            }
             teamDto1 = getTeamDtoFromGamePlayers(team1, game);
             teamDto2 = getTeamDtoFromGamePlayers(team2, game);
 
