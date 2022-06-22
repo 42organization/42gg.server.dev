@@ -65,7 +65,7 @@ public class ControllerExceptionAdvice {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     protected ResponseEntity<ExceptionReponse> methodArgumentNotValidExceptionHandle(MethodArgumentNotValidException ex) {
         log.info("MethodArgumentNotValidException", ex);
-        ExceptionReponse response = ExceptionReponse.from("E0001", ex);
+        ExceptionReponse response = ExceptionReponse.from("E0001", "잘못된 요청입니다");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -82,7 +82,7 @@ public class ControllerExceptionAdvice {
     @ExceptionHandler(BindException.class)
     protected ResponseEntity<ExceptionReponse> bindExceptionHandle(BindException ex) {
         log.error("BindException", ex);
-        ExceptionReponse response = ExceptionReponse.from("E0001", ex.getBindingResult());
+        ExceptionReponse response = ExceptionReponse.from("E0001", "잘못된 요청입니다");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 

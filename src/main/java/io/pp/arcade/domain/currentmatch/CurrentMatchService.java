@@ -124,9 +124,7 @@ public class CurrentMatchService {
 
     @Transactional
     public void updateCurrentMatchByAdmin(CurrentMatchUpdateRequestDto updateRequestDto) {
-        CurrentMatch currentMatch = currentMatchRepository.findById(updateRequestDto.getCurrenMatchId()).orElseThrow();
-        Game game = gameRepository.findById(updateRequestDto.getGameId()).orElseThrow();
-        currentMatch.setGame(game);
+        CurrentMatch currentMatch = currentMatchRepository.findById(updateRequestDto.getCurrentMatchId()).orElseThrow();
         currentMatch.setMatchImminent(updateRequestDto.getMatchImminent());
         currentMatch.setIsMatched(updateRequestDto.getIsMatched());
     }

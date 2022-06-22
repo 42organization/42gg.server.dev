@@ -109,9 +109,9 @@ public class GameControllerImpl implements GameController {
 
     @Override
     @GetMapping(value = "/games")
-    public GameResultResponseDto gameResultByGameIdAndCount(Integer count, Integer gameId, StatusType status) {
-        Pageable pageable = PageRequest.of(0, count);
-        GameResultPageDto resultPageDto = gameService.findGamesAfterId(GameFindDto.builder().id(gameId).status(status).pageable(pageable).build());
+    public GameResultResponseDto gameResultByGameIdAndCount(GameResultPageRequestDto requestDto) {
+        Pageable pageable = PageRequest.of(0, requestDto.getCount());
+        GameResultPageDto resultPageDto = gameService.findGamesAfterId(GameFindDto.builder().id(requestDto.getGameId()).status(requestDto.getStatus()).pageable(pageable).build());
         List<GameResultDto> gameResultList = new ArrayList<>();
         List<GameDto> gameLists = resultPageDto.getGameList();
         Integer lastGameId;
@@ -120,7 +120,7 @@ public class GameControllerImpl implements GameController {
         } else {
             lastGameId = gameLists.get(gameLists.size() - 1).getId();
         }
-        putResultInGames(gameResultList, gameLists);
+        putResultInGames(gameResultList, gameLists, null);
 
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
@@ -131,17 +131,17 @@ public class GameControllerImpl implements GameController {
 
     @Override
     @GetMapping(value = "/users/{intraId}/games")
-    public GameResultResponseDto gameResultByUserIdAndByGameIdAndCount(String intraId, Integer count, Integer gameId, GameType type) {
+    public GameResultResponseDto gameResultByUserIdAndByGameIdAndCount(String intraId, GameResultUserPageRequestDto requestDto) {
         //Pageable
         /*
          * 1. PChange에서 유저별 게임 목록을 가져온다
          * 2. 얘네를 바탕으로 게임을 다 긁어온다.
          * 3. 얘네를 DTO로 만들어준다
          */
-        Pageable pageable = PageRequest.of(0, count);
+        Pageable pageable = PageRequest.of(0, requestDto.getCount());
         PChangeFindDto findDto = PChangeFindDto.builder()
                 .userId(intraId)
-                .gameId(gameId)
+                .gameId(requestDto.getGameId())
                 .pageable(pageable)
                 .build();
         PChangePageDto pChangePageDto = pChangeService.findPChangeByUserIdAfterGameId(findDto);
@@ -155,7 +155,7 @@ public class GameControllerImpl implements GameController {
             lastGameId = gameLists.get(gameLists.size() - 1).getId();
         }
 
-        putResultInGames(gameResultList, gameLists);
+        putResultInGames(gameResultList, gameLists, intraId);
 
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
@@ -239,6 +239,7 @@ public class GameControllerImpl implements GameController {
                 .build();
         rankServiceImpl.modifyUserPpp(rankModifyDto);
     }
+
     private void removCurrentMatch(GameDto game) {
     CurrentMatchFindDto findDto = CurrentMatchFindDto.builder()
             .game(game)
@@ -275,7 +276,7 @@ public class GameControllerImpl implements GameController {
         }
     }
   
-    private void putResultInGames(List<GameResultDto> gameResultList, List<GameDto> gameLists) {
+    private void putResultInGames(List<GameResultDto> gameResultList, List<GameDto> gameLists, String curUserId) {
         TeamDto team1;
         TeamDto team2;
         GameTeamDto teamDto1;
@@ -283,7 +284,12 @@ public class GameControllerImpl implements GameController {
         for (GameDto game : gameLists) {
             team1 = game.getTeam1();
             team2 = game.getTeam2();
-
+            /* 왼 쪽 정 렬 */
+            if (curUserId.equals(team2.getUser1().getIntraId()) || curUserId.equals(team2.getUser2().getIntraId()))
+            {
+                team1 = game.getTeam2();
+                team2 = game.getTeam1();
+            }
             teamDto1 = getTeamDtoFromGamePlayers(team1, game);
             teamDto2 = getTeamDtoFromGamePlayers(team2, game);
 

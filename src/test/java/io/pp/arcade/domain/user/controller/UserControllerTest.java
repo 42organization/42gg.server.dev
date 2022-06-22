@@ -1,7 +1,6 @@
 package io.pp.arcade.domain.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jayway.jsonpath.JsonPath;
 import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
@@ -10,7 +9,6 @@ import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.pchange.PChange;
 import io.pp.arcade.domain.pchange.PChangeRepository;
 import io.pp.arcade.domain.rank.RankRedis;
-import io.pp.arcade.domain.security.jwt.Token;
 import io.pp.arcade.domain.security.jwt.TokenRepository;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
@@ -160,7 +158,7 @@ class UserControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("유저 정보 조회 - 간단히 (/users)")
+    @DisplayName("유저 정보 조회 - 간단히 /users")
     void findUser() throws Exception {
         /*
          * - Response Check (2)
@@ -168,7 +166,7 @@ class UserControllerTest {
          * */
         mockMvc.perform(get("/pingpong/users").contentType(MediaType.APPLICATION_JSON)
                 .param("userId", user.getId().toString())
-                .header("Authorization", "Bearer 1"))
+                .header("Authorization", "Bearer 0"))
                 .andExpect(jsonPath("$.intraId").value(user.getIntraId()))
                 .andExpect(jsonPath("$.userImageUri").value(user.getImageUri()))
                 .andExpect(status().isOk())
@@ -177,7 +175,7 @@ class UserControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("유저 정보 조회 - 상세히 (/users/{intraId}/detail)")
+    @DisplayName("유저 정보 조회 - 상세히 /users/{intraId}/detail")
     void findDetailUser() throws Exception { // rank가 문제라서 안됐다!
         /*
          * intraId를 찾을 수 없는 경우
@@ -207,7 +205,7 @@ class UserControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("유저 전적 경향 (/users/{intraId}/historics)")
+    @DisplayName("유저 전적 경향 - /users/{intraId}/historics")
     void findUserHistorics() throws Exception {
         /*
          * intraId 찾을 수 없는 경우
@@ -251,7 +249,7 @@ class UserControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("유저 검색 (/pingpong/users/searches)")
+    @DisplayName("유저 검색 - /pingpong/users/searches")
     void userSearchResult() throws Exception {
         /*
          * q(query) null
@@ -266,10 +264,11 @@ class UserControllerTest {
         /*
          * q(query) k
          * -> users : ["hakim", "donghyuk", "jekim", "jihyukim", "daekim", "sujpark", "kipark"]
+         * -> 200
          * */
         String checkUsers = "$.users[?(@=='%s')]";
         mockMvc.perform(get("/pingpong/users/searches").contentType(MediaType.APPLICATION_JSON)
-                        .param("q", "k")
+                .param("q", "k")
                 .header("Authorization", "Bearer 1"))
                 .andExpect(jsonPath("$.users").isNotEmpty())
                 .andExpect(jsonPath(checkUsers, "hakim").exists())
@@ -285,7 +284,7 @@ class UserControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("유저 실시간 정보 (/users/live)")
+    @DisplayName("유저 실시간 정보 - /users/live")
     void userLiveInfo() throws Exception {
         /*
          * 게임, 슬롯에 속해있지 않은 경우 (user)
@@ -390,10 +389,10 @@ class UserControllerTest {
     }
 
     private String getUserRankKey(String intraId, GameType gameType) {
-        return intraId + gameType.getKey();
+        return intraId + gameType.getCode();
     }
 
     private String getRankKey(GameType gameType) {
-        return gameType.getKey();
+        return gameType.getCode();
     }
 }
