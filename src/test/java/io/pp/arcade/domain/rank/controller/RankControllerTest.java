@@ -1,6 +1,5 @@
 package io.pp.arcade.domain.rank.controller;
 
-import io.netty.channel.ChannelFuture;
 import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.rank.RankRedis;
@@ -23,8 +22,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -111,7 +108,7 @@ class RankControllerTest {
         /*
         for (User user : Arrays.stream(users).collect(Collectors.toList())) {
             RankRedis singleRank = RankRedis.from(user, GameType.SINGLE.getKey());
-            RankRedis doubleRank = RankRedis.from(user, GameType.BUNGLE.getKey());
+            RankRedis doubleRank = RankRedis.from(user, GameType.BUNGLE.getCode());
             redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.SINGLE), singleRank);
             redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.BUNGLE), doubleRank);
             redisTemplate.opsForZSet().add(getRankKey(GameType.SINGLE), getUserRankKey(user.getIntraId(), GameType.SINGLE), user.getPpp());
@@ -119,7 +116,7 @@ class RankControllerTest {
         }*/
 
         GameType type = GameType.SINGLE;
-        RankRedis userRankInfo = RankRedis.from(client, type.getKey());
+        RankRedis userRankInfo = RankRedis.from(client, type.getCode());
         mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
                 .param("page","1"))
                 .header("Authorization", "Bearer " + 0))
@@ -139,15 +136,15 @@ class RankControllerTest {
     private String getUserKey(String key) { return Key.RANK_USER + key; }
 
     private String getUserKey(String intraId, GameType gameType) {
-        return Key.RANK_USER + intraId + gameType.getKey();
+        return Key.RANK_USER + intraId + gameType.getCode();
     }
 
     private String getUserRankKey(String intraId, GameType gameType) {
-        return intraId + gameType.getKey();
+        return intraId + gameType.getCode();
     }
 
     private String getRankKey(GameType gameType) {
-        return gameType.getKey();
+        return gameType.getCode();
     }
 
 

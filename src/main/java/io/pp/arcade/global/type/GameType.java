@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum GameType {
+public enum GameType implements Constant{
     SINGLE(Key.SINGLE), BUNGLE(Key.BUNGLE);
 
-    private final String key;
+    private final String code;
 }
