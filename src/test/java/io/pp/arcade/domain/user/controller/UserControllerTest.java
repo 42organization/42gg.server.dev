@@ -1,6 +1,7 @@
 package io.pp.arcade.domain.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.JsonPath;
 import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
@@ -9,6 +10,7 @@ import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.pchange.PChange;
 import io.pp.arcade.domain.pchange.PChangeRepository;
 import io.pp.arcade.domain.rank.RankRedis;
+import io.pp.arcade.domain.security.jwt.Token;
 import io.pp.arcade.domain.security.jwt.TokenRepository;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
@@ -82,6 +84,8 @@ class UserControllerTest {
     @Autowired
     private RedisTemplate<String, RankRedis> redisRank;
 
+    @Autowired
+    TestInitiator initiator;
 
     User user2;
     User user3;
@@ -158,15 +162,15 @@ class UserControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("유저 정보 조회 - 간단히 /users")
+    @DisplayName("유저 정보 조회 - 간단히 (/users)")
     void findUser() throws Exception {
         /*
          * - Response Check (2)
          * - -> intraId, userImageUri;
          * */
         mockMvc.perform(get("/pingpong/users").contentType(MediaType.APPLICATION_JSON)
-                .param("userId", user.getId().toString())
-                .header("Authorization", "Bearer 0"))
+                        .param("userId", user.getId().toString())
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(jsonPath("$.intraId").value(user.getIntraId()))
                 .andExpect(jsonPath("$.userImageUri").value(user.getImageUri()))
                 .andExpect(status().isOk())
@@ -175,14 +179,14 @@ class UserControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("유저 정보 조회 - 상세히 /users/{intraId}/detail")
+    @DisplayName("유저 정보 조회 - 상세히 (/users/{intraId}/detail)")
     void findDetailUser() throws Exception { // rank가 문제라서 안됐다!
         /*
          * intraId를 찾을 수 없는 경우
          * -> 400
          * */
         mockMvc.perform(get("/pingpong/users/" + "notFound" + "/detail").contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer 0"))
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isBadRequest());
 
         /*
@@ -191,7 +195,7 @@ class UserControllerTest {
          * -> rank, wins, losses
          * */
         mockMvc.perform(get("/pingpong/users/" + user.getIntraId() + "/detail").contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer 0"))
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(jsonPath("$.userId").value(user.getIntraId()))
                 .andExpect(jsonPath("$.userImageUri").value(user.getImageUri()))
                 .andExpect(jsonPath("$.statusMessage").value(user.getStatusMessage()))
@@ -205,14 +209,14 @@ class UserControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("유저 전적 경향 - /users/{intraId}/historics")
+    @DisplayName("유저 전적 경향 (/users/{intraId}/historics)")
     void findUserHistorics() throws Exception {
         /*
          * intraId 찾을 수 없는 경우
          * -> 400
          * */
         mockMvc.perform(get("/pingpong/users/" + "notFound" +"/historics").contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer 0"))
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isBadRequest());
 
         /*
@@ -221,7 +225,7 @@ class UserControllerTest {
          * */
         User user = users[0];
         mockMvc.perform(get("/pingpong/users/" + user.getIntraId() +"/historics").contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer 0"))
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk());
 
         /*
@@ -230,7 +234,7 @@ class UserControllerTest {
          * */
         mockMvc.perform(get("/pingpong/users/" + user.getIntraId() +"/historics").contentType(MediaType.APPLICATION_JSON)
                         .param("chartType","")
-                        .header("Authorization", "Bearer 0"))
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk());
 
         /*
@@ -240,8 +244,8 @@ class UserControllerTest {
          * */
         String gameDate = userGame.getTime().toString();
         mockMvc.perform(get("/pingpong/users/" + user.getIntraId() +"/historics").contentType(MediaType.APPLICATION_JSON)
-                .param("chartType","rank")
-                .header("Authorization", "Bearer 0"))
+                        .param("chartType","rank")
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(jsonPath("$.historics[0].ppp").value(userPchange.getPppResult()))
                 .andExpect(jsonPath("$.historics[0].date").value(userGame.getTime()))
                 .andExpect(status().isOk());
@@ -249,7 +253,7 @@ class UserControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("유저 검색 - /pingpong/users/searches")
+    @DisplayName("유저 검색 (/pingpong/users/searches)")
     void userSearchResult() throws Exception {
         /*
          * q(query) null
@@ -257,19 +261,18 @@ class UserControllerTest {
          * -> 200
          * */
         mockMvc.perform(get("/pingpong/users/searches").contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer 1"))
+                        .header("Authorization", "Bearer " + initiator.tokens[1].getAccessToken()))
                 .andExpect(jsonPath("$.users").isEmpty())
                 .andExpect(status().isOk());
 
         /*
          * q(query) k
          * -> users : ["hakim", "donghyuk", "jekim", "jihyukim", "daekim", "sujpark", "kipark"]
-         * -> 200
          * */
         String checkUsers = "$.users[?(@=='%s')]";
         mockMvc.perform(get("/pingpong/users/searches").contentType(MediaType.APPLICATION_JSON)
-                .param("q", "k")
-                .header("Authorization", "Bearer 1"))
+                        .param("q", "k")
+                        .header("Authorization", "Bearer " + initiator.tokens[1].getAccessToken()))
                 .andExpect(jsonPath("$.users").isNotEmpty())
                 .andExpect(jsonPath(checkUsers, "hakim").exists())
                 .andExpect(jsonPath(checkUsers, "donghyuk").exists())
@@ -284,14 +287,14 @@ class UserControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("유저 실시간 정보 - /users/live")
+    @DisplayName("유저 실시간 정보 (/users/live)")
     void userLiveInfo() throws Exception {
         /*
          * 게임, 슬롯에 속해있지 않은 경우 (user)
          * -> event : none
          * */
         mockMvc.perform(get("/pingpong/users/live").contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer 0"))
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.event").isEmpty())
                 .andDo(document("find-user-live1"));
@@ -300,7 +303,7 @@ class UserControllerTest {
          * -> event : match
          * */
         mockMvc.perform(get("/pingpong/users/live").contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer 1"))
+                        .header("Authorization", "Bearer " + initiator.tokens[1].getAccessToken()))
                 .andExpect(jsonPath("$.event").value("match"))
                 .andExpect(status().isOk())
                 .andDo(document("find-user-live2"));
@@ -309,7 +312,7 @@ class UserControllerTest {
          * -> event : game
          * */
         mockMvc.perform(get("/pingpong/users/live").contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer 2"))
+                        .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
                 .andExpect(jsonPath("$.event").value("game"))
                 .andExpect(status().isOk())
                 .andDo(document("find-user-live3"));
@@ -326,8 +329,8 @@ class UserControllerTest {
         Map<String, String> body = new HashMap<>();
         body.put("statusMessage", "message");
         mockMvc.perform(put("/pingpong/users/detail").contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body))
-                .header("Authorization", "Bearer 0"))
+                        .content(objectMapper.writeValueAsString(body))
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isBadRequest());
 
         /*
@@ -338,8 +341,8 @@ class UserControllerTest {
         body2.put("racketType", "NOTHING");
         body2.put("statusMessage", "message");
         mockMvc.perform(put("/pingpong/users/detail").contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body2))
-                .header("Authorization", "Bearer 0"))
+                        .content(objectMapper.writeValueAsString(body2))
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isBadRequest());
 
         /*
@@ -349,8 +352,8 @@ class UserControllerTest {
         Map<String, String> body3 = new HashMap<>();
         body3.put("racketType", "PENHOLDER");
         mockMvc.perform(put("/pingpong/users/detail").contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body3))
-                .header("Authorization", "Bearer 0"))
+                        .content(objectMapper.writeValueAsString(body3))
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isBadRequest());
 
         /*
@@ -361,26 +364,27 @@ class UserControllerTest {
         body4.put("racketType", "PENHOLDER");
         body4.put("statusMessage", "0123456789".repeat(31));
         mockMvc.perform(put("/pingpong/users/detail").contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body4))
-                .header("Authorization", "Bearer 0"))
+                        .content(objectMapper.writeValueAsString(body4))
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isBadRequest());
 
         /*
          * 업데이트 성공
          * -> 200
-         * */
+         */
         Map<String, String> body5 = new HashMap<>();
         body5.put("racketType", "PENHOLDER");
         body5.put("statusMessage", "message");
         mockMvc.perform(put("/pingpong/users/detail").contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(body5))
-                .header("Authorization", "Bearer 0"))
+                        .content(objectMapper.writeValueAsString(body5))
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(document("modify-user-profile"));
         User savedUser = userRepository.findByIntraId(user.getIntraId()).orElse(null);
-        Assertions.assertThat(savedUser.getRacketType()).isEqualTo(body5.get("racketType"));
+        Assertions.assertThat(savedUser.getRacketType().getCode()).isEqualTo(body5.get("racketType"));
         Assertions.assertThat(savedUser.getStatusMessage()).isEqualTo(body5.get("statusMessage"));
     }
+
 
     private Integer getRanking(RankRedis userInfo ,GameType gameType){
         Integer totalGames = userInfo.getLosses() + userInfo.getWins();

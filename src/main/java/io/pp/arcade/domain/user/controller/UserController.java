@@ -8,6 +8,7 @@ import io.pp.arcade.domain.user.dto.UserSearchResultResponseDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +18,7 @@ public interface UserController {
     UserResponseDto userFind(HttpServletRequest request);
     UserDetailResponseDto userFindDetail(@PathVariable String targetUserId, HttpServletRequest request);
     UserHistoricResponseDto userFindHistorics(@PathVariable String userId, @PageableDefault(size = 10) Pageable pageable);
-    void userModifyProfile(HttpServletRequest request);
+    void userModifyProfile(HttpServletRequest request, @RequestBody @Valid UserModifyProfileRequestDto userModifyProfileRequestDto);
     UserSearchResultResponseDto userSearchResult(@RequestParam(value="q", required = false, defaultValue = "") String inquiringString); // 유효성 검사 해야함
     UserLiveInfoResponseDto userLiveInfo(HttpServletRequest request);
 }
