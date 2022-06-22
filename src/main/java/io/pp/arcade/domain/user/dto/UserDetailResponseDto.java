@@ -16,4 +16,5 @@ public class UserDetailResponseDto {
     private Double winRate;
     private RacketType racketType;
     private String statusMessage;
+    private UserRivalRecordDto rivalRecord;
 }

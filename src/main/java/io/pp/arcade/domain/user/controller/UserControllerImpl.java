@@ -14,6 +14,7 @@ import io.pp.arcade.domain.rank.dto.RankFindDto;
 import io.pp.arcade.domain.rank.dto.RankUserDto;
 import io.pp.arcade.domain.rank.service.RankServiceImpl;
 import io.pp.arcade.domain.security.jwt.TokenService;
+import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.*;
 import io.pp.arcade.global.exception.BusinessException;
@@ -65,6 +66,10 @@ public class UserControllerImpl implements UserController {
         UserDto targetUser = userService.findByIntraId(UserFindDto.builder().intraId(targetUserId).build());
         // 일단 게임타입은 SINGLE로 구현
         RankUserDto rankDto = rankService.findRankById(RankFindDto.builder().intraId(targetUserId).gameType(GameType.SINGLE).build());
+        UserRivalRecordDto rivalRecord = UserRivalRecordDto.builder().curUserWin(0).targetUserWin(0).build();
+        if (!targetUserId.equals(curUser.getIntraId())) {
+            rivalRecord = getRivalRecord(curUser, targetUser);
+        }
         UserDetailResponseDto responseDto = UserDetailResponseDto.builder()
                 .userId(targetUser.getIntraId())
                 .userImageUri(targetUser.getImageUri())
@@ -75,8 +80,31 @@ public class UserControllerImpl implements UserController {
                 .losses(rankDto.getLosses())
                 .winRate(rankDto.getWinRate())
                 .rank(rankDto.getRank())
+                .rivalRecord(rivalRecord)
                 .build();
         return responseDto;
+    }
+
+    private UserRivalRecordDto getRivalRecord(UserDto curUser, UserDto targetUser) {
+        List<PChangeDto> curUserPChanges = pChangeService.findPChangeByUserIdNotPage(PChangeFindDto.builder().userId(curUser.getIntraId()).build());
+        List<PChangeDto> targetUserPChanges = pChangeService.findPChangeByUserIdNotPage(PChangeFindDto.builder().userId(targetUser.getIntraId()).build());
+        Integer curUserWin = 0;
+        Integer tarGetUserWin = 0;
+        for (PChangeDto curUsers : curUserPChanges) {
+            for (PChangeDto targetUsers : targetUserPChanges) {
+                if (curUsers.getGame().getId().equals(targetUsers.getGame().getId())) {
+                    if (curUsers.getPppChange() > 0) {
+                        curUserWin += 1;
+                    } else if (curUsers.getPppChange() < 0) {
+                        tarGetUserWin += 1;
+                    }
+                } else {
+                    targetUserPChanges.remove(targetUsers);
+                }
+            }
+        }
+        UserRivalRecordDto dto = UserRivalRecordDto.builder().curUserWin(curUserWin).targetUserWin(tarGetUserWin).build();
+        return dto;
     }
 
     /* *
