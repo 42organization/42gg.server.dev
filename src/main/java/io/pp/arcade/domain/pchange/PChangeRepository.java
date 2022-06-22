@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface PChangeRepository extends JpaRepository<PChange, Integer> {
     Optional<List<PChange>> findAllByGame(Game game);
+    Optional<List<PChange>> findAllByUserIntraId(String intraId);
     Page<PChange> findAllByUserOrderByIdDesc(User user, Pageable pageable);
     /* status가 Entitiy에 없어요 ㅠㅠ */
     //     Page<PChange> findAllByUserAndStatusAndGameIdLessThanOrderByIdDesc(User user, String status, Integer gameId, Pageable pageable);
