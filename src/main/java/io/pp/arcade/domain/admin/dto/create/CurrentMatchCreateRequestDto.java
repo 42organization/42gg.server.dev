@@ -4,7 +4,6 @@ import lombok.Getter;
 
 @Getter
 public class CurrentMatchCreateRequestDto {
-    private Integer currentMatchId;
     private Integer userId;
     private Integer slotId;
     private Integer gameId;

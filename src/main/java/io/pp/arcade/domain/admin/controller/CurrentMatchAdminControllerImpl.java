@@ -31,7 +31,7 @@ public class CurrentMatchAdminControllerImpl implements CurrentMatchAdminControl
     }
 
     @Override
-    @DeleteMapping(value = "/currentMatch/{id}")
+    @DeleteMapping(value = "/currentMatch/{currentMatchId}")
     public void currentMatchDelete(Integer currentMatchId, HttpServletRequest request) {
         CurrentMatchDeleteDto deleteDto = CurrentMatchDeleteDto.builder().currentMatchId(currentMatchId).build();
         currentMatchService.deleteCurrentMatchByAdmin(deleteDto);
