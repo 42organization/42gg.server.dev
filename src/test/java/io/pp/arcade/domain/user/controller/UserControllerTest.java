@@ -37,6 +37,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.transaction.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -242,12 +244,16 @@ class UserControllerTest {
          * -> ppp
          * -> date
          * */
+
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String gameDate = userGame.getTime().toString();
+        String subDate = gameDate.substring(0, gameDate.length()-2);
+//        LocalDateTime formatDateTime = LocalDateTime.parse(gameDate, formatter);
         mockMvc.perform(get("/pingpong/users/" + user.getIntraId() +"/historics").contentType(MediaType.APPLICATION_JSON)
                         .param("chartType","rank")
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(jsonPath("$.historics[0].ppp").value(userPchange.getPppResult()))
-                .andExpect(jsonPath("$.historics[0].date").value(userGame.getTime()))
+                .andExpect(jsonPath("$.historics[0].date").value(subDate))
                 .andExpect(status().isOk());
     }
 

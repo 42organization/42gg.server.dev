@@ -1,4 +1,10 @@
 spring:
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
+
+
+
   config:
     activate:
       on-profile:
