@@ -67,7 +67,6 @@ class UserServiceByAdminTest {
                 .ppp(1)
                 .build()
         );
-
     }
 
     @Test

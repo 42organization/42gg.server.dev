@@ -4,9 +4,9 @@ import lombok.Getter;
 
 @Getter
 public class CurrentMatchUpdateRequestDto {
-    private Integer currenMatchId;
-    private Integer slotId;
+    private Integer currentMatchId;
     private Integer userId;
+    private Integer slotId;
     private Integer gameId;
     private Boolean matchImminent;
     private Boolean isMatched;

@@ -120,10 +120,7 @@ public class GameAdminControllerTest {
         Map<String, String> body = new HashMap<>();
         body.put("gameId", game1.getId().toString());
         body.put("slotId", slot1.getId().toString());
-        body.put("team1Id", slot1.getTeam1().getId().toString());
-        body.put("team2Id", slot1.getTeam2().getId().toString());
-        body.put("seasonId", season.getId().toString());
-        body.put("time", LocalDateTime.of(2022, 7, 6, 15, 20).toString());
+        body.put("seasonId", "2");
         body.put("status", StatusType.LIVE.toString());
 
         mockMvc.perform(put("/admin/game").contentType(MediaType.APPLICATION_JSON)
@@ -132,8 +129,8 @@ public class GameAdminControllerTest {
                 .andDo(document("admin-game-update"));
 
         Game updatedGame = gameRepository.findBySlot(slot1).orElseThrow(null);
-        Assertions.assertThat(updatedGame.getTime()).isEqualTo(LocalDateTime.of(2022, 7, 6, 15, 20));
-        Assertions.assertThat(updatedGame.getType()).isEqualTo(StatusType.LIVE);
+        Assertions.assertThat(updatedGame.getSeason()).isEqualTo(2);
+        Assertions.assertThat(updatedGame.getStatus()).isEqualTo(StatusType.LIVE);
     }
 
     @Test
