@@ -45,10 +45,6 @@ public class GameAdminControllerImpl implements GameAdminController {
         GameUpdateDto updateDto = GameUpdateDto.builder()
                 .gameId(updateRequestDto.getGameId())
                 .slotId(updateRequestDto.getSlotId())
-                .team1Id(updateRequestDto.getTeam1Id())
-                .team2Id(updateRequestDto.getTeam2Id())
-                .type(updateRequestDto.getType())
-                .time(updateRequestDto.getTime())
                 .seasonId(updateRequestDto.getSeasonId())
                 .status(updateRequestDto.getStatus())
                 .build();

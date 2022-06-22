@@ -100,7 +100,8 @@ public class GameService {
     @Transactional
     public void updateGameByAdmin(GameUpdateDto updateDto) {
         Game game = gameRepository.findById(updateDto.getGameId()).orElseThrow(null);
-        game.setStatus(updateDto.getStatus());
+        Slot slot = slotRepository.findById(updateDto.getSlotId()).orElseThrow(null);
+        game.update(slot, updateDto.getSeasonId(), updateDto.getStatus());
     }
 
     @Transactional
