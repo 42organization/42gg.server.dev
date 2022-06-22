@@ -105,13 +105,12 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @PutMapping(value = "/users/detail")
-    public void userModifyProfile(HttpServletRequest request) {
+    public void userModifyProfile(HttpServletRequest request, UserModifyProfileRequestDto requestDto) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         userService.modifyUserProfile(UserModifyProfileDto.builder()
                 .userId(user.getId())
-                .userImageUri(user.getImageUri())
-                .racketType(user.getRacketType())
-                .statusMessage(user.getStatusMessage()).build());
+                .racketType(requestDto.getRacketType())
+                .statusMessage(requestDto.getStatusMessage()).build());
     }
 
     @Override
