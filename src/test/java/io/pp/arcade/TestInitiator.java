@@ -62,14 +62,14 @@ public class TestInitiator {
     public RankRedis[] ranks;
     public void letsgo() {
         users = new User[11];
-        users[0] = userRepository.save(User.builder().intraId("hakim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1040).roleType(RoleType.ADMIN).racketType(RacketType.SHAKEHAND).build());
-        users[1] = userRepository.save(User.builder().intraId("nheo").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1030).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
+        users[0] = userRepository.save(User.builder().intraId("hakim").eMail("hihihoho").imageUri("hakim.jpg").statusMessage("kikikaka").ppp(1040).roleType(RoleType.ADMIN).racketType(RacketType.SHAKEHAND).build());
+        users[1] = userRepository.save(User.builder().intraId("nheo").eMail("hihihoho").imageUri("neho.jpg").statusMessage("kikikaka").ppp(1030).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[2] = userRepository.save(User.builder().intraId("donghyuk").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1020).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[3] = userRepository.save(User.builder().intraId("jiyun").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1010).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
-        users[4] = userRepository.save(User.builder().intraId("jekim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(990).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
-        users[5] = userRepository.save(User.builder().intraId("wochae").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(980).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
-        users[6] = userRepository.save(User.builder().intraId("jabae").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1000).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
-        users[7] = userRepository.save(User.builder().intraId("jihyukim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(992).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
+        users[4] = userRepository.save(User.builder().intraId("jekim").eMail("hihihoho").imageUri("jekim.jpg").statusMessage("kikikaka").ppp(990).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
+        users[5] = userRepository.save(User.builder().intraId("wochae").eMail("hihihoho").imageUri("wochae.jpg").statusMessage("kikikaka").ppp(980).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
+        users[6] = userRepository.save(User.builder().intraId("jabae").eMail("hihihoho").imageUri("jabae.jpg").statusMessage("kikikaka").ppp(1000).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
+        users[7] = userRepository.save(User.builder().intraId("jihyukim").eMail("hihihoho").imageUri("jihyukim.jpg").statusMessage("kikikaka").ppp(992).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[8] = userRepository.save(User.builder().intraId("daekim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(996).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[9] = userRepository.save(User.builder().intraId("sujpark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(994).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[10] = userRepository.save(User.builder().intraId("kipark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(100).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());

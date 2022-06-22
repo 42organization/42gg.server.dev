@@ -17,7 +17,7 @@ public interface GameController {
     //게임 결과 정보 - GET /pingpong/games/result
     GameUserInfoResponseDto gameUserInfo(HttpServletRequest request);
     //게임 결과 입력 - POST /pingpong/games/result
-    void gameResultSave(@RequestBody GameResultRequestDto getterDto, HttpServletRequest request);
+    void gameResultSave(@RequestBody @Valid GameResultRequestDto getterDto, HttpServletRequest request);
     GameResultResponseDto gameResultByGameIdAndCount(@ModelAttribute @Valid GameResultPageRequestDto requestDto);
     GameResultResponseDto gameResultByUserIdAndByGameIdAndCount(@PathVariable String intraId, @ModelAttribute @Valid GameResultUserPageRequestDto requestDto);
 
