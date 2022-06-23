@@ -33,7 +33,8 @@ public class CurrentMatchUpdater {
     @Scheduled(cron = "0 */" + intervalTime + " " + startTime + "-" + endTime + " * * *", zone = "Asia/Seoul") // 초 분 시 일 월 년 요일
     public void updateIsImminent() throws MessagingException {
         LocalDateTime now = LocalDateTime.now();
-        now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute() + 5, 0);
+        now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
+        now = now.plusMinutes(5);
 
         SlotDto slot = slotService.findByTime(now);
         if (slot == null) {
