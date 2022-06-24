@@ -6,7 +6,9 @@ import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchModifyDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchRemoveDto;
 import io.pp.arcade.domain.noti.dto.NotiCanceledTypeDto;
+import io.pp.arcade.domain.season.Season;
 import io.pp.arcade.domain.season.SeasonService;
+import io.pp.arcade.domain.season.dto.SeasonDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.*;
@@ -28,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,13 +111,33 @@ public class SlotControllerImpl implements SlotController {
             throw new BusinessException("{invalid.request}");
         }
         SlotDto slot = currentMatch.getSlot();
-
+        if (currentMatch.getIsMatched() == true) {
+            falsifyIsMatchedForRemainders(currentMatch.getSlot());
+        }
         CurrentMatchRemoveDto currentMatchRemoveDto = CurrentMatchRemoveDto.builder()
                 .userId(user.getId()).build();
         currentMatchService.removeCurrentMatch(currentMatchRemoveDto);
         teamService.removeUserInTeam(getTeamRemoveUserDto(slot, user));
         slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
-        notiGenerater.addCancelNotisBySlot(NotiCanceledTypeDto.builder().slotDto(slot).notiType(NotiType.CANCELEDBYTIME).build());
+        notiGenerater.addCancelNotisBySlot(NotiCanceledTypeDto.builder().slotDto(slot).notiType(NotiType.CANCELEDBYMAN).build());
+    }
+
+    private void falsifyIsMatchedForRemainders(SlotDto slot) {
+        List<UserDto> users = new ArrayList<>();
+        users.add(slot.getTeam1().getUser1());
+        users.add(slot.getTeam1().getUser2());
+        users.add(slot.getTeam2().getUser1());
+        users.add(slot.getTeam2().getUser2());
+
+        for (UserDto user : users) {
+            if (user != null) {
+                currentMatchService.modifyCurrentMatch(CurrentMatchModifyDto.builder()
+                        .userId(user.getId())
+                        .isMatched(false)
+                        .matchImminent(false)
+                        .build());
+            }
+        }
     }
 
     private List<SlotGroupDto> groupingSlots(List<SlotStatusDto> slots) {
@@ -173,7 +196,13 @@ public class SlotControllerImpl implements SlotController {
         TeamDto team1 = slot.getTeam1();
         TeamDto team2 = slot.getTeam2();
         Integer headCount = slot.getHeadCount();
-        Integer pppGap = seasonService.findCurrentSeason().getPppGap();
+        SeasonDto season = seasonService.findCurrentSeason();
+        Integer pppGap;
+        if (season == null) {
+            pppGap = 100;
+        } else {
+            pppGap = season.getPppGap();
+        }
         Integer maxTeamHeadCount = GameType.SINGLE.equals(slotType) ? 1 : 2;
 
         SlotFilterDto slotFilterDto = SlotFilterDto.builder()
@@ -193,7 +222,8 @@ public class SlotControllerImpl implements SlotController {
                 teamId = team2.getId();
             }
         } else {
-            throw new BusinessException("{invalid.request}");
+            throw
+                    new BusinessException("{invalid.request}");
         }
         TeamAddUserDto teamAddUserDto = TeamAddUserDto.builder()
                 .teamId(teamId)
