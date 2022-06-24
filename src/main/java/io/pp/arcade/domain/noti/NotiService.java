@@ -64,6 +64,12 @@ public class NotiService {
     }
 
     @Transactional
+    public NotiDto findNotiByIdAndUser(NotiFindDto findDto) {
+        Noti noti = notiRepository.findByIdAndUserId(findDto.getNotiId(), findDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        return NotiDto.from(noti);
+    }
+
+    @Transactional
     public NotiCountDto countAllNByUser(NotiFindDto findDto) {
         User user = userRepository.findById(findDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         Integer count = notiRepository.countAllNByUserAndIsChecked(user, false);

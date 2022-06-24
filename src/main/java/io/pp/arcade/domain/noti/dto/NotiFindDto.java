@@ -8,4 +8,5 @@ import lombok.Getter;
 @Builder
 public class NotiFindDto {
     UserDto user;
+    Integer notiId;
 }

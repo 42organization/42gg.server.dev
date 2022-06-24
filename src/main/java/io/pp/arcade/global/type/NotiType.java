@@ -7,7 +7,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum NotiType implements Constant{
     MATCHED("MATCHED"),
-    CANCELED("CANCELED"),
+    CANCELEDBYMAN("CANCELEDBYMAN"),
+    CANCELEDBYTIME("CANCELEDBYMAN"),
     IMMINENT("IMMINENT"),
     ANNOUNCE("ANNOUNCE");
 
