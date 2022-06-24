@@ -76,7 +76,7 @@ public class NotiControllerImpl implements NotiController {
                         .enemyTeam(enemyTeam)
                         .createdAt(noti.getCreatdDate())
                         .build());
-            } else if (noti.getType().equals(NotiType.CANCELEDBYMAN)) {
+            } else if (noti.getType().equals(NotiType.CANCELEDBYMAN) || noti.getType().equals(NotiType.CANCELEDBYTIME)) {
                 notiDtos.add(NotiCanceledDto.builder()
                         .id(noti.getId())
                         .type(noti.getType())

@@ -28,6 +28,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.transaction.Transactional;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -69,7 +72,7 @@ class NotiControllerTest {
     User user4;
     Team team1;
     Team team2;
-
+    List<Noti> notis;
     @BeforeEach
     void init() {
         initiator.letsgo();
@@ -78,38 +81,15 @@ class NotiControllerTest {
         user3 = initiator.users[2];
         user4 = initiator.users[3];
         slot =initiator.slots[0];
+        notis = new ArrayList<Noti>();
 
-        notiRepository.save(Noti.builder()
-                .user(user1)
-                .type(NotiType.MATCHED)
-                .isChecked(false)
-                .slot(slot)
-                .build());
-        notiRepository.save(Noti.builder()
-                .user(user1)
-                .type(NotiType.CANCELEDBYMAN)
-                .isChecked(false)
-                .slot(slot)
-                .build());
-        notiRepository.save(Noti.builder()
-                .user(user1)
-                .type(NotiType.MATCHED)
-                .isChecked(false)
-                .slot(slot)
-                .build());
-        notiRepository.save(Noti.builder()
-                .user(user1)
-                .type(NotiType.IMMINENT)
-                .isChecked(false)
-                .slot(slot)
-                .build());
-        notiRepository.save(Noti.builder()
-                .user(user1)
-                .type(NotiType.ANNOUNCE)
-                .message("공지사항")
-                .isChecked(false)
-                .slot(slot)
-                .build());
+        notis.add(notiRepository.save(Noti.builder().type(NotiType.MATCHED).user(user1).isChecked(false).slot(slot).build()));
+        notis.add(notiRepository.save(Noti.builder().type(NotiType.CANCELEDBYMAN).user(user1).isChecked(false).slot(slot).build()));
+        notis.add(notiRepository.save(Noti.builder().type(NotiType.CANCELEDBYTIME).user(user1).isChecked(false).slot(slot).build()));
+        notis.add(notiRepository.save(Noti.builder().type(NotiType.MATCHED).user(user1).isChecked(false).slot(slot).build()));
+        notis.add(notiRepository.save(Noti.builder().type(NotiType.IMMINENT).user(user1).isChecked(false).slot(slot).build()));
+        notis.add(notiRepository.save(Noti.builder().type(NotiType.ANNOUNCE).user(user1).message("공지사항").isChecked(false).slot(slot).build()));
+
         slot.setType(GameType.SINGLE);
         team1 = slot.getTeam1();
         team2 = slot.getTeam2();
