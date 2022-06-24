@@ -40,7 +40,10 @@ public class SeasonService {
     @Transactional
     public SeasonDto findCurrentSeason() {
         LocalDateTime now = LocalDateTime.now();
-        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElseThrow(() -> new BusinessException("{invalid.request}"));
+//        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElse(null);
+        if (season == null)
+            return null;
         return SeasonDto.from(season);
     }
 

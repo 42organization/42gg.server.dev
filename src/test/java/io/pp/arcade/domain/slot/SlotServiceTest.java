@@ -76,6 +76,7 @@ class SlotServiceTest {
         Slot addedSlot = slots2.get(slots2.size() - 1);
         Team team1 = addedSlot.getTeam1();
         Team team2 = addedSlot.getTeam2();
+
         //then
         Assertions.assertThat(dto.getTime()).isEqualTo(addedSlot.getTime());
         Assertions.assertThat(team1).isNotEqualTo(null);

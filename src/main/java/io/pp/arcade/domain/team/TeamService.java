@@ -51,7 +51,7 @@ public class TeamService {
         User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
 
-        if (team.getUser1().equals(user)) {
+        if (user.equals(team.getUser1())) {
             team.setUser1(null);
         } else {
             team.setUser2(null);
