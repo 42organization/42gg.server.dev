@@ -104,6 +104,8 @@ public class SlotControllerImpl implements SlotController {
         CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUserId(user.getId());
         if (currentMatch == null) {
             throw new BusinessException("{invalid.request}");
+        } else if (currentMatch.getMatchImminent()) {
+            throw new BusinessException("{invalid.request}");
         }
         SlotDto slot = currentMatch.getSlot();
 
