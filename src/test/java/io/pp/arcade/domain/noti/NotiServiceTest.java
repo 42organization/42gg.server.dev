@@ -106,7 +106,7 @@ class NotiServiceTest {
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .type(NotiType.CANCELED)
+                .type(NotiType.CANCELEDBYMAN)
                 .isChecked(false)
                 .slot(slot)
                 .build());
@@ -142,7 +142,7 @@ class NotiServiceTest {
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .type(NotiType.CANCELED)
+                .type(NotiType.CANCELEDBYMAN)
                 .isChecked(false)
                 .slot(slot)
                 .build());
@@ -178,7 +178,7 @@ class NotiServiceTest {
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .type(NotiType.CANCELED)
+                .type(NotiType.CANCELEDBYMAN)
                 .isChecked(false)
                 .slot(slot)
                 .build());
@@ -214,7 +214,7 @@ class NotiServiceTest {
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .type(NotiType.CANCELED)
+                .type(NotiType.CANCELEDBYMAN)
                 .isChecked(false)
                 .slot(slot)
                 .build());
@@ -249,7 +249,7 @@ class NotiServiceTest {
                 .build());
         notiRepository.save(Noti.builder()
                 .user(user1)
-                .type(NotiType.CANCELED)
+                .type(NotiType.CANCELEDBYMAN)
                 .isChecked(false)
                 .slot(slot)
                 .build());

@@ -35,38 +35,32 @@ class SlotServiceTest {
     TestInitiator testInitiator;
 
     Slot slot;
-    Team team1;
     User user1;
     User user2;
-    Team team2;
-    User user3;
-    User user4;
+    Slot[] slots;
+    User[] users;
+    Team[] teams;
 
     @BeforeEach
     void init() {
         testInitiator.letsgo();
-        user1 = userRepository.findByIntraId("hakim").orElse(null);
-        user2 = userRepository.findByIntraId("jabae").orElse(null);
-        user3 = userRepository.findByIntraId("sujpark").orElse(null);
-        user4 = userRepository.findByIntraId("jihyukim").orElse(null);
-        team1 = teamRepository.save(Team.builder()
-                .teamPpp(0)
-                .headCount(0)
-                .score(0)
-                .build());
-        team2 = teamRepository.save(Team.builder()
-                .teamPpp(0)
-                .headCount(0)
-                .score(0)
-                .build());
-//        slot = slotRepository.save(Slot.builder()
-//                .tableId(1)
-//                .team1(team1)
-//                .team2(team2)
-//                .time(LocalDateTime.now())
+        teams = testInitiator.teams;
+        users = testInitiator.users;
+        slots = testInitiator.slots;
+//        user1 = userRepository.findByIntraId("hakim").orElse(null);
+//        user2 = userRepository.findByIntraId("jabae").orElse(null);
+//        user3 = userRepository.findByIntraId("sujpark").orElse(null);
+//        user4 = userRepository.findByIntraId("jihyukim").orElse(null);
+//        team1 = teamRepository.save(Team.builder()
+//                .teamPpp(0)
 //                .headCount(0)
+//                .score(0)
 //                .build());
-        slot = slotRepository.findAll().get(0);
+//        team2 = teamRepository.save(Team.builder()
+//                .teamPpp(0)
+//                .headCount(0)
+//                .score(0)
+//                .build());
     }
 
     @Test
@@ -78,10 +72,14 @@ class SlotServiceTest {
 
         //when
         slotService.addSlot(dto);
-        Slot slot1 = slotRepository.findAllByCreatedAtAfter(time.minusDays(1)).get(18);
-
+        List<Slot> slots2 = slotRepository.findAllByTimeAfterOrderByTimeAsc(time.minusDays(1));
+        Slot addedSlot = slots2.get(slots2.size() - 1);
+        Team team1 = addedSlot.getTeam1();
+        Team team2 = addedSlot.getTeam2();
         //then
-        Assertions.assertThat(dto.getTime()).isEqualTo(slot1.getTime());
+        Assertions.assertThat(dto.getTime()).isEqualTo(addedSlot.getTime());
+        Assertions.assertThat(team1).isNotEqualTo(null);
+        Assertions.assertThat(team2).isNotEqualTo(null);
     }
 
     @Test
