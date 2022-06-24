@@ -109,6 +109,8 @@ public class SlotControllerImpl implements SlotController {
             throw new BusinessException("{invalid.request}");
         } else if (currentMatch.getMatchImminent()) {
             throw new BusinessException("{invalid.request}");
+        } else if (currentMatch.getGame() != null) {
+            throw new BusinessException("{invalid.request}");
         }
         SlotDto slot = currentMatch.getSlot();
         if (currentMatch.getIsMatched() == true) {
