@@ -5,11 +5,14 @@ import io.pp.arcade.domain.currentmatch.dto.CurrentMatchSaveGameDto;
 import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.game.dto.GameAddDto;
 import io.pp.arcade.domain.game.dto.GameDto;
+import io.pp.arcade.domain.noti.dto.NotiCanceledDto;
+import io.pp.arcade.domain.noti.dto.NotiCanceledTypeDto;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.NotiType;
 import io.pp.arcade.global.util.NotiGenerater;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -55,7 +58,8 @@ public class GameGenerator {
                 saveCurrentMatch(team2.getUser1(), game);
                 saveCurrentMatch(team2.getUser2(), game);
             } else {
-                notiGenerater.addCancelNotisBySlot(slotDto);
+                NotiCanceledTypeDto canceledDto =  NotiCanceledTypeDto.builder().slotDto(slotDto).notiType(NotiType.CANCELEDBYTIME).build();
+                notiGenerater.addCancelNotisBySlot(canceledDto);
             }
         }
     }

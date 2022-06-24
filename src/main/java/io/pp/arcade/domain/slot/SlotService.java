@@ -95,10 +95,13 @@ public class SlotService {
     public List<SlotStatusDto> findSlotsStatus(SlotFindStatusDto findDto) {
         LocalDateTime now = findDto.getCurrentTime();
         LocalDateTime todayStartTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 0);
-        List<Slot> slots = slotRepository.findAllByCreatedAtAfter(todayStartTime);
+        List<Slot> slots = slotRepository.findAllByTimeAfterOrderByTimeAsc(todayStartTime);
 
         User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        Integer pppGap = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(LocalDateTime.now(), LocalDateTime.now()).orElseThrow(() -> new BusinessException("{invalid.request}")).getPppGap();
+        Integer pppGap = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(LocalDateTime.now(), LocalDateTime.now()).orElse(null).getPppGap();
+        if (pppGap == null) {
+            pppGap = 100;
+        }
         CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
         Integer userSlotId = currentMatch == null ? null : currentMatch.getSlot().getId();
 
