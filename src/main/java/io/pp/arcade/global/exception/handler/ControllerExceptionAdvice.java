@@ -39,8 +39,8 @@ public class ControllerExceptionAdvice {
     public ResponseEntity<ExceptionReponse> constraintViolationExceptionHandle(ConstraintViolationException ex) {
         log.info("ConstraintViolationException", ex);
         for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
-            String message = messageSource.getMessage(filter(violation.getMessage()), null, Locale.KOREA);
-            ExceptionReponse response = ExceptionReponse.from("E0001", message);
+//            String message = messageSource.getMessage(filter(violation.getMessage()), null, Locale.KOREA);
+            ExceptionReponse response = ExceptionReponse.from("E0001", "잘못된 요청입니다.");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
         return null;
