@@ -217,13 +217,13 @@ class UserControllerTest {
          * intraId 찾을 수 없는 경우
          * -> 400
          * */
-        mockMvc.perform(get("/pingpong/users/" + "notFound" +"/historics").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/users/{intraId}/historics", "notFound").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isBadRequest());
 
         /*
          * chartType NULL (향후 수정)
-         * -> 400
+         * -> 200
          * */
         User user = users[0];
         mockMvc.perform(get("/pingpong/users/" + user.getIntraId() +"/historics").contentType(MediaType.APPLICATION_JSON)
@@ -232,7 +232,7 @@ class UserControllerTest {
 
         /*
          * chartType 다른 값 (향후 수정)
-         * -> 400
+         * -> 200
          * */
         mockMvc.perform(get("/pingpong/users/" + user.getIntraId() +"/historics").contentType(MediaType.APPLICATION_JSON)
                         .param("chartType","")

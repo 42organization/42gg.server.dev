@@ -5,6 +5,7 @@ import io.pp.arcade.domain.currentmatch.dto.CurrentMatchAddDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchModifyDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchRemoveDto;
+import io.pp.arcade.domain.noti.dto.NotiCanceledTypeDto;
 import io.pp.arcade.domain.season.SeasonService;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.slot.SlotService;
@@ -18,6 +19,7 @@ import io.pp.arcade.domain.slot.dto.SlotStatusResponseDto;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.NotiType;
 import io.pp.arcade.global.type.SlotStatusType;
 import io.pp.arcade.global.util.HeaderUtil;
 import io.pp.arcade.global.util.NotiGenerater;
@@ -110,33 +112,38 @@ public class SlotControllerImpl implements SlotController {
         currentMatchService.removeCurrentMatch(currentMatchRemoveDto);
         teamService.removeUserInTeam(getTeamRemoveUserDto(slot, user));
         slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
-        notiGenerater.addCancelNotisBySlot(slot);
+        notiGenerater.addCancelNotisBySlot(NotiCanceledTypeDto.builder().slotDto(slot).notiType(NotiType.CANCELEDBYTIME).build());
     }
 
     private List<SlotGroupDto> groupingSlots(List<SlotStatusDto> slots) {
-        if (slots.size() == 0) {
-            throw new BusinessException("{invalid.request}");
-        }
         List<SlotGroupDto> slotGroups = new ArrayList<>();
-        List<SlotStatusDto> oneGroup = new ArrayList<>();
-        int groupTime = slots.get(0).getTime().getHour();
+        if (!slots.isEmpty()) {
+            List<SlotStatusDto> oneGroup = new ArrayList<>();
+            int groupTime = slots.get(0).getTime().getHour();
 
-        for(SlotStatusDto slot: slots) {
-            if (slot.getTime().getHour() == groupTime) {
-                oneGroup.add(SlotStatusDto.builder()
-                        .slotId(slot.getSlotId())
-                        .time(slot.getTime())
-                        .headCount(slot.getHeadCount())
-                        .status(slot.getStatus()).build());
-            } else {
-                slotGroups.add(SlotGroupDto.builder()
-                        .slots(oneGroup).build());
-                oneGroup = new ArrayList<>(); //다음 그루핑을 위한 그룹 생성
-                groupTime = slot.getTime().getHour(); //시간 갱신
+            for(SlotStatusDto slot: slots) {
+                if (slot.getTime().getHour() == groupTime) {
+                    oneGroup.add(SlotStatusDto.builder()
+                            .slotId(slot.getSlotId())
+                            .time(slot.getTime())
+                            .headCount(slot.getHeadCount())
+                            .status(slot.getStatus()).build());
+                } else {
+                    slotGroups.add(SlotGroupDto.builder()
+                            .slots(oneGroup).build());
+                    oneGroup = new ArrayList<>(); //다음 그루핑을 위한 그룹 생성
+                    groupTime = slot.getTime().getHour(); //시간 갱신
+                    oneGroup.add(SlotStatusDto.builder()
+                            .slotId(slot.getSlotId())
+                            .time(slot.getTime())
+                            .headCount(slot.getHeadCount())
+                            .status(slot.getStatus()).build());
+                }
             }
+            slotGroups.add(SlotGroupDto.builder()
+                    .slots(oneGroup).build());
         }
-        slotGroups.add(SlotGroupDto.builder()
-                .slots(oneGroup).build());
+
 
         return slotGroups;
     }
