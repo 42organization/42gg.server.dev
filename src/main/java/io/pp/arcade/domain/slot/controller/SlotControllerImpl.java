@@ -106,6 +106,8 @@ public class SlotControllerImpl implements SlotController {
             throw new BusinessException("{invalid.request}");
         } else if (currentMatch.getMatchImminent()) {
             throw new BusinessException("{invalid.request}");
+        } else if (currentMatch.getGame() != null) {
+            throw new BusinessException("{invalid.request}");
         }
         SlotDto slot = currentMatch.getSlot();
 
@@ -114,7 +116,7 @@ public class SlotControllerImpl implements SlotController {
         currentMatchService.removeCurrentMatch(currentMatchRemoveDto);
         teamService.removeUserInTeam(getTeamRemoveUserDto(slot, user));
         slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
-        notiGenerater.addCancelNotisBySlot(NotiCanceledTypeDto.builder().slotDto(slot).notiType(NotiType.CANCELEDBYTIME).build());
+        notiGenerater.addCancelNotisBySlot(NotiCanceledTypeDto.builder().slotDto(slot).notiType(NotiType.CANCELEDBYMAN).build());
     }
 
     private List<SlotGroupDto> groupingSlots(List<SlotStatusDto> slots) {
