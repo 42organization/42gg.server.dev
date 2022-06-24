@@ -5,6 +5,7 @@ import io.pp.arcade.domain.admin.dto.delete.SlotDeleteDto;
 import io.pp.arcade.domain.admin.dto.update.SlotUpdateDto;
 import io.pp.arcade.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
+import io.pp.arcade.domain.season.Season;
 import io.pp.arcade.domain.season.SeasonRepository;
 import io.pp.arcade.domain.slot.dto.*;
 import io.pp.arcade.domain.team.Team;
@@ -98,9 +99,12 @@ public class SlotService {
         List<Slot> slots = slotRepository.findAllByTimeAfterOrderByTimeAsc(todayStartTime);
 
         User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        Integer pppGap = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(LocalDateTime.now(), LocalDateTime.now()).orElse(null).getPppGap();
-        if (pppGap == null) {
+        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(LocalDateTime.now(), LocalDateTime.now()).orElse(null);
+        Integer pppGap;
+        if (season == null) {
             pppGap = 100;
+        } else {
+            pppGap = season.getPppGap();
         }
         CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
         Integer userSlotId = currentMatch == null ? null : currentMatch.getSlot().getId();
