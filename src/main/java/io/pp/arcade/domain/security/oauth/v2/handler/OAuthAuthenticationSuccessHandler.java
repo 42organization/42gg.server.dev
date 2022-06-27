@@ -1,6 +1,6 @@
 package io.pp.arcade.domain.security.oauth.v2.handler;
 
-import io.pp.arcade.domain.rank.service.RankServiceImpl;
+import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.security.jwt.Token;
 import io.pp.arcade.domain.security.oauth.v2.config.properties.AppProperties;
 import io.pp.arcade.domain.security.oauth.v2.domain.ProviderType;
@@ -22,7 +22,6 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.ServletException;
@@ -38,7 +37,7 @@ import java.util.*;
 public class OAuthAuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     private final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
     private final String REFRESH_TOKEN = "refresh_token";
-    private final RankServiceImpl rankServiceImpl;
+    private final RankRedisService rankRedisService;
     private final AuthTokenProvider tokenProvider;
     private final UserRepository userRepository;
     private final AppProperties appProperties;

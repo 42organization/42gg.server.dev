@@ -6,6 +6,7 @@ import io.pp.arcade.domain.rank.RankRedis;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.type.GameType;
 import org.junit.jupiter.api.AfterEach;
@@ -107,8 +108,8 @@ class RankControllerTest {
         User client = users[0];
         /*
         for (User user : Arrays.stream(users).collect(Collectors.toList())) {
-            RankRedis singleRank = RankRedis.from(user, GameType.SINGLE.getKey());
-            RankRedis doubleRank = RankRedis.from(user, GameType.BUNGLE.getCode());
+            RankRedis singleRank = RankRedis.from(UserDto.from(user), GameType.SINGLE.getKey());
+            RankRedis doubleRank = RankRedis.from(UserDto.from(user), GameType.BUNGLE.getCode());
             redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.SINGLE), singleRank);
             redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.BUNGLE), doubleRank);
             redisTemplate.opsForZSet().add(getRankKey(GameType.SINGLE), getUserRankKey(user.getIntraId(), GameType.SINGLE), user.getPpp());
@@ -116,7 +117,7 @@ class RankControllerTest {
         }*/
 
         GameType type = GameType.SINGLE;
-        RankRedis userRankInfo = RankRedis.from(client, type.getCode());
+        RankRedis userRankInfo = RankRedis.from(UserDto.from(client), type.getCode());
         mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
                 .param("page","1"))
                 .header("Authorization", "Bearer " + 0))

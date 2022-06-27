@@ -1,6 +1,9 @@
 package io.pp.arcade.domain.rank;
 
+import io.pp.arcade.domain.rank.dto.RankDto;
+import io.pp.arcade.domain.rank.dto.RankRedisDto;
 import io.pp.arcade.domain.user.User;
+import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.util.BaseTimeEntity;
 import io.pp.arcade.global.type.RacketType;
 import lombok.Builder;
@@ -64,5 +67,14 @@ public class Rank extends BaseTimeEntity implements Serializable {
         this.wins = wins;
         this.losses = losses;
     }
-
+    public void update(RankRedisDto rankDto, User user, Integer seasonId) {
+        this.user = user;
+        this.id = rankDto.getId();
+        this.ppp = rankDto.getPpp();
+        this.wins = rankDto.getWins();
+        this.losses = rankDto.getLosses();
+        this.ranking = rankDto.getRanking();
+        this.seasonId = seasonId;
+        this.racketType = rankDto.getRacketType();
+    }
 }
