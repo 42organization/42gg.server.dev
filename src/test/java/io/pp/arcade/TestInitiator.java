@@ -16,6 +16,7 @@ import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.RacketType;
@@ -83,8 +84,8 @@ public class TestInitiator {
         List<User> userList = Arrays.stream(users).collect(Collectors.toList());
         for (User user : userList) {
             int idx = userList.indexOf(user);
-            RankRedis singleRank = RankRedis.from(user, GameType.SINGLE.getCode());
-            RankRedis doubleRank = RankRedis.from(user, GameType.BUNGLE.getCode());
+            RankRedis singleRank = RankRedis.from(UserDto.from(user), GameType.SINGLE.getCode());
+            RankRedis doubleRank = RankRedis.from(UserDto.from(user), GameType.BUNGLE.getCode());
 
             ranks[idx] = singleRank;
             ranks[users.length + idx] = doubleRank;

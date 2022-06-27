@@ -161,7 +161,7 @@ class SlotControllerTest {
 
         /*
          * 단식 - 자신의 슬롯인 경우
-         * status : close
+         * status : myTable
          * */
         slot = slots[5];
         saveSlot(slot, 1, GameType.BUNGLE, 100, users[10]);
@@ -550,7 +550,7 @@ class SlotControllerTest {
     void slotRemoveUserSingle() throws Exception {
         HashMap<String, String> body = new HashMap<String, String>();
        /*
-        * 빈 슬롯에 취소를 요청할 경우
+        * 인원이 빈 슬롯에 취소를 요청할 경우
         * -> 400
         * */
         mockMvc.perform(delete("/pingpong/match").contentType(MediaType.APPLICATION_JSON)
@@ -689,14 +689,18 @@ class SlotControllerTest {
             Assertions.assertThat(slot.getTeam1().getUser1()).isEqualTo(null);
             Assertions.assertThat(slot.getTeam1().getHeadCount()).isEqualTo(0);
             Assertions.assertThat(slot.getTeam1().getTeamPpp()).isEqualTo(0);
+
             Assertions.assertThat(slot.getTeam2().getUser1()).isEqualTo(team2User);
             Assertions.assertThat(slot.getTeam2().getHeadCount()).isEqualTo(1);
             Assertions.assertThat(slot.getTeam2().getTeamPpp()).isEqualTo(team2User.getPpp());
+
             Assertions.assertThat(slot.getGamePpp()).isEqualTo(team2User.getPpp());
             Assertions.assertThat(slot.getHeadCount()).isEqualTo(1);
             Assertions.assertThat(slot.getType()).isEqualTo(GameType.SINGLE);
+
             Assertions.assertThat(user1CurrentMatch).isEqualTo(null);
             Assertions.assertThat(user2CurrentMatch.getIsMatched()).isEqualTo(false);
+
             Assertions.assertThat(user1Noti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
             Assertions.assertThat(user2Noti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
         }

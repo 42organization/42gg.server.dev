@@ -1,6 +1,6 @@
 package io.pp.arcade.domain.security.oauth.v2.config.security;
 
-import io.pp.arcade.domain.rank.service.RankServiceImpl;
+import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.security.oauth.v2.config.properties.AppProperties;
 import io.pp.arcade.domain.security.oauth.v2.config.properties.CorsProperties;
 import io.pp.arcade.domain.security.oauth.v2.exception.RestAuthenticationEntryPoint;
@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserRefreshTokenRepository userRefreshTokenRepository;
     private final UserRepository userRepository;
     private final ApplicationYmlRead applicationYmlRead;
-    private final RankServiceImpl rankServiceImpl;
+    private final RankRedisService rankRedisService;
     /*
      * UserDetailsService 설정
      * */
@@ -127,7 +127,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public OAuthAuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
         return new OAuthAuthenticationSuccessHandler(
-                rankServiceImpl,
+                rankRedisService,
                 tokenProvider,
                 userRepository,
                 appProperties,
