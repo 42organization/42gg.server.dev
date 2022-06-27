@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 public class GameUpdateDto {
     private Integer gameId;
-    private Integer slotId;
-    private Integer seasonId;
-    private StatusType status;
+    private Integer team1Id;
+    private Integer team2Id;
+    private LocalDateTime time;
 }

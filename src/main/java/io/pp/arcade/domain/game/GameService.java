@@ -98,13 +98,6 @@ public class GameService {
     }
 
     @Transactional
-    public void updateGameByAdmin(GameUpdateDto updateDto) {
-        Game game = gameRepository.findById(updateDto.getGameId()).orElseThrow(null);
-        Slot slot = slotRepository.findById(updateDto.getSlotId()).orElseThrow(null);
-        game.update(slot, updateDto.getSeasonId(), updateDto.getStatus());
-    }
-
-    @Transactional
     public void deleteGameByAdmin(GameDeleteDto deleteDto){
         Game game = gameRepository.findById(deleteDto.getGameId()).orElseThrow(null);
         gameRepository.delete(game);

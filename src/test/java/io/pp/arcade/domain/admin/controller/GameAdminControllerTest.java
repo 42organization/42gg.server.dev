@@ -5,13 +5,18 @@ import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
+import io.pp.arcade.domain.pchange.PChange;
+import io.pp.arcade.domain.pchange.PChangeRepository;
+import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.season.Season;
 import io.pp.arcade.domain.season.SeasonRepository;
 import io.pp.arcade.domain.slot.Slot;
+import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.StatusType;
+import io.pp.arcade.global.util.EloRating;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +51,13 @@ public class GameAdminControllerTest {
     @Autowired
     private GameRepository gameRepository;
     @Autowired
+    private SlotRepository slotRepository;
+    @Autowired
     private SeasonRepository seasonRepository;
+    @Autowired
+    private PChangeRepository pChangeRepository;
+
+    EloRating eloRating;
 
     User user1;
     User user2;
@@ -60,6 +71,14 @@ public class GameAdminControllerTest {
     Slot slot2;
     Game game1;
     Season season;
+
+    /* gameUpdate를 위한 */
+    User user5;
+    User user6;
+    Team team5;
+    Team team6;
+    Slot slot3;
+    Game beforeUpdateGame;
 
     @BeforeEach
     void init() {
@@ -94,6 +113,57 @@ public class GameAdminControllerTest {
                 .status(StatusType.WAIT)
                 .build());
 
+        /* gameUpdate를 위한 */
+        /* team5(user5)가 2 team6(user6)가 1로 게임 이겼는데 스코어 반대로 바꿀거임 */
+        user5 = testInitiator.users[4];
+        user5.setPpp(50);
+        team5 = testInitiator.teams[4];
+        team5.setUser1(user5);
+        team5.setUser2(null);
+        team5.setHeadCount(1);
+        team5.setScore(2);
+        team5.setWin(true);
+        team5.setTeamPpp(user5.getPpp());
+        user6 = testInitiator.users[5];
+        user6.setPpp(70);
+        team6 = testInitiator.teams[5];
+        team6.setUser1(user6);
+        team6.setUser2(null);
+        team6.setHeadCount(1);
+        team6.setScore(1);
+        team6.setWin(false);
+        team6.setTeamPpp(user6.getPpp());
+
+        slot3 = slotRepository.save(Slot.builder()
+                        .tableId(1)
+                .team1(team5)
+                .team2(team6)
+                .gamePpp(team5.getTeamPpp())
+                .headCount(2)
+                .time(LocalDateTime.of(2022, 6, 27, 15,00))
+                .build());
+        beforeUpdateGame = gameRepository.save(Game.builder()
+                .slot(slot3)
+                .team1(slot3.getTeam1())
+                .team2(slot3.getTeam2())
+                .time(slot3.getTime())
+                .type(GameType.SINGLE)
+                .status(StatusType.END)
+                .season(1)
+                .build());
+        /* user5의 pChange */
+        PChange beforeUpdatePChangeUser5 = pChangeRepository.save(PChange.builder()
+                .game(beforeUpdateGame)
+                .user(user5)
+                .pppChange(EloRating.pppChange(user5.getPpp(), user6.getPpp(), true))
+                .pppResult(user5.getPpp() + EloRating.pppChange(user5.getPpp(), user6.getPpp(), true))
+                .build());
+        PChange beforeUpdatePChangeUser6 = pChangeRepository.save(PChange.builder()
+                .game(beforeUpdateGame)
+                .user(user6)
+                .pppChange(EloRating.pppChange(user6.getPpp(), user5.getPpp(), false))
+                .pppResult(user6.getPpp() + EloRating.pppChange(user6.getPpp(), user5.getPpp(), false))
+                .build());
     }
 
     @Test
@@ -118,19 +188,22 @@ public class GameAdminControllerTest {
     @Transactional
     public void updateGame() throws Exception {
         Map<String, String> body = new HashMap<>();
-        body.put("gameId", game1.getId().toString());
-        body.put("slotId", slot1.getId().toString());
-        body.put("seasonId", "2");
-        body.put("status", StatusType.LIVE.toString());
+        body.put("gameId", beforeUpdateGame.getId().toString());
+        body.put("team1Id", beforeUpdateGame.getTeam1().getId().toString());
+        body.put("team2Id", beforeUpdateGame.getTeam2().getId().toString());
+        body.put("team1Score", "1");
+        body.put("team2Score", "2");
 
         mockMvc.perform(put("/admin/game").contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(body)))
                 .andExpect(status().isOk())
                 .andDo(document("admin-game-update"));
 
-        Game updatedGame = gameRepository.findBySlot(slot1).orElseThrow(null);
-        Assertions.assertThat(updatedGame.getSeason()).isEqualTo(2);
-        Assertions.assertThat(updatedGame.getStatus()).isEqualTo(StatusType.LIVE);
+        Game afterUpdateGame = gameRepository.findBySlot(slot3).orElseThrow(null);
+        Assertions.assertThat(afterUpdateGame.getTeam1().getUser1().getPpp()).isLessThan(50);
+        Assertions.assertThat(afterUpdateGame.getTeam2().getUser1().getPpp()).isGreaterThan(70);
+        PChange afterUpdatePChange = pChangeRepository.findByUserAndGame(user5, afterUpdateGame).orElseThrow(null);
+        Assertions.assertThat(afterUpdatePChange.getPppResult()).isEqualTo(afterUpdateGame.getTeam1().getUser1().getPpp());
     }
 
     @Test
