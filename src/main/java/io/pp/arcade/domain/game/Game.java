@@ -64,10 +64,4 @@ public class Game {
         this.season = season;
         this.status = status;
     }
-
-    public void update(Slot slot, Integer season, StatusType status) {
-        this.slot = slot;
-        this.season = season;
-        this.status = status;
-    }
 }

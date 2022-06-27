@@ -2,6 +2,7 @@ package io.pp.arcade.domain.pchange;
 
 import io.pp.arcade.domain.admin.dto.create.PChangeCreateRequestDto;
 import io.pp.arcade.domain.admin.dto.delete.PChangeDeleteDto;
+import io.pp.arcade.domain.admin.dto.update.PChangeUpdateDto;
 import io.pp.arcade.domain.admin.dto.update.PChangeUpdateRequestDto;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
@@ -90,6 +91,14 @@ public class PChangeService {
     }
 
     @Transactional
+    public Integer findPChangeIdByUserAndGame(PChangeFindDto findDto) {
+        Game game = gameRepository.findById(findDto.getGameId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        PChange pChange = pChangeRepository.findByUserAndGame(user, game).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        return  pChange.getId();
+    }
+
+    @Transactional
     public void createPChangeByAdmin(PChangeCreateRequestDto createRequestDto) {
         PChange pChange = PChange.builder()
                 .game(gameRepository.findById(createRequestDto.getGameId()).orElseThrow(null))
@@ -101,10 +110,10 @@ public class PChangeService {
     }
 
     @Transactional
-    public void updatePChangeByAdmin(PChangeUpdateRequestDto updateRequestDto) {
-        PChange pChange = pChangeRepository.findById(updateRequestDto.getPchangeId()).orElseThrow();
-        pChange.setPppChange(updateRequestDto.getPppChange());
-        pChange.setPppResult(updateRequestDto.getPppResult());
+    public void updatePChangeByAdmin(Integer pChangeId, PChangeUpdateDto updateDto) {
+        PChange pChange = pChangeRepository.findById(pChangeId).orElseThrow();
+        pChange.setPppChange(updateDto.getPppChange());
+        pChange.setPppResult(updateDto.getPppResult());
     }
 
     @Transactional
