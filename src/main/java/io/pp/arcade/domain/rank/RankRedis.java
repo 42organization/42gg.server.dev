@@ -1,6 +1,7 @@
 package io.pp.arcade.domain.rank;
 
 import io.pp.arcade.domain.user.User;
+import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.RacketType;
 import io.pp.arcade.global.type.GameType;
 import lombok.Builder;
@@ -22,15 +23,15 @@ public class RankRedis implements Serializable {
     @Id
     private Integer id;
 
-    @Indexed
+    @Indexed /* Redis 조회시 사용되는 변수 */
     private String intraId;
-
-    private Integer ppp;
 
     private RacketType racketType;
 
     @Indexed
     private GameType gameType;
+
+    private Integer ppp;
 
     private Integer wins;
 
@@ -55,7 +56,7 @@ public class RankRedis implements Serializable {
         this.statusMessage = statusMessage;
     }
 
-    public static RankRedis from (User user, String gameType){
+    public static RankRedis from (UserDto user, String gameType){
         return RankRedis.builder()
                 .id(user.getId())
                 .intraId(user.getIntraId())

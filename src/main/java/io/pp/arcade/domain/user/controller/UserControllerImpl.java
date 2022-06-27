@@ -12,12 +12,10 @@ import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.domain.rank.dto.RankFindDto;
 import io.pp.arcade.domain.rank.dto.RankUserDto;
-import io.pp.arcade.domain.rank.service.RankServiceImpl;
+import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.security.jwt.TokenService;
-import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.*;
-import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
@@ -38,7 +36,7 @@ public class UserControllerImpl implements UserController {
     private final NotiService notiService;
     private final CurrentMatchService currentMatchService;
     private final TokenService tokenService;
-    private final RankServiceImpl rankService;
+    private final RankRedisService rankRedisService;
 
     /* *
      * [메인 페이지]
@@ -65,7 +63,7 @@ public class UserControllerImpl implements UserController {
         UserDto curUser = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         UserDto targetUser = userService.findByIntraId(UserFindDto.builder().intraId(targetUserId).build());
         // 일단 게임타입은 SINGLE로 구현
-        RankUserDto rankDto = rankService.findRankById(RankFindDto.builder().intraId(targetUserId).gameType(GameType.SINGLE).build());
+        RankUserDto rankDto = rankRedisService.findRankById(RankFindDto.builder().intraId(targetUserId).gameType(GameType.SINGLE).build());
         UserRivalRecordDto rivalRecord = UserRivalRecordDto.builder().curUserWin(0).targetUserWin(0).build();
         if (!targetUserId.equals(curUser.getIntraId())) {
             rivalRecord = getRivalRecord(curUser, targetUser);

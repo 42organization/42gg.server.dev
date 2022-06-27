@@ -1,7 +1,7 @@
 package io.pp.arcade.domain.rank.service;
 
-import io.pp.arcade.domain.user.User;
+import io.pp.arcade.domain.user.dto.UserDto;
 
 public interface RankNTService {
-    public void userToRedisRank(User user);
+    void userToRedisRank(UserDto user);
 }
