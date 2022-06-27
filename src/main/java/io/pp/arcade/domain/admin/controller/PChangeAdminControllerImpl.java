@@ -2,6 +2,7 @@ package io.pp.arcade.domain.admin.controller;
 
 import io.pp.arcade.domain.admin.dto.create.PChangeCreateRequestDto;
 import io.pp.arcade.domain.admin.dto.delete.PChangeDeleteDto;
+import io.pp.arcade.domain.admin.dto.update.PChangeUpdateDto;
 import io.pp.arcade.domain.admin.dto.update.PChangeUpdateRequestDto;
 import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
@@ -27,7 +28,12 @@ public class PChangeAdminControllerImpl implements PChangeAdminController {
     @Override
     @PutMapping(value = "/pChange")
     public void pChangeUpdate(PChangeUpdateRequestDto updateRequestDto, HttpServletRequest request) {
-        pChangeService.updatePChangeByAdmin(updateRequestDto);
+        PChangeUpdateDto updateDto = PChangeUpdateDto.builder()
+                .gameId(updateRequestDto.getGameId())
+                .userId(updateRequestDto.getUserId())
+                .pppChange(updateRequestDto.getPppChange())
+                .pppResult(updateRequestDto.getPppResult()).build();
+        pChangeService.updatePChangeByAdmin(updateRequestDto.getPchangeId(), updateDto);
     }
 
     @Override
