@@ -7,6 +7,7 @@ import io.pp.arcade.domain.security.oauth.v2.info.OAuthUserInfo;
 import io.pp.arcade.domain.security.oauth.v2.info.OAuthUserInfoFactory;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.RacketType;
 import io.pp.arcade.global.type.RoleType;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +52,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             updateUser(savedUser , userInfo);
         } else {
             savedUser = createUser(userInfo, providerType);
-            rankNTService.userToRedisRank(savedUser);
+            rankNTService.userToRedisRank(UserDto.from(savedUser));
         }
 
         return UserPrincipal.create(savedUser, user.getAttributes());

@@ -1,14 +1,14 @@
 package io.pp.arcade.domain.rank.dto;
 
+import io.pp.arcade.global.type.GameType;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
-@Builder
 @Getter
+@Builder
 public class RankFindListDto {
-    private Integer currentPage;
-    private Integer totalPage;
-    private List<RankUserDto> rankList;
+    private Pageable pageable;
+    private GameType gameType;
+    private Integer count;
 }
