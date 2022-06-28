@@ -1,6 +1,7 @@
 package io.pp.arcade.domain.admin.controller;
 
 import io.pp.arcade.domain.admin.dto.create.SeasonCreateRequestDto;
+import io.pp.arcade.domain.admin.dto.update.SeasonUpdateDto;
 import io.pp.arcade.domain.season.SeasonService;
 import io.pp.arcade.domain.season.dto.SeasonDeleteDto;
 import io.pp.arcade.domain.season.dto.SeasonDto;
@@ -32,7 +33,13 @@ public class SeasonAdminControllerImpl implements SeasonAdminController {
     }
 
     @Override
-    @GetMapping(value = "/season")
+    @PutMapping(value = "/season")
+    public void seasonUpdate(SeasonUpdateDto seasonUpdateDto, HttpServletRequest request) {
+        seasonService.updateSeasonByAdmin(seasonUpdateDto);
+    }
+
+    @Override
+    @GetMapping(value = "/season/all")
     public List<SeasonDto> seasonAll(Pageable pageable, HttpServletRequest request) {
         List<SeasonDto> seasons = seasonService.findSeasonsByAdmin(pageable);
         return seasons;

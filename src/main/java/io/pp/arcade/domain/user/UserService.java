@@ -18,9 +18,6 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-
-
-@Transactional
 public class UserService {
     private final UserRepository userRepository;
 
@@ -80,11 +77,12 @@ public class UserService {
     public void createUserByAdmin(UserCreateRequestDto userCreateDto) {
         User user = User.builder()
                 .intraId(userCreateDto.getIntraId())
-                .eMail(userCreateDto.getEMail())
+                .eMail(userCreateDto.getEmail())
                 .imageUri(userCreateDto.getUserImageUri())
                 .racketType(userCreateDto.getRacketType())
                 .statusMessage(userCreateDto.getStatusMessage() == null ? "" : userCreateDto.getStatusMessage())
                 .ppp(userCreateDto.getPpp() == null ? 0 : userCreateDto.getPpp())
+                .roleType(RoleType.USER)
                 .build();
         userRepository.save(user);
     }
@@ -103,5 +101,22 @@ public class UserService {
         Page<User> users = userRepository.findAll(pageable);
         List<UserDto> userDtos = users.stream().map(UserDto::from).collect(Collectors.toList());
         return userDtos;
+    }
+
+    @Transactional
+    public List<UserDto> findAllByRoleType(RoleType roleType) {
+        List<User> users = userRepository.findAllByRoleType(roleType);
+        List<UserDto> userDtos = users.stream().map(UserDto::from).collect(Collectors.toList());
+        return userDtos;
+    }
+
+    @Transactional
+    public void toggleUserRoleType(UserDto userDto) {
+        User user = userRepository.findById(userDto.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        if (user.getRoleType() == RoleType.USER) {
+            user.setRoleType(RoleType.ADMIN);
+        } else {
+            user.setRoleType(RoleType.USER);
+        }
     }
 }

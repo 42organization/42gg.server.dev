@@ -213,13 +213,13 @@ public class GameAdminControllerTest {
                 .andExpect(status().isOk())
                 .andDo(document("admin-game-delete"));
         int size = gameRepository.findAll().size();
-        Assertions.assertThat(size).isEqualTo(0);
+        Assertions.assertThat(size).isEqualTo(1);
     }
 
     @Test
     @Transactional
     public void findGame() throws Exception {
-        mockMvc.perform(get("/admin/game").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/admin/game/all").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("admin-game-find-all"));
 

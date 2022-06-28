@@ -209,6 +209,7 @@ class RankRedisServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("모든 유저 랭크 조회 - Redis 데이터 X")
     void findRankAllWhenEmpty() {
         flushAll();
@@ -221,6 +222,7 @@ class RankRedisServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("빈 랭크 체크")
     void isEmpty() {
         flushAll();

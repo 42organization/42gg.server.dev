@@ -91,6 +91,7 @@ class RankServiceTest {
     }
 
     @Test
+    @Transactional
     void modifyRankPpp() {
 
     }
@@ -132,6 +133,7 @@ class RankServiceTest {
     }
 
     @Test
+    @Transactional
     void findRankList() {
         // given
         /* page가 -값일 경우*/
