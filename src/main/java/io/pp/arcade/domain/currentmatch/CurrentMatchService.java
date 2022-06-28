@@ -137,7 +137,7 @@ public class CurrentMatchService {
 
     @Transactional
     public List<CurrentMatchDto> findCurrentMatchByAdmin(Pageable pageable) {
-        Page<CurrentMatch> currentMatches = currentMatchRepository.findAll(pageable);
+        Page<CurrentMatch> currentMatches = currentMatchRepository.findAllByOrderByIdDesc(pageable);
         List<CurrentMatchDto> currentMatchDtos = currentMatches.stream().map(CurrentMatchDto::from).collect(Collectors.toList());
         return currentMatchDtos;
     }

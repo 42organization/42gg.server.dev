@@ -1,9 +1,11 @@
 package io.pp.arcade.domain.admin.controller;
 
 import io.pp.arcade.domain.admin.dto.CronUpdateDto;
+import io.pp.arcade.domain.admin.dto.update.SlotGeneratorUpdateDto;
 import io.pp.arcade.global.scheduler.CurrentMatchUpdater;
 import io.pp.arcade.global.scheduler.GameGenerator;
 import io.pp.arcade.global.scheduler.RankScheduler;
+import io.pp.arcade.global.scheduler.SlotGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +19,7 @@ public class SchedulerControllerImpl implements SchedulerController {
 
     @Override
     @PutMapping(value = "/scheduler/rank")
-    public void RankSchedulerModify(CronUpdateDto cron) {
+    public void rankSchedulerUpdate(CronUpdateDto cron) {
         rankScheduler.setCron(cron.getCron());
         rankScheduler.renewScheduler();
     }

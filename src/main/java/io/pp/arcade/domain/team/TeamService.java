@@ -124,7 +124,7 @@ public class TeamService {
 
     @Transactional
     public List<TeamDto> findTeamByAdmin(Pageable pageable) {
-        Page<Team> teams = teamRepository.findAll(pageable);
+        Page<Team> teams = teamRepository.findAllByOrderByIdDesc(pageable);
         List<TeamDto> teamDtos = teams.stream().map(TeamDto::from).collect(Collectors.toList());
         return teamDtos;
     }

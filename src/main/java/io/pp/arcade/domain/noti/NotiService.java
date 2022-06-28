@@ -126,7 +126,7 @@ public class NotiService {
 
     @Transactional
     public List<NotiDto> findNotiByAdmin(Pageable pageable) {
-        Page<Noti> notis = notiRepository.findAll(pageable);
+        Page<Noti> notis = notiRepository.findAllByOrderByIdDesc(pageable);
         List<NotiDto> notiDtos = notis.stream().map(NotiDto::from).collect(Collectors.toList());
         return notiDtos;
     }

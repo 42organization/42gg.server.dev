@@ -12,11 +12,14 @@ import io.pp.arcade.domain.rank.dto.RankDto;
 import io.pp.arcade.domain.rank.service.RankService;
 import io.pp.arcade.domain.season.SeasonService;
 import io.pp.arcade.domain.season.dto.SeasonDto;
+import io.pp.arcade.domain.slot.SlotService;
+import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.scheduler.CurrentMatchUpdater;
 import io.pp.arcade.global.scheduler.GameGenerator;
 import io.pp.arcade.global.scheduler.RankScheduler;
+import io.pp.arcade.global.scheduler.SlotGenerator;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.RoleType;
 import io.pp.arcade.global.util.HeaderUtil;
@@ -35,6 +38,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ManagementController {
     private final UserService userService;
+    private final SlotService slotService;
     private final GameService gameService;
     private final SeasonService seasonService;
     private final CurrentMatchService currentMatchService;
@@ -42,6 +46,7 @@ public class ManagementController {
     private final PChangeService pChangeService;
     private final RankService rankService;
     private final CurrentMatchUpdater currentMatchUpdater;
+    private final SlotGenerator slotGenerator;
     private final GameGenerator gameGenerator;
     private final RankScheduler rankScheduler;
 
@@ -129,6 +134,17 @@ public class ManagementController {
         model.addAttribute("rankCron", rankScheduler.getCron());
         model.addAttribute("token", HeaderUtil.getAccessToken(request));
         return "scheduler_management";
+    }
+
+    @GetMapping("/admin/slot")
+    public String slotPage(Model model, HttpServletRequest request) {
+        List<SlotDto> slotList = slotService.findSlotByAdmin(Pageable.unpaged());
+        model.addAttribute("slotStartTime", slotGenerator.getStartTime());
+        model.addAttribute("slotInterval", slotGenerator.getInterval());
+        model.addAttribute("slotNum", slotGenerator.getSlotNum());
+        model.addAttribute("slotList", slotList);
+        model.addAttribute("token", HeaderUtil.getAccessToken(request));
+        return "slot_management";
     }
 
     @GetMapping("/admin")

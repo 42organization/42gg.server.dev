@@ -81,7 +81,7 @@ public class RankService {
 
     @Transactional
     public List<RankDto> findRankByAdmin(Pageable pageable) {
-        Page<Rank> ranks = rankRepository.findAll(pageable);
+        Page<Rank> ranks = rankRepository.findAllByOrderByIdDesc(pageable);
         List<RankDto> rankDtos = ranks.stream().map(RankDto::from).collect(Collectors.toList());
         return rankDtos;
     }

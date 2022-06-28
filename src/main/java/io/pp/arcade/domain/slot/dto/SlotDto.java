@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Builder
 public class SlotDto {
     private Integer id;
+    private Integer tableId;
     private TeamDto team1;
     private TeamDto team2;
     private LocalDateTime time;
@@ -25,6 +26,7 @@ public class SlotDto {
     public static SlotDto from(Slot slot) {
         return SlotDto.builder()
                 .id(slot.getId())
+                .tableId(slot.getTableId())
                 .team1(TeamDto.from(slot.getTeam1()))
                 .team2(TeamDto.from(slot.getTeam2()))
                 .time(slot.getTime())

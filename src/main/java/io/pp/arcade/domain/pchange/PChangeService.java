@@ -124,7 +124,7 @@ public class PChangeService {
 
     @Transactional
     public List<PChangeDto> findPChangeByAdmin(Pageable pageable) {
-        Page<PChange> pChanges = pChangeRepository.findAll(pageable);
+        Page<PChange> pChanges = pChangeRepository.findAllByOrderByIdDesc(pageable);
         List<PChangeDto> pChangeDtos = pChanges.stream().map(PChangeDto::from).collect(Collectors.toList());
         return pChangeDtos;
     }
