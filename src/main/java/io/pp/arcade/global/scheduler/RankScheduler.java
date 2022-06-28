@@ -38,7 +38,6 @@ public class RankScheduler {
 
     public void startScheduler() {
         scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setWaitForTasksToCompleteOnShutdown(true);
         scheduler.initialize();
         scheduler.schedule(getDoSomething(), new CronTrigger(cron));
     }
