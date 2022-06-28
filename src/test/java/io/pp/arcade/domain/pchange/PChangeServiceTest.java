@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.pchange;
 
+import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
@@ -34,6 +35,8 @@ class PChangeServiceTest {
     TeamRepository teamRepository;
     @Autowired
     SlotRepository slotRepository;
+    @Autowired
+    TestInitiator initiator;
 
     User user1;
     User user2;
@@ -46,38 +49,23 @@ class PChangeServiceTest {
 
     @BeforeEach
     void init() {
-        user1 = userRepository.save(User.builder().intraId("jiyun1").statusMessage("").ppp(42).build());
-        user2 = userRepository.save(User.builder().intraId("jiyun2").statusMessage("").ppp(24).build());
-        user3 = userRepository.save(User.builder().intraId("nheo1").statusMessage("").ppp(60).build());
-        user4 = userRepository.save(User.builder().intraId("nheo2").statusMessage("").ppp(30).build());
-        team1 = teamRepository.save(Team.builder()
-                .teamPpp(0)
-                .user1(user1)
-                .user2(user2)
-                .headCount(2)
-                .score(0)
-                .build());
-        team2 = teamRepository.save(Team.builder()
-                .teamPpp(0)
-                .user1(user3)
-                .user2(user4)
-                .headCount(2)
-                .score(0)
-                .build());
-        slot = slotRepository.save(Slot.builder()
-                .tableId(1)
-                .team1(team1)
-                .team2(team2)
-                .type(GameType.BUNGLE)
-                .time(LocalDateTime.now())
-                .headCount(4)
-                .build());
+        initiator.letsgo();
+        user1 = initiator.users[0];
+        user2 = initiator.users[1];
+        user3 = initiator.users[2];
+        user4 = initiator.users[3];
+
+        slot = initiator.slots[0];
+
+        team1 = slot.getTeam1();
+        team2 = slot.getTeam2();
+
         game = gameRepository.save(Game.builder()
                 .slot(slot)
                 .team1(team1)
                 .team2(team2)
                 .time(slot.getTime())
-                .type(slot.getType())
+                .type(GameType.SINGLE)
                 .season(1)
                 .status(StatusType.LIVE)
                 .build());

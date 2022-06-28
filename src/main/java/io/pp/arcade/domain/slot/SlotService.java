@@ -89,7 +89,7 @@ public class SlotService {
             slot.setGamePpp((slot.getGamePpp() * slot.getHeadCount() - removeUserDto.getExitUserPpp()) / headCountResult);
         }
         slot.setHeadCount(headCountResult);
-        redisTemplate.opsForValue().set(Key.PENALTY_USER + removeUserDto.getUserId(), "penalty", 60, TimeUnit.SECONDS);
+        redisTemplate.opsForValue().set(Key.PENALTY_USER + removeUserDto.getUserId(), "true", 60, TimeUnit.SECONDS);
     }
 
     public SlotDto findSlotById(Integer slotId) {
