@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 @Getter
 public class GameUpdateRequestDto {
     private Integer gameId;
-    private Integer team1Id;
-    private Integer team2Id;
     private Integer team1Score;
     private Integer team2Score;
 }

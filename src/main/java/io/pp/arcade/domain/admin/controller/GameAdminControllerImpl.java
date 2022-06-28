@@ -71,8 +71,9 @@ public class GameAdminControllerImpl implements GameAdminController {
         /* 해당 게임의 팀 스코어랑 승리여부 수정 */
         Integer team1Score = updateRequestDto.getTeam1Score();
         Integer team2Score = updateRequestDto.getTeam2Score();
-        TeamDto team1 = teamService.findById(updateRequestDto.getTeam1Id());
-        TeamDto team2 = teamService.findById(updateRequestDto.getTeam2Id());
+        GameDto game = gameService.findById(updateRequestDto.getGameId());
+        TeamDto team1 = game.getTeam1();
+        TeamDto team2 = game.getTeam2();
 
         TeamModifyGameResultDto modifyTeam1GameResultDto = TeamModifyGameResultDto.builder()
                 .teamId(team1.getId())
@@ -87,7 +88,6 @@ public class GameAdminControllerImpl implements GameAdminController {
         teamService.modifyGameResultInTeam(modifyTeam1GameResultDto);
         teamService.modifyGameResultInTeam(modifyTeam2GameResultDto);
         /* 게임 결과가 수정된 팀 유저들의 ppp 수정 */
-        GameDto game = gameService.findById(updateRequestDto.getGameId());
         modifyUsersInfo(game);
     }
 
