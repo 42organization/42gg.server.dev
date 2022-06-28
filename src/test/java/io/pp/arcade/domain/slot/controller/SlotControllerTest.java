@@ -198,7 +198,7 @@ class SlotControllerTest {
          * status : close
          * */
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime passed = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 1, 0);
+        LocalDateTime passed = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 1);
         passedSlot = Slot.builder().tableId(1).team1(teams[0]).team2(teams[1]).time(passed).headCount(0).gamePpp(null).type(GameType.SINGLE).build();
         saveSlot(passedSlot);
         mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
@@ -247,7 +247,7 @@ class SlotControllerTest {
          * status : close
          * */
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime passed = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 1, 0);
+        LocalDateTime passed = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 1);
         passedSlot = Slot.builder().tableId(1).team1(teams[0]).team2(teams[1]).time(passed).headCount(0).gamePpp(null).type(GameType.SINGLE).build();
         saveSlot(passedSlot);
         mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.BUNGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
@@ -340,7 +340,8 @@ class SlotControllerTest {
          * */
         body = new HashMap<>();
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime passed = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 1, 0);
+        LocalDateTime passed = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 1);
+        passed.minusDays(1);
         passedSlot = Slot.builder().tableId(1).team1(teams[0]).team2(teams[1]).time(passed).headCount(0).gamePpp(null).type(GameType.SINGLE).build();
         passedSlot = saveSlot(passedSlot);
         body.put("slotId", passedSlot.getId().toString());
