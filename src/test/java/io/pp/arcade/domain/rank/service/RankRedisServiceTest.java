@@ -14,6 +14,7 @@ import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.type.GameType;
 import org.assertj.core.api.Assertions;
 import org.checkerframework.checker.units.qual.A;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,11 @@ class RankRedisServiceTest {
     String host;
     @Value("${spring.redis.port}")
     String port;
+
+    @BeforeEach
+    void flush() {
+        flushAll();
+    }
 
     @Test
     @Transactional
@@ -155,6 +161,7 @@ class RankRedisServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("랭크 상태 메시지 변경")
     void modifyRankStatusMessage() {
         // given
@@ -173,6 +180,7 @@ class RankRedisServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("모든 유저 랭크 조회")
     void findRankAll() {
         // given
@@ -198,6 +206,7 @@ class RankRedisServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("모든 유저 랭크 조회 - Redis 데이터 X")
     void findRankAllWhenEmpty() {
         flushAll();
@@ -209,6 +218,7 @@ class RankRedisServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("빈 랭크 체크")
     void isEmpty() {
         flushAll();
@@ -220,6 +230,7 @@ class RankRedisServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("빈 랭크 체크 - 데이터가 있을 경우")
     void isEmptyWhenDataExists() {
         testInitiator.letsgo();

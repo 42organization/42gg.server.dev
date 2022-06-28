@@ -1,5 +1,9 @@
 package io.pp.arcade.domain.rank.service;
 
+import io.lettuce.core.LettuceFutures;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.rank.Rank;
 import io.pp.arcade.domain.rank.RankRepository;
@@ -8,15 +12,18 @@ import io.pp.arcade.domain.rank.dto.RankSaveAllDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.global.exception.BusinessException;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -31,9 +38,21 @@ class RankServiceTest {
     @Autowired
     private TestInitiator testInitiator;
 
+    @Value("${spring.redis.host}")
+    String host;
+    @Value("${spring.redis.port}")
+    String port;
+
+
     private List<User> users;
 
+    @BeforeEach
+    void flush() {
+        flushAll();
+    }
+
     @Test
+    @Transactional
     @DisplayName("Redis -> DB - Redis 데이터 X")
     void saveAllWhenNoData() {
         /*
@@ -117,5 +136,13 @@ class RankServiceTest {
     }
     @Test
     void findAll() {
+    }
+
+    private void flushAll() {
+        RedisClient redisClient = RedisClient.create("redis://"+ host + ":" + port);
+        StatefulRedisConnection<String, String> connection = redisClient.connect();
+        RedisAsyncCommands<String, String> commands = connection.async();
+        commands.flushall();
+        boolean result = LettuceFutures.awaitAll(5, TimeUnit.SECONDS);
     }
 }

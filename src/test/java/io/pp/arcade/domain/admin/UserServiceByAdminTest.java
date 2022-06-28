@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.admin;
 
+import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.admin.dto.create.UserCreateRequestDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
@@ -23,50 +24,18 @@ class UserServiceByAdminTest {
     UserService userService;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    TestInitiator initiator;
+
+    User user1;
+    User user2;
+    User user3;
+    User user4;
+    User user5;
 
     @BeforeEach
     void init() {
-        userRepository.save(User.builder()
-                .intraId("jiyun")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-
-        userRepository.save(User.builder()
-                .intraId("donghyuk")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-
-        userRepository.save(User.builder()
-                .intraId("nheo")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-
-        userRepository.save(User.builder()
-                .intraId("hakim")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-
-        userRepository.save(User.builder()
-                .intraId("jekim")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
-
-        userRepository.save(User.builder()
-                .intraId("woche")
-                .statusMessage("")
-                .ppp(1)
-                .build()
-        );
+        initiator.letsgo();
     }
 
     @Test
@@ -79,7 +48,6 @@ class UserServiceByAdminTest {
         List<UserDto> users = userService.findUserByAdmin(pageable);
 
         //then
-        Assertions.assertThat(users.get(0).getIntraId()).isEqualTo("jiyun");
         Assertions.assertThat(users.size()).isEqualTo(5);
     }
 }
