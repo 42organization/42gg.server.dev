@@ -7,10 +7,13 @@ import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.rank.Rank;
 import io.pp.arcade.domain.rank.RankRepository;
+import io.pp.arcade.domain.rank.dto.RankDto;
 import io.pp.arcade.domain.rank.dto.RankRedisDto;
 import io.pp.arcade.domain.rank.dto.RankSaveAllDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.RacketType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,11 +23,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
+import static org.mockito.BDDMockito.given;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
@@ -50,12 +53,8 @@ class RankServiceTest {
 
     @Test
     @Transactional
-    @DisplayName("Redis -> DB - Redis 데이터 X")
+    @DisplayName("랭크 저장 Redis -> DB - Redis 데이터 X")
     void saveAllWhenNoData() {
-        /*
-         * Redis - 데이터 없을 경우
-         * */
-
         // given
         List<RankRedisDto> rankRedisDtos = rankRedisService.findRankAll();
         RankSaveAllDto saveAllDto = RankSaveAllDto.builder().rankRedisDtos(rankRedisDtos).seasonId(1).build();
@@ -69,7 +68,7 @@ class RankServiceTest {
 
     @Test
     @Transactional
-    @DisplayName("Redis -> DB - Redis 데이터 O, 시즌 정보 X")
+    @DisplayName("랭크 저장 Redis -> DB - Redis 데이터 O, 시즌 정보 X")
     void saveAllWhenNoSeason() throws Exception{
         // given
         testInitiator.letsgo();
@@ -86,7 +85,7 @@ class RankServiceTest {
 
     @Test
     @Transactional
-    @DisplayName("Redis -> DB - Redis 데이터 O, 시즌 정보 O")
+    @DisplayName("랭크 저장 Redis -> DB - Redis 데이터 O, 시즌 정보 O")
     void saveAll() {
         // given
         testInitiator.letsgo();
@@ -120,12 +119,21 @@ class RankServiceTest {
     void findAll() {
         // given
         testInitiator.letsgo();
+        users = Arrays.asList(testInitiator.users);
+        List<Rank> rankList = new ArrayList<>();
+        for (int i = 0; i < users.size(); i++) {
+            Rank rank = Rank.builder().ppp(1000).seasonId(1).ranking(i).wins(i).losses(i).gameType(GameType.SINGLE).racketType(RacketType.SHAKEHAND).user(users.get(i)).build();
+            rankList.add(rank);
+        }
+        //List<RankDto> rankDtos = rankList.stream().map(RankDto::from).collect(Collectors.toList());
+        rankRepository.saveAll(rankList);
 
         // when
-        rankService.findAll();
+        List<RankDto> rankDtos = rankService.findAll();
 
         // then
-        Assertions.assertThat(rankRepository.findAll()).isNotEmpty();
+        Assertions.assertThat(rankDtos).isNotEmpty();
+        Assertions.assertThat(rankDtos.size()).isEqualTo(rankList.size());
     }
 
     @Test
@@ -133,10 +141,9 @@ class RankServiceTest {
     @DisplayName("모든 랭크 조회 - 데이터가 없을 경우")
     void findAllWhenNoData() {
         // when
-        rankService.findAll();
-
+        List<RankDto> rankDtos = rankService.findAll();
         // then
-        Assertions.assertThat(rankRepository.findAll()).isEmpty();
+        Assertions.assertThat(rankDtos).isEmpty();
     }
 
     private void flushAll() {
@@ -144,14 +151,7 @@ class RankServiceTest {
         StatefulRedisConnection<String, String> connection = redisClient.connect();
         RedisAsyncCommands<String, String> commands = connection.async();
         commands.flushall();
-        boolean result = LettuceFutures.awaitAll(5, TimeUnit.SECONDS);
+        LettuceFutures.awaitAll(5, TimeUnit.SECONDS);
     }
 
-    private void flushAll() {
-        RedisClient redisClient = RedisClient.create("redis://"+ host + ":" + port);
-        StatefulRedisConnection<String, String> connection = redisClient.connect();
-        RedisAsyncCommands<String, String> commands = connection.async();
-        commands.flushall();
-        boolean result = LettuceFutures.awaitAll(5, TimeUnit.SECONDS);
-    }
 }

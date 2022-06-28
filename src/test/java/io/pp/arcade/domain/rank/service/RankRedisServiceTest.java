@@ -114,7 +114,6 @@ class RankRedisServiceTest {
     @DisplayName("유저 랭크 조회 - Redis 데이터 X")
     void findRankByIdWhenEmpty() {
         // given
-
         RankFindDto rankFindDto = RankFindDto.builder().gameType(GameType.SINGLE).intraId("hakim").build();
 
         // when
@@ -249,49 +248,69 @@ class RankRedisServiceTest {
     void saveAll() {
         // given
         testInitiator.letsgo();
+        flushAll();
+
         User[] users = testInitiator.users;
         List<UserDto> userDtos = new ArrayList<>();
         for (User user : users){
             userDtos.add(UserDto.from(user));
         }
+
         List<RankRedis> rankList = Arrays.asList(testInitiator.ranks);
         for (RankRedis rankRedis : rankList) {
             int idx = rankList.indexOf(rankRedis);
             rankRedis.setStatusMessage(String.valueOf(idx));
         }
-        List<RankDto> rankDtos = new ArrayList<>();
-        for (int i = 0; i < users.length; i++) {
-            rankDtos.add(RankDto.builder().id(i).ranking(i).ppp(1000).losses(i).wins(i).racketType(RacketType.SHAKEHAND).seasonId(i).user(userDtos.get(i)).build());
-        }
-        HashMap<String, RankDto> rankDtoMap = new HashMap<>();
-        for (int i = 0; i < users.length; i++) {
-            rankDtoMap.put(rankDtos.get(i).getUser().getIntraId(), rankDtos.get(i));
+
+        /* single */
+        {
+            List<RankDto> rankDtos = new ArrayList<>();
+            for (int i = 0; i < users.length; i++) {
+                rankDtos.add(RankDto.builder().ranking(i).ppp(1100).losses(i).wins(i).gameType(GameType.SINGLE).racketType(userDtos.get(i).getRacketType()).seasonId(i).user(userDtos.get(i)).build());
+            }
+
+            HashMap<String, RankDto> rankDtoMap = new HashMap<>();
+            for (int i = 0; i < users.length; i++) {
+                rankDtoMap.put(rankDtos.get(i).getUser().getIntraId() + rankDtos.get(i).getGameType().getCode(), rankDtos.get(i));
+            }
+
+            // when
+            rankRedisService.saveAll(rankDtos);
+
+            // then
+            List<RankRedis> singleList = redisTemplate.opsForValue().multiGet(redisTemplate.keys(Key.RANK_USER + "*" + "SINGLE"));
+            Assertions.assertThat(singleList).isNotEmpty();
+            for (RankRedis rankRedis : singleList) {
+                RankDto rankDto = rankDtoMap.get(rankRedis.getIntraId() + GameType.SINGLE.getCode());
+                Assertions.assertThat(rankRedis.getPpp()).isEqualTo(rankDto.getPpp());
+                Assertions.assertThat(rankRedis.getWins()).isEqualTo(rankDto.getWins());
+                Assertions.assertThat(rankRedis.getLosses()).isEqualTo(rankDto.getLosses());
+            }
         }
 
-        // when
-        rankRedisService.saveAll(rankDtos);
+        /* bungle */
+        {
+            List<RankDto> rankDtos = new ArrayList<>();
+            for (int i = 0; i < users.length; i++) {
+                rankDtos.add(RankDto.builder().ranking(i).ppp(1100).losses(i).wins(i).gameType(GameType.BUNGLE).racketType(userDtos.get(i).getRacketType()).seasonId(i).user(userDtos.get(i)).build());
+            }
 
-        // then
-        List<RankRedis> singleList = redisTemplate.opsForValue().multiGet(redisTemplate.keys(Key.RANK_USER + "*" + "SINGLE"));
-        Assertions.assertThat(singleList).isNotEmpty();
-        for(RankRedis rankRedis : singleList) {
-            RankDto rankDto = rankDtoMap.get(rankRedis.getIntraId());
-            Assertions.assertThat(rankRedis.getId()).isEqualTo(rankDto.getId());
-            Assertions.assertThat(rankRedis.getIntraId()).isEqualTo(rankDto.getUser().getIntraId());
-            Assertions.assertThat(rankRedis.getPpp()).isEqualTo(rankDto.getPpp());
-            Assertions.assertThat(rankRedis.getWins()).isEqualTo(rankDto.getWins());
-            Assertions.assertThat(rankRedis.getLosses()).isEqualTo(rankDto.getLosses());
-        }
+            HashMap<String, RankDto> rankDtoMap = new HashMap<>();
+            for (int i = 0; i < users.length; i++) {
+                rankDtoMap.put(rankDtos.get(i).getUser().getIntraId() + rankDtos.get(i).getGameType().getCode(), rankDtos.get(i));
+            }
 
-        List<RankRedis> doubleList = redisTemplate.opsForValue().multiGet(redisTemplate.keys(Key.RANK_USER + "*" + "DOUBLE"));
-        Assertions.assertThat(doubleList).isNotEmpty();
-        for(RankRedis rankRedis : doubleList) {
-            RankDto rankDto = rankDtoMap.get(rankRedis.getIntraId());
-            Assertions.assertThat(rankRedis.getId()).isEqualTo(rankDto.getId());
-            Assertions.assertThat(rankRedis.getIntraId()).isEqualTo(rankDto.getUser().getIntraId());
-            Assertions.assertThat(rankRedis.getPpp()).isEqualTo(rankDto.getPpp());
-            Assertions.assertThat(rankRedis.getWins()).isEqualTo(rankDto.getWins());
-            Assertions.assertThat(rankRedis.getLosses()).isEqualTo(rankDto.getLosses());
+            // when
+            rankRedisService.saveAll(rankDtos);
+
+            List<RankRedis> bungleList = redisTemplate.opsForValue().multiGet(redisTemplate.keys(Key.RANK_USER + "*" + "BUNGLE"));
+            Assertions.assertThat(bungleList).isNotEmpty();
+            for (RankRedis rankRedis : bungleList) {
+                RankDto rankDto = rankDtoMap.get(rankRedis.getIntraId() + GameType.BUNGLE.getCode());
+                Assertions.assertThat(rankRedis.getPpp()).isEqualTo(rankDto.getPpp());
+                Assertions.assertThat(rankRedis.getWins()).isEqualTo(rankDto.getWins());
+                Assertions.assertThat(rankRedis.getLosses()).isEqualTo(rankDto.getLosses());
+            }
         }
     }
 
@@ -302,7 +321,6 @@ class RankRedisServiceTest {
         commands.flushall();
         boolean result = LettuceFutures.awaitAll(5, TimeUnit.SECONDS);
     }
-
 
     private String getUserKey(String intraId, GameType gameType) {
         return Key.RANK_USER + intraId + gameType.getCode();

@@ -165,7 +165,7 @@ public class PChangeAdminControllerTest {
     @Test
     @Transactional
     public void pChangeFind() throws Exception {
-        mockMvc.perform(get("/admin/pChange").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/admin/pChange/all").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("admin-pChange-find-all"));
 
