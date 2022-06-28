@@ -10,6 +10,7 @@ import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.StatusType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -106,6 +107,13 @@ public class GameService {
     @Transactional
     public List<GameDto> findGameByAdmin(Pageable pageable) {
         Page<Game> games = gameRepository.findAll(pageable);
+        List<GameDto> gameDtos = games.stream().map(GameDto::from).collect(Collectors.toList());
+        return gameDtos;
+    }
+
+    @Transactional
+    public List<GameDto> findGameByTypeByAdmin(Pageable pageable, GameType type) {
+        Page<Game> games = gameRepository.findAllByType(pageable, type);
         List<GameDto> gameDtos = games.stream().map(GameDto::from).collect(Collectors.toList());
         return gameDtos;
     }
