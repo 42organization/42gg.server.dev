@@ -213,7 +213,7 @@ public class SlotService {
 
     @Transactional
     public List<SlotDto> findSlotByAdmin(Pageable pageable) {
-        Page<Slot> slots = slotRepository.findAll(pageable);
+        Page<Slot> slots = slotRepository.findAllByOrderByIdDesc(pageable);
         List<SlotDto> slotDtos = slots.stream().map(SlotDto::from).collect(Collectors.toList());
         return slotDtos;
     }

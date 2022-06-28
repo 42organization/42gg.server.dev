@@ -1,6 +1,8 @@
 package io.pp.arcade.domain.noti;
 
 import io.pp.arcade.domain.user.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -12,4 +14,5 @@ public interface NotiRepository extends JpaRepository<Noti, Integer> {
     Integer countAllNByUserAndIsChecked(User user, Boolean isChecked);
     void deleteAllByUser(User user);
     void deleteById(Integer id);
+    Page<Noti> findAllByOrderByIdDesc(Pageable pageable);
 }
