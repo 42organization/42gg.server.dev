@@ -13,17 +13,20 @@ import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.SlotStatusType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +37,7 @@ public class SlotService {
     private final UserRepository userRepository;
     private final SeasonRepository seasonRepository;
     private final CurrentMatchRepository currentMatchRepository;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
     public void addSlot(SlotAddDto addDto) {
@@ -85,6 +89,7 @@ public class SlotService {
             slot.setGamePpp((slot.getGamePpp() * slot.getHeadCount() - removeUserDto.getExitUserPpp()) / headCountResult);
         }
         slot.setHeadCount(headCountResult);
+        redisTemplate.opsForValue().set(Key.PENALTY_USER + removeUserDto.getUserId(), "penalty", 60, TimeUnit.SECONDS);
     }
 
     public SlotDto findSlotById(Integer slotId) {
