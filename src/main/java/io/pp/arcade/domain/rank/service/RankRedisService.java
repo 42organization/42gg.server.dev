@@ -4,7 +4,6 @@ import io.jsonwebtoken.lang.Collections;
 import io.pp.arcade.domain.admin.dto.create.RankCreateRequestDto;
 import io.pp.arcade.domain.admin.dto.delete.RankDeleteDto;
 import io.pp.arcade.domain.admin.dto.update.RankUpdateRequestDto;
-import io.pp.arcade.domain.rank.Rank;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.domain.rank.RankRedis;
@@ -26,7 +25,6 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class RankRedisService implements RankNTService {
-    private final UserRepository userRepository;
     private final RedisTemplate<String, String> redisRank;
     private final RedisTemplate<String, RankRedis> redisUser;
 
