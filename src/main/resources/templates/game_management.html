@@ -55,25 +55,27 @@
                                                     <th class="column-title">Season</th>
                                                     <th class="column-title">Game Status</th>
                                                     <th class="column-title">Team 1 / 2 Score</th>
+                                                    <th class="column-title"></th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr class="even pointer" th:each="game, i : ${singleGameList}">
-                                                    <td class=" " th:text="${game.getId()}"></td>
-                                                    <td class=" "
-                                                        th:text="${game.getTeam1().getUser1().getIntraId()}"></td>
-                                                    <td class=" "
-                                                        th:text="${game.getTeam2().getUser1().getIntraId()}"></td>
-                                                    <td class=" " th:text="${game.getType()}"></td>
-                                                    <td class=" " th:text="${game.getTime()}"></td>
-                                                    <td class=" " th:text="${game.getSeason()}"></td>
-                                                    <td class=" " th:text="${game.getStatus()}"></td>
-                                                    <td class=" last">
-                                                        <form>
-                                                            <input type="hidden" id="url" name="url"
-                                                                   value="/admin/game">
-                                                            <input type="hidden" id="token" th:value="${token}">
-                                                            <input type="hidden" id="gameId" th:value="${game.getId()}">
+                                                    <form>
+                                                        <td class=" " th:text="${game.getId()}"></td>
+                                                        <td class=" "
+                                                            th:text="${game.getTeam1().getUser1().getIntraId()}"></td>
+                                                        <td class=" "
+                                                            th:text="${game.getTeam2().getUser1().getIntraId()}"></td>
+                                                        <td class=" " th:text="${game.getType()}"></td>
+                                                        <td class=" " th:text="${game.getTime()}"></td>
+                                                        <td class=" " th:text="${game.getSeason()}"></td>
+                                                        <td class=" " th:text="${game.getStatus()}"></td>
+                                                        <input type="hidden" id="url" name="url"
+                                                               value="/admin/game">
+                                                        <input type="hidden" id="token" th:value="${token}">
+                                                        <input type="hidden" id="gameId" th:value="${game.getId()}">
+                                                        <input type="hidden" id="id" th:value="${game.getId()}">
+                                                        <td>
                                                             <input style="width:50px;" type="text" name="team1Score"
                                                                    th:value="${game.getTeam1().getScore()}">
                                                             <strong>/</strong>
@@ -81,7 +83,12 @@
                                                                    th:value="${game.getTeam2().getScore()}">
                                                             <input type="submit" value="수정"
                                                                    th:onclick='js_request_game_put(this.form)'>
-                                                        </form>
+                                                        </td>
+                                                        <td>
+                                                            <input type="submit" value="삭제"
+                                                                   th:onclick='js_request_delete(this.form)'>
+                                                        </td>
+                                                    </form>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -117,29 +124,31 @@
                                                     <th class="column-title">Season</th>
                                                     <th class="column-title">Game Status</th>
                                                     <th class="column-title">Team 1 / 2 Score</th>
+                                                    <th class="column-title"></th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr class="even pointer" th:each="game, i : ${bungleGameList}">
-                                                    <td class=" " th:text="${game.getId()}"></td>
-                                                    <td class=" "
-                                                        th:text="${game.getTeam1().getUser1().getIntraId()}"></td>
-                                                    <td class=" "
-                                                        th:text="${game.getTeam1().getUser2().getIntraId()}"></td>
-                                                    <td class=" "
-                                                        th:text="${game.getTeam2().getUser1().getIntraId()}"></td>
-                                                    <td class=" "
-                                                        th:text="${game.getTeam2().getUser2().getIntraId()}"></td>
-                                                    <td class=" " th:text="${game.getType()}"></td>
-                                                    <td class=" " th:text="${game.getTime()}"></td>
-                                                    <td class=" " th:text="${game.getSeason()}"></td>
-                                                    <td class=" " th:text="${game.getStatus()}"></td>
-                                                    <td class=" last">
-                                                        <form>
-                                                            <input type="hidden" id="url" name="url"
-                                                                   value="/admin/game">
-                                                            <input type="hidden" id="token" th:value="${token}">
-                                                            <input type="hidden" id="gameId" th:value="${game.getId()}">
+                                                    <form>
+                                                        <td class=" " th:text="${game.getId()}"></td>
+                                                        <td class=" "
+                                                            th:text="${game.getTeam1().getUser1().getIntraId()}"></td>
+                                                        <td class=" "
+                                                            th:text="${game.getTeam1().getUser2().getIntraId()}"></td>
+                                                        <td class=" "
+                                                            th:text="${game.getTeam2().getUser1().getIntraId()}"></td>
+                                                        <td class=" "
+                                                            th:text="${game.getTeam2().getUser2().getIntraId()}"></td>
+                                                        <td class=" " th:text="${game.getType()}"></td>
+                                                        <td class=" " th:text="${game.getTime()}"></td>
+                                                        <td class=" " th:text="${game.getSeason()}"></td>
+                                                        <td class=" " th:text="${game.getStatus()}"></td>
+                                                        <input type="hidden" id="url" name="url"
+                                                               value="/admin/game">
+                                                        <input type="hidden" id="token" th:value="${token}">
+                                                        <input type="hidden" id="gameId" th:value="${game.getId()}">
+                                                        <input type="hidden" id="id" th:value="${game.getId()}">
+                                                        <td>
                                                             <input style="width:50px;" type="text" name="team1Score"
                                                                    th:value="${game.getTeam1().getScore()}">
                                                             <strong>/</strong>
@@ -147,7 +156,12 @@
                                                                    th:value="${game.getTeam2().getScore()}">
                                                             <input type="submit" value="수정"
                                                                    th:onclick='js_request_game_put(this.form)'>
-                                                        </form>
+                                                        </td>
+                                                        <td>
+                                                            <input type="submit" value="삭제"
+                                                                   th:onclick='js_request_delete(this.form)'>
+                                                        </td>
+                                                    </form>
                                                     </td>
                                                 </tr>
                                             </table>

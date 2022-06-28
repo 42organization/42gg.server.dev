@@ -38,7 +38,7 @@ public class NotiAdminControllerImpl implements NotiAdminController {
         notiService.deleteNotibyAdmin(notiDeleteDto);
     }
 
-    @GetMapping(value = "/noti")
+    @GetMapping(value = "/noti/all")
     public List<NotiDto> notiAll(Pageable pageable, HttpServletRequest request) {
         List<NotiDto> notis = notiService.findNotiByAdmin(pageable);
         return notis;

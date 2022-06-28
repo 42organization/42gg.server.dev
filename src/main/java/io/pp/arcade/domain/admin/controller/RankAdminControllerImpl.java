@@ -39,7 +39,7 @@ public class RankAdminControllerImpl implements RankAdminController {
     }
 
     @Override
-    @GetMapping(value = "/rank")
+    @GetMapping(value = "/rank/all")
     public List<RankDto> rankAll(Pageable pageable, HttpServletRequest request) {
         List<RankDto> ranks = rankRedisService.findRankByAdmin(pageable);
         return ranks;

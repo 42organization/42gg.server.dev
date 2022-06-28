@@ -15,18 +15,16 @@ import javax.annotation.PreDestroy;
 import java.util.List;
 
 @Component
-public class RankScheduler {
-    private ThreadPoolTaskScheduler scheduler;
+public class RankScheduler extends  AbstractScheduler {
     private final RankRedisService rankRedisService;
     private final SeasonService seasonService;
     private final RankService rankService;
-    @Setter
-    private String cron = "0 55 23 * * *"; // 초 분 시 일 월 년 요일
 
     public RankScheduler(RankRedisService rankRedisService, RankService rankService, SeasonService seasonService) {
         this.rankRedisService = rankRedisService;
         this.rankService = rankService;
         this.seasonService = seasonService;
+        this.setCron("0 55 23 * * *");
     }
 
     public void dailyProcess() {
@@ -36,29 +34,10 @@ public class RankScheduler {
         rankService.saveAll(rankSaveAllDto);
     }
 
-    public void startScheduler() {
-        scheduler = new ThreadPoolTaskScheduler();
-        scheduler.initialize();
-        scheduler.schedule(getDoSomething(), new CronTrigger(cron));
-    }
-
-    private Runnable getDoSomething() {
+    @Override
+    public Runnable runnable() {
         return () -> {
             dailyProcess();
         };
-    }
-
-    public void stopScheduler() {
-        scheduler.shutdown();
-    }
-
-    @PostConstruct
-    public void init(){
-        startScheduler();
-    }
-
-    @PreDestroy
-    public void destroy() {
-        stopScheduler();
     }
 }

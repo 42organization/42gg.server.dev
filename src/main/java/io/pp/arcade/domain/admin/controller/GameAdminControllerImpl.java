@@ -152,7 +152,7 @@ public class GameAdminControllerImpl implements GameAdminController {
     }
 
     @Override
-    @GetMapping(value = "/game/")
+    @GetMapping(value = "/game/all")
     public List<GameDto> gameAll(Pageable pageable, HttpServletRequest request) {
         List<GameDto> games = gameService.findGameByAdmin(pageable);
         return games;

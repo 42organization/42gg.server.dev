@@ -141,6 +141,58 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-12 col-sm-12  ">
+                                <div class="x_panel">
+                                    <div class="x_title">
+                                        <h2>Rank Scheduler Cron</h2>
+                                        <ul class="nav navbar-right panel_toolbox">
+                                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                            </li>
+                                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                                            </li>
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+
+                                    <div class="x_content">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped jambo_table bulk_action">
+                                                <thead>
+                                                <tr class="headings">
+                                                    <th class="column-title">Current Cron(초 분 시 일 월 요일)</th>
+                                                    <th class="column-title">Second</th>
+                                                    <th class="column-title">Minute</th>
+                                                    <th class="column-title">Hour</th>
+                                                    <th class="column-title"></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <form>
+                                                    <input type="hidden" id="url" name="url"
+                                                           value="/admin/scheduler/rank">
+                                                    <input type="hidden" id="token" th:value="${token}">
+                                                    <tr>
+                                                        <td class=" " th:text="${rankCron}"></td>
+                                                        <td class=" ">
+                                                            <input type="text" id="second">
+                                                        </td>
+                                                        <td class=" ">
+                                                            <input type="text" id="minute">
+                                                        </td>
+                                                        <td class=" ">
+                                                            <input type="text" id="hour">
+                                                        </td>
+                                                        <td>
+                                                            <input type="submit" value="수정 & 재시작" th:onclick='js_request_rank_cron_put(this.form)'>
+                                                        </td>
+                                                    </tr>
+                                                </form>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
