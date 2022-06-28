@@ -11,4 +11,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByIntraId(String intraId);
     List<User> findByIntraIdContains(String intraId);
     List<User> findAllByRoleType(RoleType roleType);
+    User getUserByIntraId(String IntraId);
 }

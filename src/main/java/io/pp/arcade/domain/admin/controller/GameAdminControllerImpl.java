@@ -16,7 +16,7 @@ import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.rank.dto.RankModifyDto;
-import io.pp.arcade.domain.rank.service.RankServiceImpl;
+import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.Team;
@@ -47,7 +47,7 @@ public class GameAdminControllerImpl implements GameAdminController {
     private final PChangeService pChangeService;
     private final UserService userService;
     private final SlotService slotService;
-    private final RankServiceImpl rankServiceImpl;
+    private final RankRedisService rankRedisService;
 
     @Override
     @PostMapping(value = "/game")
@@ -141,7 +141,7 @@ public class GameAdminControllerImpl implements GameAdminController {
                 .intraId(userDto.getIntraId())
                 .isWin(!enemyTeamDto.getWin())
                 .build();
-        rankServiceImpl.modifyUserPpp(rankModifyDto);
+        rankRedisService.modifyUserPpp(rankModifyDto);
     }
 
     @Override
