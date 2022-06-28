@@ -193,7 +193,7 @@ class GameControllerTest {
         LinkedMultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("gameId", "string");
         params.add("count", "20");
-        params.add("status", StatusType.END.toString());
+        params.add("status", StatusType.END.getCode());
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                 .params(params)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
@@ -207,7 +207,7 @@ class GameControllerTest {
         MultiValueMap<String,String> params2 = new LinkedMultiValueMap<>();
         params2.add("gameId", "-1");
         params2.add("count", "20");
-        params2.add("status", StatusType.END.toString());
+        params2.add("status", StatusType.END.getCode());
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                 .params(params2)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
@@ -222,7 +222,7 @@ class GameControllerTest {
          * */
         MultiValueMap<String,String> params3 = new LinkedMultiValueMap<>();
         params3.add("count", "20");
-        params3.add("status", StatusType.END.toString());
+        params3.add("status", StatusType.END.getCode());
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                 .params(params3)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
@@ -237,7 +237,7 @@ class GameControllerTest {
          * */
         MultiValueMap<String,String> params11 = new LinkedMultiValueMap<>();
         params11.add("count", "string");
-        params11.add("status", StatusType.END.toString());
+        params11.add("status", StatusType.END.getCode());
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params11)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
@@ -250,7 +250,7 @@ class GameControllerTest {
          * */
         MultiValueMap<String,String> params12 = new LinkedMultiValueMap<>();
         params12.add("count", "-1");
-        params12.add("status", StatusType.END.toString());
+        params12.add("status", StatusType.END.getCode());
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params12)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
@@ -265,7 +265,7 @@ class GameControllerTest {
          * */
         MultiValueMap<String,String> params4 = new LinkedMultiValueMap<>();
         params4.add("gameId", "1234");
-        params4.add("status", StatusType.END.toString());
+        params4.add("status", StatusType.END.getCode());
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                 .params(params4)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
@@ -279,7 +279,7 @@ class GameControllerTest {
          * */
         MultiValueMap<String,String> params5 = new LinkedMultiValueMap<>();
         params5.add("count", "1234");
-        params5.add("status", StatusType.END.toString());
+        params5.add("status", StatusType.END.getCode());
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                 .params(params5)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
@@ -330,131 +330,17 @@ class GameControllerTest {
          * -> 200
          * */
         MultiValueMap<String,String> params8 = new LinkedMultiValueMap<>();
-        params8.add("gameId", "100");
+        params8.add("gameId", "1000");
         params8.add("count", "20");
-        params8.add("status", StatusType.END.toString());
+        params8.add("status", StatusType.END.getCode());
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                 .params(params8)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(jsonPath("$.games[0].gameId").value(endGames[99 - 1].getId()))
                 .andExpect(jsonPath("$.games.length()").value(20))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.games[0].gameId").value(endGames[99 - 1].getId()))
+                .andDo(document("find-games-game-id-1000"));
     }
-
-/*
-    @Test
-    @Transactional
-    void saveGameResult() throws Exception {
-        //given
-        Team team1 = slot.getTeam1();
-        Team team2 = slot.getTeam2();
-        addUserInTeam(team1, user1, true); //donghyuk
-        addUserInTeam(team2, user4, true); // nheo
-        Game game = saveGame(slot, team1, team2);
-        addCurrentMatch(game, user1);
-        addCurrentMatch(game, user4);
-
-        //when
-        Map<String, String> body = new HashMap<>();
-        body.put("myTeamScore", "2");
-        body.put("enemyTeamScore", "1");
-
-
-        //then
-        mockMvc.perform(post("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(body)) // { "myTeamScore" : "2", ..}
-                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(status().isOk())
-                .andDo(document("save-game-result-single"));
-
-        //given2
-        slot = initiator.slots[1];
-        team1 = slot.getTeam1();
-        team2 = slot.getTeam2();
-        addUserInTeam(team1, user2, true);
-        addUserInTeam(team1, user3, false);
-        addUserInTeam(team2, user5, true);
-        addUserInTeam(team2, user6, false);
-        Game game2 = saveGame(slot, team1, team2);
-        addCurrentMatch(game2, user2);
-        addCurrentMatch(game2, user3);
-
-        addCurrentMatch(game2, user5);
-        addCurrentMatch(game2, user6);
-
-        //when2
-        body = new HashMap<>();
-        body.put("myTeamScore", "1");
-        body.put("enemyTeamScore", "2");
-
-        //then2
-        mockMvc.perform(post("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(body)) // { "myTeamScore" : "2", ..}
-                        .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
-                .andExpect(status().isOk())
-                .andDo(document("save-game-result-double"));
-        MultiValueMap<String, String> params;
-        params = new LinkedMultiValueMap<>();
-//        Pageable pageable;
-        params.add("count", "10");
-        params.add("status", StatusType.END.toString());
-        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
-                        .params(params))
-                .andExpect(status().isOk())
-                .andDo(document("find-game-results"));
-
-        //given2 // 결과 재입력, 202에러 띄워야함
-        //위의 게임을 그대로 씀
-
-        //when2
-        body = new HashMap<>();
-        body.put("myTeamScore", "2");
-        body.put("enemyTeamScore", "1");
-
-        //then2
-        mockMvc.perform(post("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(body)) // { "myTeamScore" : "2", ..}
-                        .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
-                // ?userId=userId(donghyuk's userId) 어느 팀에 속한 유저인지 혹은 결과 입력이 필요한 유저가 맞는지 알기 위해서
-                .andExpect(status().isAccepted())
-                .andDo(document("save-game-result-after-duplicated-request"));
-        params = new LinkedMultiValueMap<>();
-//
-//        params.add("gameId", "1");
-        params.add("count", "10");
-//        params.add("status", "end");
-        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
-                        .params(params))
-                .andExpect(status().isOk())
-                .andDo(document("find-game-results-after-duplicated-request"));
-
-        params = new LinkedMultiValueMap<>();
-//        Pageable pageable;
-        params.add("count", "10");
-        params.add("gameId", "3");
-
-        mockMvc.perform(get("/pingpong/users/" + user4.getIntraId() + "/games").contentType(MediaType.APPLICATION_JSON)
-                        .params(params))
-                .andExpect(status().isOk())
-                .andDo(document("find-game-results-after-duplicated-request2"));
-
-        mockMvc.perform(get("/pingpong/users/" + user5.getIntraId() + "/games").contentType(MediaType.APPLICATION_JSON)
-                        .params(params))
-                .andExpect(status().isOk())
-                .andDo(document("find-game-results-after-duplicated-request3"));
-    }
-*/
-//    @Test
-//    @Transactional
-//    void gameResultByCount() throws Exception {
-//        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
-//                .param())
-//    }
-//
-//    @Test
-//    @Transactional
-//    void gameResultByIndexAndCount() throws Exception {
-//    }
 
     @Test
     @Transactional
@@ -489,7 +375,7 @@ class GameControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("최근 게임 기록 - /games")
+    @DisplayName("게임 결과 저장 - /games/result")
     void gameResultSave() throws Exception {
 
         Team team1 = slots[1].getTeam1();
