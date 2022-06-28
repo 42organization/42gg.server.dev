@@ -1,4 +1,4 @@
-package io.pp.arcade.global.scheduler;
+package io.pp.arcade.domain.admin.dto;
 
 import lombok.Getter;
 

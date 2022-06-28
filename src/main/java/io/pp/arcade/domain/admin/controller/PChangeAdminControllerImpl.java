@@ -44,7 +44,7 @@ public class PChangeAdminControllerImpl implements PChangeAdminController {
     }
 
     @Override
-    @GetMapping(value = "/pChange")
+    @GetMapping(value = "/pChange/all")
     public List<PChangeDto> pChangeAll(Pageable pageable, HttpServletRequest request) {
         List<PChangeDto> pChanges = pChangeService.findPChangeByAdmin(pageable);
         return pChanges;
