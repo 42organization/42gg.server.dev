@@ -32,33 +32,26 @@ public class CurrentMatchUpdater extends AbstractScheduler {
         this.setCron("0 */5 12-18 * * *");
     }
 
-    @Override //previously updateIsImminent();
-    public Runnable runnable() {
-        return () -> {
-            LocalDateTime now = LocalDateTime.now();
-            now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
-            now = now.plusMinutes(5);
+    public void updateIsImminent() throws MessagingException {
+        LocalDateTime now = LocalDateTime.now();
+        now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
+        now = now.plusMinutes(5);
 
-            SlotDto slot = slotService.findByTime(now);
-            if (slot == null) {
-                return;
-            }
-            Integer maxHeadCount = GameType.SINGLE.equals(slot.getType()) ? 2 : 4;
-            if (maxHeadCount.equals(slot.getHeadCount())) {
-                TeamDto team1 = slot.getTeam1();
-                TeamDto team2 = slot.getTeam2();
+        SlotDto slot = slotService.findByTime(now);
+        if (slot == null) {
+            return;
+        }
+        Integer maxHeadCount = GameType.SINGLE.equals(slot.getType()) ? 2 : 4;
+        if (maxHeadCount.equals(slot.getHeadCount())) {
+            TeamDto team1 = slot.getTeam1();
+            TeamDto team2 = slot.getTeam2();
 
-                currentMatchSetter(team1.getUser1());
-                currentMatchSetter(team1.getUser2());
-                currentMatchSetter(team2.getUser1());
-                currentMatchSetter(team2.getUser2());
-                try {
-                    notiGenerater.addMatchNotisBySlot(slot);
-                } catch (MessagingException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
+            currentMatchSetter(team1.getUser1());
+            currentMatchSetter(team1.getUser2());
+            currentMatchSetter(team2.getUser1());
+            currentMatchSetter(team2.getUser2());
+            notiGenerater.addMatchNotisBySlot(slot);
+        }
     }
 
     private void currentMatchSetter(UserDto user) {
@@ -72,5 +65,16 @@ public class CurrentMatchUpdater extends AbstractScheduler {
 
             currentMatchService.modifyCurrentMatch(modifyDto);
         }
+    }
+
+    @Override
+    public Runnable runnable() {
+        return () -> {
+            try {
+                updateIsImminent();
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        };
     }
 }

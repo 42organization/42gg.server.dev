@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class CurrentMatchDto {
+    private Integer id;
     private Integer userId;
     private SlotDto slot;
     private Boolean matchImminent;
@@ -18,6 +19,7 @@ public class CurrentMatchDto {
 
     public static CurrentMatchDto from(CurrentMatch currentMatch) {
         return CurrentMatchDto.builder()
+                .id(currentMatch.getId())
                 .userId(currentMatch.getUser().getId())
                 .slot(SlotDto.from(currentMatch.getSlot()))
                 .game(GameDto.from(currentMatch.getGame()))

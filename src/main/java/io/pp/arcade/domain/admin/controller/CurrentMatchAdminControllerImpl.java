@@ -38,7 +38,7 @@ public class CurrentMatchAdminControllerImpl implements CurrentMatchAdminControl
     }
 
     @Override
-    @GetMapping(value = "/currentMatch")
+    @GetMapping(value = "/currentMatch/all")
     public List<CurrentMatchDto> currentMatchAll(Pageable pageable, HttpServletRequest request) {
         List<CurrentMatchDto> currentMatches = currentMatchService.findCurrentMatchByAdmin(pageable);
         return currentMatches;

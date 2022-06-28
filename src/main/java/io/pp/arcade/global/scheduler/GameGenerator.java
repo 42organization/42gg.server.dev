@@ -22,6 +22,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
+
 //private String cron = "0 */" + intervalTime + " " + startTime + "-" + endTime + " * * *";
 //private String cron = "0 */10 15-18 * * *";
 @Component
@@ -40,42 +41,34 @@ public class GameGenerator extends AbstractScheduler {
     private final CurrentMatchService currentMatchService;
     private final NotiGenerater notiGenerater;
 
+    public void addGame() throws MessagingException {
+        Integer maxHeadCount = 2;
+        LocalDateTime now = LocalDateTime.now();
+        now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
+        SlotDto slotDto = slotService.findByTime(now);
+        if (slotDto != null && GameType.BUNGLE.equals(slotDto.getType())) {
+            maxHeadCount = 4;
+        }
+        if (slotDto != null) {
+            if (slotDto.getHeadCount().equals(maxHeadCount)) {
+                TeamDto team1 = slotDto.getTeam1();
+                TeamDto team2 = slotDto.getTeam2();
 
-    @Override // previously addGame();
-    public Runnable runnable() {
-        return () -> {
-            Integer maxHeadCount = 2;
-            LocalDateTime now = LocalDateTime.now();
-            now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
-            SlotDto slotDto = slotService.findByTime(now);
-            if (slotDto != null && GameType.BUNGLE.equals(slotDto.getType())) {
-                maxHeadCount = 4;
+                GameAddDto gameAddDto = GameAddDto.builder()
+                        .slotDto(slotDto)
+                        .build();
+                gameService.addGame(gameAddDto);
+                GameDto game = gameService.findBySlot(slotDto.getId());
+
+                saveCurrentMatch(team1.getUser1(), game);
+                saveCurrentMatch(team1.getUser2(), game);
+                saveCurrentMatch(team2.getUser1(), game);
+                saveCurrentMatch(team2.getUser2(), game);
+            } else {
+                NotiCanceledTypeDto canceledDto = NotiCanceledTypeDto.builder().slotDto(slotDto).notiType(NotiType.CANCELEDBYTIME).build();
+                notiGenerater.addCancelNotisBySlot(canceledDto);
             }
-            if (slotDto != null) {
-                if (slotDto.getHeadCount().equals(maxHeadCount)) {
-                    TeamDto team1 = slotDto.getTeam1();
-                    TeamDto team2 = slotDto.getTeam2();
-
-                    GameAddDto gameAddDto = GameAddDto.builder()
-                            .slotDto(slotDto)
-                            .build();
-                    gameService.addGame(gameAddDto);
-                    GameDto game = gameService.findBySlot(slotDto.getId());
-
-                    saveCurrentMatch(team1.getUser1(), game);
-                    saveCurrentMatch(team1.getUser2(), game);
-                    saveCurrentMatch(team2.getUser1(), game);
-                    saveCurrentMatch(team2.getUser2(), game);
-                } else {
-                    NotiCanceledTypeDto canceledDto = NotiCanceledTypeDto.builder().slotDto(slotDto).notiType(NotiType.CANCELEDBYTIME).build();
-                    try {
-                        notiGenerater.addCancelNotisBySlot(canceledDto);
-                    } catch (MessagingException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        };
+        }
     }
 
     private void saveCurrentMatch(UserDto user, GameDto game) {
@@ -86,5 +79,16 @@ public class GameGenerator extends AbstractScheduler {
                     .build();
             currentMatchService.saveGameInCurrentMatch(matchSaveGameDto);
         }
+    }
+
+    @Override
+    public Runnable runnable() {
+        return () -> {
+            try {
+                addGame();
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        };
     }
 }

@@ -1,4 +1,4 @@
-function js_request(form){
+function js_request(form) {
 
     let url = form['url'].value;
     let params = form['params'].value;
@@ -10,23 +10,23 @@ function js_request(form){
         type: `${method}`,
         contentType: 'application/json',
         headers: {
-            "Authorization": "Bearer "+ token
+            "Authorization": "Bearer " + token
         },
-        async:false,
-        error : function() {
+        async: false,
+        error: function () {
             alert("Error!");
         },
-        success : function() {
+        success: function () {
             alert("success!");
         },
-        complete : function() {
+        complete: function () {
             history.replaceState({}, null, location.pathname);
         }
     })
 }
 
 
-function js_request_game_put(form){
+function js_request_game_put(form) {
 
     let url = form['url'].value;
     let token = form['token'].value;
@@ -42,25 +42,25 @@ function js_request_game_put(form){
         url: `${url}`,
         type: `PUT`,
         headers: {
-            "Authorization": "Bearer "+ token
+            "Authorization": "Bearer " + token
         },
         data: JSON.stringify(data),
         contentType: 'application/json',
-        async:false,
-        error : function() {
+        async: false,
+        error: function () {
             alert("Error!");
         },
-        success : function() {
+        success: function () {
             alert("success!");
         },
-        complete : function() {
+        complete: function () {
             history.replaceState({}, null, location.pathname);
         }
     })
 }
 
 
-function js_request_season_post(form){
+function js_request_season_post(form) {
 
     let url = form['url'].value;
     let token = form['token'].value;
@@ -78,24 +78,24 @@ function js_request_season_post(form){
         url: `${url}`,
         type: `POST`,
         headers: {
-            "Authorization": "Bearer "+ token
+            "Authorization": "Bearer " + token
         },
         data: JSON.stringify(data),
         contentType: 'application/json',
-        async:false,
-        error : function() {
+        async: false,
+        error: function () {
             alert("Error!");
         },
-        success : function() {
+        success: function () {
             alert("success!");
         },
-        complete : function() {
+        complete: function () {
             history.replaceState({}, null, location.pathname);
         }
     })
 }
 
-function js_request_season_put(form){
+function js_request_season_put(form) {
 
     let url = form['url'].value;
     let token = form['token'].value;
@@ -111,24 +111,49 @@ function js_request_season_put(form){
         url: `${url}`,
         type: `PUT`,
         headers: {
-            "Authorization": "Bearer "+ token
+            "Authorization": "Bearer " + token
         },
         data: JSON.stringify(data),
         contentType: 'application/json',
-        async:false,
-        error : function() {
+        async: false,
+        error: function () {
             alert("Error!");
         },
-        success : function() {
+        success: function () {
             alert("success!");
         },
-        complete : function() {
+        complete: function () {
             history.replaceState({}, null, location.pathname);
         }
     })
 }
 
-function js_request_cron_put(form){
+function js_request_delete(form) {
+
+    let token = form['token'].value;
+    let id = "/" + form['id'].value;
+    let url = form['url'].value + id;
+    $.ajax({
+        url: `${url}`,
+        type: `DELETE`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_cron_put(form) {
 
     let url = form['url'].value;
     let token = form['token'].value;
@@ -143,24 +168,55 @@ function js_request_cron_put(form){
         url: `${url}`,
         type: `PUT`,
         headers: {
-            "Authorization": "Bearer "+ token
+            "Authorization": "Bearer " + token
         },
         data: JSON.stringify(data),
         contentType: 'application/json',
-        async:false,
-        error : function() {
+        async: false,
+        error: function () {
             alert("Error!");
         },
-        success : function() {
+        success: function () {
             alert("success!");
         },
-        complete : function() {
+        complete: function () {
             history.replaceState({}, null, location.pathname);
         }
     })
 }
 
-function js_request_path(form){
+function js_request_rank_cron_put(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let second = form['second'].value;
+    let minute = form['minute'].value;
+    let hour = form['hour'].value;
+    let data = {
+        "cron": second + " " + minute + " " + hour + " * * *"
+    };
+    $.ajax({
+        url: `${url}`,
+        type: `PUT`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_path(form) {
 
     let url = form['url'].value;
     let path = form['path'].value;
@@ -172,22 +228,22 @@ function js_request_path(form){
         type: `${method}`,
         contentType: 'application/json',
         headers: {
-            "Authorization": "Bearer "+ token
+            "Authorization": "Bearer " + token
         },
-        async:false,
-        error : function() {
+        async: false,
+        error: function () {
             alert("Error!");
         },
-        success : function() {
+        success: function () {
             alert("success!");
         },
-        complete : function() {
+        complete: function () {
             history.replaceState({}, null, location.pathname);
         }
     })
 }
 
-function js_request_input(form){
+function js_request_input(form) {
     let url = form['url'].value;
     let input_name = form['input'].name;
     let input_message = form['input'].value;
@@ -207,14 +263,92 @@ function js_request_input(form){
         headers: {
             "Authorization": "Bearer " + token
         },
-        async:false,
-        error : function() {
+        async: false,
+        error: function () {
             alert("Error!");
         },
-        success : function() {
+        success: function () {
             alert("success!");
         },
-        complete : function() {
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_current_match_create(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let userId = form['userId'].value;
+    let slotId = form['slotId'].value;
+    let gameId = form['gameId'].value;
+    let matchImminent = form['matchImminent'].value;
+    let isMatched = form['isMatched'].value;
+
+    let data = {
+        'userId': userId,
+        'slotId': slotId,
+        'gameId': gameId,
+        'matchImminent': matchImminent,
+        'isMatched': isMatched
+    };
+    $.ajax({
+        url: `${url}`,
+        type: `POST`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_current_match_update(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let id = form['id'].value;
+    let userId = form['userId'].value;
+    let slotId = form['slotId'].value;
+    let gameId = form['gameId'].value;
+    let matchImminent = form['matchImminent'].value;
+    let isMatched = form['isMatched'].value;
+
+    let data = {
+        'currentMatchId': id,
+        'userId': userId,
+        'slotId': slotId,
+        'gameId': gameId,
+        'matchImminent': matchImminent,
+        'isMatched': isMatched
+    };
+    $.ajax({
+        url: `${url}`,
+        type: `PUT`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
             history.replaceState({}, null, location.pathname);
         }
     })
