@@ -120,16 +120,17 @@ public class SlotControllerImpl implements SlotController {
             throw new BusinessException("{invalid.request}");
         }
         SlotDto slot = currentMatch.getSlot();
+        CurrentMatchRemoveDto currentMatchRemoveDto = CurrentMatchRemoveDto.builder()
+                .userId(user.getId()).build();
         if (currentMatch.getIsMatched() == true) {
             falsifyIsMatchedForRemainders(currentMatch.getSlot());
         }
-        CurrentMatchRemoveDto currentMatchRemoveDto = CurrentMatchRemoveDto.builder()
-                .userId(user.getId()).build();
         currentMatchService.removeCurrentMatch(currentMatchRemoveDto);
         teamService.removeUserInTeam(getTeamRemoveUserDto(slot, user));
         slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
-        notiGenerater.addCancelNotisBySlot(NotiCanceledTypeDto.builder().slotDto(slot).notiType(NotiType.CANCELEDBYMAN).build());
-
+        if (currentMatch.getIsMatched() == true) {
+            notiGenerater.addCancelNotisBySlot(NotiCanceledTypeDto.builder().slotDto(slot).notiType(NotiType.CANCELEDBYMAN).build());
+        }
     }
 
     private void falsifyIsMatchedForRemainders(SlotDto slot) {

@@ -10,10 +10,13 @@ import io.pp.arcade.domain.rank.RankRedis;
 import io.pp.arcade.domain.rank.RankRepository;
 import io.pp.arcade.domain.rank.dto.*;
 import io.pp.arcade.domain.user.User;
+import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.RacketType;
 import org.assertj.core.api.Assertions;
 import org.checkerframework.checker.units.qual.A;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +50,11 @@ class RankRedisServiceTest {
     String host;
     @Value("${spring.redis.port}")
     String port;
+
+    @BeforeEach
+    void init (){
+        flushAll();
+    }
 
     @Test
     @Transactional
@@ -106,7 +114,7 @@ class RankRedisServiceTest {
     @DisplayName("유저 랭크 조회 - Redis 데이터 X")
     void findRankByIdWhenEmpty() {
         // given
-        flushAll();
+
         RankFindDto rankFindDto = RankFindDto.builder().gameType(GameType.SINGLE).intraId("hakim").build();
 
         // when
@@ -155,6 +163,7 @@ class RankRedisServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("랭크 상태 메시지 변경")
     void modifyRankStatusMessage() {
         // given
@@ -173,6 +182,7 @@ class RankRedisServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("모든 유저 랭크 조회")
     void findRankAll() {
         // given
@@ -182,6 +192,7 @@ class RankRedisServiceTest {
         for (RankRedis rank : rankList) {
             rankMap.put(rank.getIntraId() + rank.getGameType().getCode(), rank);
         }
+
         // when
         List<RankRedisDto> rankAll = rankRedisService.findRankAll();
 
@@ -198,9 +209,11 @@ class RankRedisServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("모든 유저 랭크 조회 - Redis 데이터 X")
     void findRankAllWhenEmpty() {
         flushAll();
+
         // when
         List<RankRedisDto> rankAll = rankRedisService.findRankAll();
 
@@ -209,6 +222,7 @@ class RankRedisServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("빈 랭크 체크")
     void isEmpty() {
         flushAll();
@@ -220,12 +234,12 @@ class RankRedisServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("빈 랭크 체크 - 데이터가 있을 경우")
     void isEmptyWhenDataExists() {
         testInitiator.letsgo();
         // when
         Boolean isEmpty = rankRedisService.isEmpty();
-
         // then
         Assertions.assertThat(isEmpty).isFalse();
     }
@@ -235,19 +249,44 @@ class RankRedisServiceTest {
     void saveAll() {
         // given
         testInitiator.letsgo();
-        List<RankDto> rankDtos = rankService.findAll();
-        Map<Integer, RankDto> rankDtoMap = new HashMap<>();
-        for (RankDto rankDto : rankDtos){
-            rankDtoMap.put(rankDto.getId(), rankDto);
+        User[] users = testInitiator.users;
+        List<UserDto> userDtos = new ArrayList<>();
+        for (User user : users){
+            userDtos.add(UserDto.from(user));
         }
+        List<RankRedis> rankList = Arrays.asList(testInitiator.ranks);
+        for (RankRedis rankRedis : rankList) {
+            int idx = rankList.indexOf(rankRedis);
+            rankRedis.setStatusMessage(String.valueOf(idx));
+        }
+        List<RankDto> rankDtos = new ArrayList<>();
+        for (int i = 0; i < users.length; i++) {
+            rankDtos.add(RankDto.builder().id(i).ranking(i).ppp(1000).losses(i).wins(i).racketType(RacketType.SHAKEHAND).seasonId(i).user(userDtos.get(i)).build());
+        }
+        HashMap<String, RankDto> rankDtoMap = new HashMap<>();
+        for (int i = 0; i < users.length; i++) {
+            rankDtoMap.put(rankDtos.get(i).getUser().getIntraId(), rankDtos.get(i));
+        }
+
         // when
         rankRedisService.saveAll(rankDtos);
 
         // then
-        List<RankRedis> redisList = redisTemplate.opsForValue().multiGet(redisTemplate.keys(Key.RANK_USER_ALL));
-        Assertions.assertThat(redisList).isNotEmpty();
-        for(RankRedis rankRedis : redisList) {
-            RankDto rankDto = rankDtoMap.get(rankRedis.getId());
+        List<RankRedis> singleList = redisTemplate.opsForValue().multiGet(redisTemplate.keys(Key.RANK_USER + "*" + "SINGLE"));
+        Assertions.assertThat(singleList).isNotEmpty();
+        for(RankRedis rankRedis : singleList) {
+            RankDto rankDto = rankDtoMap.get(rankRedis.getIntraId());
+            Assertions.assertThat(rankRedis.getId()).isEqualTo(rankDto.getId());
+            Assertions.assertThat(rankRedis.getIntraId()).isEqualTo(rankDto.getUser().getIntraId());
+            Assertions.assertThat(rankRedis.getPpp()).isEqualTo(rankDto.getPpp());
+            Assertions.assertThat(rankRedis.getWins()).isEqualTo(rankDto.getWins());
+            Assertions.assertThat(rankRedis.getLosses()).isEqualTo(rankDto.getLosses());
+        }
+
+        List<RankRedis> doubleList = redisTemplate.opsForValue().multiGet(redisTemplate.keys(Key.RANK_USER + "*" + "DOUBLE"));
+        Assertions.assertThat(doubleList).isNotEmpty();
+        for(RankRedis rankRedis : doubleList) {
+            RankDto rankDto = rankDtoMap.get(rankRedis.getIntraId());
             Assertions.assertThat(rankRedis.getId()).isEqualTo(rankDto.getId());
             Assertions.assertThat(rankRedis.getIntraId()).isEqualTo(rankDto.getUser().getIntraId());
             Assertions.assertThat(rankRedis.getPpp()).isEqualTo(rankDto.getPpp());

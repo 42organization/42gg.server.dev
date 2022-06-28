@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.currentmatch;
 
+import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.currentmatch.dto.*;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
@@ -42,6 +43,8 @@ class CurrentMatchServiceTest {
     SlotRepository slotRepository;
     @Autowired
     TeamRepository teamRepository;
+    @Autowired
+    TestInitiator initiator;
 
     User user1;
     User user2;
@@ -52,41 +55,20 @@ class CurrentMatchServiceTest {
     Team team2;
     Game game;
 
+
     @BeforeEach
     void init() {
-        user1 = userRepository.save(User.builder()
-                .intraId("nheo")
-                .imageUri("")
-                .ppp(1000)
-                .statusMessage("")
-                .build());
-        user2 = userRepository.save(User.builder()
-                .intraId("donghyuk")
-                .imageUri("")
-                .ppp(950)
-                .statusMessage("")
-                .build());
-        team1 = teamRepository.save(Team.builder()
-                .user1(user1)
-                .headCount(1)
-                .score(0)
-                .teamPpp(user1.getPpp())
-                .build());
-        team2 = teamRepository.save(Team.builder()
-                .user1(user2)
-                .headCount(1)
-                .score(0)
-                .teamPpp(user2.getPpp())
-                .build());
-        slot = slotRepository.save(Slot.builder()
-                .tableId(1)
-                .team1(team1)
-                .team2(team2)
-                .time(LocalDateTime.now())
-                .gamePpp(1000)
-                .type(null)
-                .headCount(2)
-                .build());
+        initiator.letsgo();
+        user1 = initiator.users[0];
+        user2 = initiator.users[1];
+        user3 = initiator.users[2];
+        user4 = initiator.users[3];
+
+        slot = initiator.slots[0];
+
+        team1 = slot.getTeam1();
+        team2 = slot.getTeam2();
+
         game = gameRepository.save(Game.builder()
                 .team1(team1)
                 .team2(team2)

@@ -286,9 +286,9 @@ public class GameControllerImpl implements GameController {
             team2 = game.getTeam2();
 
             /* 왼 쪽 정 렬 */
-            if ((team2.getUser1() != null && curUserId.equals(team2.getUser1().getIntraId()))
-                    || (team2.getUser2() != null && curUserId.equals(team2.getUser2().getIntraId())))
-            {
+            if (curUserId != null &&
+                    ((team2.getUser1() != null && curUserId.equals(team2.getUser1().getIntraId()))
+                    || (team2.getUser2() != null && curUserId.equals(team2.getUser2().getIntraId())))) {
                 team1 = game.getTeam2();
                 team2 = game.getTeam1();
             }

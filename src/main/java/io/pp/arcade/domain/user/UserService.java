@@ -18,9 +18,6 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-
-
-@Transactional
 public class UserService {
     private final UserRepository userRepository;
 
@@ -80,11 +77,12 @@ public class UserService {
     public void createUserByAdmin(UserCreateRequestDto userCreateDto) {
         User user = User.builder()
                 .intraId(userCreateDto.getIntraId())
-                .eMail(userCreateDto.getEMail())
+                .eMail(userCreateDto.getEmail())
                 .imageUri(userCreateDto.getUserImageUri())
                 .racketType(userCreateDto.getRacketType())
                 .statusMessage(userCreateDto.getStatusMessage() == null ? "" : userCreateDto.getStatusMessage())
                 .ppp(userCreateDto.getPpp() == null ? 0 : userCreateDto.getPpp())
+                .roleType(RoleType.USER)
                 .build();
         userRepository.save(user);
     }
