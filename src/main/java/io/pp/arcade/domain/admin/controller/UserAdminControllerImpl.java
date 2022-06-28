@@ -4,6 +4,7 @@ import io.pp.arcade.domain.admin.dto.create.UserCreateRequestDto;
 import io.pp.arcade.domain.admin.dto.update.UserUpdateRequestDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.domain.user.dto.UserFindDto;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -37,5 +38,12 @@ public class UserAdminControllerImpl implements UserAdminController {
     public List<UserDto> userAll(Pageable pageable, HttpServletRequest request) {
         List<UserDto> users = userService.findUserByAdmin(pageable);
         return users;
+    }
+
+    @Override
+    @DeleteMapping(value = "/user/{userId}")
+    public void userRoleChange(Integer userId, HttpServletRequest request) {
+        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
+        userService.toggleUserRoleType(user);
     }
 }
