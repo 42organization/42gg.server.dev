@@ -17,4 +17,6 @@ public interface PChangeRepository extends JpaRepository<PChange, Integer> {
     //     Page<PChange> findAllByUserAndStatusAndGameIdLessThanOrderByIdDesc(User user, String status, Integer gameId, Pageable pageable);
     Page<PChange> findAllByUserAndGameIdLessThanOrderByIdDesc(User user, Integer gameId, Pageable pageable);
     Optional<PChange> findByUserAndGame(User user, Game game);
+
+    Page<PChange> findAllByOrderByIdDesc(Pageable pageable);
 }

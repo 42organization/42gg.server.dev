@@ -2,7 +2,6 @@ package io.pp.arcade.domain.game;
 
 import io.pp.arcade.domain.admin.dto.create.GameCreateDto;
 import io.pp.arcade.domain.admin.dto.delete.GameDeleteDto;
-import io.pp.arcade.domain.admin.dto.update.GameUpdateDto;
 import io.pp.arcade.domain.game.dto.*;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
@@ -113,7 +112,7 @@ public class GameService {
 
     @Transactional
     public List<GameDto> findGameByTypeByAdmin(Pageable pageable, GameType type) {
-        Page<Game> games = gameRepository.findAllByType(pageable, type);
+        Page<Game> games = gameRepository.findAllByTypeOrderByIdDesc(pageable, type);
         List<GameDto> gameDtos = games.stream().map(GameDto::from).collect(Collectors.toList());
         return gameDtos;
     }
