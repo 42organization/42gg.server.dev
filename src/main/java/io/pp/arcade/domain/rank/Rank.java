@@ -4,6 +4,7 @@ import io.pp.arcade.domain.rank.dto.RankDto;
 import io.pp.arcade.domain.rank.dto.RankRedisDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.util.BaseTimeEntity;
 import io.pp.arcade.global.type.RacketType;
 import lombok.Builder;
@@ -44,6 +45,10 @@ public class Rank extends BaseTimeEntity implements Serializable {
     private RacketType racketType;
 
     @NotNull
+    @Column(name = "game_type")
+    private GameType gameType;
+
+    @NotNull
     @Column(name = "wins")
     private Integer wins;
 
@@ -52,15 +57,17 @@ public class Rank extends BaseTimeEntity implements Serializable {
     private Integer losses;
 
     @Builder
-    public Rank(User user, Integer ppp, Integer seasonId, Integer ranking, RacketType racketType, Integer wins, Integer losses) {
+    public Rank(User user, Integer ppp, Integer seasonId, Integer ranking, RacketType racketType, GameType gameType, Integer wins, Integer losses) {
         this.user = user;
         this.ppp = ppp;
         this.seasonId = seasonId;
         this.ranking = ranking;
         this.racketType = racketType;
+        this.gameType = gameType;
         this.wins = wins;
         this.losses = losses;
     }
+
 
     public void update(Integer ppp, Integer wins, Integer losses) {
         this.ppp = ppp;
@@ -74,6 +81,7 @@ public class Rank extends BaseTimeEntity implements Serializable {
         this.wins = rankDto.getWins();
         this.losses = rankDto.getLosses();
         this.ranking = rankDto.getRanking();
+        this.gameType = rankDto.getGameType();
         this.seasonId = seasonId;
         this.racketType = rankDto.getRacketType();
     }

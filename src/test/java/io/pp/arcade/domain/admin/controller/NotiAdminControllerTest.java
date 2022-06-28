@@ -140,7 +140,7 @@ public class NotiAdminControllerTest {
     @Test
     @Transactional
     public void findNoti() throws Exception {
-        mockMvc.perform(get("/admin/noti").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/admin/noti/all").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("admin-noti-find-all"));
 
