@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.noti;
 
+import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.noti.dto.*;
 import io.pp.arcade.domain.slot.Slot;
@@ -12,6 +13,7 @@ import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.NotiType;
 import org.assertj.core.api.Assertions;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +46,9 @@ class NotiServiceTest {
     @Autowired
     SlotRepository slotRepository;
 
+    @Autowired
+    TestInitiator initiator;
+
     Slot slot;
     Team team1;
     User user1;
@@ -54,32 +59,14 @@ class NotiServiceTest {
 
     @BeforeEach
     void init() {
-        user1 = userRepository.save(User.builder().intraId("jiyun1").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(42).build());
-        user2 = userRepository.save(User.builder().intraId("jiyun2").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(24).build());
-        user3 = userRepository.save(User.builder().intraId("nheo1").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(60).build());
-        user4 = userRepository.save(User.builder().intraId("nheo2").eMail("kipark@student.42seoul.kr").statusMessage("").ppp(30).build());
-        team1 = teamRepository.save(Team.builder()
-                .teamPpp(0)
-                .user1(user1)
-                .user2(user2)
-                .headCount(2)
-                .score(0)
-                .build());
-        team2 = teamRepository.save(Team.builder()
-                .teamPpp(0)
-                .user1(user3)
-                .user2(user4)
-                .headCount(2)
-                .score(0)
-                .build());
-        slot = slotRepository.save(Slot.builder()
-                .tableId(1)
-                .team1(team1)
-                .team2(team2)
-                .type(GameType.BUNGLE)
-                .time(LocalDateTime.now())
-                .headCount(4)
-                .build());
+        initiator.letsgo();
+        slot = initiator.slots[0];
+        user1 = initiator.users[0];
+        user2 = initiator.users[1];
+        user3 = initiator.users[2];
+        user4 = initiator.users[3];
+        team1 = slot.getTeam1();
+        team2 = slot.getTeam2();
     }
 
 
