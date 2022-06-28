@@ -71,9 +71,10 @@ public class UserAdminControllerTest {
     public void userCreate() throws Exception {
         //given
         Map<String, String> body = new HashMap<>();
-        body.put("intraId", "jiyun");
+        body.put("intraId", "jiyun2");
         body.put("statusMessage", "hi");
         body.put("ppp", "400");
+
 
         //when
         mockMvc.perform(post("/admin/user").contentType(MediaType.APPLICATION_JSON)

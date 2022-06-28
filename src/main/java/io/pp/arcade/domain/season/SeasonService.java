@@ -1,6 +1,7 @@
 package io.pp.arcade.domain.season;
 
 import io.pp.arcade.domain.admin.dto.create.SeasonCreateRequestDto;
+import io.pp.arcade.domain.admin.dto.update.SeasonUpdateDto;
 import io.pp.arcade.domain.season.dto.SeasonAddDto;
 import io.pp.arcade.domain.season.dto.SeasonDeleteDto;
 import io.pp.arcade.domain.season.dto.SeasonDto;
@@ -22,10 +23,14 @@ public class SeasonService {
 
     @Transactional
     public void createSeasonByAdmin(SeasonCreateRequestDto createDto) {
+        Season lastSeason = seasonRepository.findFirstByOrderByIdDesc().orElse(null);
+        if (lastSeason != null) {
+            lastSeason.setEndTime(createDto.getStartTime());
+        }
         Season season = Season.builder()
                 .seasonName(createDto.getSeasonName())
                 .startTime(createDto.getStartTime())
-                .endTime(createDto.getEndTime())
+                .endTime(LocalDateTime.of(9999, 12, 31, 23, 59, 59))
                 .startPpp(createDto.getStartPpp())
                 .pppGap(createDto.getPppGap()).build();
         seasonRepository.save(season);
@@ -52,5 +57,12 @@ public class SeasonService {
         Page<Season> seasons = seasonRepository.findAll(pageable);
         List<SeasonDto> seasonDtos = seasons.stream().map(SeasonDto::from).collect(Collectors.toList());
         return seasonDtos;
+    }
+
+    @Transactional
+    public void updateSeasonByAdmin(SeasonUpdateDto seasonUpdateDto) {
+        Season season = seasonRepository.findById(seasonUpdateDto.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        season.setPppGap(seasonUpdateDto.getPppGap());
+        season.setStartPpp(seasonUpdateDto.getStartPpp());
     }
 }

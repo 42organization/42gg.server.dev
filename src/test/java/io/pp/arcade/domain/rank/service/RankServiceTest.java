@@ -49,6 +49,7 @@ class RankServiceTest {
     }
 
     @Test
+    @Transactional
     @DisplayName("Redis -> DB - Redis 데이터 X")
     void saveAllWhenNoData() {
         /*
@@ -136,6 +137,14 @@ class RankServiceTest {
 
         // then
         Assertions.assertThat(rankRepository.findAll()).isEmpty();
+    }
+
+    private void flushAll() {
+        RedisClient redisClient = RedisClient.create("redis://"+ host + ":" + port);
+        StatefulRedisConnection<String, String> connection = redisClient.connect();
+        RedisAsyncCommands<String, String> commands = connection.async();
+        commands.flushall();
+        boolean result = LettuceFutures.awaitAll(5, TimeUnit.SECONDS);
     }
 
     private void flushAll() {
