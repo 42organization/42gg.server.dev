@@ -224,6 +224,6 @@ public class GameAdminControllerTest {
                 .andDo(document("admin-game-find-all"));
 
         int size = gameRepository.findAll().size();
-        Assertions.assertThat(size).isEqualTo(1);
+        Assertions.assertThat(size).isEqualTo(2);
     }
 }

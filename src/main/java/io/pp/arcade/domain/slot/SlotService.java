@@ -97,7 +97,6 @@ public class SlotService {
         return SlotDto.from(slot);
     }
 
-    //mytable 테이블 추가하기!
     public List<SlotStatusDto> findSlotsStatus(SlotFindStatusDto findDto) {
         LocalDateTime now = findDto.getCurrentTime();
         LocalDateTime todayStartTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 0);

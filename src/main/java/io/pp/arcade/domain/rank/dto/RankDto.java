@@ -3,6 +3,7 @@ package io.pp.arcade.domain.rank.dto;
 import io.pp.arcade.domain.rank.Rank;
 import io.pp.arcade.domain.rank.RankRedis;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.RacketType;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,6 +15,7 @@ public class RankDto {
     private UserDto user;
     private Integer seasonId;
     private Integer ranking;
+    private GameType gameType;
     private RacketType racketType;
     private Integer wins;
     private Integer losses;

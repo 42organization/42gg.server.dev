@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.rank;
 
+import io.pp.arcade.domain.rank.dto.RankDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.RacketType;
@@ -67,6 +68,20 @@ public class RankRedis implements Serializable {
                 .wins(0)
                 .losses(0)
                 .winRate(0)
+                .build();
+    }
+
+    public static RankRedis from (RankDto rankDto, String gameType){
+        return RankRedis.builder()
+                .id(rankDto.getId())
+                .intraId(rankDto.getUser().getIntraId())
+                .ppp(rankDto.getPpp())
+                .statusMessage(rankDto.getUser().getStatusMessage())
+                .gameType(GameType.valueOf(gameType))
+                .racketType(rankDto.getRacketType())
+                .wins(rankDto.getWins())
+                .losses(rankDto.getLosses())
+                .winRate(rankDto.getLosses())
                 .build();
     }
 

@@ -34,7 +34,7 @@ public class RankService {
         if (saveAllDto.getSeasonId() == null) {
             throw new BusinessException("{server.internal.error}");
         }
-        List<RankRedisDto> rankRedisDtos =  saveAllDto.getRankRedisDtos();
+        List<RankRedisDto> rankRedisDtos = saveAllDto.getRankRedisDtos();
         List<Rank> rankList = rankRedisDtos.stream().map(rankRedisDto -> {
             Rank rank = new Rank();
             User user = userRepository.getUserByIntraId(rankRedisDto.getIntraId());

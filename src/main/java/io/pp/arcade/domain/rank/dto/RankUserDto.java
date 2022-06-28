@@ -16,7 +16,7 @@ public class RankUserDto {
     private String statusMessage;
     private double winRate;
 
-    public static RankUserDto from (RankRedis userRank, Long rank){
+    public static RankUserDto from (RankRedis userRank, Integer rank){
          RankUserDto dto;
         /*
          if (userRank == null) {
