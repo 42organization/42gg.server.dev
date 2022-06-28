@@ -26,6 +26,7 @@ public class TraceAspect {
     @Pointcut("execution(* io.pp.arcade.domain.security..*(..))")
     public void securityDomain(){}
 
+
     @Around("allDomain() && !securityDomain()")
     public Object doLog(ProceedingJoinPoint joinPoint) throws Throwable {
         TraceStatus status = null;

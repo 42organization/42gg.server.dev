@@ -104,4 +104,21 @@ public class UserService {
         List<UserDto> userDtos = users.stream().map(UserDto::from).collect(Collectors.toList());
         return userDtos;
     }
+
+    @Transactional
+    public List<UserDto> findAllByRoleType(RoleType roleType) {
+        List<User> users = userRepository.findAllByRoleType(roleType);
+        List<UserDto> userDtos = users.stream().map(UserDto::from).collect(Collectors.toList());
+        return userDtos;
+    }
+
+    @Transactional
+    public void toggleUserRoleType(UserDto userDto) {
+        User user = userRepository.findById(userDto.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        if (user.getRoleType() == RoleType.USER) {
+            user.setRoleType(RoleType.ADMIN);
+        } else {
+            user.setRoleType(RoleType.USER);
+        }
+    }
 }

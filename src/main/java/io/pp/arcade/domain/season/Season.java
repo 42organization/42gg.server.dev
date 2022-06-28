@@ -3,6 +3,7 @@ package io.pp.arcade.domain.season;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -25,14 +26,17 @@ public class Season {
     private LocalDateTime startTime;
 
     @NotNull
+    @Setter
     @Column(name = "end_time")
     private LocalDateTime endTime;
 
     @NotNull
+    @Setter
     @Column(name = "start_ppp")
     private Integer startPpp;
 
     @NotNull
+    @Setter
     @Column(name = "ppp_gap")
     private Integer pppGap;
 
