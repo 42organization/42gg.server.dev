@@ -353,3 +353,182 @@ function js_request_current_match_update(form) {
         }
     })
 }
+
+function js_request_slot_create(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let tableId = form['tableId'].value;
+    let team1Id = form['team1Id'].value;
+    let team2Id = form['team2Id'].value;
+    let time = form['time'].value;
+    let gamePpp = form['gamePpp'].value;
+    let headCount = form['headCount'].value;
+    let type = form['type'].value;
+
+    let data = {
+        'tableId': tableId,
+        'team1Id': team1Id,
+        'team2Id': team2Id,
+        'time': time,
+        'gamePpp': gamePpp,
+        'headCount': headCount,
+        'type': type
+    };
+
+    $.ajax({
+        url: `${url}`,
+        type: `POST`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_empty_slot_create(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let tableId = form['tableId'].value;
+    let time = form['time'].value;
+
+    let data = {
+        'tableId': tableId,
+        'team1Id': null,
+        'team2Id': null,
+        'time': time,
+        'gamePpp': null,
+        'headCount': null,
+        'type': null
+    };
+
+    $.ajax({
+        url: `${url}`,
+        type: `POST`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+
+function js_request_slot_update(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let id = form['id'].value;
+    let gamePpp = form['gamePpp'].value;
+    let headCount = form['headCount'].value;
+    let type = form['type'].value;
+
+    let data = {
+        'slotId': id,
+        'gamePpp': gamePpp,
+        'headCount': headCount,
+        'type': type
+    };
+
+    $.ajax({
+        url: `${url}`,
+        type: `PUT`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_slot_generator_put(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let startTime = form['startTime'].value;
+    let interval = form['interval'].value;
+    let slotNum = form['slotNum'].value;
+
+    let data = {
+        'startTime': startTime,
+        'interval': interval,
+        'slotNum': slotNum
+    };
+
+    $.ajax({
+        url: `${url}`,
+        type: `PUT`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_slot_generator_run(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+
+    $.ajax({
+        url: `${url}`,
+        type: `GET`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
