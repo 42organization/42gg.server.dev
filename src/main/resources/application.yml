@@ -4,6 +4,7 @@ spring:
 
   security:
     oauth2.client:
+      authenticationScheme: header
       registration:
         42:
           redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"

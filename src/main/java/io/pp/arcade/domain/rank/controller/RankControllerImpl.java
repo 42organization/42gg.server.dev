@@ -1,7 +1,9 @@
 package io.pp.arcade.domain.rank.controller;
 
-import io.pp.arcade.domain.rank.service.RankServiceImpl;
+import io.jsonwebtoken.lang.Collections;
 import io.pp.arcade.domain.rank.dto.*;
+import io.pp.arcade.domain.rank.service.RankRedisService;
+import io.pp.arcade.domain.rank.service.RankService;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.GameType;
@@ -14,27 +16,25 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/pingpong")
 public class RankControllerImpl implements RankController {
-    private final RankServiceImpl rankServiceImpl;
+    private final RankService rankService;
+    private final RankRedisService rankRedisService;
     private final TokenService tokenService;
 
     @Override
     @GetMapping(value = "/ranks/{gameType}")
     public RankListResponseDto rankList(Pageable pageable, Integer count, GameType gameType, HttpServletRequest request) {
         // 아무런 값이 없을 떄 테스트 해보기
-        UserDto user = null;
-        RankUserDto userRank = null;
-        RankFindListDto rankListDto = rankServiceImpl.findRankList(pageable, count, gameType);
-        if (rankListDto.getRankList().size() > 0 ) {
-            user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-            userRank = rankServiceImpl.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(gameType).build());
-        }
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        RankListDto rankListDto = rankRedisService.findRankList(RankFindListDto.builder().pageable(pageable).gameType(gameType).count(count).build());
+        RankUserDto userRank = rankRedisService.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(gameType).build());
         RankListResponseDto rankListResponseDto = RankListResponseDto.builder()
-                    .myRank((userRank != null) ? userRank.getRank() : null)
+                    .myRank(userRank.getRank())
                     .currentPage(rankListDto.getCurrentPage())
                     .totalPage(rankListDto.getTotalPage())
                     .rankList(rankListDto.getRankList())
@@ -44,8 +44,11 @@ public class RankControllerImpl implements RankController {
 
     @PostConstruct
     private void init (){
-        if (rankServiceImpl.isEmpty()) {
-            rankServiceImpl.loadAllFromRDB();
+        if (rankRedisService.isEmpty()) {
+            List<RankDto> rankList = rankService.findAll();
+            if (!Collections.isEmpty(rankList)) {
+                rankRedisService.saveAll(rankList);
+            }
         }
     }
 }

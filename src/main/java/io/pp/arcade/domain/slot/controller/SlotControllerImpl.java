@@ -20,12 +20,14 @@ import io.pp.arcade.domain.team.dto.TeamRemoveUserDto;
 import io.pp.arcade.domain.slot.dto.SlotStatusResponseDto;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.NotiType;
 import io.pp.arcade.global.type.SlotStatusType;
 import io.pp.arcade.global.util.HeaderUtil;
 import io.pp.arcade.global.util.NotiGenerater;
 import lombok.AllArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
@@ -45,6 +47,7 @@ public class SlotControllerImpl implements SlotController {
     private final NotiGenerater notiGenerater;
     private final SeasonService seasonService;
     private final TokenService tokenService;
+    private final RedisTemplate redisTemplate;
 
     @Override
     @GetMapping(value = "/match/tables/{tableId}/{type}")
@@ -71,6 +74,10 @@ public class SlotControllerImpl implements SlotController {
         //user가 매치를 이미 가지고 있는지 myTable에서 user 필터하기
         CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUserId(userId);
         if (matchDto != null) {
+            throw new BusinessException("{invalid.request}");
+        }
+
+        if (redisTemplate.opsForValue().get(Key.PENALTY_USER + user.getIntraId()) != null) {
             throw new BusinessException("{invalid.request}");
         }
 
@@ -122,6 +129,7 @@ public class SlotControllerImpl implements SlotController {
         teamService.removeUserInTeam(getTeamRemoveUserDto(slot, user));
         slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
         notiGenerater.addCancelNotisBySlot(NotiCanceledTypeDto.builder().slotDto(slot).notiType(NotiType.CANCELEDBYMAN).build());
+
     }
 
     private void falsifyIsMatchedForRemainders(SlotDto slot) {
@@ -246,6 +254,7 @@ public class SlotControllerImpl implements SlotController {
     private SlotRemoveUserDto getSlotRemoveUserDto(SlotDto slot, UserDto user) {
         SlotRemoveUserDto slotRemoveUserDto = SlotRemoveUserDto.builder()
                 .slotId(slot.getId())
+                .userId(user.getIntraId())
                 .exitUserPpp(user.getPpp())
                 .build();
         return slotRemoveUserDto;
