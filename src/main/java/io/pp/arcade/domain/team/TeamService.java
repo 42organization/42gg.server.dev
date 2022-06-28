@@ -105,12 +105,9 @@ public class TeamService {
     @Transactional
     public void createTeamByAdmin(TeamCreateRequestDto teamCreateDto) {
         teamRepository.save(Team.builder()
-                .user1(userRepository.findById(teamCreateDto.getUser1Id()).orElse(null))
-                .user2(userRepository.findById(teamCreateDto.getUser2Id()).orElse(null))
                 .teamPpp(teamCreateDto.getTeamPpp())
                 .headCount(teamCreateDto.getHeadCount())
                 .score(teamCreateDto.getScore())
-                .win(teamCreateDto.getWin())
                 .build());
     }
 
