@@ -37,17 +37,14 @@ class RankServiceTest {
     private RankRepository rankRepository;
     @Autowired
     private TestInitiator testInitiator;
-
     @Value("${spring.redis.host}")
     String host;
     @Value("${spring.redis.port}")
     String port;
-
-
     private List<User> users;
 
     @BeforeEach
-    void flush() {
+    void init (){
         flushAll();
     }
 
@@ -58,40 +55,22 @@ class RankServiceTest {
         /*
          * Redis - 데이터 없을 경우
          * */
-        {
-            // given
-            List<RankRedisDto> rankRedisDtos = rankRedisService.findRankAll();
-            RankSaveAllDto saveAllDto = RankSaveAllDto.builder().rankRedisDtos(rankRedisDtos).seasonId(1).build();
 
-            // when
-            rankService.saveAll(saveAllDto);
+        // given
+        List<RankRedisDto> rankRedisDtos = rankRedisService.findRankAll();
+        RankSaveAllDto saveAllDto = RankSaveAllDto.builder().rankRedisDtos(rankRedisDtos).seasonId(1).build();
 
-            // then
-            Assertions.assertThat(rankRepository.findAll()).isEmpty();
-        }
+        // when
+        rankService.saveAll(saveAllDto);
 
-
-
-
-        /*
-         * Redis - 데이터 있으며, SessionId가 있을 경우
-         * */
-        {
-            List<RankRedisDto> rankRedisDtos = rankRedisService.findRankAll();
-            RankSaveAllDto saveAllDto = RankSaveAllDto.builder().rankRedisDtos(rankRedisDtos).seasonId(null).build();
-
-            // when
-
-            // then
-        }
+        // then
+        Assertions.assertThat(rankRepository.findAll()).isEmpty();
     }
 
     @Test
     @Transactional
     @DisplayName("Redis -> DB - Redis 데이터 O, 시즌 정보 X")
     void saveAllWhenNoSeason() throws Exception{
-        // season -> null
-
         // given
         testInitiator.letsgo();
         List<RankRedisDto> rankRedisDtos = rankRedisService.findRankAll();
@@ -134,8 +113,38 @@ class RankServiceTest {
             Assertions.assertThat(rank.getUser().getPpp()).isEqualTo(rankRedisDto.getPpp());
         }
     }
+
     @Test
+    @Transactional
+    @DisplayName("모든 랭크 조회")
     void findAll() {
+        // given
+        testInitiator.letsgo();
+
+        // when
+        rankService.findAll();
+
+        // then
+        Assertions.assertThat(rankRepository.findAll()).isNotEmpty();
+    }
+
+    @Test
+    @Transactional
+    @DisplayName("모든 랭크 조회 - 데이터가 없을 경우")
+    void findAllWhenNoData() {
+        // when
+        rankService.findAll();
+
+        // then
+        Assertions.assertThat(rankRepository.findAll()).isEmpty();
+    }
+
+    private void flushAll() {
+        RedisClient redisClient = RedisClient.create("redis://"+ host + ":" + port);
+        StatefulRedisConnection<String, String> connection = redisClient.connect();
+        RedisAsyncCommands<String, String> commands = connection.async();
+        commands.flushall();
+        boolean result = LettuceFutures.awaitAll(5, TimeUnit.SECONDS);
     }
 
     private void flushAll() {
