@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum ChartType implements Constant{
-    RANK("rank");
+    RANK("RANK");
 
     private final String code;
 }
