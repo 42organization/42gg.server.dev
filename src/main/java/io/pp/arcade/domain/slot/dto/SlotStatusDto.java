@@ -5,12 +5,20 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
 
 @Getter
-@Builder
 public class SlotStatusDto {
     private Integer slotId;
     private LocalDateTime time;
-    private SlotStatusType status;
+    private String status;
     private Integer headCount;
+
+    @Builder
+    public SlotStatusDto(Integer slotId, LocalDateTime time, SlotStatusType status, Integer headCount) {
+        this.slotId = slotId;
+        this.time = time;
+        this.status = status.getCode().toLowerCase(Locale.ROOT);
+        this.headCount = headCount;
+    }
 }
