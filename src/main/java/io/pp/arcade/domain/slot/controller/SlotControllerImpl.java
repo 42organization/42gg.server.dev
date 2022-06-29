@@ -108,8 +108,8 @@ public class SlotControllerImpl implements SlotController {
     }
 
     @Override
-    @DeleteMapping(value = "/match")
-    public void slotRemoveUser(HttpServletRequest request) throws MessagingException {
+    @DeleteMapping(value = "/match/slots/{slotId}")
+    public void slotRemoveUser(Integer slotId, HttpServletRequest request) throws MessagingException {
         // slotId , tableId 유효성 검사
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         // 유저 조회, 슬롯 조회, 팀 조회( 슬롯에 헤드 카운트 -, 팀에서 유저 퇴장 )
