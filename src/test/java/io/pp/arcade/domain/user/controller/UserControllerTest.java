@@ -345,7 +345,7 @@ class UserControllerTest {
          * -> 400
          * */
         Map<String, String> body2 = new HashMap<>();
-        body2.put("racketType", RacketType.NONE.getCode());
+        body2.put("racketType", "NOTHING");
         body2.put("statusMessage", "message");
         mockMvc.perform(put("/pingpong/users/detail").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body2))
