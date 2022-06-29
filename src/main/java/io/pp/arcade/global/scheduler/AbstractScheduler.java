@@ -33,7 +33,7 @@ public abstract class AbstractScheduler {
 
     private void startScheduler() {
         scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setPoolSize(3);
+        scheduler.setPoolSize(4);
         scheduler.initialize();
         scheduler.schedule(this.runnable(), new CronTrigger(cron));
     }
