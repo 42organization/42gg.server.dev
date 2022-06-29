@@ -16,7 +16,7 @@ public class EnumConvertConfig {
         @Override
         public GameType convert(String source) {
             try {
-                GameType gameType = GameType.getEnumFromValue(source.toLowerCase(Locale.ROOT));
+                GameType gameType = GameType.getEnumFromValue(source.toUpperCase(Locale.ROOT));
                 return gameType;
             } catch (Exception e) {
                 return null;
