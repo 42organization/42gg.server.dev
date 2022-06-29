@@ -13,7 +13,7 @@ import java.util.Locale;
 public class GameResultDto {
     private Integer gameId;
     private String type;
-    private StatusType status;
+    private String status;
     private LocalDateTime time;
     private GameTeamDto team1;
     private GameTeamDto team2;
@@ -22,7 +22,7 @@ public class GameResultDto {
     public GameResultDto(Integer gameId, GameType type, StatusType status, LocalDateTime time, GameTeamDto team1, GameTeamDto team2) {
         this.gameId = gameId;
         this.type = type.getCode().toLowerCase(Locale.ROOT);
-        this.status = status;
+        this.status = status.getCode().toLowerCase(Locale.ROOT);
         this.time = time;
         this.team1 = team1;
         this.team2 = team2;

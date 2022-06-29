@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 @SpringBootTest
 class SlotServiceTest {
@@ -175,9 +176,9 @@ class SlotServiceTest {
         Integer closeCount = 0;
         for (SlotStatusDto resDto : responseDtos) {
             System.out.println(resDto.getStatus());
-            if (resDto.getStatus().equals(SlotStatusType.OPEN)) {
+            if (resDto.getStatus().equals(SlotStatusType.OPEN.getCode().toLowerCase(Locale.ROOT))) {
                 openCount++;
-            } else if (resDto.getStatus().equals(SlotStatusType.CLOSE)) {
+            } else if (resDto.getStatus().equals(SlotStatusType.CLOSE.getCode().toLowerCase(Locale.ROOT))) {
                 closeCount++;
             }
         }
