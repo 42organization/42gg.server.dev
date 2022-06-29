@@ -85,15 +85,15 @@ public class TestInitiator {
         for (User user : userList) {
             int idx = userList.indexOf(user);
             RankRedis singleRank = RankRedis.from(UserDto.from(user), GameType.SINGLE.getCode());
-            RankRedis doubleRank = RankRedis.from(UserDto.from(user), GameType.BUNGLE.getCode());
+            RankRedis doubleRank = RankRedis.from(UserDto.from(user), GameType.DOUBLE.getCode());
 
             ranks[idx] = singleRank;
             ranks[users.length + idx] = doubleRank;
             redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.SINGLE), singleRank);
-            redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.BUNGLE), doubleRank);
+            redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.DOUBLE), doubleRank);
 
             redisTemplate.opsForZSet().add(getRankKey(GameType.SINGLE), getUserRankKey(user.getIntraId(), GameType.SINGLE), user.getPpp());
-            redisTemplate.opsForZSet().add(getRankKey(GameType.BUNGLE), getUserRankKey(user.getIntraId(), GameType.BUNGLE), user.getPpp());
+            redisTemplate.opsForZSet().add(getRankKey(GameType.DOUBLE), getUserRankKey(user.getIntraId(), GameType.DOUBLE), user.getPpp());
         }
 
         teams = new Team[8];

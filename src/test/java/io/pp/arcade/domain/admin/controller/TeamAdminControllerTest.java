@@ -106,7 +106,7 @@ public class TeamAdminControllerTest {
     @Test
     @Transactional
     public void teamFind() throws Exception {
-        mockMvc.perform(get("/admin/team").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/admin/team/all").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("admin-team-find-all"));
     }

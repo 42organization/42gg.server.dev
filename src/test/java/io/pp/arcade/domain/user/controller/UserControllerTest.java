@@ -20,6 +20,7 @@ import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.RacketType;
 import io.pp.arcade.global.type.StatusType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -344,7 +345,7 @@ class UserControllerTest {
          * -> 400
          * */
         Map<String, String> body2 = new HashMap<>();
-        body2.put("racketType", "NOTHING");
+        body2.put("racketType", RacketType.NONE.getCode());
         body2.put("statusMessage", "message");
         mockMvc.perform(put("/pingpong/users/detail").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body2))
@@ -356,7 +357,7 @@ class UserControllerTest {
          * -> 400
          * */
         Map<String, String> body3 = new HashMap<>();
-        body3.put("racketType", "PENHOLDER");
+        body3.put("racketType", RacketType.PENHOLDER.getCode());
         mockMvc.perform(put("/pingpong/users/detail").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body3))
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
@@ -367,7 +368,7 @@ class UserControllerTest {
          * -> 400
          * */
         Map<String, String> body4 = new HashMap<>();
-        body4.put("racketType", "PENHOLDER");
+        body4.put("racketType", RacketType.PENHOLDER.getCode());
         body4.put("statusMessage", "0123456789".repeat(31));
         mockMvc.perform(put("/pingpong/users/detail").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body4))
@@ -379,7 +380,7 @@ class UserControllerTest {
          * -> 200
          */
         Map<String, String> body5 = new HashMap<>();
-        body5.put("racketType", "PENHOLDER");
+        body5.put("racketType", RacketType.PENHOLDER.getCode());
         body5.put("statusMessage", "message");
         mockMvc.perform(put("/pingpong/users/detail").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body5))

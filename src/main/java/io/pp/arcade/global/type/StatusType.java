@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum StatusType implements Constant{
-    LIVE("LIVE"),
-    WAIT("WAIT"),
-    END("END");
+    LIVE("live"),
+    WAIT("wait"),
+    END("end");
 
     private final String code;
 }

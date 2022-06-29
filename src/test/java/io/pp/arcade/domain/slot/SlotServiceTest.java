@@ -154,7 +154,7 @@ class SlotServiceTest {
     @Transactional
     void findSlotsStatus() {
         //given
-        slots[0].setType(GameType.BUNGLE);
+        slots[0].setType(GameType.DOUBLE);
         slots[0].setHeadCount(3);
         slots[1].setType(GameType.SINGLE);
         slots[1].setHeadCount(2);
