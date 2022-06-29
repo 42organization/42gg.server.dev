@@ -566,7 +566,7 @@ class SlotControllerTest {
         * 인원이 빈 슬롯에 취소를 요청할 경우
         * -> 400
         * */
-        mockMvc.perform(delete("/pingpong/match").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
                 .andExpect(status().is4xxClientError());
 
@@ -598,7 +598,7 @@ class SlotControllerTest {
             saveCurrentMatchImminent(currentMatch, true);
 
             /* slot - user1 등록 취소 */
-            mockMvc.perform(delete("/pingpong/match").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
                     .andExpect(status().is4xxClientError());
         }
@@ -636,7 +636,7 @@ class SlotControllerTest {
             saveCurrentMatchGame(currentMatch2, slot);
 
             /* slot - user1 등록 취소 */
-            mockMvc.perform(delete("/pingpong/match").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[7].getAccessToken()))
                     .andExpect(status().isBadRequest());
         }
@@ -658,7 +658,7 @@ class SlotControllerTest {
                     .andExpect(status().isOk());
 
             /* slot - user1 등록 취소 */
-            mockMvc.perform(delete("/pingpong/match").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
                     .andExpect(status().isOk());
             /* User1 매치테이블 조회 */
@@ -694,7 +694,7 @@ class SlotControllerTest {
                     .andExpect(status().isOk());
 
             /* slot - user1 등록 취소 */
-            mockMvc.perform(delete("/pingpong/match").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
                     .andExpect(status().isOk());
 
@@ -743,7 +743,7 @@ class SlotControllerTest {
                     .andExpect(status().isOk());
 
             /* slot - team2user 등록 취소 */
-            mockMvc.perform(delete("/pingpong/match").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(body))
                             .header("Authorization", "Bearer " + testInitiator.tokens[6].getAccessToken()))
                     .andExpect(status().isOk());
@@ -807,7 +807,7 @@ class SlotControllerTest {
 
         /* slot에서 user4 제거 */
         {
-            mockMvc.perform(delete("/pingpong/match").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()));
             Assertions.assertThat(slot.getGamePpp()).isEqualTo((hakim.getPpp() + nheo.getPpp() + donghyuk.getPpp()) / 3);
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
@@ -849,7 +849,7 @@ class SlotControllerTest {
 
         /* slot에서 user2 제거 */
         {
-            mockMvc.perform(delete("/pingpong/match").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()));
             Assertions.assertThat(slot.getGamePpp()).isEqualTo((hakim.getPpp() + donghyuk.getPpp()) / 2);
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
@@ -900,7 +900,7 @@ class SlotControllerTest {
 
         /* slot에서 user3 제거 */
         {
-            mockMvc.perform(delete("/pingpong/match").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()));
             Assertions.assertThat(slot.getGamePpp()).isEqualTo((hakim.getPpp() + nheo.getPpp()) / 2);
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
@@ -942,7 +942,7 @@ class SlotControllerTest {
 
         /* slot에서 user1 제거 */
         {
-            mockMvc.perform(delete("/pingpong/match").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()));
             Assertions.assertThat(slot.getGamePpp()).isEqualTo(nheo.getPpp());
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
@@ -986,7 +986,7 @@ class SlotControllerTest {
 
         /* slot에서 user2 제거 --> 빈슬롯 */
         {
-            mockMvc.perform(delete("/pingpong/match").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()));
             Assertions.assertThat(slot.getGamePpp()).isEqualTo(null);
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
