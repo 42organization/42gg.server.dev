@@ -299,6 +299,7 @@ public class GameControllerImpl implements GameController {
                     .gameId(game.getId())
                     .team1(teamDto1)
                     .team2(teamDto2)
+                    .type(game.getType())
                     .status(game.getStatus())
                     .time(game.getTime())
                     .build());

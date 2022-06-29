@@ -8,7 +8,6 @@ import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.domain.rank.RankRedis;
 import io.pp.arcade.domain.rank.dto.*;
-import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.type.GameType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import static io.pp.arcade.global.type.GameType.DOUBLE;
+import static io.pp.arcade.global.type.GameType.SINGLE;
 
 
 @Service
@@ -69,8 +71,8 @@ public class RankRedisService implements RankNTService {
 
     @Transactional
     public void modifyRankStatusMessage(RankModifyStatusMessageDto modifyDto) {
-        String singleUserKey = getUserKey(modifyDto.getIntraId(), GameType.SINGLE);
-        String bungleUserKey = getUserKey(modifyDto.getIntraId(), GameType.BUNGLE);
+        String singleUserKey = getUserKey(modifyDto.getIntraId(), SINGLE);
+        String bungleUserKey = getUserKey(modifyDto.getIntraId(), DOUBLE);
         RankRedis singleRank = redisUser.opsForValue().get(singleUserKey);
         RankRedis bungleRank = redisUser.opsForValue().get(bungleUserKey);
         singleRank.setStatusMessage(modifyDto.getStatusMessage());
@@ -183,23 +185,23 @@ public class RankRedisService implements RankNTService {
     private void toRedisRank(RankDto rankDto) {
         String intraId = rankDto.getUser().getIntraId();
         String key = rankDto.getGameType().getCode();
-        if (redisUser.opsForValue().get(getUserKey(intraId, GameType.valueOf(key))) == null) {
-            RankRedis rank = RankRedis.from(rankDto, key);
-            redisUser.opsForValue().set(getUserKey(intraId, GameType.valueOf(key)), rank);
+        if (redisUser.opsForValue().get(getUserKey(intraId, GameType.getEnumFromValue(key))) == null) {
+            RankRedis rank = RankRedis.from(rankDto, rankDto.getGameType().getCode());
+            redisUser.opsForValue().set(getUserKey(intraId, GameType.getEnumFromValue(key)), rank);
         }
-        redisRank.opsForZSet().add(key, getUserRankKey(intraId, GameType.valueOf(key)), rankDto.getPpp());
+        redisRank.opsForZSet().add(key, getUserRankKey(intraId, GameType.getEnumFromValue(key)), rankDto.getPpp());
     }
 
     @Transactional
     public void userToRedisRank(UserDto user) {
         String intraId = user.getIntraId();
-        if (redisUser.opsForValue().get(getUserKey(intraId, GameType.valueOf(Key.SINGLE))) == null) {
-            RankRedis singleRank = RankRedis.from(user, Key.SINGLE);
-            RankRedis doubleRank = RankRedis.from(user, Key.BUNGLE);
-            redisUser.opsForValue().set(getUserKey(intraId, GameType.valueOf(Key.SINGLE)), singleRank);
-            redisUser.opsForValue().set(getUserKey(intraId, GameType.valueOf(Key.BUNGLE)), doubleRank);
+        if (redisUser.opsForValue().get(getUserKey(intraId, GameType.getEnumFromValue(Key.SINGLE))) == null) {
+            RankRedis singleRank = RankRedis.from(user, SINGLE.getCode());
+            RankRedis doubleRank = RankRedis.from(user, DOUBLE.getCode());
+            redisUser.opsForValue().set(getUserKey(intraId, GameType.getEnumFromValue(Key.SINGLE)), singleRank);
+            redisUser.opsForValue().set(getUserKey(intraId, GameType.getEnumFromValue(Key.DOUBLE)), doubleRank);
         }
-        redisRank.opsForZSet().add(Key.SINGLE, getUserRankKey(intraId, GameType.valueOf(Key.SINGLE)), user.getPpp());
-        redisRank.opsForZSet().add(Key.BUNGLE, getUserRankKey(intraId, GameType.valueOf(Key.BUNGLE)), user.getPpp());
+        redisRank.opsForZSet().add(Key.SINGLE, getUserRankKey(intraId, GameType.getEnumFromValue(Key.SINGLE)), user.getPpp());
+        redisRank.opsForZSet().add(Key.DOUBLE, getUserRankKey(intraId, GameType.getEnumFromValue(Key.DOUBLE)), user.getPpp());
     }
 }

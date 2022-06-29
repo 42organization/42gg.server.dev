@@ -13,13 +13,8 @@ import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.NotiType;
 import io.pp.arcade.global.util.NotiGenerater;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 
@@ -45,7 +40,7 @@ public class GameGenerator extends AbstractScheduler {
         LocalDateTime now = LocalDateTime.now();
         now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
         SlotDto slotDto = slotService.findByTime(now);
-        if (slotDto != null && GameType.BUNGLE.equals(slotDto.getType())) {
+        if (slotDto != null && GameType.DOUBLE.equals(slotDto.getType())) {
             maxHeadCount = 4;
         }
         if (slotDto != null) {

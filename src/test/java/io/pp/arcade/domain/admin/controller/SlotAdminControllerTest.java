@@ -81,7 +81,7 @@ public class SlotAdminControllerTest {
         body.put("time", time.toString());
         body.put("gamePpp", "0");
         body.put("headCount", "0");
-        body.put("type", GameType.SINGLE.toString());
+        body.put("type", GameType.SINGLE.getCode());
 
         mockMvc.perform(post("/admin/slot").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body)))
