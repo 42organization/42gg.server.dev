@@ -286,8 +286,6 @@ class UserControllerTest {
                 .andExpect(jsonPath(checkUsers, "jekim").exists())
                 .andExpect(jsonPath(checkUsers, "jihyukim").exists())
                 .andExpect(jsonPath(checkUsers, "daekim").exists())
-                .andExpect(jsonPath(checkUsers, "sujpark").exists())
-                .andExpect(jsonPath(checkUsers, "kipark").exists())
                 .andExpect(status().isOk())
                 .andDo(document("search-user-with-partial-string"));
     }
