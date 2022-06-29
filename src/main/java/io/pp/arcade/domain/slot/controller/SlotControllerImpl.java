@@ -64,7 +64,7 @@ public class SlotControllerImpl implements SlotController {
                 .build();
         slots = slotService.findSlotsStatus(findDto);
         matchBoards = groupingSlots(slots);
-        SlotStatusResponseDto responseDto = SlotStatusResponseDto.builder().matchBoards(matchBoards).intervalTime(slotGenerator.getInterval()).build();
+        SlotStatusResponseDto responseDto = SlotStatusResponseDto.builder().matchBoards(matchBoards).intervalMinute(slotGenerator.getInterval()).build();
         return responseDto;
     }
 
