@@ -7,6 +7,7 @@ import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.RoleType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,7 +68,8 @@ public class UserService {
     public List<UserDto> findByPartsOfIntraId(UserSearchRequestDto userSearchDto) {
         List<UserDto> result = new ArrayList<UserDto>();
         if (!userSearchDto.getIntraId().isEmpty()){
-            List<User> users = userRepository.findByIntraIdContains(userSearchDto.getIntraId());
+            Pageable pageable = PageRequest.of(0, 5);
+            Page<User> users = userRepository.findByIntraIdContains(userSearchDto.getIntraId(), pageable);
             result.addAll(users.stream().map(UserDto::from).collect(Collectors.toList()));
         }
         return result;
