@@ -1,6 +1,7 @@
 package io.pp.arcade.global.scheduler;
 
 import io.pp.arcade.domain.currentmatch.CurrentMatchService;
+import io.pp.arcade.domain.currentmatch.dto.CurrentMatchRemoveDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchSaveGameDto;
 import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.game.dto.GameAddDto;
@@ -40,13 +41,15 @@ public class GameGenerator extends AbstractScheduler {
         LocalDateTime now = LocalDateTime.now();
         now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
         SlotDto slotDto = slotService.findByTime(now);
+
         if (slotDto != null && GameType.DOUBLE.equals(slotDto.getType())) {
             maxHeadCount = 4;
         }
+
+        TeamDto team1 = slotDto.getTeam1();
+        TeamDto team2 = slotDto.getTeam2();
         if (slotDto != null) {
             if (slotDto.getHeadCount().equals(maxHeadCount)) {
-                TeamDto team1 = slotDto.getTeam1();
-                TeamDto team2 = slotDto.getTeam2();
 
                 GameAddDto gameAddDto = GameAddDto.builder()
                         .slotDto(slotDto)
@@ -59,8 +62,14 @@ public class GameGenerator extends AbstractScheduler {
                 saveCurrentMatch(team2.getUser1(), game);
                 saveCurrentMatch(team2.getUser2(), game);
             } else {
+
                 NotiCanceledTypeDto canceledDto = NotiCanceledTypeDto.builder().slotDto(slotDto).notiType(NotiType.CANCELEDBYTIME).build();
                 notiGenerater.addCancelNotisBySlot(canceledDto);
+
+                removeCurrentMatch(team1.getUser1());
+                removeCurrentMatch(team1.getUser2());
+                removeCurrentMatch(team2.getUser1());
+                removeCurrentMatch(team2.getUser2());
             }
         }
     }
@@ -72,6 +81,15 @@ public class GameGenerator extends AbstractScheduler {
                     .userId(user.getId())
                     .build();
             currentMatchService.saveGameInCurrentMatch(matchSaveGameDto);
+        }
+    }
+
+    private void removeCurrentMatch(UserDto user) {
+        if (user != null) {
+            CurrentMatchRemoveDto removeDto = CurrentMatchRemoveDto.builder()
+                    .userId(user.getId())
+                    .build();
+            currentMatchService.removeCurrentMatch(removeDto);
         }
     }
 
