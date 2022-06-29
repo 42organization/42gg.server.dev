@@ -15,7 +15,15 @@ import org.springframework.web.bind.annotation.*;
 public class SchedulerControllerImpl implements SchedulerController {
     private final RankScheduler rankScheduler;
     private final CurrentMatchUpdater currentMatchUpdater;
+    private final SlotGenerator slotGenerator;
     private final GameGenerator gameGenerator;
+
+    @Override
+    @PostMapping(value = "/scheduler/slot")
+    public void slotGeneratorCronUpdate(CronUpdateDto cron) {
+        slotGenerator.setCron(cron.getCron());
+        slotGenerator.renewScheduler();
+    }
 
     @Override
     @PutMapping(value = "/scheduler/rank")

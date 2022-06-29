@@ -17,9 +17,14 @@ import java.time.LocalDateTime;
 
 // 하루에 한 두 번
 @Component
-@RequiredArgsConstructor
-public class SlotGenerator {
+public class SlotGenerator extends AbstractScheduler {
     private final SlotService slotService;
+
+    public SlotGenerator(SlotService slotService) {
+        this.slotService = slotService;
+        this.setCron("30 0 0 * * *");
+    }
+
     @Getter @Setter
     private Integer startTime = 15;
     @Getter @Setter
@@ -27,7 +32,6 @@ public class SlotGenerator {
     @Getter @Setter
     private Integer slotNum = 18;
 
-    @Scheduled(cron = "30 0 0 * * *", zone = "Asia/Seoul") // 초 분 시 일 월 년 요일
     public void dailyGenerate() {
         LocalDateTime now = LocalDateTime.now();
         for (int i = 0; i < slotNum; i++) {
@@ -36,5 +40,12 @@ public class SlotGenerator {
             SlotAddDto dto = SlotAddDto.builder().tableId(1).time(time).build();
             slotService.addSlot(dto);
         }
+    }
+
+    @Override
+    public Runnable runnable() {
+        return () -> {
+            dailyGenerate();
+        };
     }
 }
