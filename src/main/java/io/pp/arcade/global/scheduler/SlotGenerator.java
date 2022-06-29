@@ -36,7 +36,7 @@ public class SlotGenerator extends AbstractScheduler {
         LocalDateTime now = LocalDateTime.now();
         for (int i = 0; i < slotNum; i++) {
             LocalDateTime time = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
-                    startTime + i / 6, (i * interval) % 60, 0); // 3시부터 10분 간격으로 18개 슬롯 생성
+                    startTime + i / (60 / interval), (i * interval) % 60, 0); // 3시부터 10분 간격으로 18개 슬롯 생성
             SlotAddDto dto = SlotAddDto.builder().tableId(1).time(time).build();
             slotService.addSlot(dto);
         }
