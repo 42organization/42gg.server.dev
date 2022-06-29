@@ -13,7 +13,7 @@
                     <div class="">
                         <div class="page-title">
                             <div class="title_left">
-                                <h3>Current Match 관리</h3>
+                                <h3>Noti 관리</h3>
                             </div>
                             <div class="title_right">
                                 <div class="col-md-5 col-sm-5   form-group pull-right top_search">
@@ -32,7 +32,7 @@
                             <div class="col-md-12 col-sm-12  ">
                                 <div class="x_panel">
                                     <div class="x_title">
-                                        <h2>Current Match 생성</h2>
+                                        <h2>Noti 생성</h2>
                                         <ul class="nav navbar-right panel_toolbox">
                                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                             </li>
@@ -47,12 +47,12 @@
                                             <table class="table table-striped jambo_table bulk_action">
                                                 <thead>
                                                 <tr class="headings">
-                                                    <th class="column-title">Current Match ID</th>
+                                                    <th class="column-title">Noti ID</th>
                                                     <th class="column-title">User ID</th>
                                                     <th class="column-title">Slot ID</th>
-                                                    <th class="column-title">Game ID</th>
-                                                    <th class="column-title">isMatched</th>
-                                                    <th class="column-title">MatchImminent</th>
+                                                    <th class="column-title">Type</th>
+                                                    <th class="column-title">Message</th>
+                                                    <th class="column-title">isChecked</th>
                                                     <th class="column-title"></th>
                                                 </tr>
                                                 </thead>
@@ -60,7 +60,7 @@
                                                 <form>
                                                     <tr>
                                                         <input type="hidden" id="url" name="url"
-                                                               value="/admin/currentMatch">
+                                                               value="/admin/noti">
                                                         <input type="hidden" id="token" th:value="${token}">
                                                         <td>자동생성</td>
                                                         <td>
@@ -70,17 +70,17 @@
                                                             <input type="text" id="slotId" name="slotId">
                                                         </td>
                                                         <td>
-                                                            <input type="text" id="gameId" name="gameId">
+                                                            <input type="text" id="type" name="type">
                                                         </td>
                                                         <td>
-                                                            <input type="text" id="isMatched" name="isMatched">
+                                                            <input type="text" id="message" name="message">
                                                         </td>
                                                         <td>
-                                                            <input type="text" id="matchImminent" name="matchImminent">
+                                                            <input type="text" id="isChecked" name="isChecked">
                                                         </td>
                                                         <td>
                                                             <input type="submit" value="생성"
-                                                                   th:onclick='js_request_current_match_create(this.form)'>
+                                                                   th:onclick='js_request_noti_create(this.form)'>
                                                         </td>
                                                     </tr>
                                                 </form>
@@ -92,7 +92,7 @@
                             <div class="col-md-12 col-sm-12  ">
                                 <div class="x_panel">
                                     <div class="x_title">
-                                        <h2>Current Match 수정 / 삭제</h2>
+                                        <h2>Noti 수정 / 삭제</h2>
                                         <ul class="nav navbar-right panel_toolbox">
                                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                             </li>
@@ -107,42 +107,41 @@
                                             <table class="table table-striped jambo_table bulk_action">
                                                 <thead>
                                                 <tr class="headings">
-                                                    <th class="column-title">Current Match ID</th>
+                                                    <th class="column-title">Noti ID</th>
                                                     <th class="column-title">User ID</th>
                                                     <th class="column-title">Slot ID</th>
-                                                    <th class="column-title">Game ID</th>
-                                                    <th class="column-title">isMatched</th>
-                                                    <th class="column-title">MatchImminent</th>
+                                                    <th class="column-title">Type</th>
+                                                    <th class="column-title">Message</th>
+                                                    <th class="column-title">isChecked</th>
                                                     <th class="column-title"></th>
                                                     <th class="column-title"></th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr class="even pointer"
-                                                    th:each="currentMatch, i : ${currentMatchList}">
+                                                    th:each="noti, i : ${notiList}">
                                                     <form>
                                                         <input type="hidden" id="url" name="url"
-                                                               value="/admin/currentMatch">
+                                                               value="/admin/noti">
                                                         <input type="hidden" id="token" th:value="${token}">
-                                                        <input type="hidden" id="id" name="id" th:value="${currentMatch.getId()}">
-                                                        <input type="hidden" id="userId" name="userId" th:value="${currentMatch.getUserId()}">
-                                                        <input type="hidden" id="slotId" name="slotId" th:value="${currentMatch.getSlot().getId()}">
-                                                        <input type="hidden" id="gameId" name="gameId" th:if="${currentMatch.getGame() != null}" th:value="${currentMatch.getGame().getId()}">
-                                                        <input type="hidden" id="gameId" name="gameId" th:unless="${currentMatch.getGame() != null}" th:value="">
-                                                        <td th:text="${currentMatch.getId()}"></td>
-                                                        <td th:text="${currentMatch.getUserId()}"></td>
-                                                        <td th:text="${currentMatch.getSlot().getId()}"></td>
-                                                        <td th:if="${currentMatch.getGame() != null}" th:text="${currentMatch.getGame().getId()}"></td>
-                                                        <td th:unless="${currentMatch.getGame() != null}" th:text=""></td>
+                                                        <input type="hidden" id="id" name="id" th:value="${noti.getId()}">
+                                                        <input type="hidden" id="userId" name="userId" th:value="${noti.getUser.getId()}">
+                                                        <input type="hidden" id="slotId" name="slotId" th:value="${noti.getSlot().getId()}">
+                                                        <td th:text="${noti.getId()}"></td>
+                                                        <td th:text="${noti.getUser().getId()}"></td>
+                                                        <td th:text="${noti.getSlot().getId()}"></td>
                                                         <td>
-                                                            <input type="text" id="isMatched" name="isMatched" th:value="${currentMatch.getIsMatched()}">
+                                                            <input type="text" id="type" name="type" th:value="${noti.getType()}">
                                                         </td>
                                                         <td>
-                                                            <input type="text" id="matchImminent" name="matchImminent" th:value="${currentMatch.getMatchImminent()}">
+                                                            <input type="text" id="message" name="message" th:value="${noti.getMessage()}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" id="isChecked" name="isChecked" th:value="${noti.getIsChecked()}">
                                                         </td>
                                                         <td>
                                                             <input type="submit" value="수정"
-                                                                   th:onclick='js_request_current_match_update(this.form)'>
+                                                                   th:onclick='js_request_noti_update(this.form)'>
                                                         </td>
                                                         <td>
                                                             <input type="submit" value="삭제"
