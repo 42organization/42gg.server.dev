@@ -29,6 +29,8 @@ import java.time.LocalDateTime;
 public class GameGenerator extends AbstractScheduler {
     private final GameService gameService;
     private final SlotService slotService;
+    private final CurrentMatchService currentMatchService;
+    private final NotiGenerater notiGenerater;
 
     public GameGenerator(GameService gameService, SlotService slotService, CurrentMatchService currentMatchService, NotiGenerater notiGenerater) {
         this.gameService = gameService;
@@ -37,9 +39,6 @@ public class GameGenerator extends AbstractScheduler {
         this.notiGenerater = notiGenerater;
         this.setCron("0 */10 15-18 * * *");
     }
-
-    private final CurrentMatchService currentMatchService;
-    private final NotiGenerater notiGenerater;
 
     public void addGame() throws MessagingException {
         Integer maxHeadCount = 2;
