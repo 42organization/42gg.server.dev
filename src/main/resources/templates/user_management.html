@@ -13,7 +13,7 @@
                     <div class="">
                         <div class="page-title">
                             <div class="title_left">
-                                <h3>Current Match 관리</h3>
+                                <h3>유저 관리</h3>
                             </div>
                             <div class="title_right">
                                 <div class="col-md-5 col-sm-5   form-group pull-right top_search">
@@ -28,11 +28,10 @@
 
                         <div class="row" style="display: block;">
                             <div class="clearfix"></div>
-
                             <div class="col-md-12 col-sm-12  ">
                                 <div class="x_panel">
                                     <div class="x_title">
-                                        <h2>Current Match 생성</h2>
+                                        <h2>유저 추가</h2>
                                         <ul class="nav navbar-right panel_toolbox">
                                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                             </li>
@@ -47,40 +46,44 @@
                                             <table class="table table-striped jambo_table bulk_action">
                                                 <thead>
                                                 <tr class="headings">
-                                                    <th class="column-title">Current Match ID</th>
-                                                    <th class="column-title">User ID</th>
-                                                    <th class="column-title">Slot ID</th>
-                                                    <th class="column-title">Game ID</th>
-                                                    <th class="column-title">isMatched</th>
-                                                    <th class="column-title">MatchImminent</th>
                                                     <th class="column-title"></th>
+                                                    <th class="column-title">intra_id</th>
+                                                    <th class="column-title">email</th>
+                                                    <th class="column-title">image_uri</th>
+                                                    <th class="column-title">racket_type</th>
+                                                    <th class="column-title">status_message</th>
+                                                    <th class="column-title">ppp</th>
+                                                    <th class="column-title"></th>
+                                                    </th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <form>
-                                                    <tr>
-                                                        <input type="hidden" id="url" name="url"
-                                                               value="/admin/currentMatch">
-                                                        <input type="hidden" id="token" th:value="${token}">
-                                                        <td>자동생성</td>
-                                                        <td>
-                                                            <input type="text" id="userId" name="userId">
+                                                <form id="createForm">
+                                                    <input type="hidden" id="url" name="url" value="/admin/user">
+                                                    <input type="hidden" id="token" th:value="${token}">
+                                                    <tr class="even pointer">
+                                                        <td class=" "><p></p></td>
+                                                        <td class=" ">
+                                                            <input type="text" name="userIntraId" id="intra_id">
                                                         </td>
-                                                        <td>
-                                                            <input type="text" id="slotId" name="slotId">
+                                                        <td class=" ">
+                                                            <input type="text" name="userEmail" id="email">
                                                         </td>
-                                                        <td>
-                                                            <input type="text" id="gameId" name="gameId">
+                                                        <td class=" ">
+                                                            <input type="text" name="userImageUri" id="image_uri">
                                                         </td>
-                                                        <td>
-                                                            <input type="text" id="isMatched" name="isMatched">
+                                                        <td class=" ">
+                                                            <input type="text" name="userRacketType" id="racket_type">
                                                         </td>
-                                                        <td>
-                                                            <input type="text" id="matchImminent" name="matchImminent">
+                                                        <td class=" ">
+                                                            <input type="text" name="userStatusMessage" id="status_message">
+                                                        </td>
+                                                        <td class=" ">
+                                                            <input type="text" name="userPpp" id="ppp">
                                                         </td>
                                                         <td>
                                                             <input type="submit" value="생성"
-                                                                   th:onclick='js_request_current_match_create(this.form)'>
+                                                                   th:onclick='js_request_user_post(createForm)'>
                                                         </td>
                                                     </tr>
                                                 </form>
@@ -92,7 +95,7 @@
                             <div class="col-md-12 col-sm-12  ">
                                 <div class="x_panel">
                                     <div class="x_title">
-                                        <h2>Current Match 수정 / 삭제</h2>
+                                        <h2>유저 수정 / 삭제</h2>
                                         <ul class="nav navbar-right panel_toolbox">
                                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                             </li>
@@ -107,46 +110,39 @@
                                             <table class="table table-striped jambo_table bulk_action">
                                                 <thead>
                                                 <tr class="headings">
-                                                    <th class="column-title">Current Match ID</th>
-                                                    <th class="column-title">User ID</th>
-                                                    <th class="column-title">Slot ID</th>
-                                                    <th class="column-title">Game ID</th>
-                                                    <th class="column-title">isMatched</th>
-                                                    <th class="column-title">MatchImminent</th>
+                                                    <th class="column-title">intra_id</th>
+                                                    <th class="column-title">email</th>
+                                                    <th class="column-title">image_uri</th>
+                                                    <th class="column-title">racket_type</th>
+                                                    <th class="column-title">status_message</th>
+                                                    <th class="column-title">ppp</th>
                                                     <th class="column-title"></th>
                                                     <th class="column-title"></th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <tr class="even pointer"
-                                                    th:each="currentMatch, i : ${currentMatchList}">
-                                                    <form>
-                                                        <input type="hidden" id="url" name="url"
-                                                               value="/admin/currentMatch">
+                                                <tr class="even pointer" th:each="user, i : ${userList}">
+                                                    <form id="editForm">
+                                                        <input type="hidden" id="url" name="url" value="/admin/user">
                                                         <input type="hidden" id="token" th:value="${token}">
-                                                        <input type="hidden" id="id" name="id" th:value="${currentMatch.getId()}">
-                                                        <input type="hidden" id="userId" name="userId" th:value="${currentMatch.getUserId()}">
-                                                        <input type="hidden" id="slotId" name="slotId" th:value="${currentMatch.getSlot().getId()}">
-                                                        <input type="hidden" id="gameId" name="gameId" th:if="${currentMatch.getGame() != null}" th:value="${currentMatch.getGame().getId()}">
-                                                        <input type="hidden" id="gameId" name="gameId" th:unless="${currentMatch.getGame() != null}" th:value="">
-                                                        <td th:text="${currentMatch.getId()}"></td>
-                                                        <td th:text="${currentMatch.getUserId()}"></td>
-                                                        <td th:text="${currentMatch.getSlot().getId()}"></td>
-                                                        <td th:if="${currentMatch.getGame() != null}" th:text="${currentMatch.getGame().getId()}"></td>
-                                                        <td th:unless="${currentMatch.getGame() != null}" th:text=""></td>
+                                                        <input type="hidden" id="id" th:value="${user.getId()}">
+                                                        <th class="text" id="userIntraId" th:text="${user.getIntraId()}">
+                                                        <th class="text" id="userEmail" th:text="${user.getEMail()}">
                                                         <td>
-                                                            <input type="text" id="isMatched" name="isMatched" th:value="${currentMatch.getIsMatched()}">
+                                                            <input type="text" id="image_uri" th:value="${user.getImageUri()}">
                                                         </td>
                                                         <td>
-                                                            <input type="text" id="matchImminent" name="matchImminent" th:value="${currentMatch.getMatchImminent()}">
+                                                            <input type="text" id="racket_type" th:value="${user.getRacketType()}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" id="status_message" th:value="${user.getStatusMessage()}">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" id="ppp" th:value="${user.getPpp()}">
                                                         </td>
                                                         <td>
                                                             <input type="submit" value="수정"
-                                                                   th:onclick='js_request_current_match_update(this.form)'>
-                                                        </td>
-                                                        <td>
-                                                            <input type="submit" value="삭제"
-                                                                   th:onclick='js_request_delete(this.form)'>
+                                                                   th:onclick='js_request_user_put(editForm)'>
                                                         </td>
                                                     </form>
                                                 </tr>
@@ -158,6 +154,9 @@
                         </div>
                     </div>
                 </div>
+                <!-- /page content -->
+
+                <!-- footer content -->
                 <footer>
                     <div class="pull-right">
                         Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>

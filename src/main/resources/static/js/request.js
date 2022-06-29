@@ -25,6 +25,40 @@ function js_request(form) {
     })
 }
 
+function js_request_game_create(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let slotId = form['slotId'].value;
+    let seasonId = form['seasonId'].value;
+    let status = form['status'].value;
+
+    let data = {
+        "slotId": slotId,
+        "seasonId": seasonId,
+        "status": status
+    };
+
+    $.ajax({
+        url: `${url}`,
+        type: `POST`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
 
 function js_request_game_put(form) {
 
@@ -546,7 +580,7 @@ function js_request_noti_create(form) {
     let data = {
         'userId': userId,
         'slotId': slotId,
-        'type': type,
+        'notiType': type,
         'message': message,
         'isChecked': isChecked
     };
@@ -558,6 +592,296 @@ function js_request_noti_create(form) {
             "Authorization": "Bearer " + token
         },
         data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_noti_update(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let notiId = form['id'].value;
+    let userId = form['userId'].value;
+    let slotId = form['slotId'].value;
+    let type = form['type'].value;
+    let message = form['message'].value;
+    let isChecked = form['isChecked'].value;
+
+    let data = {
+        'notiId': notiId,
+        'userId': userId,
+        'slotId': slotId,
+        'notiType': type,
+        'message': message,
+        'isChecked': isChecked
+    };
+
+    $.ajax({
+        url: `${url}`,
+        type: `PUT`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_pchange_create(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let gameId = form['gameId'].value;
+    let userId = form['userId'].value;
+    let pppChange = form['pppChange'].value;
+    let pppResult = form['pppResult'].value;
+
+    let data = {
+        'gameId': gameId,
+        'userId': userId,
+        'pppChange': pppChange,
+        'pppResult': pppResult
+    };
+
+    $.ajax({
+        url: `${url}`,
+        type: `POST`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_pchange_update(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let id = form['id'].value;
+    let gameId = form['gameId'].value;
+    let userId = form['userId'].value;
+    let pppChange = form['pppChange'].value;
+    let pppResult = form['pppResult'].value;
+
+    let data = {
+        'pchangeId': id,
+        'gameId': gameId,
+        'userId': userId,
+        'pppChange': pppChange,
+        'pppResult': pppResult
+    };
+
+    $.ajax({
+        url: `${url}`,
+        type: `PUT`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_user_post(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let intra_id = form['intra_id'].value;
+    let email = form['email'].value;
+    let image_uri = form['image_uri'].value;
+    let racket_type = form['racket_type'].value;
+    let status_message = form['status_message'].value;
+    let ppp = form['ppp'].value;
+    let data = {
+        "intraId" : intra_id,
+        "email" : email,
+        "userImageUri" : image_uri,
+        "racketType" : racket_type,
+        "statusMessage" : status_message,
+        "ppp" : ppp
+    };
+    $.ajax({
+        url: `${url}`,
+        type: `POST`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_user_put(form) {
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let id = form['id'].value;
+    let image_uri = form['image_uri'].value;
+    let racket_type = form['racket_type'].value;
+    let status_message = form['status_message'].value;
+    let ppp = form['ppp'].value;
+    let data = {
+        "userId" : id,
+        "userImageUri" : image_uri,
+        "racketType" : racket_type,
+        "statusMessage" : status_message,
+        "ppp" : ppp
+    };
+    $.ajax({
+        url: `${url}`,
+        type: `PUT`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_team_post(form) {
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let team_ppp = form['teamPpp'].value;
+    let team_headcount = form['headCount'].value;
+    let team_score = form['score'].value;
+    let data = {
+        "teamPpp" : team_ppp,
+        "headCount" : team_headcount,
+        "score" : team_score,
+    };
+    $.ajax({
+        url: `${url}`,
+        type: `POST`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_team_put(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let id = form['id'].value;
+    let team_user1 = form['teamUser1'].value;
+    let team_user2 = form['teamUser2'].value;
+    let team_ppp = form['teamPpp'].value;
+    let team_headcount = form['teamHeadCount'].value;
+    let team_score = form['teamScore'].value;
+    let team_win = form['teamWin'].value;
+    let data = {
+        "teamId" : id,
+        "user1Id" : team_user1,
+        "user2Id" : team_user2,
+        "teamPpp" : team_ppp,
+        "headCount" : team_headcount,
+        "score" : team_score,
+        "win" : team_win
+    };
+    $.ajax({
+        url: `${url}`,
+        type: `PUT`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_team_delete(form) {
+
+    let token = form['token'].value;
+    let id = "/" + form['id'].value;
+    let url = form['url'].value + id;
+    $.ajax({
+        url: `${url}`,
+        type: `DELETE`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
         contentType: 'application/json',
         async: false,
         error: function () {
