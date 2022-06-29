@@ -54,15 +54,15 @@ public class SlotControllerImpl implements SlotController {
     public SlotStatusResponseDto slotStatusList(Integer tableId, GameType type, HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         List<SlotStatusDto> slots;
-        List<SlotGroupDto> slotGroups;
+        List<List<SlotStatusDto>> matchBoards;
         SlotFindStatusDto findDto = SlotFindStatusDto.builder()
                 .userId(user.getId())
                 .type(type)
                 .currentTime(LocalDateTime.now())
                 .build();
         slots = slotService.findSlotsStatus(findDto);
-        slotGroups = groupingSlots(slots);
-        SlotStatusResponseDto responseDto = SlotStatusResponseDto.builder().slotGroups(slotGroups).build();
+        matchBoards = groupingSlots(slots);
+        SlotStatusResponseDto responseDto = SlotStatusResponseDto.builder().matchBoards(matchBoards).build();
         return responseDto;
     }
 
@@ -151,8 +151,8 @@ public class SlotControllerImpl implements SlotController {
         }
     }
 
-    private List<SlotGroupDto> groupingSlots(List<SlotStatusDto> slots) {
-        List<SlotGroupDto> slotGroups = new ArrayList<>();
+    private List<List<SlotStatusDto>> groupingSlots(List<SlotStatusDto> slots) {
+        List<List<SlotStatusDto>> slotGroups = new ArrayList<>();
         if (!slots.isEmpty()) {
             List<SlotStatusDto> oneGroup = new ArrayList<>();
             int groupTime = slots.get(0).getTime().getHour();
@@ -165,8 +165,7 @@ public class SlotControllerImpl implements SlotController {
                             .headCount(slot.getHeadCount())
                             .status(slot.getStatus()).build());
                 } else {
-                    slotGroups.add(SlotGroupDto.builder()
-                            .slots(oneGroup).build());
+                    slotGroups.add(oneGroup);
                     oneGroup = new ArrayList<>(); //다음 그루핑을 위한 그룹 생성
                     groupTime = slot.getTime().getHour(); //시간 갱신
                     oneGroup.add(SlotStatusDto.builder()
@@ -176,8 +175,7 @@ public class SlotControllerImpl implements SlotController {
                             .status(slot.getStatus()).build());
                 }
             }
-            slotGroups.add(SlotGroupDto.builder()
-                    .slots(oneGroup).build());
+            slotGroups.add(oneGroup);
         }
 
 
