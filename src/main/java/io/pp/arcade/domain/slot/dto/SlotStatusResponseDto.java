@@ -8,6 +8,6 @@ import java.util.List;
 @Getter
 @Builder
 public class SlotStatusResponseDto {
-    Integer intervalTime;
+    Integer intervalMinute;
     List<List<SlotStatusDto>> matchBoards;
 }
