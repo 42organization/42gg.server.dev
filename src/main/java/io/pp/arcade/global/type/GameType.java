@@ -8,14 +8,14 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum GameType implements Constant{
-    SINGLE(Key.SINGLE), BUNGLE(Key.BUNGLE);
+    SINGLE(Key.SINGLE), DOUBLE(Key.DOUBLE);
 
     private final String code;
 
     @JsonCreator
     public static GameType getEnumFromValue(String value) {
         for(GameType e : values()) {
-            if(e.name().equals(value)) {
+            if(e.code.equals(value)) {
                 return e;
             }
         }

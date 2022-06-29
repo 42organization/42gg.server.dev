@@ -5,7 +5,6 @@ import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
-import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.slot.Slot;
@@ -29,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -88,7 +86,7 @@ public class CurrentMatchAdminControllerTest {
                 .team1(team3InSlot1)
                 .team2(team4InSlot1)
                 .tableId(1)
-                .type(GameType.BUNGLE)
+                .type(GameType.DOUBLE)
                         .headCount(4)
                 .time(LocalDateTime.of(2022, 6, 22, 14,00))
                 .build());
@@ -193,7 +191,7 @@ public class CurrentMatchAdminControllerTest {
                 .andDo(document("admin-currentMatch-create"));
 
         CurrentMatch createdCurrentMatch = currentMatchRepository.findByUser(userInTeam3).orElseThrow(null);
-        Assertions.assertThat(createdCurrentMatch.getSlot().getType()).isEqualTo(GameType.BUNGLE);
+        Assertions.assertThat(createdCurrentMatch.getSlot().getType()).isEqualTo(GameType.DOUBLE);
     }
 
     @Test

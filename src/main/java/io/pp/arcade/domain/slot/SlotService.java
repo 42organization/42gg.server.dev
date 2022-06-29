@@ -164,7 +164,7 @@ public class SlotService {
         Integer pppGap = dto.getPppGap();
         LocalDateTime currentTime = LocalDateTime.now();
         Integer maxCount = 2;
-        if (slotType != null && slotType.equals(GameType.BUNGLE)) {
+        if (slotType != null && slotType.equals(GameType.DOUBLE)) {
             maxCount = 4;
         }
         SlotStatusType status = SlotStatusType.OPEN;
