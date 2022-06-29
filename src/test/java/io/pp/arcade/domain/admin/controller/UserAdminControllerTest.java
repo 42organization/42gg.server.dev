@@ -105,7 +105,7 @@ public class UserAdminControllerTest {
     @Test
     @Transactional
     public void userFind() throws Exception {
-        mockMvc.perform(get("/admin/user").contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/admin/user/all").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(document("admin-user-find-all"));
     }

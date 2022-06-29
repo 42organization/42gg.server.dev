@@ -2,7 +2,6 @@ package io.pp.arcade.domain.rank.service;
 
 import io.lettuce.core.LettuceFutures;
 import io.lettuce.core.RedisClient;
-import io.lettuce.core.RedisFuture;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.pp.arcade.TestInitiator;
@@ -13,9 +12,7 @@ import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.type.GameType;
-import io.pp.arcade.global.type.RacketType;
 import org.assertj.core.api.Assertions;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,11 +24,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import javax.transaction.Transactional;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @SpringBootTest
 class RankRedisServiceTest {
@@ -175,7 +169,7 @@ class RankRedisServiceTest {
 
         // then
         RankRedis singleRank =  redisTemplate.opsForValue().get(getUserKey(user.getIntraId(), GameType.SINGLE));
-        RankRedis bungleRank =  redisTemplate.opsForValue().get(getUserKey(user.getIntraId(), GameType.BUNGLE));
+        RankRedis bungleRank =  redisTemplate.opsForValue().get(getUserKey(user.getIntraId(), GameType.DOUBLE));
         Assertions.assertThat(singleRank.getStatusMessage()).isEqualTo("change");
         Assertions.assertThat(bungleRank.getStatusMessage()).isEqualTo("change");
     }
@@ -292,7 +286,7 @@ class RankRedisServiceTest {
         {
             List<RankDto> rankDtos = new ArrayList<>();
             for (int i = 0; i < users.length; i++) {
-                rankDtos.add(RankDto.builder().ranking(i).ppp(1100).losses(i).wins(i).gameType(GameType.BUNGLE).racketType(userDtos.get(i).getRacketType()).seasonId(i).user(userDtos.get(i)).build());
+                rankDtos.add(RankDto.builder().ranking(i).ppp(1100).losses(i).wins(i).gameType(GameType.DOUBLE).racketType(userDtos.get(i).getRacketType()).seasonId(i).user(userDtos.get(i)).build());
             }
 
             HashMap<String, RankDto> rankDtoMap = new HashMap<>();
@@ -303,10 +297,10 @@ class RankRedisServiceTest {
             // when
             rankRedisService.saveAll(rankDtos);
 
-            List<RankRedis> bungleList = redisTemplate.opsForValue().multiGet(redisTemplate.keys(Key.RANK_USER + "*" + "BUNGLE"));
+            List<RankRedis> bungleList = redisTemplate.opsForValue().multiGet(redisTemplate.keys(Key.RANK_USER + "*" + "DOUBLE"));
             Assertions.assertThat(bungleList).isNotEmpty();
             for (RankRedis rankRedis : bungleList) {
-                RankDto rankDto = rankDtoMap.get(rankRedis.getIntraId() + GameType.BUNGLE.getCode());
+                RankDto rankDto = rankDtoMap.get(rankRedis.getIntraId() + GameType.DOUBLE.getCode());
                 Assertions.assertThat(rankRedis.getPpp()).isEqualTo(rankDto.getPpp());
                 Assertions.assertThat(rankRedis.getWins()).isEqualTo(rankDto.getWins());
                 Assertions.assertThat(rankRedis.getLosses()).isEqualTo(rankDto.getLosses());
