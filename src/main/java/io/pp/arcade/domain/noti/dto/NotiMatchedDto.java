@@ -6,13 +6,22 @@ import lombok.Getter;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Locale;
 
 @Getter
-@Builder
 public class NotiMatchedDto {
     private Integer id;
-    private NotiType type;
+    private String type;
     private LocalDateTime time;
     private Boolean isChecked;
     private LocalDateTime createdAt;
+
+    @Builder
+    public NotiMatchedDto(Integer id, NotiType type, LocalDateTime time, Boolean isChecked, LocalDateTime createdAt) {
+        this.id = id;
+        this.type = type.getCode().toLowerCase(Locale.ROOT);
+        this.time = time;
+        this.isChecked = isChecked;
+        this.createdAt = createdAt;
+    }
 }
