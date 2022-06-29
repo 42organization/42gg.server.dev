@@ -34,7 +34,7 @@ public class UserAdminControllerImpl implements UserAdminController {
     }
 
     @Override
-    @GetMapping(value = "/user")
+    @GetMapping(value = "/user/all")
     public List<UserDto> userAll(Pageable pageable, HttpServletRequest request) {
         List<UserDto> users = userService.findUserByAdmin(pageable);
         return users;

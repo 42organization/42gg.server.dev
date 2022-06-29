@@ -130,6 +130,7 @@ public class ManagementController {
     @GetMapping("/admin/scheduler")
     public String schedularPage(Model model, HttpServletRequest request) {
         model.addAttribute("currentCron", currentMatchUpdater.getCron());
+        model.addAttribute("slotCron", slotGenerator.getCron());
         model.addAttribute("gameCron", gameGenerator.getCron());
         model.addAttribute("rankCron", rankScheduler.getCron());
         model.addAttribute("token", HeaderUtil.getAccessToken(request));
