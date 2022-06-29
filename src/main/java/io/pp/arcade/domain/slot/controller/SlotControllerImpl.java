@@ -161,20 +161,12 @@ public class SlotControllerImpl implements SlotController {
 
             for(SlotStatusDto slot: slots) {
                 if (slot.getTime().getHour() == groupTime) {
-                    oneGroup.add(SlotStatusDto.builder()
-                            .slotId(slot.getSlotId())
-                            .time(slot.getTime())
-                            .headCount(slot.getHeadCount())
-                            .status(slot.getStatus()).build());
+                    oneGroup.add(slot);
                 } else {
                     slotGroups.add(oneGroup);
                     oneGroup = new ArrayList<>(); //다음 그루핑을 위한 그룹 생성
                     groupTime = slot.getTime().getHour(); //시간 갱신
-                    oneGroup.add(SlotStatusDto.builder()
-                            .slotId(slot.getSlotId())
-                            .time(slot.getTime())
-                            .headCount(slot.getHeadCount())
-                            .status(slot.getStatus()).build());
+                    oneGroup.add(slot);
                 }
             }
             slotGroups.add(oneGroup);
