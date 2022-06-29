@@ -14,6 +14,8 @@ import io.pp.arcade.domain.season.SeasonService;
 import io.pp.arcade.domain.season.dto.SeasonDto;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
+import io.pp.arcade.domain.team.TeamService;
+import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.scheduler.CurrentMatchUpdater;
@@ -37,6 +39,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ManagementController {
     private final UserService userService;
+    private final TeamService teamService;
     private final SlotService slotService;
     private final GameService gameService;
     private final SeasonService seasonService;
@@ -93,7 +96,7 @@ public class ManagementController {
     public String currentMatchPage(Model model, HttpServletRequest request) {
         List<CurrentMatchDto> currentMatchList = currentMatchService.findCurrentMatchByAdmin(Pageable.unpaged());
 
-        model.addAttribute("currnetMatchList", currentMatchList);
+        model.addAttribute("currentMatchList", currentMatchList);
         model.addAttribute("token", HeaderUtil.getAccessToken(request));
         return "current_match_management";
     }
@@ -107,7 +110,7 @@ public class ManagementController {
         return "noti_management";
     }
 
-    @GetMapping("/admin/pchange")
+    @GetMapping("/admin/pChange")
     public String pchangePage(Model model, HttpServletRequest request) {
         List<PChangeDto> pchangeList = pChangeService.findPChangeByAdmin(Pageable.unpaged());
 
@@ -145,6 +148,21 @@ public class ManagementController {
         model.addAttribute("slotList", slotList);
         model.addAttribute("token", HeaderUtil.getAccessToken(request));
         return "slot_management";
+    }
+
+
+    @GetMapping("/admin/user")
+    public String userPage(Model model, HttpServletRequest request) {
+        List<UserDto> userList = userService.findUserByAdmin(Pageable.unpaged());
+        model.addAttribute("userList", userList);
+        return "user_management";
+    }
+
+    @GetMapping("/admin/team")
+    public String teamPage(Model model, HttpServletRequest request) {
+        List<TeamDto> teamList = teamService.findTeamByAdmin(Pageable.unpaged());
+        model.addAttribute("teamList", teamList);
+        return "team_management";
     }
 
     @GetMapping("/admin")

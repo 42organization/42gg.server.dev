@@ -13,7 +13,7 @@
                     <div class="">
                         <div class="page-title">
                             <div class="title_left">
-                                <h3>Current Match 관리</h3>
+                                <h3>Ppp Change 관리</h3>
                             </div>
                             <div class="title_right">
                                 <div class="col-md-5 col-sm-5   form-group pull-right top_search">
@@ -32,7 +32,7 @@
                             <div class="col-md-12 col-sm-12  ">
                                 <div class="x_panel">
                                     <div class="x_title">
-                                        <h2>Current Match 생성</h2>
+                                        <h2>Ppp Change 생성</h2>
                                         <ul class="nav navbar-right panel_toolbox">
                                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                             </li>
@@ -47,12 +47,11 @@
                                             <table class="table table-striped jambo_table bulk_action">
                                                 <thead>
                                                 <tr class="headings">
-                                                    <th class="column-title">Current Match ID</th>
-                                                    <th class="column-title">User ID</th>
-                                                    <th class="column-title">Slot ID</th>
+                                                    <th class="column-title">Ppp Change ID</th>
                                                     <th class="column-title">Game ID</th>
-                                                    <th class="column-title">isMatched</th>
-                                                    <th class="column-title">MatchImminent</th>
+                                                    <th class="column-title">User ID</th>
+                                                    <th class="column-title">Ppp Change</th>
+                                                    <th class="column-title">Ppp Result</th>
                                                     <th class="column-title"></th>
                                                 </tr>
                                                 </thead>
@@ -60,27 +59,24 @@
                                                 <form>
                                                     <tr>
                                                         <input type="hidden" id="url" name="url"
-                                                               value="/admin/currentMatch">
+                                                               value="/admin/pChange">
                                                         <input type="hidden" id="token" th:value="${token}">
                                                         <td>자동생성</td>
-                                                        <td>
-                                                            <input type="text" id="userId" name="userId">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" id="slotId" name="slotId">
-                                                        </td>
                                                         <td>
                                                             <input type="text" id="gameId" name="gameId">
                                                         </td>
                                                         <td>
-                                                            <input type="text" id="isMatched" name="isMatched">
+                                                            <input type="text" id="userId" name="userId">
                                                         </td>
                                                         <td>
-                                                            <input type="text" id="matchImminent" name="matchImminent">
+                                                            <input type="text" id="pppChange" name="pppChange">
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" id="pppResult" name="pppResult">
                                                         </td>
                                                         <td>
                                                             <input type="submit" value="생성"
-                                                                   th:onclick='js_request_current_match_create(this.form)'>
+                                                                   th:onclick='js_request_pchange_create(this.form)'>
                                                         </td>
                                                     </tr>
                                                 </form>
@@ -92,7 +88,7 @@
                             <div class="col-md-12 col-sm-12  ">
                                 <div class="x_panel">
                                     <div class="x_title">
-                                        <h2>Current Match 수정 / 삭제</h2>
+                                        <h2>Ppp Change 수정 / 삭제</h2>
                                         <ul class="nav navbar-right panel_toolbox">
                                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                             </li>
@@ -107,42 +103,37 @@
                                             <table class="table table-striped jambo_table bulk_action">
                                                 <thead>
                                                 <tr class="headings">
-                                                    <th class="column-title">Current Match ID</th>
-                                                    <th class="column-title">User ID</th>
-                                                    <th class="column-title">Slot ID</th>
+                                                    <th class="column-title">Ppp Change ID</th>
                                                     <th class="column-title">Game ID</th>
-                                                    <th class="column-title">isMatched</th>
-                                                    <th class="column-title">MatchImminent</th>
+                                                    <th class="column-title">User ID</th>
+                                                    <th class="column-title">Ppp Change</th>
+                                                    <th class="column-title">Ppp Result</th>
                                                     <th class="column-title"></th>
                                                     <th class="column-title"></th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
                                                 <tr class="even pointer"
-                                                    th:each="currentMatch, i : ${currentMatchList}">
+                                                    th:each="pChange, i : ${pchangeList}">
                                                     <form>
                                                         <input type="hidden" id="url" name="url"
-                                                               value="/admin/currentMatch">
+                                                               value="/admin/pChange">
                                                         <input type="hidden" id="token" th:value="${token}">
-                                                        <input type="hidden" id="id" name="id" th:value="${currentMatch.getId()}">
-                                                        <input type="hidden" id="userId" name="userId" th:value="${currentMatch.getUserId()}">
-                                                        <input type="hidden" id="slotId" name="slotId" th:value="${currentMatch.getSlot().getId()}">
-                                                        <input type="hidden" id="gameId" name="gameId" th:if="${currentMatch.getGame() != null}" th:value="${currentMatch.getGame().getId()}">
-                                                        <input type="hidden" id="gameId" name="gameId" th:unless="${currentMatch.getGame() != null}" th:value="">
-                                                        <td th:text="${currentMatch.getId()}"></td>
-                                                        <td th:text="${currentMatch.getUserId()}"></td>
-                                                        <td th:text="${currentMatch.getSlot().getId()}"></td>
-                                                        <td th:if="${currentMatch.getGame() != null}" th:text="${currentMatch.getGame().getId()}"></td>
-                                                        <td th:unless="${currentMatch.getGame() != null}" th:text=""></td>
-                                                        <td>
-                                                            <input type="text" id="isMatched" name="isMatched" th:value="${currentMatch.getIsMatched()}">
+                                                        <input type="hidden" id="id" name="id" th:value="${pChange.getId()}">
+                                                        <input type="hidden" id="gameId" name="gameId" th:value="${pChange.getGame().getId()}">
+                                                        <input type="hidden" id="userId" name="userId" th:value="${pChange.getUser().getId()}">
+                                                        <td th:text="${pChange.getId()}"></td>
+                                                        <td th:text="${pChange.getGame().getId()}"></td>
+                                                        <td th:text="${pChange.getUser().getId()}"></td>
+                                                         <td>
+                                                            <input type="text" id="pppChange" name="pppChange" th:value="${pChange.getPppChange()}">
                                                         </td>
                                                         <td>
-                                                            <input type="text" id="matchImminent" name="matchImminent" th:value="${currentMatch.getMatchImminent()}">
+                                                            <input type="text" id="pppResult" name="pppResult" th:value="${pChange.getPppResult()}">
                                                         </td>
                                                         <td>
                                                             <input type="submit" value="수정"
-                                                                   th:onclick='js_request_current_match_update(this.form)'>
+                                                                   th:onclick='js_request_pchange_update(this.form)'>
                                                         </td>
                                                         <td>
                                                             <input type="submit" value="삭제"

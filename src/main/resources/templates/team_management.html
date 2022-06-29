@@ -13,7 +13,7 @@
                     <div class="">
                         <div class="page-title">
                             <div class="title_left">
-                                <h3>Current Match 관리</h3>
+                                <h3>팀 관리</h3>
                             </div>
                             <div class="title_right">
                                 <div class="col-md-5 col-sm-5   form-group pull-right top_search">
@@ -32,7 +32,7 @@
                             <div class="col-md-12 col-sm-12  ">
                                 <div class="x_panel">
                                     <div class="x_title">
-                                        <h2>Current Match 생성</h2>
+                                        <h2>팀 추가</h2>
                                         <ul class="nav navbar-right panel_toolbox">
                                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                             </li>
@@ -47,40 +47,32 @@
                                             <table class="table table-striped jambo_table bulk_action">
                                                 <thead>
                                                 <tr class="headings">
-                                                    <th class="column-title">Current Match ID</th>
-                                                    <th class="column-title">User ID</th>
-                                                    <th class="column-title">Slot ID</th>
-                                                    <th class="column-title">Game ID</th>
-                                                    <th class="column-title">isMatched</th>
-                                                    <th class="column-title">MatchImminent</th>
                                                     <th class="column-title"></th>
+                                                    <th class="column-title">teamPpp</th>
+                                                    <th class="column-title">headCount</th>
+                                                    <th class="column-title">score</th>
+                                                    <th class="column-title"></th>
+                                                    </th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <form>
-                                                    <tr>
-                                                        <input type="hidden" id="url" name="url"
-                                                               value="/admin/currentMatch">
-                                                        <input type="hidden" id="token" th:value="${token}">
-                                                        <td>자동생성</td>
-                                                        <td>
-                                                            <input type="text" id="userId" name="userId">
+                                                <form id="createForm">
+                                                    <input type="hidden" id="url" name="url" value="/admin/team">
+                                                    <input type="hidden" id="token" th:value="${token}">
+                                                    <tr class="even pointer">
+                                                        <td class=" "><p></p></td>
+                                                        <td class=" ">
+                                                            <input type="text" name="teamPpp" id="teamPpp">
                                                         </td>
-                                                        <td>
-                                                            <input type="text" id="slotId" name="slotId">
+                                                        <td class=" ">
+                                                            <input type="text" name="teamHeadcount" id="headCount">
                                                         </td>
-                                                        <td>
-                                                            <input type="text" id="gameId" name="gameId">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" id="isMatched" name="isMatched">
-                                                        </td>
-                                                        <td>
-                                                            <input type="text" id="matchImminent" name="matchImminent">
+                                                        <td class=" ">
+                                                            <input type="text" name="teamScore" id="score">
                                                         </td>
                                                         <td>
                                                             <input type="submit" value="생성"
-                                                                   th:onclick='js_request_current_match_create(this.form)'>
+                                                                   th:onclick='js_request_team_post(createForm)'>
                                                         </td>
                                                     </tr>
                                                 </form>
@@ -92,7 +84,7 @@
                             <div class="col-md-12 col-sm-12  ">
                                 <div class="x_panel">
                                     <div class="x_title">
-                                        <h2>Current Match 수정 / 삭제</h2>
+                                        <h2>팀 수정 / 삭제</h2>
                                         <ul class="nav navbar-right panel_toolbox">
                                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                             </li>
@@ -107,46 +99,47 @@
                                             <table class="table table-striped jambo_table bulk_action">
                                                 <thead>
                                                 <tr class="headings">
-                                                    <th class="column-title">Current Match ID</th>
-                                                    <th class="column-title">User ID</th>
-                                                    <th class="column-title">Slot ID</th>
-                                                    <th class="column-title">Game ID</th>
-                                                    <th class="column-title">isMatched</th>
-                                                    <th class="column-title">MatchImminent</th>
+                                                    <th class="column-title">user1</th>
+                                                    <th class="column-title">user2</th>
+                                                    <th class="column-title">teamPpp</th>
+                                                    <th class="column-title">headCount</th>
+                                                    <th class="column-title">score</th>
+                                                    <th class="column-title">win</th>
                                                     <th class="column-title"></th>
                                                     <th class="column-title"></th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <tr class="even pointer"
-                                                    th:each="currentMatch, i : ${currentMatchList}">
+                                                <tr class="even pointer" th:each="team, i : ${teamList}">
                                                     <form>
-                                                        <input type="hidden" id="url" name="url"
-                                                               value="/admin/currentMatch">
+                                                        <input type="hidden" id="url" name="url" value="/admin/team">
                                                         <input type="hidden" id="token" th:value="${token}">
-                                                        <input type="hidden" id="id" name="id" th:value="${currentMatch.getId()}">
-                                                        <input type="hidden" id="userId" name="userId" th:value="${currentMatch.getUserId()}">
-                                                        <input type="hidden" id="slotId" name="slotId" th:value="${currentMatch.getSlot().getId()}">
-                                                        <input type="hidden" id="gameId" name="gameId" th:if="${currentMatch.getGame() != null}" th:value="${currentMatch.getGame().getId()}">
-                                                        <input type="hidden" id="gameId" name="gameId" th:unless="${currentMatch.getGame() != null}" th:value="">
-                                                        <td th:text="${currentMatch.getId()}"></td>
-                                                        <td th:text="${currentMatch.getUserId()}"></td>
-                                                        <td th:text="${currentMatch.getSlot().getId()}"></td>
-                                                        <td th:if="${currentMatch.getGame() != null}" th:text="${currentMatch.getGame().getId()}"></td>
-                                                        <td th:unless="${currentMatch.getGame() != null}" th:text=""></td>
-                                                        <td>
-                                                            <input type="text" id="isMatched" name="isMatched" th:value="${currentMatch.getIsMatched()}">
+                                                        <input type="hidden" id="id" th:value="${team.getId()}">
+                                                        <td class=" ">
+                                                            <input type="text" name="teamUser1" id="teamUser1">
                                                         </td>
-                                                        <td>
-                                                            <input type="text" id="matchImminent" name="matchImminent" th:value="${currentMatch.getMatchImminent()}">
+                                                        <td class=" ">
+                                                            <input type="text" name="teamUser2" id="teamUser2">
+                                                        </td>
+                                                        <td class=" ">
+                                                            <input type="text" name="teamPpp" id="teamPpp" th:value="${team.getTeamPpp()}">
+                                                        </td>
+                                                        <td class=" ">
+                                                            <input type="text" name="teamHeadCount" id="teamHeadCount" th:value="${team.getHeadCount()}">
+                                                        </td>
+                                                        <td class=" ">
+                                                            <input type="text" name="teamScore" id="teamScore" th:value="${team.getScore()}">
+                                                        </td>
+                                                        <td class=" ">
+                                                            <input type="text" name="teamWin" id="teamWin" th:value="${team.getWin()}">
                                                         </td>
                                                         <td>
                                                             <input type="submit" value="수정"
-                                                                   th:onclick='js_request_current_match_update(this.form)'>
+                                                                   th:onclick='js_request_team_put(this.form)'>
                                                         </td>
                                                         <td>
                                                             <input type="submit" value="삭제"
-                                                                   th:onclick='js_request_delete(this.form)'>
+                                                                   th:onclick='js_request_team_delete(this.form)'>
                                                         </td>
                                                     </form>
                                                 </tr>
@@ -155,9 +148,13 @@
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
+                <!-- /page content -->
+
+                <!-- footer content -->
                 <footer>
                     <div class="pull-right">
                         Gentelella - Bootstrap Admin Template by <a href="https://colorlib.com">Colorlib</a>

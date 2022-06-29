@@ -9,6 +9,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class PChangeDto {
+    private Integer id;
     private GameDto game;
     private UserDto user;
     private Integer pppChange;
@@ -16,6 +17,7 @@ public class PChangeDto {
 
     public static PChangeDto from(PChange pChange){
         return PChangeDto.builder()
+                .id(pChange.getId())
                 .game(GameDto.from(pChange.getGame()))
                 .user(UserDto.from(pChange.getUser()))
                 .pppChange(pChange.getPppChange())
