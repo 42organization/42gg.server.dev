@@ -1,5 +1,7 @@
 package io.pp.arcade.global.type;
 
-public interface Constant {
-    String getCode();
+public abstract class Constant {
+    String getCode() {
+        return null;
+    };
 }

@@ -27,6 +27,7 @@ public class RankDto {
                 .ppp(rank.getPpp())
                 .losses(rank.getLosses())
                 .wins(rank.getWins())
+                .gameType(rank.getGameType())
                 .ranking(rank.getRanking())
                 .seasonId(rank.getSeasonId())
                 .user(UserDto.from(rank.getUser()))
