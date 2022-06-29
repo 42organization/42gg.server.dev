@@ -8,6 +8,5 @@ import lombok.Getter;
 @Builder
 public class CurrentMatchRemoveDto {
     private Integer userId;
-    private Integer intraId;
     private GameDto game;
 }
