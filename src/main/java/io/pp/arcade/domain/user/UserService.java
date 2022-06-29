@@ -55,6 +55,7 @@ public class UserService {
     }
 
     /* 유저 정보 업데이트 */
+    @Transactional
     public void modifyUserProfile(UserModifyProfileDto modifyDto) {
         User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
         //user.setEMail(modifyDto.getEmail());
