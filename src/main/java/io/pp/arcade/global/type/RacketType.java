@@ -6,10 +6,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum RacketType implements Constant{
-    PENHOLDER("penholder"),
-    SHAKEHAND("shakehand"),
-    DUAL("dual"),
-    NONE("none");
+    PENHOLDER("PENHOLDER"),
+    SHAKEHAND("SHAKEHAND"),
+    DUAL("DUAL"),
+    NONE("NONE");
 
     private final String code;
 }
