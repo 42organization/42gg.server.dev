@@ -6,11 +6,12 @@ import io.pp.arcade.global.type.RoleType;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
 @Builder
-public class UserDto {
+public class UserDto implements Serializable {
     private Integer id;
     private String intraId;
     private String eMail;
