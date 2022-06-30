@@ -18,7 +18,7 @@ public class NotiAnnounceDto {
     @Builder
     public NotiAnnounceDto(Integer id, NotiType type, Boolean isChecked, String message, LocalDateTime createdAt) {
         this.id = id;
-        this.type = type.getCode().toLowerCase(Locale.ROOT);
+        this.type = type.getCode();
         this.isChecked = isChecked;
         this.message = message;
         this.createdAt = createdAt;

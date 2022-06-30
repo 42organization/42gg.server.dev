@@ -8,7 +8,7 @@ import java.util.Locale;
 
 @Getter
 public class UserDetailResponseDto {
-    private String userId;
+    private String intraId;
     private String userImageUri;
     private Integer rank;
     private Integer ppp;
@@ -20,15 +20,15 @@ public class UserDetailResponseDto {
     private UserRivalRecordDto rivalRecord;
 
     @Builder
-    public UserDetailResponseDto(String userId, String userImageUri, Integer rank, Integer ppp, Integer wins, Integer losses, Double winRate, RacketType racketType, String statusMessage, UserRivalRecordDto rivalRecord) {
-        this.userId = userId;
+    public UserDetailResponseDto(String intraId, String userImageUri, Integer rank, Integer ppp, Integer wins, Integer losses, Double winRate, RacketType racketType, String statusMessage, UserRivalRecordDto rivalRecord) {
+        this.intraId = intraId;
         this.userImageUri = userImageUri;
         this.rank = rank;
         this.ppp = ppp;
         this.wins = wins;
         this.losses = losses;
         this.winRate = winRate;
-        this.racketType = racketType.getCode().toLowerCase(Locale.ROOT);
+        this.racketType = racketType.getCode();
         this.statusMessage = statusMessage;
         this.rivalRecord = rivalRecord;
     }

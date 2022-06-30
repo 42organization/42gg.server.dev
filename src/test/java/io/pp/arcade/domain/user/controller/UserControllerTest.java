@@ -199,7 +199,7 @@ class UserControllerTest {
          * */
         mockMvc.perform(get("/pingpong/users/" + user.getIntraId() + "/detail").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(jsonPath("$.userId").value(user.getIntraId()))
+                .andExpect(jsonPath("$.intraId").value(user.getIntraId()))
                 .andExpect(jsonPath("$.userImageUri").value(user.getImageUri()))
                 .andExpect(jsonPath("$.statusMessage").value(user.getStatusMessage()))
                 .andExpect(jsonPath("$.ppp").value(user.getPpp()))

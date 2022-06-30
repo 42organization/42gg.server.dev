@@ -32,7 +32,7 @@ public class CodeToEnumConverterFactory implements ConverterFactory<String, Enum
             T[] constants = enumType.getEnumConstants();
             for (T c : constants) {
                 if (constantEnum) {
-                    if (((Constant) c).getCode().equals(source.trim().toUpperCase(Locale.ROOT))) {
+                    if (((Constant) c).getCode().toUpperCase(Locale.ROOT).equals(source.trim().toUpperCase(Locale.ROOT))) {
                         return c;
                     }
                 } else {
