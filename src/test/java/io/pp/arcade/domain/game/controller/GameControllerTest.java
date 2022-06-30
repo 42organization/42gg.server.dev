@@ -451,7 +451,7 @@ class GameControllerTest {
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body8))
                         .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
 //        - 게임결과 입력이 끝난 경우
 //          → 202 (Accepted)
