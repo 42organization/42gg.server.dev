@@ -1,4 +1,4 @@
-package io.pp.arcade.admin.management;
+package io.pp.arcade.domain.admin.management;
 
 import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
@@ -166,7 +166,7 @@ public class ManagementController {
     }
 
     @GetMapping("/admin")
-    public String mainPage() {
+    public String mainPage(HttpServletRequest request) {
         return "layout/admin";
     }
 }
