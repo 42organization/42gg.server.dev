@@ -1,0 +1,44 @@
+[source,options="nowrap"]
+----
+{
+  "notifications" : [ {
+    "id" : 13,
+    "type" : "matched",
+    "time" : "2022-06-30T15:00:00",
+    "isChecked" : false,
+    "createdAt" : "2022-06-29T21:47:14.757892"
+  }, {
+    "id" : 14,
+    "type" : "canceledbyman",
+    "time" : "2022-06-30T15:00:00",
+    "isChecked" : false,
+    "createdAt" : "2022-06-29T21:47:14.760766"
+  }, {
+    "id" : 15,
+    "type" : "canceledbytime",
+    "time" : "2022-06-30T15:00:00",
+    "isChecked" : false,
+    "createdAt" : "2022-06-29T21:47:14.762737"
+  }, {
+    "id" : 16,
+    "type" : "matched",
+    "time" : "2022-06-30T15:00:00",
+    "isChecked" : false,
+    "createdAt" : "2022-06-29T21:47:14.764381"
+  }, {
+    "id" : 17,
+    "type" : "imminent",
+    "time" : "2022-06-30T15:00:00",
+    "isChecked" : false,
+    "myTeam" : [ "hakim" ],
+    "enemyTeam" : [ "nheo" ],
+    "createdAt" : "2022-06-29T21:47:14.765972"
+  }, {
+    "id" : 18,
+    "type" : "announce",
+    "isChecked" : false,
+    "message" : "공지사항",
+    "createdAt" : "2022-06-29T21:47:14.768704"
+  } ]
+}
+----

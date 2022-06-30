@@ -1,0 +1,10 @@
+[source,options="nowrap"]
+----
+{
+  "time" : null,
+  "slotId" : null,
+  "myTeam" : [ ],
+  "enemyTeam" : [ ],
+  "isMatched" : false
+}
+----
