@@ -73,6 +73,7 @@ class NotiControllerTest {
     Team team1;
     Team team2;
     List<Noti> notis;
+
     @BeforeEach
     void init() {
         initiator.letsgo();

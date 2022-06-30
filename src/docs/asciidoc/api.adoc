@@ -1,6 +1,3 @@
-ifndef::snippets[]
-:snippets: ./build/generated-snippets
-
 = 42PINGPONG API DOCS
 :doctype: book
 :icons: font

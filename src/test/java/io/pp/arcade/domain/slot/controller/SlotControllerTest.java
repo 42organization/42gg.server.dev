@@ -72,14 +72,11 @@ class SlotControllerTest {
     @Autowired
     TestInitiator testInitiator;
 
-    List<Slot> slotList;
     Slot[] slots;
     User[] users;
     Team[] teams;
-    User user;
     Slot passedSlot;
     Team passedTeam1;
-    Slot laterSlot;
 
     @BeforeEach
     void init() {

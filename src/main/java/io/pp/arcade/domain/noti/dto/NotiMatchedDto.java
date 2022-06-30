@@ -19,7 +19,7 @@ public class NotiMatchedDto {
     @Builder
     public NotiMatchedDto(Integer id, NotiType type, LocalDateTime time, Boolean isChecked, LocalDateTime createdAt) {
         this.id = id;
-        this.type = type.getCode().toLowerCase(Locale.ROOT);
+        this.type = type.getCode();
         this.time = time;
         this.isChecked = isChecked;
         this.createdAt = createdAt;
