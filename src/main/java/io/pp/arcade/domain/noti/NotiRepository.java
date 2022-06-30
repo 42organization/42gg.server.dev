@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface NotiRepository extends JpaRepository<Noti, Integer> {
     List<Noti> findAllByUser(User user);
+    List<Noti> findAllByUserOrderByIdDesc(User user);
     Optional<Noti> findByIdAndUserId(Integer Id, Integer userId);
     Integer countAllNByUserAndIsChecked(User user, Boolean isChecked);
     void deleteAllByUser(User user);

@@ -58,7 +58,7 @@ public class NotiService {
     @Transactional
     public List<NotiDto> findNotiByUser(NotiFindDto findDto) {
         User user = userRepository.findById(findDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        List<Noti> notis = notiRepository.findAllByUser(user);
+        List<Noti> notis = notiRepository.findAllByUserOrderByIdDesc(user);
         List<NotiDto> notiDtoList = notis.stream().map(NotiDto::from).collect(Collectors.toList());
         return notiDtoList;
     }
