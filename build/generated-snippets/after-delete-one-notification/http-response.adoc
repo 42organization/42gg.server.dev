@@ -1,0 +1,51 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 863
+
+{
+  "notifications" : [ {
+    "id" : 8,
+    "type" : "canceledbyman",
+    "time" : "2022-06-30T15:00:00",
+    "isChecked" : false,
+    "createdAt" : "2022-06-29T21:47:13.989219"
+  }, {
+    "id" : 9,
+    "type" : "canceledbytime",
+    "time" : "2022-06-30T15:00:00",
+    "isChecked" : false,
+    "createdAt" : "2022-06-29T21:47:13.991344"
+  }, {
+    "id" : 10,
+    "type" : "matched",
+    "time" : "2022-06-30T15:00:00",
+    "isChecked" : false,
+    "createdAt" : "2022-06-29T21:47:13.994253"
+  }, {
+    "id" : 11,
+    "type" : "imminent",
+    "time" : "2022-06-30T15:00:00",
+    "isChecked" : false,
+    "myTeam" : [ "hakim" ],
+    "enemyTeam" : [ "nheo" ],
+    "createdAt" : "2022-06-29T21:47:13.995848"
+  }, {
+    "id" : 12,
+    "type" : "announce",
+    "isChecked" : false,
+    "message" : "공지사항",
+    "createdAt" : "2022-06-29T21:47:13.997133"
+  } ]
+}
+----
