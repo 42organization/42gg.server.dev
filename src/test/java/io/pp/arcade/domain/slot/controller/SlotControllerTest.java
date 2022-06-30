@@ -173,7 +173,7 @@ class SlotControllerTest {
                         .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
 //                .andExpect(jsonPath("$.matchBoards[0].slots[5].status").value(SlotStatusType.MYTABLE.toString()))
                 .andExpect(status().isOk())
-                .andDo(document("slot-status-list-6-when-i-have-a-slot"));
+                .andDo(document("slot-status-list-4-when-i-have-a-slot"));
 
         /*
          * SINGLE 조회 시, BUNGLE 슬롯에 대한 처리
@@ -184,7 +184,8 @@ class SlotControllerTest {
         mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
 //                .andExpect(jsonPath("$.matchBoards[1].slots[0].status").value(SlotStatusType.CLOSE.toString()))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("slot-status-list-5-when-i-choose-type-single"));
 
         /*
          * 시간이 지난 슬롯
@@ -197,7 +198,8 @@ class SlotControllerTest {
         mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
 //                .andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.CLOSE.toString()))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("slot-status-list-6-times-past"));
     }
 
     @Test
@@ -213,7 +215,7 @@ class SlotControllerTest {
         mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 10"))
                 //.andExpect(jsonPath("$.matchBoards[0].slots[3].status").value(SlotStatusType.CLOSE.toString()))
-                .andDo(document("slot-status-list-4-with-type-double"));
+                .andDo(document("slot-status-list-7-with-type-double"));
         /*
          * 복식 - 유저(100p) -> 슬롯(900p) 접근
          * status : close
@@ -224,9 +226,9 @@ class SlotControllerTest {
         mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
                 //.andExpect(jsonPath("$.matchBoards[0].slots[4].status").value(SlotStatusType.CLOSE.toString()))
-                .andDo(document("slot-status-list-5-after-enter-100p-in-900p"));
+                .andDo(document("slot-status-list-8-after-enter-100p-in-900p"));
         /*
-         * BUNGLE 조회 시, SINGLE 슬롯에 대한 처리
+         * double 조회 시, SINGLE 슬롯에 대한 처리
          * status : close
          * */
         slot = slots[7];
@@ -234,7 +236,8 @@ class SlotControllerTest {
         mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
                 //.andExpect(jsonPath("$.matchBoards[1].slots[1].status").value(SlotStatusType.CLOSE.toString()))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("slot-status-list-9-when-i-choose-type-double"));
         /*
          * 시간이 지난 슬롯
          * status : close
