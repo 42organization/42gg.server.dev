@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.rank;
 
+import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.rank.dto.RankDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.dto.UserDto;
@@ -57,13 +58,13 @@ public class RankRedis implements Serializable {
         this.statusMessage = statusMessage;
     }
 
-    public static RankRedis from (UserDto user, String gameType){
+    public static RankRedis from (UserDto user, GameType gameType){
         return RankRedis.builder()
                 .id(user.getId())
                 .intraId(user.getIntraId())
                 .ppp(user.getPpp())
                 .statusMessage(user.getStatusMessage())
-                .gameType(GameType.getEnumFromValue(gameType))
+                .gameType(gameType)
                 .racketType(user.getRacketType())
                 .wins(0)
                 .losses(0)
@@ -71,13 +72,13 @@ public class RankRedis implements Serializable {
                 .build();
     }
 
-    public static RankRedis from (RankDto rankDto, String gameType){
+    public static RankRedis from (RankDto rankDto, GameType gameType){
         return RankRedis.builder()
                 .id(rankDto.getId())
                 .intraId(rankDto.getUser().getIntraId())
                 .ppp(rankDto.getPpp())
                 .statusMessage(rankDto.getUser().getStatusMessage())
-                .gameType(GameType.getEnumFromValue(gameType))
+                .gameType(gameType)
                 .racketType(rankDto.getRacketType())
                 .wins(rankDto.getWins())
                 .losses(rankDto.getLosses())
@@ -93,5 +94,9 @@ public class RankRedis implements Serializable {
         }
         this.ppp = ppp;
         this.winRate = (double)wins / (wins + losses);
+    }
+
+    public void updateStatusMessage(String statusMessage){
+        this.setStatusMessage(statusMessage);
     }
 }
