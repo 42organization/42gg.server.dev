@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class GamePlayerDto {
-    private String userId;
+    private String intraId;
     private String userImageUri;
     private Integer wins;
     private Integer losses;

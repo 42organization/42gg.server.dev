@@ -69,7 +69,7 @@ public class UserControllerImpl implements UserController {
             rivalRecord = getRivalRecord(curUser, targetUser);
         }
         UserDetailResponseDto responseDto = UserDetailResponseDto.builder()
-                .userId(targetUser.getIntraId())
+                .intraId(targetUser.getIntraId())
                 .userImageUri(targetUser.getImageUri())
                 .racketType(targetUser.getRacketType())
                 .ppp(targetUser.getPpp())
