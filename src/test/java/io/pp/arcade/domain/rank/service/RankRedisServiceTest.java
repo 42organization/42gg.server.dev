@@ -272,7 +272,7 @@ class RankRedisServiceTest {
             rankRedisService.saveAll(rankDtos);
 
             // then
-            List<RankRedis> singleList = redisTemplate.opsForValue().multiGet(redisTemplate.keys(Key.RANK_USER + "*" + "SINGLE"));
+            List<RankRedis> singleList = redisTemplate.opsForValue().multiGet(redisTemplate.keys(Key.RANK_USER + "*" + GameType.SINGLE.getCode()));
             Assertions.assertThat(singleList).isNotEmpty();
             for (RankRedis rankRedis : singleList) {
                 RankDto rankDto = rankDtoMap.get(rankRedis.getIntraId() + GameType.SINGLE.getCode());
@@ -297,7 +297,7 @@ class RankRedisServiceTest {
             // when
             rankRedisService.saveAll(rankDtos);
 
-            List<RankRedis> bungleList = redisTemplate.opsForValue().multiGet(redisTemplate.keys(Key.RANK_USER + "*" + "DOUBLE"));
+            List<RankRedis> bungleList = redisTemplate.opsForValue().multiGet(redisTemplate.keys(Key.RANK_USER + "*" + GameType.DOUBLE.getCode()));
             Assertions.assertThat(bungleList).isNotEmpty();
             for (RankRedis rankRedis : bungleList) {
                 RankDto rankDto = rankDtoMap.get(rankRedis.getIntraId() + GameType.DOUBLE.getCode());
