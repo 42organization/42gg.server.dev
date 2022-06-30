@@ -85,7 +85,7 @@ public class RankRedisService implements RankNTService {
 
     @Transactional
     public List<RankRedisDto> findRankAll(RankFindAllDto findAllDto) {
-        Set rankKeys = redisRank.keys(Key.RANK_USER_ALL + findAllDto.getGameType().name());
+        Set rankKeys = redisRank.keys(Key.RANK_USER_ALL + findAllDto.getGameType().getCode());
         List<RankRedis> rankList = redisUser.opsForValue().multiGet(rankKeys);
         List<RankRedisDto> rankRedisDtos = new ArrayList<RankRedisDto>();
         if (!Collections.isEmpty(rankList)) {
@@ -178,7 +178,7 @@ public class RankRedisService implements RankNTService {
 
     @Transactional
     protected void saveUserRankingPpp(RankRedis userRank, Integer ppp) {
-        redisRank.opsForZSet().add(userRank.getGameType().name(), getUserRankKey(userRank.getIntraId(), userRank.getGameType()), ppp);
+        redisRank.opsForZSet().add(userRank.getGameType().getCode(), getUserRankKey(userRank.getIntraId(), userRank.getGameType()), ppp);
     }
 
     @Transactional
@@ -186,18 +186,20 @@ public class RankRedisService implements RankNTService {
         redisUser.opsForValue().set(getUserKey(rank.getIntraId(), rank.getGameType()), rank);
     }
 
-    private String getUserKey(String key) { return Key.RANK_USER + key; }
+    private String getUserKey(String key) {
+        return Key.RANK_USER + key;
+    }
 
     private String getUserKey(String intraId, GameType gameType) {
-        return Key.RANK_USER + intraId + gameType.name();
+        return Key.RANK_USER + intraId + gameType.getCode();
     }
 
     private String getUserRankKey(String intraId, GameType gameType) {
-        return "\"" + intraId + gameType.name() + "\"";
+        return "\"" + intraId + gameType.getCode() + "\"";
     }
 
     private String getRankKey(GameType gameType) {
-        return gameType.name();
+        return gameType.getCode();
     }
 
     @Transactional
