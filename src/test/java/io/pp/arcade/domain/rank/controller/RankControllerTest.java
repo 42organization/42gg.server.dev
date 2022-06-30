@@ -117,7 +117,7 @@ class RankControllerTest {
         }*/
 
         GameType type = GameType.SINGLE;
-        RankRedis userRankInfo = RankRedis.from(UserDto.from(client), type.getCode());
+        RankRedis userRankInfo = RankRedis.from(UserDto.from(client), type);
         mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
                 .param("page","1"))
                 .header("Authorization", "Bearer " + 0))
