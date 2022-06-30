@@ -1,0 +1,6 @@
+[source,bash]
+----
+$ http DELETE 'http://localhost:8080/pingpong/match/slots/1' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:Bearer 2'
+----
