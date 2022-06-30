@@ -84,8 +84,8 @@ public class TestInitiator {
         List<User> userList = Arrays.stream(users).collect(Collectors.toList());
         for (User user : userList) {
             int idx = userList.indexOf(user);
-            RankRedis singleRank = RankRedis.from(UserDto.from(user), GameType.SINGLE.getCode());
-            RankRedis doubleRank = RankRedis.from(UserDto.from(user), GameType.DOUBLE.getCode());
+            RankRedis singleRank = RankRedis.from(UserDto.from(user), GameType.SINGLE);
+            RankRedis doubleRank = RankRedis.from(UserDto.from(user), GameType.DOUBLE);
 
             ranks[idx] = singleRank;
             ranks[users.length + idx] = doubleRank;
