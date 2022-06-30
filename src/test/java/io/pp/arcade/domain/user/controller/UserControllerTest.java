@@ -177,7 +177,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.intraId").value(user.getIntraId()))
                 .andExpect(jsonPath("$.userImageUri").value(user.getImageUri()))
                 .andExpect(status().isOk())
-                .andDo(document("find-user"));
+                .andDo(document("user-find"));
     }
 
     @Test
@@ -207,7 +207,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.wins").value(userRank.getWins()))
                 .andExpect(jsonPath("$.losses").value(userRank.getLosses()))
                 .andExpect(status().isOk())
-                .andDo(document("find-user-detail"));
+                .andDo(document("user-find-detail"));
     }
 
     @Test
@@ -255,7 +255,8 @@ class UserControllerTest {
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(jsonPath("$.historics[0].ppp").value(userPchange.getPppResult()))
                 .andExpect(jsonPath("$.historics[0].date").value(gameDate))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("user-find-historics"));
     }
 
     @Test
@@ -287,7 +288,7 @@ class UserControllerTest {
                 .andExpect(jsonPath(checkUsers, "jihyukim").exists())
                 .andExpect(jsonPath(checkUsers, "daekim").exists())
                 .andExpect(status().isOk())
-                .andDo(document("search-user-with-partial-string"));
+                .andDo(document("user-search-with-partial-string"));
     }
 
     @Test
@@ -302,7 +303,7 @@ class UserControllerTest {
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.event").isEmpty())
-                .andDo(document("find-user-live1"));
+                .andDo(document("user-find-live1"));
         /*
          * 슬롯에 등록된 경우 (user1)
          * -> event : match
@@ -311,7 +312,7 @@ class UserControllerTest {
                         .header("Authorization", "Bearer " + initiator.tokens[1].getAccessToken()))
                 .andExpect(jsonPath("$.event").value("match"))
                 .andExpect(status().isOk())
-                .andDo(document("find-user-live2"));
+                .andDo(document("user-find-live2"));
         /*
          * 게임 중인 경우 (user2)
          * -> event : game
@@ -320,7 +321,7 @@ class UserControllerTest {
                         .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
                 .andExpect(jsonPath("$.event").value("game"))
                 .andExpect(status().isOk())
-                .andDo(document("find-user-live3"));
+                .andDo(document("user-find-live3"));
     }
 
     @Test
@@ -384,7 +385,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(body5))
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("modify-user-profile"));
+                .andDo(document("user-modify-profile"));
         User savedUser = userRepository.findByIntraId(user.getIntraId()).orElse(null);
         Assertions.assertThat(savedUser.getRacketType().getCode()).isEqualTo(body5.get("racketType"));
         Assertions.assertThat(savedUser.getStatusMessage()).isEqualTo(body5.get("statusMessage"));
