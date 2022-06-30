@@ -1,0 +1,10 @@
+[source,options="nowrap"]
+----
+{
+  "time" : "2022-06-30T21:47:48.048842",
+  "slotId" : 167,
+  "myTeam" : [ ],
+  "enemyTeam" : [ ],
+  "isMatched" : false
+}
+----

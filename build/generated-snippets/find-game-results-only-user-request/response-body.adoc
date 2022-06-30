@@ -1,0 +1,7 @@
+[source,options="nowrap"]
+----
+{
+  "games" : [ ],
+  "lastGameId" : 0
+}
+----
