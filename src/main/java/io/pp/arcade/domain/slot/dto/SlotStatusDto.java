@@ -18,7 +18,7 @@ public class SlotStatusDto {
     public SlotStatusDto(Integer slotId, LocalDateTime time, SlotStatusType status, Integer headCount) {
         this.slotId = slotId;
         this.time = time;
-        this.status = status.getCode().toLowerCase(Locale.ROOT);
+        this.status = status.getCode();
         this.headCount = headCount;
     }
 }

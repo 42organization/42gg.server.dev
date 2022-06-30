@@ -333,7 +333,7 @@ public class GameControllerImpl implements GameController {
             }
             RankUserDto userRankDto = rankRedisService.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(game.getType()).build());
             GamePlayerDto gamePlayerDto = GamePlayerDto.builder()
-                    .userId(user.getIntraId())
+                    .intraId(user.getIntraId())
                     .userImageUri(user.getImageUri())
                     .wins(userRankDto.getWins())
                     .losses(userRankDto.getLosses())

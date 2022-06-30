@@ -21,8 +21,8 @@ public class GameResultDto {
     @Builder
     public GameResultDto(Integer gameId, GameType type, StatusType status, LocalDateTime time, GameTeamDto team1, GameTeamDto team2) {
         this.gameId = gameId;
-        this.type = type.getCode().toLowerCase(Locale.ROOT);
-        this.status = status.getCode().toLowerCase(Locale.ROOT);
+        this.type = type.getCode();
+        this.status = status.getCode();
         this.time = time;
         this.team1 = team1;
         this.team2 = team2;

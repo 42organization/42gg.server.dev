@@ -21,7 +21,7 @@ public class NotiImminentMatchDto {
     @Builder
     public NotiImminentMatchDto(Integer id, NotiType type, LocalDateTime time, Boolean isChecked, List<String> myTeam, List<String> enemyTeam, LocalDateTime createdAt) {
         this.id = id;
-        this.type = type.getCode().toLowerCase(Locale.ROOT);
+        this.type = type.getCode();
         this.time = time;
         this.isChecked = isChecked;
         this.myTeam = myTeam;
