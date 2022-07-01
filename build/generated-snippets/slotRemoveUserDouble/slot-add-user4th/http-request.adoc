@@ -3,10 +3,10 @@
 POST /pingpong/match/tables/1/double HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer 3
-Content-Length: 20
+Content-Length: 22
 Host: localhost:8080
 
 {
-  "slotId" : "1"
+  "slotId" : "261"
 }
 ----

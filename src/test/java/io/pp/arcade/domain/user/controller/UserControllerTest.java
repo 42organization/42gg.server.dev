@@ -190,7 +190,8 @@ class UserControllerTest {
          * */
         mockMvc.perform(get("/pingpong/users/" + "notFound" + "/detail").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is4xxClientError())
+                .andDo(document("user-find-detail-4xxError-cause-couldn't-find-intraId"));
 
         /*
          * Response Check (7)
@@ -220,7 +221,8 @@ class UserControllerTest {
          * */
         mockMvc.perform(get("/pingpong/users/{intraId}/historics", "notFound").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is4xxClientError())
+                .andDo(document("user-find-historic-4xxError-cause-couldn't-find-intraId"));
 
         /*
          * chartType NULL (향후 수정)
@@ -337,7 +339,8 @@ class UserControllerTest {
         mockMvc.perform(put("/pingpong/users/detail").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body))
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("user-modify-4xxError-cause-racketType-missing"));
 
         /*
          * racketType 다른 값인 경우
@@ -349,7 +352,8 @@ class UserControllerTest {
         mockMvc.perform(put("/pingpong/users/detail").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body2))
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("user-modify-4xxError-cause-racketType-wrong-value"));
 
         /*
          * statusMessage missing
@@ -360,7 +364,8 @@ class UserControllerTest {
         mockMvc.perform(put("/pingpong/users/detail").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body3))
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("user-modify-4xxError-cause-statusMessage-missing"));
 
         /*
          * statusMessage.length > 300
@@ -372,7 +377,8 @@ class UserControllerTest {
         mockMvc.perform(put("/pingpong/users/detail").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body4))
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("user-modify-4xxError-cause-statusMessage-wrong-length"));
 
         /*
          * 업데이트 성공

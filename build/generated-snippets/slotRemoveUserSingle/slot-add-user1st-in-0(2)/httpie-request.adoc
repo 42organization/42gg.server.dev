@@ -1,8 +1,0 @@
-[source,bash]
-----
-$ echo '{
-  "slotId" : "3"
-}' | http POST 'http://localhost:8080/pingpong/match/tables/1/single' \
-    'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:Bearer 3'
-----
