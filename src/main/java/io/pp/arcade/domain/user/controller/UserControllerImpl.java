@@ -11,6 +11,7 @@ import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.domain.rank.dto.RankFindDto;
+import io.pp.arcade.domain.rank.dto.RankModifyStatusMessageDto;
 import io.pp.arcade.domain.rank.dto.RankUserDto;
 import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.security.jwt.TokenService;
@@ -134,6 +135,8 @@ public class UserControllerImpl implements UserController {
     @PutMapping(value = "/users/detail")
     public void userModifyProfile(HttpServletRequest request, UserModifyProfileRequestDto requestDto) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        RankModifyStatusMessageDto modifyDto = RankModifyStatusMessageDto.builder().statusMessage(requestDto.getStatusMessage()).intraId(user.getIntraId()).build();
+        rankRedisService.modifyRankStatusMessage(modifyDto);
         userService.modifyUserProfile(UserModifyProfileDto.builder()
                 .userId(user.getId())
                 .racketType(requestDto.getRacketType())
