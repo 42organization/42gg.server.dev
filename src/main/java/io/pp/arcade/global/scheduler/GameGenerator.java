@@ -46,9 +46,9 @@ public class GameGenerator extends AbstractScheduler {
             maxHeadCount = 4;
         }
 
-        TeamDto team1 = slotDto.getTeam1();
-        TeamDto team2 = slotDto.getTeam2();
         if (slotDto != null) {
+            TeamDto team1 = slotDto.getTeam1();
+            TeamDto team2 = slotDto.getTeam2();
             if (slotDto.getHeadCount().equals(maxHeadCount)) {
 
                 GameAddDto gameAddDto = GameAddDto.builder()
