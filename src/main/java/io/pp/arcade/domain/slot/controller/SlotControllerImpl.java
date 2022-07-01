@@ -29,7 +29,9 @@ import io.pp.arcade.global.util.HeaderUtil;
 import io.pp.arcade.global.util.NotiGenerater;
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -117,7 +119,7 @@ public class SlotControllerImpl implements SlotController {
         if (currentMatch == null) {
             throw new BusinessException("{invalid.request}");
         } else if (currentMatch.getMatchImminent()) {
-            throw new BusinessException("{invalid.request}");
+            throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "");
         } else if (currentMatch.getGame() != null) {
             throw new BusinessException("{invalid.request}");
         }
