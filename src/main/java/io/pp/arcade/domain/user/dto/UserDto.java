@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @Getter
 @Builder
-public class UserDto implements Serializable {
+public class UserDto {
     private Integer id;
     private String intraId;
     private String eMail;
