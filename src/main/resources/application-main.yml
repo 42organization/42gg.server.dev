@@ -1,0 +1,52 @@
+spring:
+  config:
+    activate:
+      on-profile:
+
+  # 데이터 소스 설정
+  datasource:
+    url: jdbc:mysql://localhost:3306/MAIN?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: 42gg
+    password: pingPongpower42#
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: false
+        use_sql_comments: false
+
+  security:
+    oauth2.client:
+      registration:
+        42:
+          client-id: "353cdada0d271c99afd647ecb5c77f257750a212e40b613fe6847985bc1f21c6"
+          client-secret: "126a9ebf21bb84857bbae746af4f36ba74eefd24af9bceee5abd7cbe6530f5ce"
+
+  # Redis 설정
+  cache:
+    type: redis
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+
+  # cors 설정
+cors:
+  allowed-origins: 'http://localhost:3000'
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS,PATCH
+  allowed-headers: '*'
+  allowed-credentials: false
+  max-age: 3600
+
+info:
+  web:
+    frontUrl: 'http://localhost:3000'
