@@ -56,6 +56,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .authorizeRequests().antMatchers("/admin/**").hasRole("USER")
+                .and()
                     .cors()
                 .and()
                     .sessionManagement()
@@ -101,7 +103,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
     /*
      * 토큰 필터 설정

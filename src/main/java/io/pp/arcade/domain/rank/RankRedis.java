@@ -73,7 +73,9 @@ public class RankRedis implements Serializable {
     }
 
     public static RankRedis from (RankDto rankDto, GameType gameType){
-        return RankRedis.builder()
+        Integer losses = rankDto.getLosses();
+        Integer wins = rankDto.getWins();
+        RankRedis rankRedis = RankRedis.builder()
                 .id(rankDto.getId())
                 .intraId(rankDto.getUser().getIntraId())
                 .ppp(rankDto.getPpp())
@@ -82,8 +84,9 @@ public class RankRedis implements Serializable {
                 .racketType(rankDto.getRacketType())
                 .wins(rankDto.getWins())
                 .losses(rankDto.getLosses())
-                .winRate(rankDto.getLosses())
+                .winRate((losses + wins) == 0 ? 0 : ((double)wins / (double)(losses + wins) * 100))
                 .build();
+        return rankRedis;
     }
 
     public void update(Boolean isWin, Integer ppp){
@@ -93,7 +96,7 @@ public class RankRedis implements Serializable {
             this.losses++;
         }
         this.ppp = ppp;
-        this.winRate = (double)wins / (wins + losses);
+        this.winRate = (double)wins / (wins + losses) * 100;
     }
 
     public void updateStatusMessage(String statusMessage){
