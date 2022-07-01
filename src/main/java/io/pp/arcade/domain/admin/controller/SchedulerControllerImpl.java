@@ -21,6 +21,7 @@ public class SchedulerControllerImpl implements SchedulerController {
     @Override
     @PostMapping(value = "/scheduler/slot")
     public void slotGeneratorCronUpdate(CronUpdateDto cron) {
+        slotGenerator.setInterval(cron.getInterval());
         slotGenerator.setCron(cron.getCron());
         slotGenerator.renewScheduler();
     }
@@ -28,18 +29,21 @@ public class SchedulerControllerImpl implements SchedulerController {
     @Override
     @PutMapping(value = "/scheduler/rank")
     public void rankSchedulerUpdate(CronUpdateDto cron) {
+        rankScheduler.setInterval(cron.getInterval());
         rankScheduler.setCron(cron.getCron());
         rankScheduler.renewScheduler();
     }
 
     @PutMapping(value = "/scheduler/current")
     public void currentMatchCronUpdate(CronUpdateDto cron) {
+        currentMatchUpdater.setInterval(cron.getInterval());
         currentMatchUpdater.setCron(cron.getCron());
         currentMatchUpdater.renewScheduler();
     }
 
     @PutMapping(value = "/scheduler/game")
     public void gameCronUpdate(CronUpdateDto cron) {
+        gameGenerator.setInterval(cron.getInterval());
         gameGenerator.setCron(cron.getCron());
         gameGenerator.renewScheduler();
     }

@@ -25,6 +25,7 @@ public class RankScheduler extends  AbstractScheduler {
         this.rankService = rankService;
         this.seasonService = seasonService;
         this.setCron("0 55 23 * * *");
+        this.setInterval(0);
     }
 
     public void dailyProcess() {

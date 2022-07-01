@@ -67,6 +67,14 @@ public class GameService {
     }
 
     @Transactional
+    public GameDto findBySlotNullable(Integer slotId) {
+        Slot slot = slotRepository.findById(slotId).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Game game = gameRepository.findBySlot(slot).orElse(null);
+        GameDto gameDto = game == null ? null : GameDto.from(game);
+        return gameDto;
+    }
+
+    @Transactional
     public GameResultPageDto findGamesAfterId(GameFindDto findDto) {
         Page<Game> games;
         if (findDto.getStatus() != null) {
