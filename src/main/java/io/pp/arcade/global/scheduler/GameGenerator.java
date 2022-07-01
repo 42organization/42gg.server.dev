@@ -6,6 +6,7 @@ import io.pp.arcade.domain.currentmatch.dto.CurrentMatchSaveGameDto;
 import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.game.dto.GameAddDto;
 import io.pp.arcade.domain.game.dto.GameDto;
+import io.pp.arcade.domain.game.dto.GameModifyStatusDto;
 import io.pp.arcade.domain.noti.dto.NotiCanceledTypeDto;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
@@ -13,6 +14,7 @@ import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.NotiType;
+import io.pp.arcade.global.type.StatusType;
 import io.pp.arcade.global.util.NotiGenerater;
 import org.springframework.stereotype.Component;
 
@@ -34,6 +36,7 @@ public class GameGenerator extends AbstractScheduler {
         this.currentMatchService = currentMatchService;
         this.notiGenerater = notiGenerater;
         this.setCron("0 */10 * * * *");
+        this.setInterval(10);
     }
 
     public void addGame() throws MessagingException {
@@ -74,6 +77,18 @@ public class GameGenerator extends AbstractScheduler {
         }
     }
 
+    public void gameLiveToWait() {
+        LocalDateTime now = LocalDateTime.now();
+        now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0).minusMinutes(interval);
+        SlotDto slot = slotService.findByTime(now);
+        if (slot != null) {
+            GameDto game = gameService.findBySlotIdNullable(slot.getId());
+            if (game != null && game.getStatus().equals(StatusType.LIVE)) {
+                gameService.modifyGameStatus(GameModifyStatusDto.builder().gameId(game.getId()).status(StatusType.WAIT).build());
+            }
+        }
+    }
+
     private void saveCurrentMatch(UserDto user, GameDto game) {
         if (user != null) {
             CurrentMatchSaveGameDto matchSaveGameDto = CurrentMatchSaveGameDto.builder()
@@ -98,6 +113,7 @@ public class GameGenerator extends AbstractScheduler {
         return () -> {
             try {
                 addGame();
+                gameLiveToWait();
             } catch (MessagingException e) {
                 e.printStackTrace();
             }
