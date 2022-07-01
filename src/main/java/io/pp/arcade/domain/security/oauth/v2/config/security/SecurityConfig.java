@@ -103,15 +103,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /*
-     * 토큰 필터 설정
-     * */
-    @Bean
-    @DependsOn(value = {"jwtBean"})
-    public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter(tokenProvider);
-    }
-
-    /*
      * 쿠키 기반 인가 Repository
      * 인가 응답을 연계 하고 검증할 때 사용.
      * */
