@@ -98,8 +98,6 @@ public class UserControllerImpl implements UserController {
                     } else if (curUsers.getPppChange() < 0) {
                         tarGetUserWin += 1;
                     }
-                } else {
-                    targetUserPChanges.remove(targetUsers);
                 }
             }
         }
