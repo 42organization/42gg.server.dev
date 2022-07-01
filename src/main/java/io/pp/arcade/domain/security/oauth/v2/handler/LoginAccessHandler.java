@@ -70,7 +70,6 @@ public class LoginAccessHandler {
             result = isSuccess ? login.tryStart(method, target, args) : method.invoke(target,args);
             queue.remove(ip);
         }
-
         return result;
     }
 
