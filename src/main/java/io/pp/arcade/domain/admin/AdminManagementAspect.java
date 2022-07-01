@@ -45,10 +45,9 @@ public class AdminManagementAspect {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getResponse();
 
-        UserDto user = null;
         HttpSession session = request.getSession();
         AdminCheckerDto sessionUser = (AdminCheckerDto) session.getAttribute("user");
-        if (sessionUser == null || user.getRoleType() != RoleType.ADMIN)
+        if (sessionUser == null || sessionUser.getRoleType() != RoleType.ADMIN)
             return redirect(response);
         // 실제 실행할 메서드
         return method.invoke(target, args);
