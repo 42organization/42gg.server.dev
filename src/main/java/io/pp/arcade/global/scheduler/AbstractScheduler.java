@@ -13,6 +13,8 @@ public abstract class AbstractScheduler {
     private ThreadPoolTaskScheduler scheduler;
     @Getter @Setter
     protected String cron;
+    @Getter @Setter
+    protected Integer interval;
 
     public abstract Runnable runnable();
 

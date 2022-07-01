@@ -77,7 +77,7 @@ public class SlotControllerImpl implements SlotController {
 
         checkIfUserHaveCurrentMatch(userId);
         checkIfUserHavePenalty(userId);
-        checkIfSlotTimePassed(slot);
+//        checkIfSlotTimePassed(slot);
 
         TeamAddUserDto teamAddUserDto = getTeamAddUserDto(slot, type, user);
 
@@ -118,13 +118,11 @@ public class SlotControllerImpl implements SlotController {
                 .userId(user.getId()).build();
         if (currentMatch.getIsMatched() == true) {
             falsifyIsMatchedForRemainders(currentMatch.getSlot());
+            notiGenerater.addCancelNotisBySlot(NotiCanceledTypeDto.builder().slotDto(slot).notiType(NotiType.CANCELEDBYMAN).build());
         }
         currentMatchService.removeCurrentMatch(currentMatchRemoveDto);
         teamService.removeUserInTeam(getTeamRemoveUserDto(slot, user));
         slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
-        if (currentMatch.getIsMatched() == true) {
-            notiGenerater.addCancelNotisBySlot(NotiCanceledTypeDto.builder().slotDto(slot).notiType(NotiType.CANCELEDBYMAN).build());
-        }
     }
 
     private void checkIfUserRemovable(CurrentMatchDto currentMatch, SlotDto slot) {

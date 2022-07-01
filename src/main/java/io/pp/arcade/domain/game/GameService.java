@@ -67,6 +67,13 @@ public class GameService {
     }
 
     @Transactional
+    public GameDto findBySlotIdNullable(Integer slotId) {
+        Game game = gameRepository.findBySlotId(slotId).orElse(null);
+        GameDto gameDto = game == null ? null : GameDto.from(game);
+        return gameDto;
+    }
+
+    @Transactional
     public GameResultPageDto findGamesAfterId(GameFindDto findDto) {
         Page<Game> games;
         if (findDto.getStatus() != null) {
