@@ -75,22 +75,12 @@ public class SlotControllerImpl implements SlotController {
     public void slotAddUser(Integer tableId, GameType type, SlotAddUserRequestDto addReqDto, HttpServletRequest request) throws MessagingException {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         Integer userId = user.getId();
-        //user가 매치를 이미 가지고 있는지 myTable에서 user 필터하기
-        CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUserId(userId);
-        if (matchDto != null) {
-            throw new BusinessException("{invalid.request}");
-        }
+        SlotDto slot = slotService.findSlotById(addReqDto.getSlotId());
 
-        if (redisTemplate.opsForValue().get(Key.PENALTY_USER + user.getIntraId()) != null) {
-            throw new ResponseStatusException(HttpStatus.LOCKED, "");
-        }
+        checkIfUserHaveCurrentMatch(userId);
+        checkIfUserHavePenalty(userId);
+        checkIfSlotTimePassed(slot);
 
-        SlotAddUserDto addDto = SlotAddUserDto.builder()
-                .slotId(addReqDto.getSlotId())
-                .type(type)
-                .joinUserPpp(user.getPpp())
-                .build();
-        SlotDto slot = slotService.findSlotById(addDto.getSlotId());
         TeamAddUserDto teamAddUserDto = getTeamAddUserDto(slot, type, user);
 
         //유저가 슬롯에 입장하면 currentMatch에 등록된다.
@@ -99,6 +89,12 @@ public class SlotControllerImpl implements SlotController {
                 .userId(userId)
                 .build();
         currentMatchService.addCurrentMatch(matchAddDto);
+
+        SlotAddUserDto addDto = SlotAddUserDto.builder()
+                .slotId(addReqDto.getSlotId())
+                .type(type)
+                .joinUserPpp(user.getPpp())
+                .build();
         slotService.addUserInSlot(addDto);
         teamService.addUserInTeam(teamAddUserDto);
 
@@ -263,6 +259,25 @@ public class SlotControllerImpl implements SlotController {
                     .matchImminent(modifyDto.getMatchImminent())
                     .build();
             currentMatchService.modifyCurrentMatch(matchModifyDto);
+        }
+    }
+
+    private void checkIfSlotTimePassed(SlotDto slot) {
+        if (LocalDateTime.now().isAfter(slot.getTime())) {
+            throw new BusinessException("{invalid.request}");
+        }
+    }
+
+    private void checkIfUserHavePenalty(Integer userId) {
+        if (redisTemplate.opsForValue().get(Key.PENALTY_USER + userId) != null) {
+            throw new ResponseStatusException(HttpStatus.LOCKED, "");
+        }
+    }
+
+    private void checkIfUserHaveCurrentMatch(Integer userId) {
+        CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUserId(userId);
+        if (matchDto != null) {
+            throw new BusinessException("{invalid.request}");
         }
     }
 }
