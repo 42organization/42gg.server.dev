@@ -59,9 +59,4 @@ public class RedisConfig {
         return redisTemplate;
     }
 
-    @Bean
-    public static ConfigureRedisAction redisConfigureAction(){
-        return ConfigureRedisAction.NO_OP;
-    }
-
 }
