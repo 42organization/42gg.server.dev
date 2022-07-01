@@ -38,7 +38,7 @@ public class RankRedisService implements RankNTService {
 
         int currentPage = (pageNumber < 1) ? 1 : (pageNumber);
         Long size = redisRank.opsForZSet().size(getRankKey(type));
-        int totalPage = (size == null) ? 1 : size.intValue() / count + 1;
+        int totalPage = (size == null) ? 1 : size.intValue() / count;
         int start = (currentPage - 1) * count;
         int end = start + count - 1;
 
