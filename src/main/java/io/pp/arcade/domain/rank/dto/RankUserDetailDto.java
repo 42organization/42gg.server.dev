@@ -12,5 +12,5 @@ public class RankUserDetailDto {
     private String statusMessage;
     private Integer wins;
     private Integer losses;
-    private double winRate;
+    private Double winRate;
 }

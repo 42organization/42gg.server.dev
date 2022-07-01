@@ -128,7 +128,7 @@ public class SlotControllerImpl implements SlotController {
     }
 
     private void checkIfUserRemovable(CurrentMatchDto currentMatch, SlotDto slot) {
-        if (currentMatch.getMatchImminent() && slot.getHeadCount() == (slot.getType().equals(GameType.SINGLE) ? 1 : 2)) {
+        if (currentMatch.getMatchImminent() && slot.getHeadCount() == (slot.getType().equals(GameType.SINGLE) ? 2 : 4)) {
             throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "");
         } else if (currentMatch.getGame() != null) {
             throw new BusinessException("{invalid.request}");
