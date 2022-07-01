@@ -82,7 +82,7 @@ public class GameGenerator extends AbstractScheduler {
         now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0).minusMinutes(interval);
         SlotDto slot = slotService.findByTime(now);
         if (slot != null) {
-            GameDto game = gameService.findBySlotNullable(slot.getId());
+            GameDto game = gameService.findBySlotIdNullable(slot.getId());
             if (game != null && game.getStatus().equals(StatusType.LIVE)) {
                 gameService.modifyGameStatus(GameModifyStatusDto.builder().gameId(game.getId()).status(StatusType.WAIT).build());
             }
