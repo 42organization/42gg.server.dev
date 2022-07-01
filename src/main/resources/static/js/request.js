@@ -196,7 +196,8 @@ function js_request_cron_put(form) {
     let start_time = form['start_time'].value;
     let end_time = form['end_time'].value;
     let data = {
-        "cron": second + " */" + interval_time + " " + start_time + "-" + end_time + " * * *"
+        "cron": second + " */" + interval_time + " " + start_time + "-" + end_time + " * * *",
+        "interval": interval_time
     };
     $.ajax({
         url: `${url}`,
