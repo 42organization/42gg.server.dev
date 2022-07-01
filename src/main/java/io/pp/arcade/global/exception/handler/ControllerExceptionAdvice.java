@@ -16,6 +16,7 @@ import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
@@ -96,12 +97,12 @@ public class ControllerExceptionAdvice {
     }
 
     @ExceptionHandler(AccessException.class)
-    protected ResponseEntity<Object> customAccessExceptionHandle(AccessException ex) throws URISyntaxException {
+    protected ResponseEntity<ExceptionReponse> customAccessExceptionHandle(AccessException ex) throws URISyntaxException {
         String message = messageSource.getMessage(filter(ex.getRedirectUrl()), null, Locale.KOREA);
         URI redirectUri = new URI(message);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(redirectUri);
-        return new ResponseEntity<>(httpHeaders, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
     }
 
     private String filter(String message){
