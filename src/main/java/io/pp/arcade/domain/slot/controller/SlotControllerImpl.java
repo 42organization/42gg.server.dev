@@ -82,7 +82,7 @@ public class SlotControllerImpl implements SlotController {
         }
 
         if (redisTemplate.opsForValue().get(Key.PENALTY_USER + user.getIntraId()) != null) {
-            throw new BusinessException("{invalid.request}");
+            throw new ResponseStatusException(HttpStatus.LOCKED, "");
         }
 
         SlotAddUserDto addDto = SlotAddUserDto.builder()
