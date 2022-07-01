@@ -6,7 +6,6 @@ import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchModifyDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchRemoveDto;
 import io.pp.arcade.domain.noti.dto.NotiCanceledTypeDto;
-import io.pp.arcade.domain.season.Season;
 import io.pp.arcade.domain.season.SeasonService;
 import io.pp.arcade.domain.season.dto.SeasonDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
@@ -35,7 +34,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -112,14 +110,10 @@ public class SlotControllerImpl implements SlotController {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         // 유저 조회, 슬롯 조회, 팀 조회( 슬롯에 헤드 카운트 -, 팀에서 유저 퇴장 )
         CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUserId(user.getId());
-        if (currentMatch == null) {
-            throw new BusinessException("{invalid.request}");
-        } else if (currentMatch.getMatchImminent()) {
-            throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "");
-        } else if (currentMatch.getGame() != null) {
-            throw new BusinessException("{invalid.request}");
-        }
+        checkIfCurrentMatchExists(currentMatch);
         SlotDto slot = currentMatch.getSlot();
+        checkIfUserRemovable(currentMatch, slot);
+
         CurrentMatchRemoveDto currentMatchRemoveDto = CurrentMatchRemoveDto.builder()
                 .userId(user.getId()).build();
         if (currentMatch.getIsMatched() == true) {
@@ -130,6 +124,20 @@ public class SlotControllerImpl implements SlotController {
         slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
         if (currentMatch.getIsMatched() == true) {
             notiGenerater.addCancelNotisBySlot(NotiCanceledTypeDto.builder().slotDto(slot).notiType(NotiType.CANCELEDBYMAN).build());
+        }
+    }
+
+    private void checkIfUserRemovable(CurrentMatchDto currentMatch, SlotDto slot) {
+        if (currentMatch.getMatchImminent() && slot.getHeadCount() == (slot.getType().equals(GameType.SINGLE) ? 1 : 2)) {
+            throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "");
+        } else if (currentMatch.getGame() != null) {
+            throw new BusinessException("{invalid.request}");
+        }
+    }
+
+    private void checkIfCurrentMatchExists(CurrentMatchDto currentMatch) {
+        if (currentMatch == null) {
+            throw new BusinessException("{invalid.request}");
         }
     }
 
