@@ -1,6 +1,0 @@
-[source,options="nowrap"]
-----
-{
-  "users" : [ "hakim", "donghyuk", "jekim", "jihyukim", "daekim", "sujpark", "kipark" ]
-}
-----
