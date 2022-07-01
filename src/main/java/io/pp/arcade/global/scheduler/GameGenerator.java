@@ -20,7 +20,7 @@ import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 
 //private String cron = "0 */" + intervalTime + " " + startTime + "-" + endTime + " * * *";
-//private String cron = "0 */10 15-18 * * *";
+//private String cron = "0 */10 * * * *";
 @Component
 public class GameGenerator extends AbstractScheduler {
     private final GameService gameService;
@@ -33,7 +33,7 @@ public class GameGenerator extends AbstractScheduler {
         this.slotService = slotService;
         this.currentMatchService = currentMatchService;
         this.notiGenerater = notiGenerater;
-        this.setCron("0 */10 15-18 * * *");
+        this.setCron("0 */10 * * * *");
     }
 
     public void addGame() throws MessagingException {
