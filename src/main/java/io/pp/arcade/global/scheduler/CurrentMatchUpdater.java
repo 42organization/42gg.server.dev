@@ -30,6 +30,7 @@ public class CurrentMatchUpdater extends AbstractScheduler {
         this.notiGenerater = notiGenerater;
         this.currentMatchService = currentMatchService;
         this.setCron("0 */5 12-18 * * *");
+        this.setInterval(5);
     }
 
     public void updateIsImminent() throws MessagingException {

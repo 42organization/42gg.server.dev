@@ -1026,7 +1026,6 @@ class SlotControllerTest {
             Assertions.assertThat(jiyunNotiSize).isEqualTo(2);
         }
         flushAll();
-
     }
 
     private void flushAll() {

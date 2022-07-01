@@ -77,7 +77,7 @@ public class SlotControllerImpl implements SlotController {
 
         checkIfUserHaveCurrentMatch(userId);
         checkIfUserHavePenalty(userId);
-        checkIfSlotTimePassed(slot);
+//        checkIfSlotTimePassed(slot);
 
         TeamAddUserDto teamAddUserDto = getTeamAddUserDto(slot, type, user);
 
