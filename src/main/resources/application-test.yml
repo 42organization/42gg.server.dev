@@ -5,10 +5,10 @@ spring:
 
   # 데이터 소스 설정
   datasource:
-    url: jdbc:mysql://pingponginstance.cooitq6xqn9g.ap-northeast-2.rds.amazonaws.com:3306/pingponginstance?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/TEST?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     driverClassName: com.mysql.cj.jdbc.Driver
-    username: wochae
-    password: chamcracker
+    username: 42gg
+    password: pingPongpower42#
 
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
