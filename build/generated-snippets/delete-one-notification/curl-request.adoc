@@ -1,6 +1,0 @@
-[source,bash]
-----
-$ curl 'http://localhost:8080/pingpong/notifications/7' -i -X DELETE \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer 0'
-----

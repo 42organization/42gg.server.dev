@@ -39,9 +39,9 @@ public class UserControllerImpl implements UserController {
     private final TokenService tokenService;
     private final RankRedisService rankRedisService;
 
-    /* *
+    /*
      * [메인 페이지]
-     * 유저 기본 정보 조회
+     * - 유저 정보 조회
      * */
     @Override
     @GetMapping(value = "/users")
@@ -54,9 +54,9 @@ public class UserControllerImpl implements UserController {
         return responseDto;
     }
 
-    /* *
+    /*
      * [프로필 페이지]
-     * 유저 프로필 정보 조회
+     * - 유저 프로필 조회
      * */
     @Override
     @GetMapping(value = "/users/{targetUserId}/detail")
@@ -84,30 +84,9 @@ public class UserControllerImpl implements UserController {
         return responseDto;
     }
 
-    private UserRivalRecordDto getRivalRecord(UserDto curUser, UserDto targetUser) {
-        List<PChangeDto> curUserPChanges = pChangeService.findPChangeByUserIdNotPage(PChangeFindDto.builder().userId(curUser.getIntraId()).build());
-        List<PChangeDto> targetUserPChanges = pChangeService.findPChangeByUserIdNotPage(PChangeFindDto.builder().userId(targetUser.getIntraId()).build());
-        Integer curUserWin = 0;
-        Integer tarGetUserWin = 0;
-        for (PChangeDto curUsers : curUserPChanges) {
-            for (PChangeDto targetUsers : targetUserPChanges) {
-                if (curUsers.getGame().getId().equals(targetUsers.getGame().getId())
-                        && (curUsers.getPppChange() * targetUsers.getPppChange() < 0)) {
-                    if (curUsers.getPppChange() > 0) {
-                        curUserWin += 1;
-                    } else if (curUsers.getPppChange() < 0) {
-                        tarGetUserWin += 1;
-                    }
-                }
-            }
-        }
-        UserRivalRecordDto dto = UserRivalRecordDto.builder().curUserWin(curUserWin).targetUserWin(tarGetUserWin).build();
-        return dto;
-    }
-
-    /* *
+    /*
      * [프로필 페이지]
-     * 유저 최근 전적 경향 조회
+     * - 유저 최근 전적 경향 조회
      * */
     @Override
     @GetMapping(value = "/users/{userId}/historics")
@@ -129,6 +108,10 @@ public class UserControllerImpl implements UserController {
         return responseDto;
     }
 
+    /*
+     * [프로필 페이지]
+     * - 유저 프로필 수정
+     */
     @Override
     @PutMapping(value = "/users/detail")
     public void userModifyProfile(HttpServletRequest request, UserModifyProfileRequestDto requestDto) {
@@ -165,5 +148,26 @@ public class UserControllerImpl implements UserController {
                 .event(event)
                 .build();
         return userLiveInfoResponse;
+    }
+
+    private UserRivalRecordDto getRivalRecord(UserDto curUser, UserDto targetUser) {
+        List<PChangeDto> curUserPChanges = pChangeService.findPChangeByUserIdNotPage(PChangeFindDto.builder().userId(curUser.getIntraId()).build());
+        List<PChangeDto> targetUserPChanges = pChangeService.findPChangeByUserIdNotPage(PChangeFindDto.builder().userId(targetUser.getIntraId()).build());
+        Integer curUserWin = 0;
+        Integer tarGetUserWin = 0;
+        for (PChangeDto curUsers : curUserPChanges) {
+            for (PChangeDto targetUsers : targetUserPChanges) {
+                if (curUsers.getGame().getId().equals(targetUsers.getGame().getId())
+                        && (curUsers.getPppChange() * targetUsers.getPppChange() < 0)) {
+                    if (curUsers.getPppChange() > 0) {
+                        curUserWin += 1;
+                    } else if (curUsers.getPppChange() < 0) {
+                        tarGetUserWin += 1;
+                    }
+                }
+            }
+        }
+        UserRivalRecordDto dto = UserRivalRecordDto.builder().curUserWin(curUserWin).targetUserWin(tarGetUserWin).build();
+        return dto;
     }
 }

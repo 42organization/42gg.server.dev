@@ -12,6 +12,7 @@ import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.StatusType;
@@ -23,11 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Collections;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class CurrentMatchServiceTest {
@@ -139,8 +136,8 @@ class CurrentMatchServiceTest {
                 .user(user1)
                 .build());
 
-        CurrentMatchDto dto1 = currentMatchService.findCurrentMatchByUserId(user1.getId());
-        CurrentMatchDto dto2 = currentMatchService.findCurrentMatchByUserId(user2.getId());
+        CurrentMatchDto dto1 = currentMatchService.findCurrentMatchByUser(UserDto.from(user1));
+        CurrentMatchDto dto2 = currentMatchService.findCurrentMatchByUser(UserDto.from(user2));
 
         Assertions.assertThat(dto1).isNotEqualTo(null);
         Assertions.assertThat(dto2).isEqualTo(null);
