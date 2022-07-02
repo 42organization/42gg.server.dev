@@ -268,7 +268,8 @@ class SlotControllerTest {
         mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body))
                         .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                        .andDo(document("slot-add-user-4xxError-cause-slotId-is-negative"));
 
         /*
          * SlotId = null (없는 경우)
@@ -276,7 +277,8 @@ class SlotControllerTest {
          * */
         mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("slot-add-user-4xxError-cause-slotId-is-null"));
 
         /*
          * SlotId = string (문자열인 경우)
@@ -287,7 +289,8 @@ class SlotControllerTest {
         mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body))
                         .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("slot-add-user-4xxError-cause-slotId-is-string"));
 
         /*
          * 단식 - 유저(840p) -> Slot(1000p) 접근
@@ -300,7 +303,8 @@ class SlotControllerTest {
         mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body))
                         .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("slot-add-user-4xxError-cause-slotPpp-is-too-high"));
 
         /*
          * 단식 - 유저(Single) -> Slot(Bungle) 접근
@@ -314,7 +318,8 @@ class SlotControllerTest {
         mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body))
                         .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("slot-add-user-4xxError-cause-single-try-enter-double"));
 
         /*
          * 단식 - 풀방 (2/2) 접근
@@ -328,7 +333,8 @@ class SlotControllerTest {
         mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body))
                         .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("slot-add-user-4xxError-cause-try-enter-full"));
 
         /*
          * 시간이 지난 슬롯 접근
@@ -344,7 +350,8 @@ class SlotControllerTest {
         mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body))
                         .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("slot-add-user-4xxError-cause-slotId-is-negative"));
     }
 
     @Test

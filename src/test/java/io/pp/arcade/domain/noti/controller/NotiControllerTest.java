@@ -106,13 +106,13 @@ class NotiControllerTest {
                     .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(jsonPath("$.notifications[0].isChecked").value("false"))
                 .andExpect(status().isOk())
-                .andDo(document("find-notifications"));
+                .andDo(document("notifications-find"));
 
         mockMvc.perform(get("/pingpong/notifications").contentType(MediaType.APPLICATION_JSON)
                    .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(jsonPath("$.notifications[0].isChecked").value("true"))
                 .andExpect(status().isOk())
-                .andDo(document("find-notifications-twice"));
+                .andDo(document("notifications-find-twice"));
     }
 
     @Test
@@ -122,33 +122,37 @@ class NotiControllerTest {
         mockMvc.perform(delete("/pingpong/notifications/" + notiRepository.findAll().get(0).getId().toString()).contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("delete-one-notification"));
+                .andDo(document("notification-delete-one"));
 
         // 관련되지 않은 유저가 삭제하는 경우  -> 400
         mockMvc.perform(delete("/pingpong/notifications/" + notiRepository.findAll().get(1).getId().toString()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[1].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("notification-delete-4xxError-cause-other-user-try"));
 
         // notiId → 마이너스인 경우  -> 400
         mockMvc.perform(delete("/pingpong/notifications/{notiId}", "-1").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("notification-delete-4xxError-cause-notiId-is-negative"));
 
         // notiId → 존재하지 않는 경우  -> 400
         mockMvc.perform(delete("/pingpong/notifications/{notiId}", "3000").contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("notification-delete-4xxError-cause-notiId-don't-exist"));
 
         // notiId → 숫자가 아닌 경우  -> 400
         mockMvc.perform(delete("/pingpong/notifications/{notiId}", "string").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("notification-delete-4xxError-cause-notiId-is-not-integer"));
 
         // 정상 요청
         mockMvc.perform(get("/pingpong/notifications").contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("after-delete-one-notification"));
+                .andDo(document("notification-after-delete-one"));
     }
 
     @Test
@@ -159,11 +163,11 @@ class NotiControllerTest {
         mockMvc.perform(delete("/pingpong/notifications").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("delete-all-notification"));
+                .andDo(document("notification-delete-all"));
 
         mockMvc.perform(get("/pingpong/notifications").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("after-delete-all-notification"));
+                .andDo(document("notification-after-delete-all"));
     }
 }
