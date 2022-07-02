@@ -5,3 +5,5 @@
 주차별 - https://island-zebra-5e0.notion.site/42-Pingpong-Backend-from-220523-1dbd3272898e46ae9e41d159ab6e36ec
 
 활동 정리 - https://copper-way-3a6.notion.site/42pingpong-c5de0333ac0647ffa406bfd15a3ef66b
+
+API별 HTTP 상태코드 - https://graceful-atom-bb0.notion.site/API-HTTP-bb2a6c2a7ab44df68a5810eafad76b33
