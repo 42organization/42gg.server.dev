@@ -4,14 +4,11 @@ import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchResponseDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
-import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.team.dto.TeamPosDto;
-import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
-import io.pp.arcade.domain.user.dto.UserFindDto;
 import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -35,7 +32,7 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
     @GetMapping(value = "/match/current")
     public CurrentMatchResponseDto currentMatchFind(HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUserId(user.getId());;
+        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUser(user);;
         CurrentMatchResponseDto responseDto = getCurrentMatchResponseDto(currentMatch, user);
         return responseDto;
     }
@@ -62,9 +59,9 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
             slotId = slot.getId();
             slotTime = slot.getTime();
             isMatch = currentMatch.getIsMatched();
-            TeamPosDto teamPosDto = teamService.getTeamPosNT(curUser, slot.getTeam1(), slot.getTeam2());
             // 경기는 5분전이고 매치가 성사되었는가?
             if (currentMatch.getMatchImminent() && isMatch){
+                TeamPosDto teamPosDto = teamService.getTeamPosNT(curUser, slot.getTeam1(), slot.getTeam2());
                 myTeam = getTeamUsersIntraIdList(teamPosDto.getMyTeam());
                 enemyTeam = getTeamUsersIntraIdList(teamPosDto.getEnemyTeam());
             }

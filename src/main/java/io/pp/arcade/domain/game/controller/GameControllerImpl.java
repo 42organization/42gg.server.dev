@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -57,14 +56,11 @@ public class GameControllerImpl implements GameController {
     @GetMapping(value = "/games/result")
     public GameUserInfoResponseDto gameUserInfo(HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUserId(user.getId());
-        if (currentMatch == null) {
-            throw new BusinessException("{invalid.request}");
-        }
+        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUser(user);
+
+        checkIfUserHavePlayingGame(currentMatch);
+
         GameDto game = currentMatch.getGame();
-        if (game == null) {
-            throw new BusinessException("{invalid.request}");
-        }
         List<GameUserInfoDto> myTeams = new ArrayList<>();
         List<GameUserInfoDto> enemyTeams = new ArrayList<>();
 
@@ -83,7 +79,7 @@ public class GameControllerImpl implements GameController {
     @PostMapping(value = "/games/result")
     public void gameResultSave(GameResultRequestDto requestDto, HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUserId(user.getId());
+        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUser(user);
 
         // if the result already exists, throw 202 error
         if (currentMatch == null) {
@@ -166,6 +162,17 @@ public class GameControllerImpl implements GameController {
 //                .totalPage(pChangePageDto.getTotalPage())
                 .build();
         return gameResultResponse;
+    }
+
+
+    private void checkIfUserHavePlayingGame(CurrentMatchDto currentMatch) {
+        if (currentMatch == null) {
+            throw new BusinessException("{invalid.request}");
+        }
+        GameDto game = currentMatch.getGame();
+        if (game == null) {
+            throw new BusinessException("{invalid.request}");
+        }
     }
 
     private void endGameStatus(GameDto game) {
