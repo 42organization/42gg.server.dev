@@ -1,6 +1,0 @@
-[source,bash]
-----
-$ http GET 'http://localhost:8080/pingpong/ranks/single?page=1' \
-    'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:Bearer 0'
-----

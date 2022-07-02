@@ -20,12 +20,13 @@ spring:
         format_sql: false
         use_sql_comments: false
 
+
   security:
     oauth2.client:
       registration:
         42:
-          client-id: "353cdada0d271c99afd647ecb5c77f257750a212e40b613fe6847985bc1f21c6"
-          client-secret: "126a9ebf21bb84857bbae746af4f36ba74eefd24af9bceee5abd7cbe6530f5ce"
+          client-id: "3111893d1b711fe2b6defa524f9a138a7048e2a010079785fa5658c965a4fc75"
+          client-secret: "759ac1501d6c08b0124ce04f6b92960d5e79320bd9f44ebd4f288e6b3c05cbcc"
 
   # Redis 설정
   cache:
