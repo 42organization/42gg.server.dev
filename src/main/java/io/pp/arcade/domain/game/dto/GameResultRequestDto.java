@@ -20,18 +20,18 @@ public class GameResultRequestDto {
 
     public Integer getMyTeamScore() {
         if (myTeamScore + enemyTeamScore > 3) {
-            throw new BusinessException("{invalid.request}");
+            throw new BusinessException("E0001");
         } else if (myTeamScore == 1 && enemyTeamScore == 1) {
-            throw new BusinessException("{invalid.request}");
+            throw new BusinessException("E0001");
         }
         return myTeamScore;
     }
 
     public Integer getEnemyTeamScore() {
         if (myTeamScore + enemyTeamScore > 3) {
-            throw new BusinessException("{invalid.request}");
+            throw new BusinessException("E0001");
         } else if (myTeamScore == 1 && enemyTeamScore == 1) {
-            throw new BusinessException("{invalid.request}");
+            throw new BusinessException("E0001");
         }
         return enemyTeamScore;
     }

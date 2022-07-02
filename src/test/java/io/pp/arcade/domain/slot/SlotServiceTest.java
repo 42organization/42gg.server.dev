@@ -85,7 +85,7 @@ class SlotServiceTest {
 
         //when
         slotService.addUserInSlot(dto);
-        Slot s1 = slotRepository.findById(slot.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Slot s1 = slotRepository.findById(slot.getId()).orElseThrow(() -> new BusinessException("E0001"));
 
         //then
         Assertions.assertThat(s1.getHeadCount()).isEqualTo(1);
@@ -101,7 +101,7 @@ class SlotServiceTest {
 
         //when
         slotService.addUserInSlot(dto1);
-        Slot s2 = slotRepository.findById(slot.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Slot s2 = slotRepository.findById(slot.getId()).orElseThrow(() -> new BusinessException("E0001"));
 
         //then
         Assertions.assertThat(s2.getHeadCount()).isEqualTo(2);
@@ -123,7 +123,7 @@ class SlotServiceTest {
                 .build();
         // when
         slotService.removeUserInSlot(dto);
-        Slot removedUserSlot = slotRepository.findById(slot1.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Slot removedUserSlot = slotRepository.findById(slot1.getId()).orElseThrow(() -> new BusinessException("E0001"));
 
         // then
         Assertions.assertThat(removedUserSlot.getGamePpp()).isEqualTo(100);
@@ -132,7 +132,7 @@ class SlotServiceTest {
 
         // when
         slotService.removeUserInSlot(dto);
-        Slot removedUserSlot2 = slotRepository.findById(slot1.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Slot removedUserSlot2 = slotRepository.findById(slot1.getId()).orElseThrow(() -> new BusinessException("E0001"));
 
         // then
         Assertions.assertThat(removedUserSlot2.getGamePpp()).isEqualTo(null);

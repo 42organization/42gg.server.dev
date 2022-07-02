@@ -41,7 +41,7 @@ class UserServiceTest {
     @Transactional
     void findById() {
         //given
-        User user = userRepository.findByIntraId("jiyun").orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findByIntraId("jiyun").orElseThrow(() -> new BusinessException("E0001"));
 
         //when
         UserDto userDto = userService.findById(UserFindDto.builder().userId(user.getId()).build());
@@ -92,7 +92,7 @@ class UserServiceTest {
                 .statusMessage("선출 아님").build();
         //when
         userService.modifyUserProfile(dto);
-        User user = userRepository.findByIntraId("jiyun").orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findByIntraId("jiyun").orElseThrow(() -> new BusinessException("E0001"));
 
         //then
 //        Assertions.assertThat(user.getImageUri()).isEqualTo("image");

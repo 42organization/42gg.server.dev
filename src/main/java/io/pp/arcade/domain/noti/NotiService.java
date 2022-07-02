@@ -34,10 +34,10 @@ public class NotiService {
 
     @Transactional
     public void addNoti(NotiAddDto notiAddDto) throws MessagingException {
-        User user = userRepository.findById(notiAddDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(notiAddDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
         Slot slot = null;
         if (notiAddDto.getSlot() != null) {
-            slot = slotRepository.findById(notiAddDto.getSlot().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+            slot = slotRepository.findById(notiAddDto.getSlot().getId()).orElseThrow(() -> new BusinessException("E0001"));
         }
         Noti noti = Noti.builder()
                 .user(user)
@@ -57,7 +57,7 @@ public class NotiService {
 
     @Transactional
     public List<NotiDto> findNotiByUser(NotiFindDto findDto) {
-        User user = userRepository.findById(findDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(findDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
         List<Noti> notis = notiRepository.findAllByUserOrderByIdDesc(user);
         List<NotiDto> notiDtoList = notis.stream().map(NotiDto::from).collect(Collectors.toList());
         return notiDtoList;
@@ -65,13 +65,13 @@ public class NotiService {
 
     @Transactional
     public NotiDto findNotiByIdAndUser(NotiFindDto findDto) {
-        Noti noti = notiRepository.findByIdAndUserId(findDto.getNotiId(), findDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Noti noti = notiRepository.findByIdAndUserId(findDto.getNotiId(), findDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
         return NotiDto.from(noti);
     }
 
     @Transactional
     public NotiCountDto countAllNByUser(NotiFindDto findDto) {
-        User user = userRepository.findById(findDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(findDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
         Integer count = notiRepository.countAllNByUserAndIsChecked(user, false);
         NotiCountDto countDto = NotiCountDto.builder().notiCount(count).build();
         return countDto;
@@ -79,14 +79,14 @@ public class NotiService {
 
     @Transactional
     public void modifyNotiChecked(NotiModifyDto modifyDto) {
-        User user = userRepository.findById(modifyDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(modifyDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
         List<Noti> notis = notiRepository.findAllByUser(user);
         notis.forEach(noti -> {noti.setIsChecked(true);});
     }
 
     @Transactional
     public void removeAllNotisByUser(NotiDeleteDto deleteDto) {
-        User user = userRepository.findById(deleteDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(deleteDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
         notiRepository.deleteAllByUser(user);
     }
 

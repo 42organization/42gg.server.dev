@@ -30,7 +30,7 @@ public class GameService {
     @Transactional
     public GameDto findById(Integer gameId) {
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new BusinessException("{invalid.request}"));
+                .orElseThrow(() -> new BusinessException("E0001"));
         GameDto dto = GameDto.from(game);
         return dto;
     }
@@ -38,9 +38,9 @@ public class GameService {
     @Transactional
     public void addGame(GameAddDto addDto) {
         SlotDto slotDto = addDto.getSlotDto();
-        Slot slot = slotRepository.findById(slotDto.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        Team team1 = teamRepository.findById(slotDto.getTeam1().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        Team team2 = teamRepository.findById(slotDto.getTeam2().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Slot slot = slotRepository.findById(slotDto.getId()).orElseThrow(() -> new BusinessException("E0001"));
+        Team team1 = teamRepository.findById(slotDto.getTeam1().getId()).orElseThrow(() -> new BusinessException("E0001"));
+        Team team2 = teamRepository.findById(slotDto.getTeam2().getId()).orElseThrow(() -> new BusinessException("E0001"));
         gameRepository.save(Game.builder()
                 .slot(slot)
                 .team1(team1)
@@ -55,14 +55,14 @@ public class GameService {
 
     @Transactional
     public void modifyGameStatus(GameModifyStatusDto modifyStatusDto) {
-        Game game = gameRepository.findById(modifyStatusDto.getGameId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Game game = gameRepository.findById(modifyStatusDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
         game.setStatus(modifyStatusDto.getStatus());
     }
 
     @Transactional
     public GameDto findBySlot(Integer slotId) {
-        Slot slot = slotRepository.findById(slotId).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        GameDto game = GameDto.from(gameRepository.findBySlot(slot).orElseThrow(() -> new BusinessException("{invalid.request}")));
+        Slot slot = slotRepository.findById(slotId).orElseThrow(() -> new BusinessException("E0001"));
+        GameDto game = GameDto.from(gameRepository.findBySlot(slot).orElseThrow(() -> new BusinessException("E0001")));
         return game;
     }
 
