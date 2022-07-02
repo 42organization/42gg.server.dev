@@ -187,383 +187,383 @@ include::{snippets}/no-slots/http-response.adoc[]
 
 === 2. 풀방(slotId:116)
 === curl-request
-include::{snippets}/slotStatusListSingle/slot-status-list-when-singleSlot-is-full/curl-request.adoc[]
+include::{snippets}/slot-status-list-when-singleSlot-is-full/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotStatusListSingle/slot-status-list-when-singleSlot-is-full/http-request.adoc[]
+include::{snippets}/slot-status-list-when-singleSlot-is-full/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotStatusListSingle/slot-status-list-when-singleSlot-is-full/http-response.adoc[]
+include::{snippets}/slot-status-list-when-singleSlot-is-full/http-response.adoc[]
 
 === 3. 100ppp user가 보는 900ppp 슬롯(slotId:117) 상태
 === curl-request
-include::{snippets}/slotStatusListSingle/slot-status-list-after-enter-100p-in-900p/curl-request.adoc[]
+include::{snippets}/slot-status-list-after-enter-100p-in-900p/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotStatusListSingle/slot-status-list-after-enter-100p-in-900p/http-request.adoc[]
+include::{snippets}/slot-status-list-after-enter-100p-in-900p/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotStatusListSingle/slot-status-list-after-enter-100p-in-900p/http-response.adoc[]
+include::{snippets}/slot-status-list-after-enter-100p-in-900p/http-response.adoc[]
 
 === 4. myTable 상태(slotId:120)
 === curl-request
-include::{snippets}/slotStatusListSingle/slot-status-list-when-i-have-a-slot/curl-request.adoc[]
+include::{snippets}/slot-status-list-when-i-have-a-slot/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotStatusListSingle/slot-status-list-when-i-have-a-slot/http-request.adoc[]
+include::{snippets}/slot-status-list-when-i-have-a-slot/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotStatusListSingle/slot-status-list-when-i-have-a-slot/http-response.adoc[]
+include::{snippets}/slot-status-list-when-i-have-a-slot/http-response.adoc[]
 
 === 5. 단식 선택한 user가 보는 복식 슬롯(slotId:121) 상태 보기
 === curl-request
-include::{snippets}/slotStatusListSingle/slot-status-list-choose-single-look-double/curl-request.adoc[]
+include::{snippets}/slot-status-list-choose-single-look-double/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotStatusListSingle/slot-status-list-choose-single-look-double/http-request.adoc[]
+include::{snippets}/slot-status-list-choose-single-look-double/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotStatusListSingle/slot-status-list-choose-single-look-double/http-response.adoc[]
+include::{snippets}/slot-status-list-choose-single-look-double/http-response.adoc[]
 
 === 6. 시간 지난 슬롯 상태 보기
 === curl-request
-include::{snippets}/slotStatusListSingle/slot-status-list-times-past/curl-request.adoc[]
+include::{snippets}/slot-status-list-times-past/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotStatusListSingle/slot-status-list-times-past/http-request.adoc[]
+include::{snippets}/slot-status-list-times-past/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotStatusListSingle/slot-status-list-times-past/http-response.adoc[]
+include::{snippets}/slot-status-list-times-past/http-response.adoc[]
 
 == 매칭 슬롯 목록(복식)
 
 === 1. 복식 풀방(slotId:137)
 === curl-request
-include::{snippets}/slotStatusListDouble/slot-status-list-when-doubleSlot-is-full/curl-request.adoc[]
+include::{snippets}/slot-status-list-when-doubleSlot-is-full/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotStatusListDouble/slot-status-list-when-doubleSlot-is-full/http-request.adoc[]
+include::{snippets}/slot-status-list-when-doubleSlot-is-full/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotStatusListDouble/slot-status-list-when-doubleSlot-is-full/http-response.adoc[]
+include::{snippets}/slot-status-list-when-doubleSlot-is-full/http-response.adoc[]
 
 === 2. 100ppp user가 보는 900ppp 슬롯 상태
 === curl-request
-include::{snippets}/slotStatusListDouble/slot-status-list-after-enter-100p-in-900p/curl-request.adoc[]
+include::{snippets}/slot-status-list-after-enter-100p-in-900p/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotStatusListDouble/slot-status-list-after-enter-100p-in-900p/http-request.adoc[]
+include::{snippets}/slot-status-list-after-enter-100p-in-900p/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotStatusListDouble/slot-status-list-after-enter-100p-in-900p/http-response.adoc[]
+include::{snippets}/slot-status-list-after-enter-100p-in-900p/http-response.adoc[]
 
 === 3. 복식 선택한 user가 보는 단식 슬롯 상태
 === curl-request
-include::{snippets}/slotStatusListDouble/slot-status-list-choose-double-look-single/curl-request.adoc[]
+include::{snippets}/slot-status-list-choose-double-look-single/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotStatusListDouble/slot-status-list-choose-double-look-single/http-request.adoc[]
+include::{snippets}/slot-status-list-choose-double-look-single/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotStatusListDouble/slot-status-list-choose-double-look-single/http-response.adoc[]
+include::{snippets}/slot-status-list-choose-double-look-single/http-response.adoc[]
 
 == 매칭 슬롯 입장(단식)
 
 === 1-1. 유저1이 0/2 슬롯(slotId:171)에 입장하기 전 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotAddUserSingle/slot-before-add-user-in-0(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/slot-before-add-user-in-0(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotAddUserSingle/slot-before-add-user-in-0(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/slot-before-add-user-in-0(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotAddUserSingle/slot-before-add-user-in-0(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/slot-before-add-user-in-0(2)-check-is-myTable-or-not/http-response.adoc[]
 
 === 1-2. 유저1이 0/2 슬롯(slotId:171)에 입장한 후 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotAddUserSingle/slot-after-add-user-in-0(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/slot-after-add-user-in-0(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotAddUserSingle/slot-after-add-user-in-0(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/slot-after-add-user-in-0(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotAddUserSingle/slot-after-add-user-in-0(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/slot-after-add-user-in-0(2)-check-is-myTable-or-not/http-response.adoc[]
 
 === 2-1. 유저2가 1/2 슬롯(slotId:171)에 입장하기 전 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotAddUserSingle/slot-before-add-user-in-1(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/slot-before-add-user-in-1(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotAddUserSingle/slot-before-add-user-in-1(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/slot-before-add-user-in-1(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotAddUserSingle/slot-before-add-user-in-1(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/slot-before-add-user-in-1(2)-check-is-myTable-or-not/http-response.adoc[]
 
 === 2-2. 유저2가 1/2 슬롯(slotId:171)에 입장한 후 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotAddUserSingle/slot-after-add-user-in-1(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/slot-after-add-user-in-1(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotAddUserSingle/slot-after-add-user-in-1(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/slot-after-add-user-in-1(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotAddUserSingle/slot-after-add-user-in-1(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/slot-after-add-user-in-1(2)-check-is-myTable-or-not/http-response.adoc[]
 
 == 매칭 슬롯 입장(복식)
 
 === 1-1. 유저1이 0/4 슬롯(slotId:189)에 입장하기 전 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotAddUserDouble/slot-before-add-user-in-0(2)+0(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/slot-before-add-user-in-0(2)+0(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotAddUserDouble/slot-before-add-user-in-0(2)+0(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/slot-before-add-user-in-0(2)+0(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotAddUserDouble/slot-before-add-user-in-0(2)+0(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/slot-before-add-user-in-0(2)+0(2)-check-is-myTable-or-not/http-response.adoc[]
 
 === 1-2. 유저1이 0/4 슬롯(slotId:189)에 입장한 후 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotAddUserDouble/slot-after-add-user-in-0(2)+0(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/slot-after-add-user-in-0(2)+0(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotAddUserDouble/slot-after-add-user-in-0(2)+0(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/slot-after-add-user-in-0(2)+0(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotAddUserDouble/slot-after-add-user-in-0(2)+0(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/slot-after-add-user-in-0(2)+0(2)-check-is-myTable-or-not/http-response.adoc[]
 
 === ...
 
 === 4-1. 유저4가 3/4 슬롯(slotId:189)에 입장하기 전 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotAddUserDouble/slot-before-add-user-in-2(2)+1(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/slot-before-add-user-in-2(2)+1(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotAddUserDouble/slot-before-add-user-in-2(2)+1(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/slot-before-add-user-in-2(2)+1(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotAddUserDouble/slot-before-add-user-in-2(2)+1(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/slot-before-add-user-in-2(2)+1(2)-check-is-myTable-or-not/http-response.adoc[]
 
 === 4-2. 유저4가 3/4 슬롯(slotId:189)에 입장한 후 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotAddUserDouble/slot-after-add-user-in-2(2)+1(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/slot-after-add-user-in-2(2)+1(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotAddUserDouble/slot-after-add-user-in-2(2)+1(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/slot-after-add-user-in-2(2)+1(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotAddUserDouble/slot-after-add-user-in-2(2)+1(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/slot-after-add-user-in-2(2)+1(2)-check-is-myTable-or-not/http-response.adoc[]
 
 == 매칭 슬롯 입장 에러(악의 접근)
 
 === 1. slotId가 -1일 때
 === curl-request
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-slotId-is-negative/curl-request.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-slotId-is-negative/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-slotId-is-negative/http-request.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-slotId-is-negative/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-slotId-is-negative/http-response.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-slotId-is-negative/http-response.adoc[]
 
 === 2. slotId가 null일 때
 === curl-request
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-slotId-is-null/curl-request.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-slotId-is-null/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-slotId-is-null/http-request.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-slotId-is-null/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-slotId-is-null/http-response.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-slotId-is-null/http-response.adoc[]
 
 === 3. slotId가 string일 때
 === curl-request
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-slotId-is-string/curl-request.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-slotId-is-string/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-slotId-is-string/http-request.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-slotId-is-string/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-slotId-is-string/http-response.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-slotId-is-string/http-response.adoc[]
 
 === 4. 가능 범위보다 높은 ppp 슬롯에 접근 시도 시
 === curl-request
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-slotPpp-is-too-high/curl-request.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-slotPpp-is-too-high/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-slotPpp-is-too-high/http-request.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-slotPpp-is-too-high/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-slotPpp-is-too-high/http-response.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-slotPpp-is-too-high/http-response.adoc[]
 
 === 5. 단식 선택 유저가 복식 슬롯에 접근 시도 시
 === curl-request
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-single-try-enter-double/curl-request.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-single-try-enter-double/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-single-try-enter-double/http-request.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-single-try-enter-double/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-single-try-enter-double/http-response.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-single-try-enter-double/http-response.adoc[]
 
 === 6. 풀방에 접근 시도 시
 === curl-request
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-try-enter-full/curl-request.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-try-enter-full/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-try-enter-full/http-request.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-try-enter-full/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotAddUserError/slot-add-user-4xxError-cause-try-enter-full/http-response.adoc[]
+include::{snippets}/slot-add-user-4xxError-cause-try-enter-full/http-response.adoc[]
 
 == 게임 취소 aka 슬롯 퇴장(단식)
 
 === 1. Imminent한 게임을 취소하려고 할 때
 === curl-request
-include::{snippets}/slotRemoveUserSingle/slot-cancel-imminent-game/curl-request.adoc[]
+include::{snippets}/slot-cancel-imminent-game/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotRemoveUserSingle/slot-cancel-imminent-game/http-request.adoc[]
+include::{snippets}/slot-cancel-imminent-game/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotRemoveUserSingle/slot-cancel-imminent-game/http-response.adoc[]
+include::{snippets}/slot-cancel-imminent-game/http-response.adoc[]
 
 === 2. Live 게임을 취소하려고 할 때
 === curl-request
-include::{snippets}/slotRemoveUserSingle/slot-cancel-live-game/curl-request.adoc[]
+include::{snippets}/slot-cancel-live-game/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotRemoveUserSingle/slot-cancel-live-game/http-request.adoc[]
+include::{snippets}/slot-cancel-live-game/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotRemoveUserSingle/slot-cancel-live-game/http-response.adoc[]
+include::{snippets}/slot-cancel-live-game/http-response.adoc[]
 
 === 3-1. user가 혼자 있는 슬롯(slotId:208)에서 나가기 전 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotRemoveUserSingle/(v1)slot-before-user1st-cancel-when-status-1(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/(single1)slot-before-user1st-cancel-when-status-1(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotRemoveUserSingle/(v1)slot-before-user1st-cancel-when-status-1(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/(single1)slot-before-user1st-cancel-when-status-1(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotRemoveUserSingle/(v1)slot-before-user1st-cancel-when-status-1(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/(single1)slot-before-user1st-cancel-when-status-1(2)-check-is-myTable-or-not/http-response.adoc[]
 
 === 3-2. user가 혼자 있는 슬롯(slotId:208)에서 나간 후 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotRemoveUserSingle/(v1)slot-after-user1st-cancel-when-status-1(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/(single1)slot-after-user1st-cancel-when-status-1(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotRemoveUserSingle/(v1)slot-after-user1st-cancel-when-status-1(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/(single1)slot-after-user1st-cancel-when-status-1(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotRemoveUserSingle/(v1)slot-after-user1st-cancel-when-status-1(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/(single1)slot-after-user1st-cancel-when-status-1(2)-check-is-myTable-or-not/http-response.adoc[]
 
 === 4-1. user가 이미 매칭 완료된 2/2 슬롯(slotId:209)에서 나가기 전 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotRemoveUserSingle/(v2)slot-before-user1st-cancel-when-status-2(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/(single2)slot-before-user1st-cancel-when-status-2(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotRemoveUserSingle/(v2)slot-before-user1st-cancel-when-status-2(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/(single2)slot-before-user1st-cancel-when-status-2(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotRemoveUserSingle/(v2)slot-before-user1st-cancel-when-status-2(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/(single2)slot-before-user1st-cancel-when-status-2(2)-check-is-myTable-or-not/http-response.adoc[]
 
 === 4-2. user가 이미 매칭 완료된 2/2 슬롯(slotId:209)에서 나간 후 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotRemoveUserSingle/(v2)slot-after-user1st-cancel-when-status-2(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/(single2)slot-after-user1st-cancel-when-status-2(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotRemoveUserSingle/(v2)slot-after-user1st-cancel-when-status-2(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/(single2)slot-after-user1st-cancel-when-status-2(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotRemoveUserSingle/(v2)slot-after-user1st-cancel-when-status-2(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/(single2)slot-after-user1st-cancel-when-status-2(2)-check-is-myTable-or-not/http-response.adoc[]
 
 == 게임 취소 aka 슬롯 퇴장(복식)
 
 === 1. 4명의 유저가 슬롯(slotId:243)에 들어간 후, 네 번째 유저(user4th) 에게 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotRemoveUserDouble/slot-after-add-users-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/(double1)slot-after-add-users-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotRemoveUserDouble/slot-after-add-users-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/(double1)slot-after-add-users-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotRemoveUserDouble/slot-after-add-users-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/(double1)slot-after-add-users-check-is-myTable-or-not/http-response.adoc[]
 
 === 2. 4명의 유저가 슬롯(slotId:243)에 들어간 후, 다른 유저에게 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotRemoveUserDouble/slot-after-add-users-check-other-user-view/curl-request.adoc[]
+include::{snippets}/(double1)slot-after-add-users-check-other-user-view/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotRemoveUserDouble/slot-after-add-users-check-other-user-view/http-request.adoc[]
+include::{snippets}/(double1)slot-after-add-users-check-other-user-view/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotRemoveUserDouble/slot-after-add-users-check-other-user-view/http-response.adoc[]
+include::{snippets}/(double1)slot-after-add-users-check-other-user-view/http-response.adoc[]
 
 === 3-1. 네 번째 유저(user4th)가 슬롯(slotId:261) 나가기 전 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotRemoveUserDouble/slot-before-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/(double2)slot-before-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotRemoveUserDouble/slot-before-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/(double2)slot-before-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotRemoveUserDouble/slot-before-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/(double2)slot-before-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not/http-response.adoc[]
 
 === 3-2. 네 번째 유저(user4th)가 슬롯(slotId:261) 나간 후 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotRemoveUserDouble/slot-after-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/(double2)slot-after-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotRemoveUserDouble/slot-after-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/(double2)slot-after-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotRemoveUserDouble/slot-after-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/(double2)slot-after-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not/http-response.adoc[]
 
 === 4-1. 두 번째 유저(user2nd)가 3/4 슬롯(slotId:261) 나가기 전 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotRemoveUserDouble/slot-before-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/(double3)slot-before-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotRemoveUserDouble/slot-before-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/(double3)slot-before-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotRemoveUserDouble/slot-before-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/(double3)slot-before-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not/http-response.adoc[]
 
 === 4-2. 두 번째 유저(user2nd)가 3/4 슬롯(slotId:261) 나간 후 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotRemoveUserDouble/slot-after-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/(double3)slot-after-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotRemoveUserDouble/slot-after-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/(double3)slot-after-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotRemoveUserDouble/slot-after-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/(double3)slot-after-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not/http-response.adoc[]
 
 === ...
 
-=== 7-1. 첫 번째 유저가 1/4 슬롯(slotId:261)에서 나가기 전 myTable인지 아닌지
+=== 7-1. 두 번째 유저가 1/4 슬롯(slotId:261)에서 나가기 전 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotRemoveUserDouble/slot-before-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/(double6)slot-before-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotRemoveUserDouble/slot-before-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/(double6)slot-before-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotRemoveUserDouble/slot-before-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/(double6)slot-before-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not/http-response.adoc[]
 
-=== 7-2. 첫 번째 유저가 1/4 슬롯(slotId:261)에서 나간 후 myTable인지 아닌지
+=== 7-2. 두 번째 유저가 1/4 슬롯(slotId:261)에서 나간 후 myTable인지 아닌지
 === curl-request
-include::{snippets}/slotRemoveUserDouble/slot-after-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not/curl-request.adoc[]
+include::{snippets}/(double6)slot-after-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not/curl-request.adoc[]
 
 === http-request
-include::{snippets}/slotRemoveUserDouble/slot-after-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not/http-request.adoc[]
+include::{snippets}/(double6)slot-after-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not/http-request.adoc[]
 
 === http-response
-include::{snippets}/slotRemoveUserDouble/slot-after-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not/http-response.adoc[]
+include::{snippets}/(double6)slot-after-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not/http-response.adoc[]
 
 = 유저 검색 페이지
 
-=== 1. 검색창에 k 입력시
+== 1. 검색창에 k 입력시
 === curl-request
 include::{snippets}/user-search-with-partial-string/curl-request.adoc[]
 
@@ -575,7 +575,7 @@ include::{snippets}/user-search-with-partial-string/http-response.adoc[]
 
 = 결과 입력 페이지(게임 결과 정보 찾기)
 
-=== 1. 진행 중인 게임 결과가 없을 때, 에러
+== 1. 진행 중인 게임 결과가 없을 때, 에러
 === curl-request
 include::{snippets}/game-find-result-4XXError-cause-no-exists/curl-request.adoc[]
 
@@ -585,7 +585,7 @@ include::{snippets}/game-find-result-4XXError-cause-no-exists/http-request.adoc[
 === http-response
 include::{snippets}/game-find-result-4XXError-cause-no-exists/http-response.adoc[]
 
-=== 2. 단식 진행 중
+== 2. 단식 진행 중
 === curl-request
 include::{snippets}/game-find-results-single/curl-request.adoc[]
 
@@ -595,7 +595,7 @@ include::{snippets}/game-find-results-single/http-request.adoc[]
 === http-response
 include::{snippets}/game-find-results-single/http-response.adoc[]
 
-=== 3. 복식 진행 중
+== 3. 복식 진행 중
 === curl-request
 include::{snippets}/game-find-results-double/curl-request.adoc[]
 
@@ -607,7 +607,7 @@ include::{snippets}/game-find-results-double/http-response.adoc[]
 
 = 결과 입력 페이지(게임 결과 저장)
 
-=== 1. score 값이 null일 때, 에러
+== 1. score 값이 null일 때, 에러
 === curl-request
 include::{snippets}/game-result-save-Error-cause-score-is-null/curl-request.adoc[]
 
@@ -617,7 +617,7 @@ include::{snippets}/game-result-save-Error-cause-score-is-null/http-request.adoc
 === http-response
 include::{snippets}/game-result-save-Error-cause-score-is-null/http-response.adoc[]
 
-=== 2. score 값이 3 이상일 때, 에러
+== 2. score 값이 3 이상일 때, 에러
 === curl-request
 include::{snippets}/game-result-save-Error-cause-score-is-bigger-than-3/curl-request.adoc[]
 
@@ -627,7 +627,7 @@ include::{snippets}/game-result-save-Error-cause-score-is-bigger-than-3/http-req
 === http-response
 include::{snippets}/game-result-save-Error-cause-score-is-bigger-than-3/http-response.adoc[]
 
-=== 3. score 값이 1:1일 때, 에러
+== 3. score 값이 1:1일 때, 에러
 === curl-request
 include::{snippets}/game-result-save-Error-cause-score-1:1/curl-request.adoc[]
 
@@ -637,7 +637,7 @@ include::{snippets}/game-result-save-Error-cause-score-1:1/http-request.adoc[]
 === http-response
 include::{snippets}/game-result-save-Error-cause-score-1:1/http-response.adoc[]
 
-=== 4. score 값의 합이 4 이상일 때, 에러
+== 4. score 값의 합이 4 이상일 때, 에러
 === curl-request
 include::{snippets}/game-result-save-Error-cause-score-sum-is-bigger-than-4/curl-request.adoc[]
 
@@ -647,7 +647,7 @@ include::{snippets}/game-result-save-Error-cause-score-sum-is-bigger-than-4/http
 === http-response
 include::{snippets}/game-result-save-Error-cause-score-sum-is-bigger-than-4/http-response.adoc[]
 
-=== 5. score 값이 음수일 때, 에러
+== 5. score 값이 음수일 때, 에러
 === curl-request
 include::{snippets}/game-result-save-Error-cause-score-is-negative/curl-request.adoc[]
 
@@ -657,7 +657,7 @@ include::{snippets}/game-result-save-Error-cause-score-is-negative/http-request.
 === http-response
 include::{snippets}/game-result-save-Error-cause-score-is-negative/http-response.adoc[]
 
-=== 6. score 값이 소수일 때, 에러
+== 6. score 값이 소수일 때, 에러
 === curl-request
 include::{snippets}/game-result-save-Error-cause-score-is-decimal/curl-request.adoc[]
 
@@ -667,7 +667,7 @@ include::{snippets}/game-result-save-Error-cause-score-is-decimal/http-request.a
 === http-response
 include::{snippets}/game-result-save-Error-cause-score-is-decimal/http-response.adoc[]
 
-=== 7. score 값이 숫자가 아닐 때, 에러
+== 7. score 값이 숫자가 아닐 때, 에러
 === curl-request
 include::{snippets}/game-result-save-Error-cause-score-is-not-integer/curl-request.adoc[]
 
@@ -677,7 +677,7 @@ include::{snippets}/game-result-save-Error-cause-score-is-not-integer/http-reque
 === http-response
 include::{snippets}/game-result-save-Error-cause-score-is-not-integer/http-response.adoc[]
 
-=== 8. score 값 정상 요청
+== 8. score 값 정상 요청
 === curl-request
 include::{snippets}/game-result-save-isCreated/curl-request.adoc[]
 
@@ -687,7 +687,7 @@ include::{snippets}/game-result-save-isCreated/http-request.adoc[]
 === http-response
 include::{snippets}/game-result-save-isCreated/http-response.adoc[]
 
-=== 9. 해당 게임 score가 이미 입력돼서 데이터에도 남아있는 경우
+== 9. 해당 게임 score가 이미 입력돼서 데이터에도 남아있는 경우
 === curl-request
 include::{snippets}/game-result-save-isAccepted/curl-request.adoc[]
 
@@ -697,7 +697,7 @@ include::{snippets}/game-result-save-isAccepted/http-request.adoc[]
 === http-response
 include::{snippets}/game-result-save-isAccepted/http-response.adoc[]
 
-=== 10. 입력된 결과 확인
+== 10. 입력된 결과 확인
 === curl-request
 include::{snippets}/game-find-results-only-user-request/curl-request.adoc[]
 
@@ -709,7 +709,7 @@ include::{snippets}/game-find-results-only-user-request/http-response.adoc[]
 
 = 최근 경기 페이지
 
-=== 1. gameId가 숫자가 아님, 에러
+== 1. gameId가 숫자가 아님, 에러
 === curl-request
 include::{snippets}/game-find-results-4XXError-cause-gameId-is-not-Integer/curl-request.adoc[]
 
@@ -719,7 +719,7 @@ include::{snippets}/game-find-results-4XXError-cause-gameId-is-not-Integer/http-
 === http-response
 include::{snippets}/game-find-results-4XXError-cause-gameId-is-not-Integer/http-response.adoc[]
 
-=== 2. gameId가 음수임
+== 2. gameId가 음수임
 === curl-request
 include::{snippets}/game-find-results-gameId-is-negative/curl-request.adoc[]
 
@@ -729,7 +729,7 @@ include::{snippets}/game-find-results-gameId-is-negative/http-request.adoc[]
 === http-response
 include::{snippets}/game-find-results-gameId-is-negative/http-response.adoc[]
 
-=== 3. gameId가 null임
+== 3. gameId가 null임
 === curl-request
 include::{snippets}/game-find-result-gameId-is-null/curl-request.adoc[]
 
@@ -739,7 +739,7 @@ include::{snippets}/game-find-result-gameId-is-null/http-request.adoc[]
 === http-response
 include::{snippets}/game-find-result-gameId-is-null/http-response.adoc[]
 
-=== 4. count가 숫자가 아님, 에러
+== 4. count가 숫자가 아님, 에러
 === curl-request
 include::{snippets}/game-find-results-4XXError-cause-count-is-string/curl-request.adoc[]
 
@@ -749,7 +749,7 @@ include::{snippets}/game-find-results-4XXError-cause-count-is-string/http-reques
 === http-response
 include::{snippets}/game-find-results-4XXError-cause-count-is-string/http-response.adoc[]
 
-=== 5. count가 음수임
+== 5. count가 음수임
 === curl-request
 include::{snippets}/game-find-results-count-is-negative/curl-request.adoc[]
 
@@ -759,7 +759,7 @@ include::{snippets}/game-find-results-count-is-negative/http-request.adoc[]
 === http-response
 include::{snippets}/game-find-results-count-is-negative/http-response.adoc[]
 
-=== 6. count가 null임
+== 6. count가 null임
 === curl-request
 include::{snippets}/game-find-results-count-is-null/curl-request.adoc[]
 
@@ -769,7 +769,7 @@ include::{snippets}/game-find-results-count-is-null/http-request.adoc[]
 === http-response
 include::{snippets}/game-find-results-count-is-null/http-response.adoc[]
 
-=== 7. count가 100 이상
+== 7. count가 100 이상
 === curl-request
 include::{snippets}/game-find-results-count-is-bigger-than-100/curl-request.adoc[]
 
@@ -779,7 +779,7 @@ include::{snippets}/game-find-results-count-is-bigger-than-100/http-request.adoc
 === http-response
 include::{snippets}/game-find-results-count-is-bigger-than-100/http-response.adoc[]
 
-=== 8. status가 NOTHING같이 다른 값일 때
+== 8. status가 NOTHING같이 다른 값일 때
 === curl-request
 include::{snippets}/game-user-info-status-wrong/curl-request.adoc[]
 
@@ -789,7 +789,7 @@ include::{snippets}/game-user-info-status-wrong/http-request.adoc[]
 === http-response
 include::{snippets}/game-user-info-status-wrong/http-response.adoc[]
 
-=== 9. status가 null일 때
+== 9. status가 null일 때
 === curl-request
 include::{snippets}/game-user-info-status-is-null/curl-request.adoc[]
 
@@ -799,7 +799,7 @@ include::{snippets}/game-user-info-status-is-null/http-request.adoc[]
 === http-response
 include::{snippets}/game-user-info-status-is-null/http-response.adoc[]
 
-=== 10. gameId가 1000일 때
+== 10. gameId가 1000일 때
 === curl-request
 include::{snippets}/game-find-results-find-id-1000/curl-request.adoc[]
 
