@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface CurrentMatchRepository extends JpaRepository<CurrentMatch, Integer> {
     Optional<CurrentMatch> findByUser(User user);
+    Optional<CurrentMatch> findByUserId(Integer userId);
     List<CurrentMatch> findAllByGame(Game game);
     Page<CurrentMatch> findAllByOrderByIdDesc(Pageable pageable);
     void deleteByUser(User user);

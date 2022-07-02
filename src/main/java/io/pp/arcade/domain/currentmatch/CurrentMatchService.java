@@ -12,6 +12,7 @@ import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.exception.BusinessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,8 +45,7 @@ public class CurrentMatchService {
 
     @Transactional
     public void modifyCurrentMatch(CurrentMatchModifyDto modifyDto){
-        User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
+        CurrentMatch currentMatch = currentMatchRepository.findByUserId(modifyDto.getUserId()).orElse(null);
         currentMatch.setIsMatched(modifyDto.getIsMatched());
         currentMatch.setMatchImminent(modifyDto.getMatchImminent());
     }
@@ -59,15 +59,15 @@ public class CurrentMatchService {
     }
 
     @Transactional
-    public CurrentMatchDto findCurrentMatchByUserId(Integer userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
+    public CurrentMatchDto findCurrentMatchByUser(UserDto userDto) {
+        //User user = userRepository.findById(userId).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        CurrentMatch currentMatch = currentMatchRepository.findByUserId(userDto.getId()).orElse(null);
         CurrentMatchDto dto = null;
 
         if (currentMatch != null) {
             dto = CurrentMatchDto.builder()
                     .game(currentMatch.getGame() == null ? null : GameDto.from(currentMatch.getGame()))
-                    .userId(user.getId())
+                    .userId(userDto.getId())
                     .slot(SlotDto.from(currentMatch.getSlot()))
                     .matchImminent(currentMatch.getMatchImminent())
                     .isMatched(currentMatch.getIsMatched())

@@ -75,7 +75,7 @@ public class SlotControllerImpl implements SlotController {
         Integer userId = user.getId();
         SlotDto slot = slotService.findSlotById(addReqDto.getSlotId());
 
-        checkIfUserHaveCurrentMatch(userId);
+        checkIfUserHaveCurrentMatch(user);
         checkIfUserHavePenalty(userId);
         checkIfSlotAvailable(slot, type, user);
 //        checkIfSlotTimePassed(slot);
@@ -110,7 +110,7 @@ public class SlotControllerImpl implements SlotController {
         // slotId , tableId 유효성 검사
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         // 유저 조회, 슬롯 조회, 팀 조회( 슬롯에 헤드 카운트 -, 팀에서 유저 퇴장 )
-        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUserId(user.getId());
+        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUser(user);
         checkIfCurrentMatchExists(currentMatch);
         SlotDto slot = currentMatch.getSlot();
         checkIfUserRemovable(currentMatch, slot);
@@ -287,8 +287,8 @@ public class SlotControllerImpl implements SlotController {
         }
     }
 
-    private void checkIfUserHaveCurrentMatch(Integer userId) {
-        CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUserId(userId);
+        private void checkIfUserHaveCurrentMatch(UserDto user) {
+        CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUser(user);
         if (matchDto != null) {
             throw new BusinessException("{invalid.request}");
         }
