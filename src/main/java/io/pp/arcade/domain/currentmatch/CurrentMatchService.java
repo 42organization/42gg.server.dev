@@ -45,7 +45,7 @@ public class CurrentMatchService {
 
     @Transactional
     public void modifyCurrentMatch(CurrentMatchModifyDto modifyDto){
-        CurrentMatch currentMatch = currentMatchRepository.findByUserId(modifyDto.getUserId()).orElse(null);
+        CurrentMatch currentMatch = currentMatchRepository.findByUserId(modifyDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         currentMatch.setIsMatched(modifyDto.getIsMatched());
         currentMatch.setMatchImminent(modifyDto.getMatchImminent());
     }
