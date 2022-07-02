@@ -351,7 +351,7 @@ class SlotControllerTest {
                         .content(objectMapper.writeValueAsString(body))
                         .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
                 .andExpect(status().isBadRequest())
-                .andDo(document("slot-add-user-4xxError-cause-slotId-is-negative"));
+                .andDo(document("slot-status-list-times-past"));
     }
 
     @Test
@@ -726,10 +726,10 @@ class SlotControllerTest {
             saveCurrentMatchGame(currentMatch, slot);
             saveCurrentMatchGame(currentMatch2, slot);
 
-            /* slot - user1 등록 취소 */
+            /* slot - user1 등록 취소 imminent라서 취소 불가*/
             mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[7].getAccessToken()))
-                    .andExpect(status().isBadRequest())
+                    .andExpect(status().isIAmATeapot())
                     .andDo(document("slot-cancel-live-game"));
         }
 
@@ -748,23 +748,23 @@ class SlotControllerTest {
                             .content(objectMapper.writeValueAsString(body))
                             .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("(v1)slot-add-user1st-in-0(2)"));
+                    .andDo(document("(single1)slot-add-user1st-in-0(2)"));
 
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("(v1)slot-before-user1st-cancel-when-status-1(2)-check-is-myTable-or-not"));
+                    .andDo(document("(single1)slot-before-user1st-cancel-when-status-1(2)-check-is-myTable-or-not"));
 
             /* slot - user1 등록 취소 */
             mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("(v1)slot-user1st-cancel-when-status-1(2)"));
+                    .andDo(document("(single1)slot-user1st-cancel-when-status-1(2)"));
 
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("(v1)slot-after-user1st-cancel-when-status-1(2)-check-is-myTable-or-not"));
+                    .andDo(document("(single1)slot-after-user1st-cancel-when-status-1(2)-check-is-myTable-or-not"));
             /* User1 매치테이블 조회 */
             CurrentMatch user1CurrentMatch = currentMatchRepository.findByUser(team1User).orElse(null);
 
@@ -792,17 +792,17 @@ class SlotControllerTest {
                             .content(objectMapper.writeValueAsString(body))
                             .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("(v2)slot-add-user1st-in-0(2)"));
+                    .andDo(document("(single2)slot-add-user1st-in-0(2)"));
             mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(body))
                             .header("Authorization", "Bearer " + testInitiator.tokens[4].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("(v2)slot-add-user2nd-in-1(2)"));
+                    .andDo(document("(single2)slot-add-user2nd-in-1(2)"));
 
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("(v2)slot-before-user1st-cancel-when-status-2(2)-check-is-myTable-or-not"));
+                    .andDo(document("(single2)slot-before-user1st-cancel-when-status-2(2)-check-is-myTable-or-not"));
             /* slot - user1 등록 취소 */
             mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
@@ -811,7 +811,7 @@ class SlotControllerTest {
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("(v2)slot-after-user1st-cancel-when-status-2(2)-check-is-myTable-or-not"));
+                    .andDo(document("(single2)slot-after-user1st-cancel-when-status-2(2)-check-is-myTable-or-not"));
 
 
             CurrentMatch user1CurrentMatch = currentMatchRepository.findByUser(team1User).orElse(null);
@@ -853,27 +853,27 @@ class SlotControllerTest {
                             .content(objectMapper.writeValueAsString(body))
                             .header("Authorization", "Bearer " + testInitiator.tokens[5].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("(v3)slot-add-user1st-in-0(2)"));
+                    .andDo(document("(single3)slot-add-user1st-in-0(2)"));
             mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(body))
                             .header("Authorization", "Bearer " + testInitiator.tokens[6].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("(v3)slot-add-user2nd-in-1(2)"));
+                    .andDo(document("(single3)slot-add-user2nd-in-1(2)"));
 
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[6].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("(v3)slot-before-user2nd-cancel-when-status-2(2)-check-is-myTable-or-not"));
+                    .andDo(document("(single3)slot-before-user2nd-cancel-when-status-2(2)-check-is-myTable-or-not"));
             /* slot - team2user 등록 취소 */
             mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(body))
                             .header("Authorization", "Bearer " + testInitiator.tokens[6].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("(v3)slot-user2nd-cancel-when-status-2(2)"));
+                    .andDo(document("(single3)slot-user2nd-cancel-when-status-2(2)"));
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[6].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("(v3)slot-after-user2nd-cancel-when-status-2(2)-check-is-myTable-or-not"));
+                    .andDo(document("(single3)slot-after-user2nd-cancel-when-status-2(2)-check-is-myTable-or-not"));
             CurrentMatch user1CurrentMatch = currentMatchRepository.findByUser(team1User).orElse(null);
             CurrentMatch user2CurrentMatch = currentMatchRepository.findByUser(team2User).orElse(null);
             Noti user1Noti = notiRepository.findAllByUser(team1User).get(1);
@@ -918,33 +918,33 @@ class SlotControllerTest {
                             .content(objectMapper.writeValueAsString(body))
                             .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-add-user1st"));
+                    .andDo(document("(double1)slot-add-user1st"));
             mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(body))
                             .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-add-user2nd"));
+                    .andDo(document("(double1)slot-add-user2nd"));
             mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(body))
                             .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
                     .andExpect(status().isOk())
-                            .andDo(document("slot-add-user3rd"));
+                            .andDo(document("(double1)slot-add-user3rd"));
             mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(body))
                             .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-add-user4th"));
+                    .andDo(document("(double1)slot-add-user4th"));
             // 넷 중 하나가 봤을 때
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(body))
                             .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-after-add-users-check-is-myTable-or-not"));
+                    .andDo(document("(double1)slot-after-add-users-check-is-myTable-or-not"));
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(body))
                             .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-after-add-users-check-other-user-view"));
+                    .andDo(document("(double1)slot-after-add-users-check-other-user-view"));
         }
 
         /* slot에서 user4 제거 */
@@ -953,21 +953,21 @@ class SlotControllerTest {
                             .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
                     //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-before-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not"));
+                    .andDo(document("(double2)slot-before-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not"));
             mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
-                    .andDo(document("slot-user4th-cancel-when-status-2(2)+2(2)"));
+                    .andDo(document("(double2)slot-user4th-cancel-when-status-2(2)+2(2)"));
             Assertions.assertThat(slot.getGamePpp()).isEqualTo((hakim.getPpp() + nheo.getPpp() + donghyuk.getPpp()) / 3);
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
                     //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-after-user4th-cancel-when-status-2(2)+2(2)-check-other-user-view"));
+                    .andDo(document("(double2)slot-after-user4th-cancel-when-status-2(2)+2(2)-check-other-user-view"));
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
                     //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-after-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not"));
+                    .andDo(document("(double2)slot-after-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not"));
             Assertions.assertThat(slot.getHeadCount()).isEqualTo(3);
             Assertions.assertThat(slot.getType()).isEqualTo(GameType.DOUBLE);
 
@@ -1007,21 +1007,21 @@ class SlotControllerTest {
                             .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
                     //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-before-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not"));
+                    .andDo(document("(double3)slot-before-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not"));
             mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
-                    .andDo(document("slot-user2nd-cancel-when-status-2(2)+1(2)"));
+                    .andDo(document("(double3)slot-user2nd-cancel-when-status-2(2)+1(2)"));
             Assertions.assertThat(slot.getGamePpp()).isEqualTo((hakim.getPpp() + donghyuk.getPpp()) / 2);
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
                     //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-after-user2nd-cancel-when-status-2(2)+1(2)-check-other-user-view"));
+                    .andDo(document("(double3)slot-after-user2nd-cancel-when-status-2(2)+1(2)-check-other-user-view"));
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
                     //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-after-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not"));
+                    .andDo(document("(double3)slot-after-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not"));
             Assertions.assertThat(slot.getHeadCount()).isEqualTo(2);
             Assertions.assertThat(slot.getType()).isEqualTo(GameType.DOUBLE);
 
@@ -1071,21 +1071,21 @@ class SlotControllerTest {
                             .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
                     //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-before-user3rd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not"));
+                    .andDo(document("(double4)slot-before-user3rd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not"));
             mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
-                    .andDo(document("slot-user3rd-cancel-when-status-2(2)+1(2)"));
+                    .andDo(document("(double4)slot-user3rd-cancel-when-status-2(2)+1(2)"));
             Assertions.assertThat(slot.getGamePpp()).isEqualTo((hakim.getPpp() + nheo.getPpp()) / 2);
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
                     //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-after-user3rd-cancel-when-status-2(2)+1(2)-check-other-user-view"));
+                    .andDo(document("(double4)slot-after-user3rd-cancel-when-status-2(2)+1(2)-check-other-user-view"));
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
                     //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-after-user3rd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not"));
+                    .andDo(document("(double4)slot-after-user3rd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not"));
             Assertions.assertThat(slot.getHeadCount()).isEqualTo(2);
             Assertions.assertThat(slot.getType()).isEqualTo(GameType.DOUBLE);
 
@@ -1125,21 +1125,21 @@ class SlotControllerTest {
                             .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
                     //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-before-user1st-cancel-when-status-2(2)+0(2)-check-is-myTable-or-not"));
+                    .andDo(document("(double5)slot-before-user1st-cancel-when-status-2(2)+0(2)-check-is-myTable-or-not"));
             mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
-                    .andDo(document("slot-user1st-cancel-when-status-2(2)+0(2)"));
+                    .andDo(document("(double5)slot-user1st-cancel-when-status-2(2)+0(2)"));
             Assertions.assertThat(slot.getGamePpp()).isEqualTo(nheo.getPpp());
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
                     //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-after-user1st-cancel-when-status-2(2)+0(2)-check-other-user-view"));
+                    .andDo(document("(double5)slot-after-user1st-cancel-when-status-2(2)+0(2)-check-other-user-view"));
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
                     //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-after-user1st-cancel-when-status-2(2)+0(2)-check-is-myTable-or-not"));
+                    .andDo(document("(double5)slot-after-user1st-cancel-when-status-2(2)+0(2)-check-is-myTable-or-not"));
             Assertions.assertThat(slot.getHeadCount()).isEqualTo(1);
             Assertions.assertThat(slot.getType()).isEqualTo(GameType.DOUBLE);
 
@@ -1181,21 +1181,21 @@ class SlotControllerTest {
                             .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
                     //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-before-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not"));
+                    .andDo(document("(double6)slot-before-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not"));
             mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
-                    .andDo(document("slot-user2nd-cancel-when-status-1(2)+0(2)"));
+                    .andDo(document("(double6)slot-user2nd-cancel-when-status-1(2)+0(2)"));
             Assertions.assertThat(slot.getGamePpp()).isEqualTo(null);
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
                     //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-after-user2nd-when-status-1(2)+0(2)-check-other-user-view"));
+                    .andDo(document("(double6)slot-after-user2nd-when-status-1(2)+0(2)-check-other-user-view"));
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
                     //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
                     .andExpect(status().isOk())
-                    .andDo(document("slot-after-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not"));
+                    .andDo(document("(double6)slot-after-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not"));
             Assertions.assertThat(slot.getHeadCount()).isEqualTo(0);
             Assertions.assertThat(slot.getType()).isEqualTo(null);
 
