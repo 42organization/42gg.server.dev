@@ -114,7 +114,7 @@ public class UserControllerImpl implements UserController {
      */
     @Override
     @PutMapping(value = "/users/detail")
-    public void userModifyProfile(HttpServletRequest request, UserModifyProfileRequestDto requestDto) {
+    public void userModifyProfile(UserModifyProfileRequestDto requestDto, HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         RankModifyStatusMessageDto modifyDto = RankModifyStatusMessageDto.builder().statusMessage(requestDto.getStatusMessage()).intraId(user.getIntraId()).build();
         rankRedisService.modifyRankStatusMessage(modifyDto);
@@ -126,7 +126,8 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @GetMapping(value = "/users/searches")
-    public UserSearchResultResponseDto userSearchResult(String inquiringString) {
+    public UserSearchResultResponseDto userSearchResult(String inquiringString, HttpServletRequest request) {
+        tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         List<String> users = userService.findByPartsOfIntraId(UserSearchRequestDto.builder().intraId(inquiringString).build())
                 .stream().map(UserDto::getIntraId).collect(Collectors.toList());
         return UserSearchResultResponseDto.builder().users(users).build();
