@@ -31,8 +31,8 @@ public class PChangeService {
 
     @Transactional
     public void addPChange(PChangeAddDto addDto) {
-        Game game = gameRepository.findById(addDto.getGameId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        User user = userRepository.findById(addDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Game game = gameRepository.findById(addDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
+        User user = userRepository.findById(addDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         pChangeRepository.save(PChange.builder()
                 .game(game)
                 .user(user)
@@ -44,21 +44,21 @@ public class PChangeService {
 
     @Transactional
     public List<PChangeDto> findPChangeByGameId(PChangeFindDto findDto) {
-        Game game = gameRepository.findById(findDto.getGameId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        List<PChange> pChangeList = pChangeRepository.findAllByGame(game).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Game game = gameRepository.findById(findDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
+        List<PChange> pChangeList = pChangeRepository.findAllByGame(game).orElseThrow(() -> new BusinessException("E0001"));
         return pChangeList.stream().map(PChangeDto::from).collect(Collectors.toList());
     }
 
 
     @Transactional
     public List<PChangeDto> findPChangeByUserIdNotPage(PChangeFindDto findDto){
-        List<PChange> pChangeList = pChangeRepository.findAllByUserIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));;
+        List<PChange> pChangeList = pChangeRepository.findAllByUserIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));;
         return pChangeList.stream().map(PChangeDto::from).collect(Collectors.toList());
     }
 
     @Transactional
     public PChangePageDto findPChangeByUserId(PChangeFindDto findDto){
-        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         Page<PChange> pChangePage = pChangeRepository.findAllByUserOrderByIdDesc(user, findDto.getPageable());
         PChangePageDto dto = PChangePageDto.builder()
                 .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()))
@@ -70,7 +70,7 @@ public class PChangeService {
 
     @Transactional
     public PChangePageDto findPChangeByUserIdAfterGameId(PChangeFindDto findDto){
-        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         Integer gameId = findDto.getGameId() == null ? Integer.MAX_VALUE : findDto.getGameId();
 
         Page<PChange> pChangePage = pChangeRepository.findAllByUserAndGameIdLessThanOrderByIdDesc(user, gameId, findDto.getPageable());
@@ -84,17 +84,17 @@ public class PChangeService {
 
     @Transactional
     public PChangeDto findPChangeByUserAndGame(PChangeFindDto findDto) {
-        Game game = gameRepository.findById(findDto.getGameId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        PChangeDto pChangeDto = PChangeDto.from(pChangeRepository.findByUserAndGame(user, game).orElseThrow(() -> new BusinessException("{invalid.request}")));
+        Game game = gameRepository.findById(findDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
+        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        PChangeDto pChangeDto = PChangeDto.from(pChangeRepository.findByUserAndGame(user, game).orElseThrow(() -> new BusinessException("E0001")));
         return  pChangeDto;
     }
 
     @Transactional
     public Integer findPChangeIdByUserAndGame(PChangeFindDto findDto) {
-        Game game = gameRepository.findById(findDto.getGameId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        PChange pChange = pChangeRepository.findByUserAndGame(user, game).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Game game = gameRepository.findById(findDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
+        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        PChange pChange = pChangeRepository.findByUserAndGame(user, game).orElseThrow(() -> new BusinessException("E0001"));
         return  pChange.getId();
     }
 

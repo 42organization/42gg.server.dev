@@ -38,14 +38,14 @@ public class SeasonService {
 
     @Transactional
     public void deleteSeasonByAdmin(SeasonDeleteDto deleteDto) {
-        Season season = seasonRepository.findById(deleteDto.getSeasonId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Season season = seasonRepository.findById(deleteDto.getSeasonId()).orElseThrow(() -> new BusinessException("E0001"));
         seasonRepository.delete(season);
     }
 
     @Transactional
     public SeasonDto findCurrentSeason() {
         LocalDateTime now = LocalDateTime.now();
-//        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElseThrow(() -> new BusinessException("{invalid.request}"));
+//        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElseThrow(() -> new BusinessException("E0001"));
         Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElse(null);
         if (season == null)
             return null;
@@ -61,7 +61,7 @@ public class SeasonService {
 
     @Transactional
     public void updateSeasonByAdmin(SeasonUpdateDto seasonUpdateDto) {
-        Season season = seasonRepository.findById(seasonUpdateDto.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Season season = seasonRepository.findById(seasonUpdateDto.getId()).orElseThrow(() -> new BusinessException("E0001"));
         season.setPppGap(seasonUpdateDto.getPppGap());
         season.setStartPpp(seasonUpdateDto.getStartPpp());
     }

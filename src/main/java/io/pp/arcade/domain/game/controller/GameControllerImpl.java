@@ -87,7 +87,7 @@ public class GameControllerImpl implements GameController {
         }
         GameDto game = currentMatch.getGame();
         if (game == null) {
-            throw new BusinessException("{invalid.request}");
+            throw new BusinessException("E0001");
         }
         TeamDto team1 = game.getTeam1();
         TeamDto team2 = game.getTeam2();
@@ -167,11 +167,11 @@ public class GameControllerImpl implements GameController {
 
     private void checkIfUserHavePlayingGame(CurrentMatchDto currentMatch) {
         if (currentMatch == null) {
-            throw new BusinessException("{invalid.request}");
+            throw new BusinessException("E0001");
         }
         GameDto game = currentMatch.getGame();
         if (game == null) {
-            throw new BusinessException("{invalid.request}");
+            throw new BusinessException("E0001");
         }
     }
 
@@ -192,7 +192,7 @@ public class GameControllerImpl implements GameController {
             team2Score = requestDto.getMyTeamScore();
             team1Score = requestDto.getEnemyTeamScore();
         } else {
-            throw new BusinessException("{invalid.request}");
+            throw new BusinessException("E0001");
         }
         List<TeamModifyGameResultDto> modifyList = new ArrayList<>();
         modifyList.add(TeamModifyGameResultDto.builder()

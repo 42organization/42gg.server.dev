@@ -107,7 +107,7 @@ class GameServiceTest {
                 .build();
         //when
         gameService.modifyGameStatus(modifyDto);
-        Game game1 = gameRepository.findById(game.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Game game1 = gameRepository.findById(game.getId()).orElseThrow(() -> new BusinessException("E0001"));
 
         //then
         Assertions.assertThat(game1.getStatus()).isEqualTo(StatusType.END);
