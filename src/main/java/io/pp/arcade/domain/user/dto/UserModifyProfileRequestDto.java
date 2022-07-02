@@ -12,7 +12,7 @@ public class UserModifyProfileRequestDto {
     @NotNull
     private RacketType racketType;
     @NotNull
-    @Size(min = 0, max = 300)
+    @Size(min = 0, max = 30)
     private String statusMessage;
 }
 
