@@ -463,7 +463,7 @@ class GameControllerTest {
 //        정 상 요 청
         Map<String, String> body8 = new HashMap<>();
         body8.put("myTeamScore", "2");
-        body8.put("enemyTeamScore", "1");
+        body8.put("enemyTeamScore", "0");
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body8))
                         .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))

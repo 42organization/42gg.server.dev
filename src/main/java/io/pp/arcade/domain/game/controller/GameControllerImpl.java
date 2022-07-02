@@ -213,18 +213,18 @@ public class GameControllerImpl implements GameController {
     private void modifyUsersPppAndPChange(GameDto game, TeamDto team1, TeamDto team2) {
         TeamDto savedTeam1 = teamService.findById(team1.getId());
         TeamDto savedTeam2 = teamService.findById(team2.getId());
-        modifyUserPppAndAddPchangeAndRank(game, team1.getUser1(), savedTeam2);
-        modifyUserPppAndAddPchangeAndRank(game, team1.getUser2(), savedTeam2);
-        modifyUserPppAndAddPchangeAndRank(game, team2.getUser1(), savedTeam1);
-        modifyUserPppAndAddPchangeAndRank(game, team2.getUser2(), savedTeam1);
+        Boolean isOneSide = Math.abs(savedTeam1.getScore() - savedTeam2.getScore()) == 2;
+        modifyUserPppAndAddPchangeAndRank(game, team1.getUser1(), savedTeam2, isOneSide);
+        modifyUserPppAndAddPchangeAndRank(game, team1.getUser2(), savedTeam2, isOneSide);
+        modifyUserPppAndAddPchangeAndRank(game, team2.getUser1(), savedTeam1, isOneSide);
+        modifyUserPppAndAddPchangeAndRank(game, team2.getUser2(), savedTeam1, isOneSide);
         
     }
     
-    private void modifyUserPppAndAddPchangeAndRank(GameDto game, UserDto user, TeamDto enemyTeam) {
+    private void modifyUserPppAndAddPchangeAndRank(GameDto game, UserDto user, TeamDto enemyTeam, Boolean isOneSide) {
         if (user == null) {
             return;
         }
-        Boolean isOneSide = Math.abs(game.getTeam1().getScore() - game.getTeam2().getScore()) == 2;
         Integer pppChange = EloRating.pppChange(user.getPpp(), enemyTeam.getTeamPpp(), !enemyTeam.getWin(), isOneSide);
         Integer ppp = (user.getPpp() + pppChange);
         Integer userPpp = ppp > 0 ? ppp : 0;
