@@ -67,7 +67,7 @@ public class SlotService {
 
     @Transactional
     public void addUserInSlot(SlotAddUserDto addUserDto) {
-        Slot slot = slotRepository.findById(addUserDto.getSlotId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Slot slot = slotRepository.findById(addUserDto.getSlotId()).orElseThrow(() -> new BusinessException("E0001"));
         Integer headCountResult = slot.getHeadCount() + 1; // entity라 반영이 안되어서 미리 뺀 값을 써줘야함
         if (slot.getHeadCount() == 0) {
             slot.setType(addUserDto.getType());
@@ -80,7 +80,7 @@ public class SlotService {
 
     @Transactional
     public void removeUserInSlot(SlotRemoveUserDto removeUserDto) {
-        Slot slot = slotRepository.findById(removeUserDto.getSlotId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Slot slot = slotRepository.findById(removeUserDto.getSlotId()).orElseThrow(() -> new BusinessException("E0001"));
         Integer headCountResult = slot.getHeadCount() - 1; // entity라 반영이 안되어서 미리 뺀 값을 써줘야함
         if (headCountResult == 0) {
             slot.setType(null);
@@ -93,7 +93,7 @@ public class SlotService {
     }
 
     public SlotDto findSlotById(Integer slotId) {
-        Slot slot = slotRepository.findById(slotId).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Slot slot = slotRepository.findById(slotId).orElseThrow(() -> new BusinessException("E0001"));
         return SlotDto.from(slot);
     }
 
@@ -102,7 +102,7 @@ public class SlotService {
         LocalDateTime todayStartTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 0);
         List<Slot> slots = slotRepository.findAllByTimeAfterOrderByTimeAsc(todayStartTime);
 
-        User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(LocalDateTime.now(), LocalDateTime.now()).orElse(null);
         Integer pppGap;
         if (season == null) {
@@ -198,7 +198,7 @@ public class SlotService {
 
     @Transactional
     public void updateSlotByAdmin(SlotUpdateDto updateDto) {
-        Slot slot = slotRepository.findById(updateDto.getSlotId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Slot slot = slotRepository.findById(updateDto.getSlotId()).orElseThrow(() -> new BusinessException("E0001"));
         slot.setGamePpp(updateDto.getGamePpp());
         slot.setHeadCount(updateDto.getHeadCount());
         slot.setType(updateDto.getType());
@@ -206,7 +206,7 @@ public class SlotService {
 
     @Transactional
     public void deleteSlotByAdmin(SlotDeleteDto deleteDto) {
-        Slot slot = slotRepository.findById(deleteDto.getSlotId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Slot slot = slotRepository.findById(deleteDto.getSlotId()).orElseThrow(() -> new BusinessException("E0001"));
         slotRepository.delete(slot);
     }
 

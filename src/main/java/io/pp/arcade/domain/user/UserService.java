@@ -24,13 +24,13 @@ public class UserService {
 
     @Transactional
     public UserDto findByIntraId(UserFindDto findDto) {
-        User user = userRepository.findByIntraId(findDto.getIntraId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findByIntraId(findDto.getIntraId()).orElseThrow(() -> new BusinessException("E0001"));
         return UserDto.from(user);
     }
 
     @Transactional
     public UserDto findById(UserFindDto findDto) {
-        User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         return UserDto.from(user);
     }
 
@@ -50,14 +50,14 @@ public class UserService {
     /* 유저 ppp 변경 */
     @Transactional
     public void modifyUserPpp(UserModifyPppDto modifyDto) {
-        User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         user.setPpp(modifyDto.getPpp());
     }
 
     /* 유저 정보 업데이트 */
     @Transactional
     public void modifyUserProfile(UserModifyProfileDto modifyDto) {
-        User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         //user.setEMail(modifyDto.getEmail());
         //user.setImageUri(modifyDto.getUserImageUri());
         user.setRacketType(modifyDto.getRacketType());
@@ -115,7 +115,7 @@ public class UserService {
 
     @Transactional
     public void toggleUserRoleType(UserDto userDto) {
-        User user = userRepository.findById(userDto.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(userDto.getId()).orElseThrow(() -> new BusinessException("E0001"));
         if (user.getRoleType() == RoleType.USER) {
             user.setRoleType(RoleType.ADMIN);
         } else {

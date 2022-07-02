@@ -19,6 +19,7 @@ import io.pp.arcade.domain.team.dto.TeamRemoveUserDto;
 import io.pp.arcade.domain.slot.dto.SlotStatusResponseDto;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.exception.entity.ExceptionEntity;
 import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.scheduler.SlotGenerator;
 import io.pp.arcade.global.type.GameType;
@@ -37,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @AllArgsConstructor
@@ -76,7 +78,7 @@ public class SlotControllerImpl implements SlotController {
         SlotDto slot = slotService.findSlotById(addReqDto.getSlotId());
 
         checkIfUserHaveCurrentMatch(user);
-        checkIfUserHavePenalty(userId);
+        checkIfUserHavePenalty(user);
         checkIfSlotAvailable(slot, type, user);
 //        checkIfSlotTimePassed(slot);
         //user가 들어갈 팀을 정한당
@@ -120,6 +122,7 @@ public class SlotControllerImpl implements SlotController {
         if (currentMatch.getIsMatched() == true) {
             falsifyIsMatchedForRemainders(currentMatch.getSlot());
             notiGenerater.addCancelNotisBySlot(NotiCanceledTypeDto.builder().slotDto(slot).notiType(NotiType.CANCELEDBYMAN).build());
+            redisTemplate.opsForValue().set(Key.PENALTY_USER + user.getIntraId(), "true", 60, TimeUnit.SECONDS);
         }
         currentMatchService.removeCurrentMatch(currentMatchRemoveDto);
         teamService.removeUserInTeam(getTeamRemoveUserDto(slot, user));
@@ -128,15 +131,13 @@ public class SlotControllerImpl implements SlotController {
 
     private void checkIfUserRemovable(CurrentMatchDto currentMatch, SlotDto slot) {
         if (currentMatch.getMatchImminent() && slot.getHeadCount() == (slot.getType().equals(GameType.SINGLE) ? 2 : 4)) {
-            throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT, "");
-        } else if (currentMatch.getGame() != null) {
-            throw new BusinessException("{invalid.request}");
+            throw new BusinessException("SD002");
         }
     }
 
     private void checkIfCurrentMatchExists(CurrentMatchDto currentMatch) {
         if (currentMatch == null) {
-            throw new BusinessException("{invalid.request}");
+            throw new BusinessException("SD001");
         }
     }
 
@@ -231,7 +232,7 @@ public class SlotControllerImpl implements SlotController {
                 .headCount(slot.getHeadCount())
                 .build();
         if (SlotStatusType.CLOSE.equals(slotService.getStatus(slotFilterDto))) {
-            throw new BusinessException("{invalid.request}");
+            throw new BusinessException("SC001");
         }
     }
 
@@ -275,22 +276,16 @@ public class SlotControllerImpl implements SlotController {
         }
     }
 
-    private void checkIfSlotTimePassed(SlotDto slot) {
-        if (LocalDateTime.now().isAfter(slot.getTime())) {
-            throw new BusinessException("{invalid.request}");
-        }
-    }
-
-    private void checkIfUserHavePenalty(Integer userId) {
-        if (redisTemplate.opsForValue().get(Key.PENALTY_USER + userId) != null) {
-            throw new ResponseStatusException(HttpStatus.LOCKED, "");
+    private void checkIfUserHavePenalty(UserDto user) {
+        if (redisTemplate.opsForValue().get(Key.PENALTY_USER + user.getIntraId()) != null) {
+            throw new BusinessException("SC003");
         }
     }
 
         private void checkIfUserHaveCurrentMatch(UserDto user) {
         CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUser(user);
         if (matchDto != null) {
-            throw new BusinessException("{invalid.request}");
+            throw new BusinessException("SC002");
         }
     }
 }

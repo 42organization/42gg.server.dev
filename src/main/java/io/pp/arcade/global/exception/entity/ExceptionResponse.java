@@ -10,41 +10,40 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 @Setter
 @Getter
-public class ExceptionReponse {
+public class ExceptionResponse {
     private String code;
     private String message;
 
-    public static ExceptionReponse from(String code, BindingResult bindingResult){
+    public static ExceptionResponse from(String code, BindingResult bindingResult){
         FieldError fieldError = bindingResult.getFieldError();
-        return ExceptionReponse.builder()
+        return ExceptionResponse.builder()
                 .code(code)
                 .message(fieldError.getDefaultMessage())
                 .build();
     }
 
-    public static ExceptionReponse from(String code, MethodArgumentTypeMismatchException ex){
-        return ExceptionReponse.builder()
+    public static ExceptionResponse from(String code, MethodArgumentTypeMismatchException ex){
+        return ExceptionResponse.builder()
                 .code(code)
                 .message(ex.getMessage())
                 .build();
     }
 
-    public static ExceptionReponse from(String code){
-        return ExceptionReponse.builder()
+    public static ExceptionResponse from(String code){
+        return ExceptionResponse.builder()
                 .code(code)
-                .message(HttpStatus.METHOD_NOT_ALLOWED.toString())
                 .build();
     }
 
-    public static ExceptionReponse from(String code, String Message){
-        return ExceptionReponse.builder()
+    public static ExceptionResponse from(String code, String Message){
+        return ExceptionResponse.builder()
                 .code(code)
                 .message(Message)
                 .build();
     }
     @Builder
-    private ExceptionReponse(String code, String message){
+    private ExceptionResponse(String code, String message){
         this.code = code;
-        this.message = message;
+        this.message = "잘못된 요청입니다.";
     }
 }

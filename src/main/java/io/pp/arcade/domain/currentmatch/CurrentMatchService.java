@@ -33,8 +33,8 @@ public class CurrentMatchService {
 
     @Transactional
     public void addCurrentMatch(CurrentMatchAddDto addDto){
-        User user = userRepository.findById(addDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        Slot slot = slotRepository.findById(addDto.getSlot().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(addDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        Slot slot = slotRepository.findById(addDto.getSlot().getId()).orElseThrow(() -> new BusinessException("E0001"));
         currentMatchRepository.save(CurrentMatch.builder()
                         .user(user)
                         .slot(slot)
@@ -52,15 +52,15 @@ public class CurrentMatchService {
 
     @Transactional
     public void saveGameInCurrentMatch(CurrentMatchSaveGameDto saveDto) {
-        Game game = gameRepository.findById(saveDto.getGameId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        User user = userRepository.findById(saveDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Game game = gameRepository.findById(saveDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
+        User user = userRepository.findById(saveDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
         currentMatch.setGame(game);
     }
 
     @Transactional
     public CurrentMatchDto findCurrentMatchByUser(UserDto userDto) {
-        //User user = userRepository.findById(userId).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        //User user = userRepository.findById(userId).orElseThrow(() -> new BusinessException("E0001"));
         CurrentMatch currentMatch = currentMatchRepository.findByUserId(userDto.getId()).orElse(null);
         CurrentMatchDto dto = null;
 
@@ -78,7 +78,7 @@ public class CurrentMatchService {
 
     @Transactional
     public CurrentMatchDto findCurrentMatchByIntraId(String intraId) {
-        User user = userRepository.findByIntraId(intraId).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findByIntraId(intraId).orElseThrow(() -> new BusinessException("E0001"));
         CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
         CurrentMatchDto dto = null;
 
@@ -96,7 +96,7 @@ public class CurrentMatchService {
 
     @Transactional
     public List<CurrentMatchDto> findCurrentMatchByGame(CurrentMatchFindDto findDto) {
-        Game game = gameRepository.findById(findDto.getGame().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Game game = gameRepository.findById(findDto.getGame().getId()).orElseThrow(() -> new BusinessException("E0001"));
         List<CurrentMatch> matches = currentMatchRepository.findAllByGame(game);
         List<CurrentMatchDto> currentMatchDtos = matches.stream().map(CurrentMatchDto::from).collect(Collectors.toList());
         return currentMatchDtos;
@@ -104,7 +104,7 @@ public class CurrentMatchService {
 
     @Transactional
     public void removeCurrentMatch(CurrentMatchRemoveDto removeDto) {
-        User user = userRepository.findById(removeDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(removeDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         currentMatchRepository.deleteByUser(user);
     }
 
