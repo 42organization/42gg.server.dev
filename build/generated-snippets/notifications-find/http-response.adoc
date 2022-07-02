@@ -1,0 +1,57 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 1019
+
+{
+  "notifications" : [ {
+    "id" : 58,
+    "type" : "announce",
+    "isChecked" : false,
+    "message" : "공지사항",
+    "createdAt" : "2022-07-02T18:45:13.902581"
+  }, {
+    "id" : 57,
+    "type" : "imminent",
+    "time" : "2022-07-03T15:00:00",
+    "isChecked" : false,
+    "myTeam" : [ "hakim" ],
+    "enemyTeam" : [ "nheo" ],
+    "createdAt" : "2022-07-02T18:45:13.828836"
+  }, {
+    "id" : 56,
+    "type" : "matched",
+    "time" : "2022-07-03T15:00:00",
+    "isChecked" : false,
+    "createdAt" : "2022-07-02T18:45:13.812829"
+  }, {
+    "id" : 55,
+    "type" : "canceledbytime",
+    "time" : "2022-07-03T15:00:00",
+    "isChecked" : false,
+    "createdAt" : "2022-07-02T18:45:13.792133"
+  }, {
+    "id" : 54,
+    "type" : "canceledbyman",
+    "time" : "2022-07-03T15:00:00",
+    "isChecked" : false,
+    "createdAt" : "2022-07-02T18:45:13.773148"
+  }, {
+    "id" : 53,
+    "type" : "matched",
+    "time" : "2022-07-03T15:00:00",
+    "isChecked" : false,
+    "createdAt" : "2022-07-02T18:45:13.768835"
+  } ]
+}
+----
