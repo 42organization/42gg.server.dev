@@ -24,8 +24,8 @@ spring:
     oauth2.client:
       registration:
         42:
-          client-id: "353cdada0d271c99afd647ecb5c77f257750a212e40b613fe6847985bc1f21c6"
-          client-secret: "126a9ebf21bb84857bbae746af4f36ba74eefd24af9bceee5abd7cbe6530f5ce"
+          client-id: "1eded582676170d1dab786f3586c6a5b73555bad3c94adef564d79c256a08d71"
+          client-secret: "20d12429900a3a1eeb331197555921db1a59b95a828a45abebbad1e0d822d022"
 
   # Redis 설정
   cache:
@@ -41,7 +41,7 @@ logging:
 
   # cors 설정
 cors:
-  allowed-origins: 'http://localhost:3000'
+  allowed-origins: 'https://42gg.kr'
   allowed-methods: GET,POST,PUT,DELETE,OPTIONS,PATCH
   allowed-headers: '*'
   allowed-credentials: false
@@ -49,4 +49,4 @@ cors:
 
 info:
   web:
-    frontUrl: 'http://localhost:3000'
+    frontUrl: 'https://42gg.kr'
