@@ -77,9 +77,10 @@ public class SlotControllerImpl implements SlotController {
 
         checkIfUserHaveCurrentMatch(userId);
         checkIfUserHavePenalty(userId);
+        checkIfSlotAvailable(slot, type, user);
 //        checkIfSlotTimePassed(slot);
-
-        TeamAddUserDto teamAddUserDto = getTeamAddUserDto(slot, type, user);
+        //user가 들어갈 팀을 정한당
+        TeamAddUserDto teamAddUserDto = getTeamAddUserDto(slot, user);
 
         //유저가 슬롯에 입장하면 currentMatch에 등록된다.
         CurrentMatchAddDto matchAddDto = CurrentMatchAddDto.builder()
@@ -197,20 +198,27 @@ public class SlotControllerImpl implements SlotController {
         modifyCurrentMatch(team2.getUser2(), matchModifyDto);
     }
 
-    private TeamAddUserDto getTeamAddUserDto(SlotDto slot, GameType gameType, UserDto user) {
+    private TeamAddUserDto getTeamAddUserDto(SlotDto slot, UserDto user) {
         Integer teamId;
-        GameType slotType = slot.getType();
         TeamDto team1 = slot.getTeam1();
         TeamDto team2 = slot.getTeam2();
-        Integer headCount = slot.getHeadCount();
-        SeasonDto season = seasonService.findCurrentSeason();
-        Integer pppGap;
-        if (season == null) {
-            pppGap = 100;
-        } else {
-            pppGap = season.getPppGap();
-        }
+        GameType slotType = slot.getType();
         Integer maxTeamHeadCount = GameType.SINGLE.equals(slotType) ? 1 : 2;
+
+        if (team1.getHeadCount() < maxTeamHeadCount) {
+            teamId = team1.getId();
+        } else {
+            teamId = team2.getId();
+        }
+        TeamAddUserDto teamAddUserDto = TeamAddUserDto.builder()
+                .teamId(teamId)
+                .userId(user.getId())
+                .build();
+        return teamAddUserDto;
+    }
+
+    private void checkIfSlotAvailable(SlotDto slot, GameType gameType, UserDto user) {
+        Integer pppGap = getPppGapFromSeason();
 
         SlotFilterDto slotFilterDto = SlotFilterDto.builder()
                 .slotId(slot.getId())
@@ -222,21 +230,20 @@ public class SlotControllerImpl implements SlotController {
                 .pppGap(pppGap)
                 .headCount(slot.getHeadCount())
                 .build();
-        if (SlotStatusType.OPEN.equals(slotService.getStatus(slotFilterDto))) {
-            if (team1.getHeadCount() < maxTeamHeadCount) {
-                teamId = team1.getId();
-            } else {
-                teamId = team2.getId();
-            }
-        } else {
-            throw
-                    new BusinessException("{invalid.request}");
+        if (SlotStatusType.CLOSE.equals(slotService.getStatus(slotFilterDto))) {
+            throw new BusinessException("{invalid.request}");
         }
-        TeamAddUserDto teamAddUserDto = TeamAddUserDto.builder()
-                .teamId(teamId)
-                .userId(user.getId())
-                .build();
-        return teamAddUserDto;
+    }
+
+    private Integer getPppGapFromSeason() {
+        Integer pppGap;
+        SeasonDto season = seasonService.findCurrentSeason();
+        if (season == null) {
+            pppGap = 100;
+        } else {
+            pppGap = season.getPppGap();
+        }
+        return pppGap;
     }
 
     private TeamRemoveUserDto getTeamRemoveUserDto(SlotDto slot, UserDto user) {
