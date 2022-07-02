@@ -100,13 +100,14 @@ public class GameAdminControllerImpl implements GameAdminController {
     private void modifyUsersInfo(GameDto gameDto) {
         TeamDto updatedTeam1 = teamService.findById(gameDto.getTeam1().getId());
         TeamDto updatedTeam2 = teamService.findById(gameDto.getTeam2().getId());
-        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam1.getUser1(), updatedTeam2);
-        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam2.getUser2(), updatedTeam2);
-        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam1.getUser2(), updatedTeam1);
-        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam2.getUser1(), updatedTeam1);
+        Boolean isOneSide = Math.abs(updatedTeam1.getScore() - updatedTeam2.getScore()) == 2;
+        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam1.getUser1(), updatedTeam2, isOneSide);
+        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam2.getUser2(), updatedTeam2, isOneSide);
+        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam1.getUser2(), updatedTeam1, isOneSide);
+        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam2.getUser1(), updatedTeam1, isOneSide);
     }
 
-    private void modifyUserPPPAndPChangeAndRank(GameDto game, UserDto userDto, TeamDto enemyTeamDto) {
+    private void modifyUserPPPAndPChangeAndRank(GameDto game, UserDto userDto, TeamDto enemyTeamDto, Boolean isOneSide) {
         if (userDto == null) {
             return;
         }
@@ -115,7 +116,7 @@ public class GameAdminControllerImpl implements GameAdminController {
                 .userId(userDto.getIntraId())
                 .build());
         Integer userPreviousPpp = pChangeDto.getPppResult() - pChangeDto.getPppChange();
-        Boolean isOneSide = Math.abs(game.getTeam1().getScore() - game.getTeam2().getScore()) == 2;
+
         Integer newPppChange = EloRating.pppChange(userPreviousPpp, enemyTeamDto.getTeamPpp(),!enemyTeamDto.getWin(), isOneSide);
         Integer tmpPpp = userPreviousPpp + newPppChange;
         Integer userFinalPpp = tmpPpp > 0 ? tmpPpp : 0;
