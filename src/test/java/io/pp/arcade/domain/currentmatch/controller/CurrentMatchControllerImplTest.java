@@ -119,7 +119,9 @@ class CurrentMatchControllerImplTest {
          * - 해당 유저가 예약된 경기가 있으며 5분전이 아닐 경우
          * - 해당 유저가 예약된 경기가 있으며 5분전일 때, 매치가 성사되지 않을 경우
          * - 해당 유저가 예약된 경기가 있으며 5분전일 때, 매치가 성사된 경우
-         * - 해당 유저가 예약된 경기가 있으며 경기가 시작된 경우
+         * - 해당 유저가 예약된 경기가 있으며 경기가 시작된 경우 +
+         * - 시간이 지나도 매칭이 안되어 클로즈된 슬롯에 매칭 테이블 요청 보내는 경우 +
+         * - 유효하지 않은 토큰으로 매칭 테이블 요청을 보내는 경우 +
          * */
 
         // 해당 유저가 예약된 경기가 없을 경우
@@ -191,5 +193,21 @@ class CurrentMatchControllerImplTest {
                         .header("Authorization", "Bearer " + initiator.tokens[4].getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(document("current-match-info-gaming"));
+
+        // 유효하지 않은 토큰으로 매칭 테이블 요청을 보내는 경우
+        // 유저 : none
+        // 슬롯 : slot
+        team1 = Team.builder().teamPpp(100).headCount(2).user1(user3).user2(user4).score(0).build();
+        team2 = Team.builder().teamPpp(100).headCount(2).user1(user5).user2(user6).score(0).build();
+        saveTeam(team1);
+        saveTeam(team2);
+        slot = Slot.builder().tableId(1).team1(team1).team2(team2).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
+        slot = saveSlot(slot);
+        Game game1 = Game.builder().team1(team1).team2(team2).type(GameType.DOUBLE).season(1).slot(slot).time(slot.getTime()).status(StatusType.LIVE).build();
+        game = saveGame(game1);
+        currentMatchSave(game1, slot, user4, true, true);
+        mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isUnauthorized())
+                .andDo(document("current-match-info-unauthorized-request"));
     }
 }
