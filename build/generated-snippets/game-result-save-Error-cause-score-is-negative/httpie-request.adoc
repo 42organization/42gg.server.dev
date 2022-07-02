@@ -1,0 +1,9 @@
+[source,bash]
+----
+$ echo '{
+  "myTeamScore" : "2",
+  "enemyTeamScore" : "-3"
+}' | http POST 'http://localhost:8080/pingpong/games/result' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:Bearer 2'
+----

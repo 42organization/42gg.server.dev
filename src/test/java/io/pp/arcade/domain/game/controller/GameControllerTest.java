@@ -143,7 +143,8 @@ class GameControllerTest {
          * */
         mockMvc.perform(get("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + initiator.tokens[3].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("game-find-result-4XXError-cause-no-exists"));
         /*
          * 사용자 - 단식 진행 중인 경우
          * myTeam [{hakim, imageUri}]
@@ -157,7 +158,7 @@ class GameControllerTest {
                 .andExpect(jsonPath("$.enemyTeam[0].intraId").value(users[1].getIntraId()))
                 .andExpect(jsonPath("$.enemyTeam[0].userImageUri").value(users[1].getImageUri()))
                 .andExpect(status().isOk())
-                .andDo(document("find-game-results-Single"));
+                .andDo(document("game-find-results-single"));
         /*
          * 사용자 - 복식 진행 중인 경우
          * jekim wochae jabae jihyukim
@@ -176,7 +177,7 @@ class GameControllerTest {
                 .andExpect(jsonPath("$.enemyTeam[1].intraId").value(users[7].getIntraId()))
                 .andExpect(jsonPath("$.enemyTeam[1].userImageUri").value(users[7].getImageUri()))
                 .andExpect(status().isOk())
-                .andDo(document("find-game-results-Bungle"));
+                .andDo(document("game-find-results-double"));
     }
 
     @Test
@@ -195,7 +196,8 @@ class GameControllerTest {
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                 .params(params)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("game-find-results-4XXError-cause-gameId-is-not-Integer"));
 
         /*
          * gameId -> -1 (음수인 경우)
@@ -211,7 +213,8 @@ class GameControllerTest {
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
 //                .andExpect(jsonPath("$.games[0].gameId").value(endGames[endGames.length - 1].getId()))
                 .andExpect(jsonPath("$.games.length()").value(20))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("game-find-results-gameId-is-negative"));
 
         /*
          * gameId -> null
@@ -226,7 +229,8 @@ class GameControllerTest {
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(jsonPath("$.games[0].gameId").value(endGames[endGames.length - 1].getId()))
                 .andExpect(jsonPath("$.games.length()").value(20))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("game-find-result-gameId-is-null"));
 
         /*
          * count -> string (숫자가 아닌 경우)
@@ -239,7 +243,8 @@ class GameControllerTest {
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params11)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("game-find-results-4XXError-cause-count-is-string"));
 
         /*
          * count -> -1 (음수인 경우)
@@ -254,7 +259,8 @@ class GameControllerTest {
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(jsonPath("$.games[0].gameId").value(endGames[endGames.length - 1].getId()))
                 .andExpect(jsonPath("$.games.length()").value(20))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("game-find-results-count-is-negative"));
 
         /*
          * count -> null
@@ -269,7 +275,8 @@ class GameControllerTest {
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(jsonPath("$.games[0].gameId").value(endGames[endGames.length - 1].getId()))
                 .andExpect(jsonPath("$.games.length()").value(20))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("game-find-results-count-is-null"));
         /*
          * count -> 1234 (100이상인 경우)
          * -> 100개의 게임정보 반환
@@ -283,7 +290,8 @@ class GameControllerTest {
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(jsonPath("$.games[0].gameId").value(endGames[endGames.length - 1].getId()))
                 .andExpect(jsonPath("$.games.length()").value(100))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andDo(document("game-find-results-count-is-bigger-than-100"));
 
         /*
          * status -> NOTHING (다른 값인 경우)
@@ -302,7 +310,7 @@ class GameControllerTest {
                 .andExpect(jsonPath("$.games[3].gameId").value(endGames[endGames.length - 1].getId()))
                 .andExpect(jsonPath("$.games.length()").value(20))
                 .andExpect(status().isOk())
-                .andDo(document("game-user-info"));
+                .andDo(document("game-user-info-status-wrong"));
 
         /*
          * status -> null
@@ -320,10 +328,10 @@ class GameControllerTest {
                 .andExpect(jsonPath("$.games[3].gameId").value(endGames[endGames.length - 1].getId()))
                 .andExpect(jsonPath("$.games.length()").value(20))
                 .andExpect(status().isOk())
-                .andDo(document("game-user-info"));
+                .andDo(document("game-user-info-status-is-null"));
 
         /*
-         * GameId -> 100
+         * GameId -> 1000
          * -> GameId 99번부터 리스트 반환
          * -> 200
          * */
@@ -337,7 +345,7 @@ class GameControllerTest {
                 .andExpect(jsonPath("$.games.length()").value(20))
                 .andExpect(status().isOk())
 //                .andExpect(jsonPath("$.games[0].gameId").value(endGames[99 - 1].getId()))
-                .andDo(document("find-games-game-id-1000"));
+                .andDo(document("game-find-results-find-id-1000"));
     }
 
     @Test
@@ -353,7 +361,8 @@ class GameControllerTest {
         mockMvc.perform(get("/pingpong/users/{intraId}/games","NOTFOUND").contentType(MediaType.APPLICATION_JSON)
                         .params(params2)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("game-find-results-4xxError-cause-couldn't-find-intraId"));
 
         /*
          * 사용자 - 경기기록이 없는 경우
@@ -368,7 +377,7 @@ class GameControllerTest {
                 .andExpect(jsonPath("$.games").isEmpty())
                 .andExpect(jsonPath("$.lastGameId").value(0))
                 .andExpect(status().isOk())
-                .andDo(document("find-game-results-only-user-request"));
+                .andDo(document("find-game-results-theres-no-game-record"));
     }
 
     @Test
@@ -388,7 +397,8 @@ class GameControllerTest {
 //        - Score값이 null인 경우
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("game-result-save-Error-cause-score-is-null"));
 
 //        - Score별 값이 3이상일 경우
         Map<String, String> body2 = new HashMap<>();
@@ -397,7 +407,8 @@ class GameControllerTest {
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body2))
                         .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("game-result-save-Error-cause-score-is-bigger-than-3"));
 
 //        - Score값이 1:1 경우
         Map<String, String> body3 = new HashMap<>();
@@ -406,16 +417,18 @@ class GameControllerTest {
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body3))
                         .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("game-result-save-Error-cause-score-1:1"));
 
 //        - Score합이 4이상일 경우
         Map<String, String> body4 = new HashMap<>();
-        body4.put("myTeamScore", "1");
-        body4.put("enemyTeamScore", "5");
+        body4.put("myTeamScore", "2");
+        body4.put("enemyTeamScore", "2");
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body4))
                         .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("game-result-save-Error-cause-score-sum-is-bigger-than-4"));
 
 //        - Score값이 음수일 경우
         Map<String, String> body5 = new HashMap<>();
@@ -424,7 +437,8 @@ class GameControllerTest {
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body5))
                         .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("game-result-save-Error-cause-score-is-negative"));
 
 //        - Score값이 소수인 경우
         Map<String, String> body6 = new HashMap<>();
@@ -433,7 +447,8 @@ class GameControllerTest {
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body6))
                         .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("game-result-save-Error-cause-score-is-decimal"));
 
 //        - Score가 숫자가 아닌 경우
         Map<String, String> body7 = new HashMap<>();
@@ -442,7 +457,8 @@ class GameControllerTest {
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body7))
                         .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isBadRequest())
+                .andDo(document("game-result-save-Error-cause-score-is-not-integer"));
 
 //        정 상 요 청
         Map<String, String> body8 = new HashMap<>();
@@ -451,7 +467,8 @@ class GameControllerTest {
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body8))
                         .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
-                .andExpect(status().isCreated());
+                .andExpect(status().isCreated())
+                .andDo(document("game-result-save-isCreated"));
 
 //        - 게임결과 입력이 끝난 경우
 //          → 202 (Accepted)
@@ -461,7 +478,8 @@ class GameControllerTest {
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body9))
                         .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
-                .andExpect(status().isAccepted());
+                .andExpect(status().isAccepted())
+                .andDo(document("game-result-save-isAccepted"));
 
 //        입력된결과확인
         LinkedMultiValueMap<String, String> params = new LinkedMultiValueMap<>();
@@ -470,6 +488,6 @@ class GameControllerTest {
                 .params(params)
                 .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("find-game-results-only-user-request"));
+                .andDo(document("game-find-results-only-user-request"));
     }
 }
