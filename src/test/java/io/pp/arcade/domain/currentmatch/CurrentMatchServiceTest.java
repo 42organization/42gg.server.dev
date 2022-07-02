@@ -85,7 +85,7 @@ class CurrentMatchServiceTest {
                 .userId(user1.getId())
                 .build();
         currentMatchService.addCurrentMatch(addDto);
-        CurrentMatch match = currentMatchRepository.findByUser(user1).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        CurrentMatch match = currentMatchRepository.findByUser(user1).orElseThrow(() -> new BusinessException("E0001"));
 
         Assertions.assertThat(match.getUser()).isEqualTo(user1);
     }
@@ -106,7 +106,7 @@ class CurrentMatchServiceTest {
                 .build();
 
         currentMatchService.modifyCurrentMatch(modifyDto);
-        currentMatch = currentMatchRepository.findById(currentMatch.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        currentMatch = currentMatchRepository.findById(currentMatch.getId()).orElseThrow(() -> new BusinessException("E0001"));
         Assertions.assertThat(currentMatch.getIsMatched()).isEqualTo(true);
         Assertions.assertThat(currentMatch.getMatchImminent()).isEqualTo(false);
     }
@@ -124,7 +124,7 @@ class CurrentMatchServiceTest {
                 .build();
 
         currentMatchService.saveGameInCurrentMatch(saveGameDto);
-        currentMatch = currentMatchRepository.findById(currentMatch.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        currentMatch = currentMatchRepository.findById(currentMatch.getId()).orElseThrow(() -> new BusinessException("E0001"));
         Assertions.assertThat(currentMatch.getGame()).isEqualTo(game);
     }
 
