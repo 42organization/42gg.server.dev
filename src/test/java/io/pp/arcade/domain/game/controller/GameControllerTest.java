@@ -268,7 +268,7 @@ class GameControllerTest {
          * -> 200
          * */
         MultiValueMap<String,String> params4 = new LinkedMultiValueMap<>();
-        params4.add("gameId", "1234");
+        params4.add("gameId", "12345678");
         params4.add("status", StatusType.END.getCode());
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                 .params(params4)
@@ -283,7 +283,7 @@ class GameControllerTest {
          * -> 200
          * */
         MultiValueMap<String,String> params5 = new LinkedMultiValueMap<>();
-        params5.add("count", "1234");
+        params5.add("count", "12345678");
         params5.add("status", StatusType.END.getCode());
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                 .params(params5)
@@ -336,7 +336,7 @@ class GameControllerTest {
          * -> 200
          * */
         MultiValueMap<String,String> params8 = new LinkedMultiValueMap<>();
-        params8.add("gameId", "1000");
+        params8.add("gameId", "12345678");
         params8.add("count", "20");
         params8.add("status", StatusType.END.getCode());
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
