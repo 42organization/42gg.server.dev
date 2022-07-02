@@ -198,6 +198,15 @@ public class SlotControllerImpl implements SlotController {
     }
 
     private TeamAddUserDto getTeamAddUserDto(SlotDto slot, GameType gameType, UserDto user) {
+        Integer teamId = whichTeamToGo(slot, gameType, user);
+        TeamAddUserDto teamAddUserDto = TeamAddUserDto.builder()
+                .teamId(teamId)
+                .userId(user.getId())
+                .build();
+        return teamAddUserDto;
+    }
+
+    private Integer whichTeamToGo(SlotDto slot, GameType gameType, UserDto user) {
         Integer teamId;
         GameType slotType = slot.getType();
         TeamDto team1 = slot.getTeam1();
@@ -232,11 +241,7 @@ public class SlotControllerImpl implements SlotController {
             throw
                     new BusinessException("{invalid.request}");
         }
-        TeamAddUserDto teamAddUserDto = TeamAddUserDto.builder()
-                .teamId(teamId)
-                .userId(user.getId())
-                .build();
-        return teamAddUserDto;
+        return teamId;
     }
 
     private TeamRemoveUserDto getTeamRemoveUserDto(SlotDto slot, UserDto user) {
