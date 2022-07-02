@@ -19,7 +19,6 @@ import io.pp.arcade.domain.team.dto.TeamRemoveUserDto;
 import io.pp.arcade.domain.slot.dto.SlotStatusResponseDto;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.exception.BusinessException;
-import io.pp.arcade.global.exception.entity.ExceptionEntity;
 import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.scheduler.SlotGenerator;
 import io.pp.arcade.global.type.GameType;
@@ -29,9 +28,7 @@ import io.pp.arcade.global.util.HeaderUtil;
 import io.pp.arcade.global.util.NotiGenerater;
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -119,14 +116,18 @@ public class SlotControllerImpl implements SlotController {
 
         CurrentMatchRemoveDto currentMatchRemoveDto = CurrentMatchRemoveDto.builder()
                 .userId(user.getId()).build();
-        if (currentMatch.getIsMatched() == true) {
-            falsifyIsMatchedForRemainders(currentMatch.getSlot());
-            notiGenerater.addCancelNotisBySlot(NotiCanceledTypeDto.builder().slotDto(slot).notiType(NotiType.CANCELEDBYMAN).build());
-            redisTemplate.opsForValue().set(Key.PENALTY_USER + user.getIntraId(), "true", 60, TimeUnit.SECONDS);
-        }
         currentMatchService.removeCurrentMatch(currentMatchRemoveDto);
         teamService.removeUserInTeam(getTeamRemoveUserDto(slot, user));
         slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
+        checkIsSlotMatched(user, currentMatch, slot);
+    }
+
+    private void checkIsSlotMatched(UserDto user, CurrentMatchDto currentMatch, SlotDto slot) throws MessagingException {
+        if (currentMatch.getIsMatched() == true) {
+            falsifyIsMatchedForRemainders(currentMatch.getSlot());
+            redisTemplate.opsForValue().set(Key.PENALTY_USER + user.getIntraId(), "true", 60, TimeUnit.SECONDS);
+            notiGenerater.addCancelNotisBySlot(NotiCanceledTypeDto.builder().slotDto(slot).notiType(NotiType.CANCELEDBYMAN).build());
+        }
     }
 
     private void checkIfUserRemovable(CurrentMatchDto currentMatch, SlotDto slot) {
