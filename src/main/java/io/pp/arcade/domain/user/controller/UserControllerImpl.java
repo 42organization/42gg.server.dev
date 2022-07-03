@@ -11,12 +11,12 @@ import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.domain.rank.dto.RankFindDto;
+import io.pp.arcade.domain.rank.dto.RankModifyStatusMessageDto;
 import io.pp.arcade.domain.rank.dto.RankUserDto;
-import io.pp.arcade.domain.rank.service.RankServiceImpl;
+import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.*;
-import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
@@ -37,11 +37,11 @@ public class UserControllerImpl implements UserController {
     private final NotiService notiService;
     private final CurrentMatchService currentMatchService;
     private final TokenService tokenService;
-    private final RankServiceImpl rankService;
+    private final RankRedisService rankRedisService;
 
-    /* *
+    /*
      * [메인 페이지]
-     * 유저 기본 정보 조회
+     * - 유저 정보 조회
      * */
     @Override
     @GetMapping(value = "/users")
@@ -54,9 +54,9 @@ public class UserControllerImpl implements UserController {
         return responseDto;
     }
 
-    /* *
+    /*
      * [프로필 페이지]
-     * 유저 프로필 정보 조회
+     * - 유저 프로필 조회
      * */
     @Override
     @GetMapping(value = "/users/{targetUserId}/detail")
@@ -64,9 +64,13 @@ public class UserControllerImpl implements UserController {
         UserDto curUser = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         UserDto targetUser = userService.findByIntraId(UserFindDto.builder().intraId(targetUserId).build());
         // 일단 게임타입은 SINGLE로 구현
-        RankUserDto rankDto = rankService.findRankById(RankFindDto.builder().intraId(targetUserId).gameType(GameType.SINGLE).build());
+        RankUserDto rankDto = rankRedisService.findRankById(RankFindDto.builder().intraId(targetUserId).gameType(GameType.SINGLE).build());
+        UserRivalRecordDto rivalRecord = UserRivalRecordDto.builder().curUserWin(0).targetUserWin(0).build();
+        if (!targetUserId.equals(curUser.getIntraId())) {
+            rivalRecord = getRivalRecord(curUser, targetUser);
+        }
         UserDetailResponseDto responseDto = UserDetailResponseDto.builder()
-                .userId(targetUser.getIntraId())
+                .intraId(targetUser.getIntraId())
                 .userImageUri(targetUser.getImageUri())
                 .racketType(targetUser.getRacketType())
                 .ppp(targetUser.getPpp())
@@ -75,13 +79,14 @@ public class UserControllerImpl implements UserController {
                 .losses(rankDto.getLosses())
                 .winRate(rankDto.getWinRate())
                 .rank(rankDto.getRank())
+                .rivalRecord(rivalRecord)
                 .build();
         return responseDto;
     }
 
-    /* *
+    /*
      * [프로필 페이지]
-     * 유저 최근 전적 경향 조회
+     * - 유저 최근 전적 경향 조회
      * */
     @Override
     @GetMapping(value = "/users/{userId}/historics")
@@ -103,20 +108,26 @@ public class UserControllerImpl implements UserController {
         return responseDto;
     }
 
+    /*
+     * [프로필 페이지]
+     * - 유저 프로필 수정
+     */
     @Override
     @PutMapping(value = "/users/detail")
-    public void userModifyProfile(HttpServletRequest request) {
+    public void userModifyProfile(UserModifyProfileRequestDto requestDto, HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        RankModifyStatusMessageDto modifyDto = RankModifyStatusMessageDto.builder().statusMessage(requestDto.getStatusMessage()).intraId(user.getIntraId()).build();
+        rankRedisService.modifyRankStatusMessage(modifyDto);
         userService.modifyUserProfile(UserModifyProfileDto.builder()
                 .userId(user.getId())
-                .userImageUri(user.getImageUri())
-                .racketType(user.getRacketType())
-                .statusMessage(user.getStatusMessage()).build());
+                .racketType(requestDto.getRacketType())
+                .statusMessage(requestDto.getStatusMessage()).build());
     }
 
     @Override
     @GetMapping(value = "/users/searches")
-    public UserSearchResultResponseDto userSearchResult(String inquiringString) {
+    public UserSearchResultResponseDto userSearchResult(String inquiringString, HttpServletRequest request) {
+        tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         List<String> users = userService.findByPartsOfIntraId(UserSearchRequestDto.builder().intraId(inquiringString).build())
                 .stream().map(UserDto::getIntraId).collect(Collectors.toList());
         return UserSearchResultResponseDto.builder().users(users).build();
@@ -138,5 +149,26 @@ public class UserControllerImpl implements UserController {
                 .event(event)
                 .build();
         return userLiveInfoResponse;
+    }
+
+    private UserRivalRecordDto getRivalRecord(UserDto curUser, UserDto targetUser) {
+        List<PChangeDto> curUserPChanges = pChangeService.findPChangeByUserIdNotPage(PChangeFindDto.builder().userId(curUser.getIntraId()).build());
+        List<PChangeDto> targetUserPChanges = pChangeService.findPChangeByUserIdNotPage(PChangeFindDto.builder().userId(targetUser.getIntraId()).build());
+        Integer curUserWin = 0;
+        Integer tarGetUserWin = 0;
+        for (PChangeDto curUsers : curUserPChanges) {
+            for (PChangeDto targetUsers : targetUserPChanges) {
+                if (curUsers.getGame().getId().equals(targetUsers.getGame().getId())
+                        && (curUsers.getPppChange() * targetUsers.getPppChange() < 0)) {
+                    if (curUsers.getPppChange() > 0) {
+                        curUserWin += 1;
+                    } else if (curUsers.getPppChange() < 0) {
+                        tarGetUserWin += 1;
+                    }
+                }
+            }
+        }
+        UserRivalRecordDto dto = UserRivalRecordDto.builder().curUserWin(curUserWin).targetUserWin(tarGetUserWin).build();
+        return dto;
     }
 }

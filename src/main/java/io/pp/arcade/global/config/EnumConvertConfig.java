@@ -1,6 +1,7 @@
 package io.pp.arcade.global.config;
 
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.RacketType;
 import io.pp.arcade.global.type.StatusType;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
@@ -15,7 +16,8 @@ public class EnumConvertConfig {
         @Override
         public GameType convert(String source) {
             try {
-                return GameType.valueOf(source.toUpperCase(Locale.ROOT));
+                GameType gameType = GameType.getEnumFromValue(source.toUpperCase(Locale.ROOT));
+                return gameType;
             } catch (Exception e) {
                 return null;
             }
@@ -26,7 +28,18 @@ public class EnumConvertConfig {
         @Override
         public StatusType convert(String source) {
             try {
-                return StatusType.valueOf(source.toUpperCase());
+                return StatusType.valueOf(source.toUpperCase(Locale.ROOT));
+            } catch (Exception e) {
+                return null;
+            }
+        }
+    }
+    @Component
+    public class StringToRacketTypeEnumConverter implements Converter<String, RacketType> {
+        @Override
+        public RacketType convert(String source) {
+            try {
+                return RacketType.valueOf(source.toUpperCase(Locale.ROOT));
             } catch (Exception e) {
                 return null;
             }

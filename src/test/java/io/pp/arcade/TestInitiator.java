@@ -16,6 +16,7 @@ import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.RacketType;
@@ -53,8 +54,7 @@ public class TestInitiator {
     UserRepository userRepository;
     @Autowired
     private RedisTemplate redisTemplate;
-    @Autowired
-    private RedisTemplate<String, RankRedis> redisRank;
+
 
     public User[] users;
     public Token[] tokens;
@@ -62,21 +62,21 @@ public class TestInitiator {
     public Slot[] slots;
     public RankRedis[] ranks;
     public void letsgo() {
-        users = new User[11];
-        users[0] = userRepository.save(User.builder().intraId("hakim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1040).roleType(RoleType.ADMIN).racketType(RacketType.SHAKEHAND).build());
-        users[1] = userRepository.save(User.builder().intraId("nheo").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1030).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
+        users = new User[12];
+        users[0] = userRepository.save(User.builder().intraId("hakim").eMail("hihihoho").imageUri("hakim.jpg").statusMessage("kikikaka").ppp(1040).roleType(RoleType.ADMIN).racketType(RacketType.SHAKEHAND).build());
+        users[1] = userRepository.save(User.builder().intraId("nheo").eMail("hihihoho").imageUri("neho.jpg").statusMessage("kikikaka").ppp(1030).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[2] = userRepository.save(User.builder().intraId("donghyuk").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1020).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[3] = userRepository.save(User.builder().intraId("jiyun").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1010).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
-        users[4] = userRepository.save(User.builder().intraId("jekim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(990).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
-        users[5] = userRepository.save(User.builder().intraId("wochae").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(980).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
-        users[6] = userRepository.save(User.builder().intraId("jabae").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1000).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
-        users[7] = userRepository.save(User.builder().intraId("jihyukim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(992).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
+        users[4] = userRepository.save(User.builder().intraId("jekim").eMail("hihihoho").imageUri("jekim.jpg").statusMessage("kikikaka").ppp(990).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
+        users[5] = userRepository.save(User.builder().intraId("wochae").eMail("hihihoho").imageUri("wochae.jpg").statusMessage("kikikaka").ppp(980).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
+        users[6] = userRepository.save(User.builder().intraId("jabae").eMail("hihihoho").imageUri("jabae.jpg").statusMessage("kikikaka").ppp(1000).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
+        users[7] = userRepository.save(User.builder().intraId("jihyukim").eMail("hihihoho").imageUri("jihyukim.jpg").statusMessage("kikikaka").ppp(992).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[8] = userRepository.save(User.builder().intraId("daekim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(996).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[9] = userRepository.save(User.builder().intraId("sujpark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(994).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[10] = userRepository.save(User.builder().intraId("kipark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(100).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
-
-        tokens = new Token[11];
-        for (Integer i = 0; i < 11; i++) {
+        users[11] = userRepository.save(User.builder().intraId("jujeon").eMail("hihi").imageUri("null").statusMessage("kiki").ppp(1000).roleType(RoleType.USER).racketType(RacketType.DUAL).build());
+        tokens = new Token[12];
+        for (Integer i = 0; i < 12; i++) {
             tokens[i] = tokenRepository.save(new Token(users[i], i.toString(), i.toString()));
         }
 
@@ -84,16 +84,16 @@ public class TestInitiator {
         List<User> userList = Arrays.stream(users).collect(Collectors.toList());
         for (User user : userList) {
             int idx = userList.indexOf(user);
-            RankRedis singleRank = RankRedis.from(user, GameType.SINGLE.getKey());
-            RankRedis doubleRank = RankRedis.from(user, GameType.BUNGLE.getKey());
+            RankRedis singleRank = RankRedis.from(UserDto.from(user), GameType.SINGLE);
+            RankRedis doubleRank = RankRedis.from(UserDto.from(user), GameType.DOUBLE);
 
             ranks[idx] = singleRank;
             ranks[users.length + idx] = doubleRank;
             redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.SINGLE), singleRank);
-            redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.BUNGLE), doubleRank);
+            redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.DOUBLE), doubleRank);
 
             redisTemplate.opsForZSet().add(getRankKey(GameType.SINGLE), getUserRankKey(user.getIntraId(), GameType.SINGLE), user.getPpp());
-            redisTemplate.opsForZSet().add(getRankKey(GameType.BUNGLE), getUserRankKey(user.getIntraId(), GameType.BUNGLE), user.getPpp());
+            redisTemplate.opsForZSet().add(getRankKey(GameType.DOUBLE), getUserRankKey(user.getIntraId(), GameType.DOUBLE), user.getPpp());
         }
 
         teams = new Team[8];
@@ -119,24 +119,15 @@ public class TestInitiator {
         Season testSeason = seasonRepository.save(Season.builder().seasonName("Test").startTime(LocalDateTime.now().minusYears(1)).endTime(LocalDateTime.now().plusYears(1)).startPpp(1000).pppGap(150).build());
     }
 
-    private String getUserKey(String key) { return Key.RANK_USER + key; }
-
     private String getUserKey(String intraId, GameType gameType) {
-        return Key.RANK_USER + intraId + gameType.getKey();
+        return Key.RANK_USER + intraId + gameType.getCode();
     }
 
     private String getUserRankKey(String intraId, GameType gameType) {
-        return intraId + gameType.getKey();
+        return intraId + gameType.getCode();
     }
 
     private String getRankKey(GameType gameType) {
-        return gameType.getKey();
-    }
-
-
-    private Integer getRanking(RankRedis userInfo , GameType gameType){
-        Integer totalGames = userInfo.getLosses() + userInfo.getWins();
-        Integer ranking= (totalGames == 0) ? -1 : redisRank.opsForZSet().reverseRank(getRankKey(gameType), getUserRankKey(userInfo.getIntraId(), gameType)).intValue() + 1;
-        return ranking;
+        return gameType.getCode();
     }
 }

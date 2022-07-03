@@ -19,12 +19,12 @@ public class Team {
 
     @Setter
     @OneToOne
-    @JoinColumn(name = "user1_id")
+    @JoinColumn(name = "user1_id", referencedColumnName = "intra_id")
     private User user1;
 
     @Setter
     @OneToOne
-    @JoinColumn(name = "user2_id")
+    @JoinColumn(name = "user2_id", referencedColumnName = "intra_id")
     private User user2;
 
     @NotNull

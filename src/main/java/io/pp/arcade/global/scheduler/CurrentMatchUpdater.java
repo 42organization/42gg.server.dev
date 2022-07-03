@@ -1,39 +1,42 @@
 package io.pp.arcade.global.scheduler;
 
 import io.pp.arcade.domain.currentmatch.CurrentMatchService;
-import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchModifyDto;
-import io.pp.arcade.domain.game.GameService;
-import io.pp.arcade.domain.noti.NotiService;
-import io.pp.arcade.domain.noti.dto.NotiAddDto;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.dto.TeamDto;
-import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.util.NotiGenerater;
 import lombok.AllArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
+import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 
+//@Scheduled(cron = "0 */" + intervalTime + " " + startTime + "-" + endTime + " * * *", zone = "Asia/Seoul") // 초 분 시 일 월 년 요일
 @Component
-@AllArgsConstructor
-public class CurrentMatchUpdater {
+public class CurrentMatchUpdater extends AbstractScheduler {
     private final SlotService slotService;
     private final NotiGenerater notiGenerater;
     private final CurrentMatchService currentMatchService;
-    private final String startTime = "12";
-    private final String endTime = "18";
-    private final String intervalTime = "5";
 
-    @Scheduled(cron = "0 */" + intervalTime + " " + startTime + "-" + endTime + " * * *", zone = "Asia/Seoul") // 초 분 시 일 월 년 요일
+    public CurrentMatchUpdater(SlotService slotService, NotiGenerater notiGenerater, CurrentMatchService currentMatchService) {
+        this.slotService = slotService;
+        this.notiGenerater = notiGenerater;
+        this.currentMatchService = currentMatchService;
+        this.setCron("0 */5 12-18 * * *");
+        this.setInterval(5);
+    }
+
     public void updateIsImminent() throws MessagingException {
         LocalDateTime now = LocalDateTime.now();
-        now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute() + 5, 0);
+        now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
+        now = now.plusMinutes(5);
 
         SlotDto slot = slotService.findByTime(now);
         if (slot == null) {
@@ -63,5 +66,16 @@ public class CurrentMatchUpdater {
 
             currentMatchService.modifyCurrentMatch(modifyDto);
         }
+    }
+
+    @Override
+    public Runnable runnable() {
+        return () -> {
+            try {
+                updateIsImminent();
+            } catch (MessagingException e) {
+                e.printStackTrace();
+            }
+        };
     }
 }

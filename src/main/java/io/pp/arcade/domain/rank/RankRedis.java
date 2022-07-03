@@ -1,6 +1,9 @@
 package io.pp.arcade.domain.rank;
 
+import io.pp.arcade.domain.game.Game;
+import io.pp.arcade.domain.rank.dto.RankDto;
 import io.pp.arcade.domain.user.User;
+import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.RacketType;
 import io.pp.arcade.global.type.GameType;
 import lombok.Builder;
@@ -22,15 +25,15 @@ public class RankRedis implements Serializable {
     @Id
     private Integer id;
 
-    @Indexed
+    @Indexed /* Redis 조회시 사용되는 변수 */
     private String intraId;
-
-    private Integer ppp;
 
     private RacketType racketType;
 
     @Indexed
     private GameType gameType;
+
+    private Integer ppp;
 
     private Integer wins;
 
@@ -55,18 +58,35 @@ public class RankRedis implements Serializable {
         this.statusMessage = statusMessage;
     }
 
-    public static RankRedis from (User user, String gameType){
+    public static RankRedis from (UserDto user, GameType gameType){
         return RankRedis.builder()
                 .id(user.getId())
                 .intraId(user.getIntraId())
                 .ppp(user.getPpp())
                 .statusMessage(user.getStatusMessage())
-                .gameType(GameType.valueOf(gameType))
+                .gameType(gameType)
                 .racketType(user.getRacketType())
                 .wins(0)
                 .losses(0)
                 .winRate(0)
                 .build();
+    }
+
+    public static RankRedis from (RankDto rankDto, GameType gameType){
+        Integer losses = rankDto.getLosses();
+        Integer wins = rankDto.getWins();
+        RankRedis rankRedis = RankRedis.builder()
+                .id(rankDto.getId())
+                .intraId(rankDto.getUser().getIntraId())
+                .ppp(rankDto.getPpp())
+                .statusMessage(rankDto.getUser().getStatusMessage())
+                .gameType(gameType)
+                .racketType(rankDto.getRacketType())
+                .wins(rankDto.getWins())
+                .losses(rankDto.getLosses())
+                .winRate((losses + wins) == 0 ? 0 : ((double)wins / (double)(losses + wins) * 100))
+                .build();
+        return rankRedis;
     }
 
     public void update(Boolean isWin, Integer ppp){
@@ -76,6 +96,10 @@ public class RankRedis implements Serializable {
             this.losses++;
         }
         this.ppp = ppp;
-        this.winRate = (double)wins / (wins + losses);
+        this.winRate = (double)wins / (wins + losses) * 100;
+    }
+
+    public void updateStatusMessage(String statusMessage){
+        this.setStatusMessage(statusMessage);
     }
 }

@@ -3,13 +3,9 @@ package io.pp.arcade.domain.noti.controller;
 import io.pp.arcade.domain.noti.NotiService;
 import io.pp.arcade.domain.noti.dto.*;
 import io.pp.arcade.domain.security.jwt.TokenService;
-import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamPosDto;
-import io.pp.arcade.domain.user.User;
-import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
-import io.pp.arcade.domain.user.dto.UserFindDto;
 import io.pp.arcade.global.type.NotiType;
 import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
@@ -80,7 +76,7 @@ public class NotiControllerImpl implements NotiController {
                         .enemyTeam(enemyTeam)
                         .createdAt(noti.getCreatdDate())
                         .build());
-            } else if (noti.getType().equals(NotiType.CANCELED)) {
+            } else if (noti.getType().equals(NotiType.CANCELEDBYMAN) || noti.getType().equals(NotiType.CANCELEDBYTIME)) {
                 notiDtos.add(NotiCanceledDto.builder()
                         .id(noti.getId())
                         .type(noti.getType())
@@ -101,7 +97,9 @@ public class NotiControllerImpl implements NotiController {
 
     @Override
     @DeleteMapping(value = "notifications/{notiId}")
-    public void notiRemoveOne(Integer notiId) {
+    public void notiRemoveOne(Integer notiId, HttpServletRequest request) {
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        notiService.findNotiByIdAndUser(NotiFindDto.builder().notiId(notiId).user(user).build());
         NotiDeleteDto deleteDto = NotiDeleteDto.builder()
                 .notiId(notiId)
                 .build();

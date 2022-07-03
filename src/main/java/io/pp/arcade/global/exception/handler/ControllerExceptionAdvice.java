@@ -2,10 +2,12 @@ package io.pp.arcade.global.exception.handler;
 
 import io.pp.arcade.global.exception.AccessException;
 import io.pp.arcade.global.exception.BusinessException;
-import io.pp.arcade.global.exception.entity.ExceptionReponse;
+import io.pp.arcade.global.exception.entity.ExceptionResponse;
+import io.pp.arcade.global.util.ApplicationYmlRead;
 import io.pp.arcade.global.util.AsyncMailSender;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -34,13 +36,14 @@ public class ControllerExceptionAdvice {
     private final MessageSource messageSource;
     private final JavaMailSender javaMailSender;
     private final AsyncMailSender asyncMailSender;
+    private final ApplicationYmlRead applicationYmlRead;
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ExceptionReponse> constraintViolationExceptionHandle(ConstraintViolationException ex) {
+    public ResponseEntity<ExceptionResponse> constraintViolationExceptionHandle(ConstraintViolationException ex) {
         log.info("ConstraintViolationException", ex);
         for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
-            String message = messageSource.getMessage(filter(violation.getMessage()), null, Locale.KOREA);
-            ExceptionReponse response = ExceptionReponse.from("E0001", message);
+//            String message = messageSource.getMessage(filter(violation.getMessage()), null, Locale.KOREA);
+            ExceptionResponse response = ExceptionResponse.from("E0001", "잘못된 요청입니다.");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
         return null;
@@ -51,9 +54,9 @@ public class ControllerExceptionAdvice {
      * 주로 @RequestParam enum으로 binding 못했을 경우 발생
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    protected ResponseEntity<ExceptionReponse> methodArgumentTypeMismatchExceptionHandle(MethodArgumentTypeMismatchException ex) {
+    protected ResponseEntity<ExceptionResponse> methodArgumentTypeMismatchExceptionHandle(MethodArgumentTypeMismatchException ex) {
         log.error("MethodArgumentTypeMismatchException", ex);
-        ExceptionReponse response = ExceptionReponse.from("E0001", "잘못된 요청입니다");
+        ExceptionResponse response = ExceptionResponse.from("E0001", "잘못된 요청입니다");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -63,9 +66,9 @@ public class ControllerExceptionAdvice {
      *  주로 @RequestBody, @RequestPart 어노테이션에서 발생
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<ExceptionReponse> methodArgumentNotValidExceptionHandle(MethodArgumentNotValidException ex) {
+    protected ResponseEntity<ExceptionResponse> methodArgumentNotValidExceptionHandle(MethodArgumentNotValidException ex) {
         log.info("MethodArgumentNotValidException", ex);
-        ExceptionReponse response = ExceptionReponse.from("E0001", ex);
+        ExceptionResponse response = ExceptionResponse.from("E0001", "잘못된 요청입니다");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
@@ -73,35 +76,35 @@ public class ControllerExceptionAdvice {
      * 지원하지 않은 HTTP method 호출 할 경우 발생
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    protected ResponseEntity<ExceptionReponse> httpRequestMethodNotSupportedExceptionHandle(HttpRequestMethodNotSupportedException ex) {
+    protected ResponseEntity<ExceptionResponse> httpRequestMethodNotSupportedExceptionHandle(HttpRequestMethodNotSupportedException ex) {
         log.error("HttpRequestMethodNotSupportedException", ex);
-        ExceptionReponse response = ExceptionReponse.from("405");
+        ExceptionResponse response = ExceptionResponse.from("405");
         return new ResponseEntity<>(response, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
     @ExceptionHandler(BindException.class)
-    protected ResponseEntity<ExceptionReponse> bindExceptionHandle(BindException ex) {
+    protected ResponseEntity<ExceptionResponse> bindExceptionHandle(BindException ex) {
         log.error("BindException", ex);
-        ExceptionReponse response = ExceptionReponse.from("E0001", ex.getBindingResult());
+        ExceptionResponse response = ExceptionResponse.from("E0001", "잘못된 요청입니다");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BusinessException.class)
-    protected ResponseEntity<ExceptionReponse> httpRequestMethodNotSupportedExceptionHandle(BusinessException ex) throws MessagingException {
+    protected ResponseEntity<ExceptionResponse> httpRequestMethodNotSupportedExceptionHandle(BusinessException ex) throws MessagingException {
         log.error("BusinessException", ex);
-        String message = messageSource.getMessage(filter(ex.getMessage()), null, Locale.KOREA);
-        sendMail(message);
-        ExceptionReponse response = ExceptionReponse.from("E0001", message);
+        //String message = messageSource.getMessage(filter(ex.getMessage()), null, Locale.KOREA);
+        ExceptionResponse response = ExceptionResponse.from(ex.getMessage());
+        sendMail(response.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(AccessException.class)
-    protected ResponseEntity<Object> customAccessExceptionHandle(AccessException ex) throws URISyntaxException {
-        String message = messageSource.getMessage(filter(ex.getRedirectUrl()), null, Locale.KOREA);
-        URI redirectUri = new URI(message);
+    protected ResponseEntity<ExceptionResponse> customAccessExceptionHandle(AccessException ex) throws URISyntaxException {
+        //String message = messageSource.getMessage(filter(ex.getRedirectUrl()), null, Locale.KOREA);
+        URI redirectUri = new URI(applicationYmlRead.getFrontUrl());
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setLocation(redirectUri);
-        return new ResponseEntity<>(httpHeaders, HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
     }
 
     private String filter(String message){

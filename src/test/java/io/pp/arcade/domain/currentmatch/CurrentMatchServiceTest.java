@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.currentmatch;
 
+import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.currentmatch.dto.*;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
@@ -11,6 +12,7 @@ import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.StatusType;
@@ -22,11 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.Collections;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class CurrentMatchServiceTest {
@@ -42,6 +40,8 @@ class CurrentMatchServiceTest {
     SlotRepository slotRepository;
     @Autowired
     TeamRepository teamRepository;
+    @Autowired
+    TestInitiator initiator;
 
     User user1;
     User user2;
@@ -52,41 +52,20 @@ class CurrentMatchServiceTest {
     Team team2;
     Game game;
 
+
     @BeforeEach
     void init() {
-        user1 = userRepository.save(User.builder()
-                .intraId("nheo")
-                .imageUri("")
-                .ppp(1000)
-                .statusMessage("")
-                .build());
-        user2 = userRepository.save(User.builder()
-                .intraId("donghyuk")
-                .imageUri("")
-                .ppp(950)
-                .statusMessage("")
-                .build());
-        team1 = teamRepository.save(Team.builder()
-                .user1(user1)
-                .headCount(1)
-                .score(0)
-                .teamPpp(user1.getPpp())
-                .build());
-        team2 = teamRepository.save(Team.builder()
-                .user1(user2)
-                .headCount(1)
-                .score(0)
-                .teamPpp(user2.getPpp())
-                .build());
-        slot = slotRepository.save(Slot.builder()
-                .tableId(1)
-                .team1(team1)
-                .team2(team2)
-                .time(LocalDateTime.now())
-                .gamePpp(1000)
-                .type(null)
-                .headCount(2)
-                .build());
+        initiator.letsgo();
+        user1 = initiator.users[0];
+        user2 = initiator.users[1];
+        user3 = initiator.users[2];
+        user4 = initiator.users[3];
+
+        slot = initiator.slots[0];
+
+        team1 = slot.getTeam1();
+        team2 = slot.getTeam2();
+
         game = gameRepository.save(Game.builder()
                 .team1(team1)
                 .team2(team2)
@@ -106,7 +85,7 @@ class CurrentMatchServiceTest {
                 .userId(user1.getId())
                 .build();
         currentMatchService.addCurrentMatch(addDto);
-        CurrentMatch match = currentMatchRepository.findByUser(user1).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        CurrentMatch match = currentMatchRepository.findByUser(user1).orElseThrow(() -> new BusinessException("E0001"));
 
         Assertions.assertThat(match.getUser()).isEqualTo(user1);
     }
@@ -127,7 +106,7 @@ class CurrentMatchServiceTest {
                 .build();
 
         currentMatchService.modifyCurrentMatch(modifyDto);
-        currentMatch = currentMatchRepository.findById(currentMatch.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        currentMatch = currentMatchRepository.findById(currentMatch.getId()).orElseThrow(() -> new BusinessException("E0001"));
         Assertions.assertThat(currentMatch.getIsMatched()).isEqualTo(true);
         Assertions.assertThat(currentMatch.getMatchImminent()).isEqualTo(false);
     }
@@ -145,7 +124,7 @@ class CurrentMatchServiceTest {
                 .build();
 
         currentMatchService.saveGameInCurrentMatch(saveGameDto);
-        currentMatch = currentMatchRepository.findById(currentMatch.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        currentMatch = currentMatchRepository.findById(currentMatch.getId()).orElseThrow(() -> new BusinessException("E0001"));
         Assertions.assertThat(currentMatch.getGame()).isEqualTo(game);
     }
 
@@ -157,8 +136,8 @@ class CurrentMatchServiceTest {
                 .user(user1)
                 .build());
 
-        CurrentMatchDto dto1 = currentMatchService.findCurrentMatchByUserId(user1.getId());
-        CurrentMatchDto dto2 = currentMatchService.findCurrentMatchByUserId(user2.getId());
+        CurrentMatchDto dto1 = currentMatchService.findCurrentMatchByUser(UserDto.from(user1));
+        CurrentMatchDto dto2 = currentMatchService.findCurrentMatchByUser(UserDto.from(user2));
 
         Assertions.assertThat(dto1).isNotEqualTo(null);
         Assertions.assertThat(dto2).isEqualTo(null);

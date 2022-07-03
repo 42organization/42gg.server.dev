@@ -2,9 +2,11 @@ package io.pp.arcade.domain.user.dto;
 
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.global.type.RacketType;
+import io.pp.arcade.global.type.RoleType;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
@@ -16,6 +18,7 @@ public class UserDto {
     private String imageUri;
     private RacketType racketType;
     private String statusMessage;
+    private RoleType roleType;
     private Integer ppp;
 
     public static UserDto from(User user) {
@@ -30,6 +33,7 @@ public class UserDto {
                     .imageUri(user.getImageUri())
                     .racketType(user.getRacketType())
                     .statusMessage(user.getStatusMessage())
+                    .roleType(user.getRoleType())
                     .ppp(user.getPpp())
                     .build();
         }

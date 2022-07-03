@@ -1,0 +1,2907 @@
+[source,options="nowrap"]
+----
+{
+  "games" : [ {
+    "gameId" : 1029,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1028,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1027,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1026,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1025,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1024,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1023,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1022,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1021,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1020,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1019,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1018,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1017,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1016,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1015,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1014,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1013,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1012,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1011,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1010,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1009,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1008,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1007,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1006,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1005,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1004,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1003,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1002,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1001,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 1000,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 999,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 998,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 997,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 996,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 995,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 994,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 993,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 992,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 991,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 990,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 989,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 988,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 987,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 986,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 985,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 984,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 983,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 982,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 981,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 980,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 979,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 978,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 977,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 976,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 975,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 974,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 973,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 972,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 971,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 970,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 969,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 968,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 967,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 966,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 965,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 964,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 963,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 962,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 961,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 960,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 959,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 958,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 957,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 956,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 955,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 954,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 953,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 952,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 951,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 950,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 949,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 948,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 947,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 946,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 945,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 944,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 943,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 942,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 941,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 940,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 939,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 938,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 937,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 936,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 935,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 934,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 933,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 932,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 931,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  }, {
+    "gameId" : 930,
+    "type" : "single",
+    "status" : "end",
+    "time" : "2022-07-03T15:00:00",
+    "team1" : {
+      "players" : [ {
+        "intraId" : "hakim",
+        "userImageUri" : "hakim.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    },
+    "team2" : {
+      "players" : [ {
+        "intraId" : "nheo",
+        "userImageUri" : "neho.jpg",
+        "wins" : 0,
+        "losses" : 0,
+        "winRate" : 0.0,
+        "pppChange" : 20
+      } ],
+      "isWin" : null,
+      "score" : 0
+    }
+  } ],
+  "lastGameId" : 930
+}
+----

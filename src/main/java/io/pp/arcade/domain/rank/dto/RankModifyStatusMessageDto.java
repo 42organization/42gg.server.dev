@@ -8,6 +8,5 @@ import lombok.Getter;
 @Builder
 public class RankModifyStatusMessageDto {
     private String intraId;
-    private GameType gameType;
     private String statusMessage;
 }
