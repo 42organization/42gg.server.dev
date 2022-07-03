@@ -100,22 +100,24 @@ public class GameAdminControllerImpl implements GameAdminController {
     private void modifyUsersInfo(GameDto gameDto) {
         TeamDto updatedTeam1 = teamService.findById(gameDto.getTeam1().getId());
         TeamDto updatedTeam2 = teamService.findById(gameDto.getTeam2().getId());
-        modifyUserPPPAndPChangeAndRank(gameDto.getId(), updatedTeam1.getUser1(), updatedTeam2);
-        modifyUserPPPAndPChangeAndRank(gameDto.getId(), updatedTeam2.getUser2(), updatedTeam2);
-        modifyUserPPPAndPChangeAndRank(gameDto.getId(), updatedTeam1.getUser2(), updatedTeam1);
-        modifyUserPPPAndPChangeAndRank(gameDto.getId(), updatedTeam2.getUser1(), updatedTeam1);
+        Boolean isOneSide = Math.abs(updatedTeam1.getScore() - updatedTeam2.getScore()) == 2;
+        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam1.getUser1(), updatedTeam2, isOneSide);
+        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam2.getUser2(), updatedTeam2, isOneSide);
+        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam1.getUser2(), updatedTeam1, isOneSide);
+        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam2.getUser1(), updatedTeam1, isOneSide);
     }
 
-    private void modifyUserPPPAndPChangeAndRank(Integer gameId, UserDto userDto, TeamDto enemyTeamDto) {
+    private void modifyUserPPPAndPChangeAndRank(GameDto game, UserDto userDto, TeamDto enemyTeamDto, Boolean isOneSide) {
         if (userDto == null) {
             return;
         }
         PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder()
-                .gameId(gameId)
+                .gameId(game.getId())
                 .userId(userDto.getIntraId())
                 .build());
         Integer userPreviousPpp = pChangeDto.getPppResult() - pChangeDto.getPppChange();
-        Integer newPppChange = EloRating.pppChange(userPreviousPpp, enemyTeamDto.getTeamPpp(),!enemyTeamDto.getWin());
+
+        Integer newPppChange = EloRating.pppChange(userPreviousPpp, enemyTeamDto.getTeamPpp(),!enemyTeamDto.getWin(), isOneSide);
         Integer tmpPpp = userPreviousPpp + newPppChange;
         Integer userFinalPpp = tmpPpp > 0 ? tmpPpp : 0;
         UserModifyPppDto modifyPppDto = UserModifyPppDto.builder()
@@ -125,16 +127,16 @@ public class GameAdminControllerImpl implements GameAdminController {
         userService.modifyUserPpp(modifyPppDto);
 
         Integer pChangeId = pChangeService.findPChangeIdByUserAndGame(PChangeFindDto.builder()
-                .gameId(gameId)
+                .gameId(game.getId())
                 .userId(userDto.getIntraId())
                 .build());
         pChangeService.updatePChangeByAdmin(pChangeId, PChangeUpdateDto.builder()
-                .gameId(gameId)
+                .gameId(game.getId())
                 .userId(userDto.getId())
                 .pppChange(userFinalPpp - userPreviousPpp)
                 .pppResult(userFinalPpp)
                 .build());
-        GameType gameType = gameService.findById(gameId).getType();
+        GameType gameType = gameService.findById(game.getId()).getType();
         RankModifyDto rankModifyDto =  RankModifyDto.builder()
                 .gameType(gameType)
                 .Ppp(userFinalPpp)
