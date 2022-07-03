@@ -36,7 +36,7 @@ public class TokenService {
 
     public UserDto findAdminByRefreshToken(String refreshToken) {
         User user = repository.findByRefreshToken(refreshToken)
-                .orElseThrow(() -> new BusinessException("token.notfound"))
+                .orElseThrow(() -> new AccessException("{front.url}"))
                 .getUser();
         if (user.getRoleType() != RoleType.ADMIN)
             throw new AccessException("{front.url}");

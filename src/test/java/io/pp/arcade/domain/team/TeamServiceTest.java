@@ -84,7 +84,7 @@ class TeamServiceTest {
 
         //when
         teamService.addUserInTeam(dto);
-        Team team_0 = teamRepository.findById(team0.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Team team_0 = teamRepository.findById(team0.getId()).orElseThrow(() -> new BusinessException("E0001"));
 
         //then
         Assertions.assertThat(team_0.getHeadCount()).isEqualTo(1);
@@ -98,7 +98,7 @@ class TeamServiceTest {
 
         //when
         teamService.addUserInTeam(dto1);
-        Team team_1 = teamRepository.findById(team0.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Team team_1 = teamRepository.findById(team0.getId()).orElseThrow(() -> new BusinessException("E0001"));
 
         //then
         Assertions.assertThat(team_1.getHeadCount()).isEqualTo(2);
@@ -116,7 +116,7 @@ class TeamServiceTest {
 
         //when
         teamService.removeUserInTeam(dto);
-        Team team = teamRepository.findById(team2.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Team team = teamRepository.findById(team2.getId()).orElseThrow(() -> new BusinessException("E0001"));
 
         //then
         Assertions.assertThat(team.getHeadCount()).isEqualTo(1);
@@ -135,7 +135,7 @@ class TeamServiceTest {
 
         //when
         teamService.saveGameResultInTeam(dto);
-        Team team = teamRepository.findById(team2.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Team team = teamRepository.findById(team2.getId()).orElseThrow(() -> new BusinessException("E0001"));
 
         //then
         Assertions.assertThat(team.getScore()).isEqualTo(2);
@@ -160,7 +160,7 @@ class TeamServiceTest {
 
         //when
         teamService.modifyGameResultInTeam(dto);
-        Team team = teamRepository.findById(team4.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Team team = teamRepository.findById(team4.getId()).orElseThrow(() -> new BusinessException("E0001"));
 
         //then
         Assertions.assertThat(team.getScore()).isEqualTo(1);

@@ -1,12 +1,15 @@
 package io.pp.arcade.domain.rank;
 
+import io.pp.arcade.domain.rank.dto.RankDto;
+import io.pp.arcade.domain.rank.dto.RankRedisDto;
 import io.pp.arcade.domain.user.User;
+import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.util.BaseTimeEntity;
 import io.pp.arcade.global.type.RacketType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -27,7 +30,6 @@ public class Rank extends BaseTimeEntity implements Serializable {
     private User user;
 
     @NotNull
-    @Setter
     @Column(name = "ppp")
     private Integer ppp;
 
@@ -43,6 +45,10 @@ public class Rank extends BaseTimeEntity implements Serializable {
     private RacketType racketType;
 
     @NotNull
+    @Column(name = "game_type")
+    private GameType gameType;
+
+    @NotNull
     @Column(name = "wins")
     private Integer wins;
 
@@ -51,14 +57,32 @@ public class Rank extends BaseTimeEntity implements Serializable {
     private Integer losses;
 
     @Builder
-    public Rank(User user, Integer ppp, Integer seasonId, Integer ranking, RacketType racketType, Integer wins, Integer losses) {
+    public Rank(User user, Integer ppp, Integer seasonId, Integer ranking, RacketType racketType, GameType gameType, Integer wins, Integer losses) {
         this.user = user;
         this.ppp = ppp;
         this.seasonId = seasonId;
         this.ranking = ranking;
         this.racketType = racketType;
+        this.gameType = gameType;
         this.wins = wins;
         this.losses = losses;
     }
 
+
+    public void update(Integer ppp, Integer wins, Integer losses) {
+        this.ppp = ppp;
+        this.wins = wins;
+        this.losses = losses;
+    }
+    public void update(RankRedisDto rankDto, User user, Integer seasonId) {
+        this.user = user;
+        this.id = rankDto.getId();
+        this.ppp = rankDto.getPpp();
+        this.wins = rankDto.getWins();
+        this.losses = rankDto.getLosses();
+        this.ranking = rankDto.getRanking();
+        this.gameType = rankDto.getGameType();
+        this.seasonId = seasonId;
+        this.racketType = rankDto.getRacketType();
+    }
 }

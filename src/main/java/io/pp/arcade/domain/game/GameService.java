@@ -2,7 +2,6 @@ package io.pp.arcade.domain.game;
 
 import io.pp.arcade.domain.admin.dto.create.GameCreateDto;
 import io.pp.arcade.domain.admin.dto.delete.GameDeleteDto;
-import io.pp.arcade.domain.admin.dto.update.GameUpdateDto;
 import io.pp.arcade.domain.game.dto.*;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
@@ -10,6 +9,7 @@ import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.StatusType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,7 +30,7 @@ public class GameService {
     @Transactional
     public GameDto findById(Integer gameId) {
         Game game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new BusinessException("{invalid.request}"));
+                .orElseThrow(() -> new BusinessException("E0001"));
         GameDto dto = GameDto.from(game);
         return dto;
     }
@@ -38,9 +38,9 @@ public class GameService {
     @Transactional
     public void addGame(GameAddDto addDto) {
         SlotDto slotDto = addDto.getSlotDto();
-        Slot slot = slotRepository.findById(slotDto.getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        Team team1 = teamRepository.findById(slotDto.getTeam1().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        Team team2 = teamRepository.findById(slotDto.getTeam2().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Slot slot = slotRepository.findById(slotDto.getId()).orElseThrow(() -> new BusinessException("E0001"));
+        Team team1 = teamRepository.findById(slotDto.getTeam1().getId()).orElseThrow(() -> new BusinessException("E0001"));
+        Team team2 = teamRepository.findById(slotDto.getTeam2().getId()).orElseThrow(() -> new BusinessException("E0001"));
         gameRepository.save(Game.builder()
                 .slot(slot)
                 .team1(team1)
@@ -55,30 +55,38 @@ public class GameService {
 
     @Transactional
     public void modifyGameStatus(GameModifyStatusDto modifyStatusDto) {
-        Game game = gameRepository.findById(modifyStatusDto.getGameId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Game game = gameRepository.findById(modifyStatusDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
         game.setStatus(modifyStatusDto.getStatus());
     }
 
     @Transactional
     public GameDto findBySlot(Integer slotId) {
-        Slot slot = slotRepository.findById(slotId).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        GameDto game = GameDto.from(gameRepository.findBySlot(slot).orElseThrow(() -> new BusinessException("{invalid.request}")));
+        Slot slot = slotRepository.findById(slotId).orElseThrow(() -> new BusinessException("E0001"));
+        GameDto game = GameDto.from(gameRepository.findBySlot(slot).orElseThrow(() -> new BusinessException("E0001")));
         return game;
+    }
+
+    @Transactional
+    public GameDto findBySlotIdNullable(Integer slotId) {
+        Game game = gameRepository.findBySlotId(slotId).orElse(null);
+        GameDto gameDto = game == null ? null : GameDto.from(game);
+        return gameDto;
     }
 
     @Transactional
     public GameResultPageDto findGamesAfterId(GameFindDto findDto) {
         Page<Game> games;
-        Integer gameId = findDto.getId() == null ? Integer.MAX_VALUE : findDto.getId();
         if (findDto.getStatus() != null) {
-            games = gameRepository.findByIdLessThanAndStatusOrderByIdDesc(gameId, findDto.getStatus(), findDto.getPageable());
+            games = gameRepository.findByIdLessThanAndStatusOrderByIdDesc(findDto.getId(), findDto.getStatus(), findDto.getPageable());
         } else {
-            games = gameRepository.findByIdLessThanOrderByIdDesc(gameId, findDto.getPageable());
+            games = gameRepository.findByIdLessThanOrderByIdDesc(findDto.getId(), findDto.getPageable());
         }
         List<GameDto> gameDtoList = games.stream().map(GameDto::from).collect(Collectors.toList());
 
         GameResultPageDto resultPageDto = GameResultPageDto.builder()
                 .gameList(gameDtoList)
+                .totalPage(games.getTotalPages())
+                .currentPage(games.getNumber())
                 .build();
         return resultPageDto;
     }
@@ -99,12 +107,6 @@ public class GameService {
     }
 
     @Transactional
-    public void updateGameByAdmin(GameUpdateDto updateDto) {
-        Game game = gameRepository.findById(updateDto.getGameId()).orElseThrow(null);
-        game.setStatus(updateDto.getStatus());
-    }
-
-    @Transactional
     public void deleteGameByAdmin(GameDeleteDto deleteDto){
         Game game = gameRepository.findById(deleteDto.getGameId()).orElseThrow(null);
         gameRepository.delete(game);
@@ -113,6 +115,13 @@ public class GameService {
     @Transactional
     public List<GameDto> findGameByAdmin(Pageable pageable) {
         Page<Game> games = gameRepository.findAll(pageable);
+        List<GameDto> gameDtos = games.stream().map(GameDto::from).collect(Collectors.toList());
+        return gameDtos;
+    }
+
+    @Transactional
+    public List<GameDto> findGameByTypeByAdmin(Pageable pageable, GameType type) {
+        Page<Game> games = gameRepository.findAllByTypeOrderByIdDesc(pageable, type);
         List<GameDto> gameDtos = games.stream().map(GameDto::from).collect(Collectors.toList());
         return gameDtos;
     }

@@ -31,14 +31,14 @@ public class CurrentMatchAdminControllerImpl implements CurrentMatchAdminControl
     }
 
     @Override
-    @DeleteMapping(value = "/currentMatch/{id}")
+    @DeleteMapping(value = "/currentMatch/{currentMatchId}")
     public void currentMatchDelete(Integer currentMatchId, HttpServletRequest request) {
         CurrentMatchDeleteDto deleteDto = CurrentMatchDeleteDto.builder().currentMatchId(currentMatchId).build();
         currentMatchService.deleteCurrentMatchByAdmin(deleteDto);
     }
 
     @Override
-    @GetMapping(value = "/currentMatch")
+    @GetMapping(value = "/currentMatch/all")
     public List<CurrentMatchDto> currentMatchAll(Pageable pageable, HttpServletRequest request) {
         List<CurrentMatchDto> currentMatches = currentMatchService.findCurrentMatchByAdmin(pageable);
         return currentMatches;

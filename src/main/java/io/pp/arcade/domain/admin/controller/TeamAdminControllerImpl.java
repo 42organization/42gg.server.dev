@@ -47,7 +47,7 @@ public class TeamAdminControllerImpl implements TeamAdminController {
     }
 
     @Override
-    @GetMapping(value = "/team")
+    @GetMapping(value = "/team/all")
     public List<TeamDto> teamAll(Pageable pageable, HttpServletRequest request) {
         List<TeamDto> teamDtos = teamService.findTeamByAdmin(pageable);
         return teamDtos;

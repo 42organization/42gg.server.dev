@@ -13,19 +13,28 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
         format_sql: false
         use_sql_comments: false
 
+
   security:
     oauth2.client:
       registration:
         42:
-          client-id: "cd1431e55cd272b41ed09874172e04833b1918749ee6642acaef5b45f19c0b27"
-          client-secret: "16f1c09b9b394017e87c4aeb55829647b6e0d69d6bba96f024b15cbdb723d529"
+          client-id: "353cdada0d271c99afd647ecb5c77f257750a212e40b613fe6847985bc1f21c6"
+          client-secret: "126a9ebf21bb84857bbae746af4f36ba74eefd24af9bceee5abd7cbe6530f5ce"
+
+  # Redis 설정
+  cache:
+    type: redis
+  redis:
+    host: 127.0.0.1
+    port: 6379
+
 
 logging:
   level:

@@ -28,14 +28,14 @@ public class TeamService {
 
     @Transactional
     public TeamDto findById(Integer id) {
-        Team team = teamRepository.findById(id).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Team team = teamRepository.findById(id).orElseThrow(() -> new BusinessException("E0001"));
         return TeamDto.from(team);
     }
 
     @Transactional
     public void addUserInTeam(TeamAddUserDto dto) {
-        User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new BusinessException("E0001"));
 
         if (team.getUser1() == null) {
             team.setUser1(user);
@@ -48,10 +48,10 @@ public class TeamService {
 
     @Transactional
     public void removeUserInTeam(TeamRemoveUserDto dto) {
-        User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(dto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new BusinessException("E0001"));
 
-        if (team.getUser1().equals(user)) {
+        if (user.equals(team.getUser1())) {
             team.setUser1(null);
         } else {
             team.setUser2(null);
@@ -68,7 +68,7 @@ public class TeamService {
 
     @Transactional
     public void saveGameResultInTeam(TeamSaveGameResultDto dto) {
-        Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new BusinessException("E0001"));
 
         team.setScore(dto.getScore());
         team.setWin(dto.getWin());
@@ -76,7 +76,7 @@ public class TeamService {
 
     @Transactional
     public void modifyGameResultInTeam(TeamModifyGameResultDto dto) {
-        Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Team team = teamRepository.findById(dto.getTeamId()).orElseThrow(() -> new BusinessException("E0001"));
 
         team.setScore(dto.getScore());
         team.setWin(dto.getWin());
@@ -93,7 +93,7 @@ public class TeamService {
             myTeamDto = team2;
             enemyTeamDto = team1;
         } else {
-            throw new BusinessException("{invalid.request}");
+            throw new BusinessException("E0001");
         }
         TeamPosDto dto = TeamPosDto.builder()
                 .myTeam(myTeamDto)
@@ -105,12 +105,9 @@ public class TeamService {
     @Transactional
     public void createTeamByAdmin(TeamCreateRequestDto teamCreateDto) {
         teamRepository.save(Team.builder()
-                .user1(userRepository.findById(teamCreateDto.getUser1Id()).orElse(null))
-                .user2(userRepository.findById(teamCreateDto.getUser2Id()).orElse(null))
                 .teamPpp(teamCreateDto.getTeamPpp())
                 .headCount(teamCreateDto.getHeadCount())
                 .score(teamCreateDto.getScore())
-                .win(teamCreateDto.getWin())
                 .build());
     }
 
@@ -127,7 +124,7 @@ public class TeamService {
 
     @Transactional
     public List<TeamDto> findTeamByAdmin(Pageable pageable) {
-        Page<Team> teams = teamRepository.findAll(pageable);
+        Page<Team> teams = teamRepository.findAllByOrderByIdDesc(pageable);
         List<TeamDto> teamDtos = teams.stream().map(TeamDto::from).collect(Collectors.toList());
         return teamDtos;
     }

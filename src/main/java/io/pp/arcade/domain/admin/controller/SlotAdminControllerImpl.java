@@ -2,10 +2,13 @@ package io.pp.arcade.domain.admin.controller;
 
 import io.pp.arcade.domain.admin.dto.create.SlotCreateRequestDto;
 import io.pp.arcade.domain.admin.dto.delete.SlotDeleteDto;
+import io.pp.arcade.domain.admin.dto.update.SlotGeneratorUpdateDto;
 import io.pp.arcade.domain.admin.dto.update.SlotUpdateDto;
 import io.pp.arcade.domain.admin.dto.update.SlotUpdateRequestDto;
 import io.pp.arcade.domain.slot.SlotService;
+import io.pp.arcade.domain.slot.dto.SlotAddDto;
 import io.pp.arcade.domain.slot.dto.SlotDto;
+import io.pp.arcade.global.scheduler.SlotGenerator;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +21,32 @@ import java.util.List;
 @RequestMapping(value = "/admin")
 public class SlotAdminControllerImpl implements SlotAdminController {
     private final SlotService slotService;
+    private final SlotGenerator slotGenerator;
+
+    @Override
+    @GetMapping(value = "/slot/generator")
+    public void slotGeneratorRun() {
+        slotGenerator.dailyGenerate();
+    }
+
+    @Override
+    @PutMapping(value = "/slot/generator")
+    public void slotGeneratorUpdate(@RequestBody SlotGeneratorUpdateDto dto) {
+        slotGenerator.setStartTime(dto.getStartTime());
+        slotGenerator.setInterval(dto.getInterval());
+        slotGenerator.setSlotNum(dto.getSlotNum());
+    }
 
     @Override
     @PostMapping(value = "/slot")
     public void slotCreate(SlotCreateRequestDto createRequestDto, HttpServletRequest request) {
         slotService.createSlotByAdmin(createRequestDto);
+    }
+
+    @Override
+    @PostMapping(value = "/slot/empty")
+    public void slotCreateEmpty(SlotCreateRequestDto createRequestDto, HttpServletRequest request) {
+        slotService.addSlot(SlotAddDto.builder().tableId(createRequestDto.getTableId()).time(createRequestDto.getTime()).build());
     }
 
     @Override
@@ -38,15 +62,15 @@ public class SlotAdminControllerImpl implements SlotAdminController {
     }
 
     @Override
-    @DeleteMapping(value = "/slot/{id}")
+    @DeleteMapping(value = "/slot/{slotId}")
     public void slotDelete(Integer slotId, HttpServletRequest request) {
         SlotDeleteDto deleteDto = SlotDeleteDto.builder()
-                .id(slotId).build();
+                .slotId(slotId).build();
         slotService.deleteSlotByAdmin(deleteDto);
     }
 
     @Override
-    @GetMapping(value = "/slot")
+    @GetMapping(value = "/slot/all")
     public List<SlotDto> slotAll(Pageable pageable, HttpServletRequest request) {
         List<SlotDto> slotDtos = slotService.findSlotByAdmin(pageable);
         return slotDtos;

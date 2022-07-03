@@ -14,5 +14,5 @@ import javax.servlet.http.HttpServletRequest;
 public interface SlotController {
     SlotStatusResponseDto slotStatusList(@PathVariable Integer tableId, @PathVariable GameType type, HttpServletRequest request);
     void slotAddUser(@PathVariable Integer tableId, @PathVariable GameType type, @RequestBody SlotAddUserRequestDto addReqDto, HttpServletRequest request) throws MessagingException;
-    void slotRemoveUser(HttpServletRequest request) throws MessagingException;
+    void slotRemoveUser(@PathVariable Integer slotId, HttpServletRequest request) throws MessagingException;
 }

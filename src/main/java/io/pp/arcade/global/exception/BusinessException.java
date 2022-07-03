@@ -8,6 +8,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class BusinessException extends RuntimeException {
-    private String Message;
+    private String code;
+    private String message;
+
+    public BusinessException(String message) {
+        super(message);
+        this.message = message;
+    }
 }
 

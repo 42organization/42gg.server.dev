@@ -1,0 +1,110 @@
+[source,http,options="nowrap"]
+----
+HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 1970
+
+{
+  "intervalMinute" : 10,
+  "matchBoards" : [ [ {
+    "slotId" : 794,
+    "time" : "2022-07-03T15:00:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 795,
+    "time" : "2022-07-03T15:10:00",
+    "status" : "close",
+    "headCount" : 2
+  }, {
+    "slotId" : 796,
+    "time" : "2022-07-03T15:20:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 797,
+    "time" : "2022-07-03T15:30:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 798,
+    "time" : "2022-07-03T15:40:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 799,
+    "time" : "2022-07-03T15:50:00",
+    "status" : "open",
+    "headCount" : 0
+  } ], [ {
+    "slotId" : 800,
+    "time" : "2022-07-03T16:00:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 801,
+    "time" : "2022-07-03T16:10:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 802,
+    "time" : "2022-07-03T16:20:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 803,
+    "time" : "2022-07-03T16:30:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 804,
+    "time" : "2022-07-03T16:40:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 805,
+    "time" : "2022-07-03T16:50:00",
+    "status" : "open",
+    "headCount" : 0
+  } ], [ {
+    "slotId" : 806,
+    "time" : "2022-07-03T17:00:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 807,
+    "time" : "2022-07-03T17:10:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 808,
+    "time" : "2022-07-03T17:20:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 809,
+    "time" : "2022-07-03T17:30:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 810,
+    "time" : "2022-07-03T17:40:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 811,
+    "time" : "2022-07-03T17:50:00",
+    "status" : "open",
+    "headCount" : 0
+  } ] ]
+}
+----

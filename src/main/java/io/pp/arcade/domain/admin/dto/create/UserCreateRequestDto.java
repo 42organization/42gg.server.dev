@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public class UserCreateRequestDto {
     String intraId;
-    String eMail;
+    String email;
     String userImageUri;
     RacketType racketType;
     String statusMessage;

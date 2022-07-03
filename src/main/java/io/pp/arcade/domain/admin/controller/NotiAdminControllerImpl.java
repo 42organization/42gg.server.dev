@@ -32,13 +32,13 @@ public class NotiAdminControllerImpl implements NotiAdminController {
     }
 
     @Override
-    @DeleteMapping(value = "/noti/{id}")
+    @DeleteMapping(value = "/noti/{notiId}")
     public void notiDelete(Integer notiId, HttpServletRequest request) {
         NotiDeleteDto notiDeleteDto = NotiDeleteDto.builder().notiId(notiId).build();
         notiService.deleteNotibyAdmin(notiDeleteDto);
     }
 
-    @GetMapping(value = "/noti")
+    @GetMapping(value = "/noti/all")
     public List<NotiDto> notiAll(Pageable pageable, HttpServletRequest request) {
         List<NotiDto> notis = notiService.findNotiByAdmin(pageable);
         return notis;

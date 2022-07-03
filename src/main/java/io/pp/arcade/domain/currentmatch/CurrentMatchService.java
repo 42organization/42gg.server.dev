@@ -12,6 +12,7 @@ import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.exception.BusinessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -32,8 +33,8 @@ public class CurrentMatchService {
 
     @Transactional
     public void addCurrentMatch(CurrentMatchAddDto addDto){
-        User user = userRepository.findById(addDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        Slot slot = slotRepository.findById(addDto.getSlot().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(addDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        Slot slot = slotRepository.findById(addDto.getSlot().getId()).orElseThrow(() -> new BusinessException("E0001"));
         currentMatchRepository.save(CurrentMatch.builder()
                         .user(user)
                         .slot(slot)
@@ -44,30 +45,29 @@ public class CurrentMatchService {
 
     @Transactional
     public void modifyCurrentMatch(CurrentMatchModifyDto modifyDto){
-        User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
+        CurrentMatch currentMatch = currentMatchRepository.findByUserId(modifyDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         currentMatch.setIsMatched(modifyDto.getIsMatched());
         currentMatch.setMatchImminent(modifyDto.getMatchImminent());
     }
 
     @Transactional
     public void saveGameInCurrentMatch(CurrentMatchSaveGameDto saveDto) {
-        Game game = gameRepository.findById(saveDto.getGameId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        User user = userRepository.findById(saveDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Game game = gameRepository.findById(saveDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
+        User user = userRepository.findById(saveDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
         currentMatch.setGame(game);
     }
 
     @Transactional
-    public CurrentMatchDto findCurrentMatchByUserId(Integer userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
+    public CurrentMatchDto findCurrentMatchByUser(UserDto userDto) {
+        //User user = userRepository.findById(userId).orElseThrow(() -> new BusinessException("E0001"));
+        CurrentMatch currentMatch = currentMatchRepository.findByUserId(userDto.getId()).orElse(null);
         CurrentMatchDto dto = null;
 
         if (currentMatch != null) {
             dto = CurrentMatchDto.builder()
                     .game(currentMatch.getGame() == null ? null : GameDto.from(currentMatch.getGame()))
-                    .userId(user.getId())
+                    .userId(userDto.getId())
                     .slot(SlotDto.from(currentMatch.getSlot()))
                     .matchImminent(currentMatch.getMatchImminent())
                     .isMatched(currentMatch.getIsMatched())
@@ -78,7 +78,7 @@ public class CurrentMatchService {
 
     @Transactional
     public CurrentMatchDto findCurrentMatchByIntraId(String intraId) {
-        User user = userRepository.findByIntraId(intraId).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findByIntraId(intraId).orElseThrow(() -> new BusinessException("E0001"));
         CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
         CurrentMatchDto dto = null;
 
@@ -96,7 +96,7 @@ public class CurrentMatchService {
 
     @Transactional
     public List<CurrentMatchDto> findCurrentMatchByGame(CurrentMatchFindDto findDto) {
-        Game game = gameRepository.findById(findDto.getGame().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        Game game = gameRepository.findById(findDto.getGame().getId()).orElseThrow(() -> new BusinessException("E0001"));
         List<CurrentMatch> matches = currentMatchRepository.findAllByGame(game);
         List<CurrentMatchDto> currentMatchDtos = matches.stream().map(CurrentMatchDto::from).collect(Collectors.toList());
         return currentMatchDtos;
@@ -104,7 +104,7 @@ public class CurrentMatchService {
 
     @Transactional
     public void removeCurrentMatch(CurrentMatchRemoveDto removeDto) {
-        User user = userRepository.findById(removeDto.getUserId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(removeDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         currentMatchRepository.deleteByUser(user);
     }
 
@@ -124,9 +124,7 @@ public class CurrentMatchService {
 
     @Transactional
     public void updateCurrentMatchByAdmin(CurrentMatchUpdateRequestDto updateRequestDto) {
-        CurrentMatch currentMatch = currentMatchRepository.findById(updateRequestDto.getCurrenMatchId()).orElseThrow();
-        Game game = gameRepository.findById(updateRequestDto.getGameId()).orElseThrow();
-        currentMatch.setGame(game);
+        CurrentMatch currentMatch = currentMatchRepository.findById(updateRequestDto.getCurrentMatchId()).orElseThrow();
         currentMatch.setMatchImminent(updateRequestDto.getMatchImminent());
         currentMatch.setIsMatched(updateRequestDto.getIsMatched());
     }
@@ -139,7 +137,7 @@ public class CurrentMatchService {
 
     @Transactional
     public List<CurrentMatchDto> findCurrentMatchByAdmin(Pageable pageable) {
-        Page<CurrentMatch> currentMatches = currentMatchRepository.findAll(pageable);
+        Page<CurrentMatch> currentMatches = currentMatchRepository.findAllByOrderByIdDesc(pageable);
         List<CurrentMatchDto> currentMatchDtos = currentMatches.stream().map(CurrentMatchDto::from).collect(Collectors.toList());
         return currentMatchDtos;
     }

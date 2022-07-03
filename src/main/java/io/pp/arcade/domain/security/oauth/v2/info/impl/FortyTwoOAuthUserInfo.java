@@ -3,7 +3,6 @@ package io.pp.arcade.domain.security.oauth.v2.info.impl;
 
 import io.pp.arcade.domain.security.oauth.v2.info.OAuthUserInfo;
 
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 public class FortyTwoOAuthUserInfo extends OAuthUserInfo {

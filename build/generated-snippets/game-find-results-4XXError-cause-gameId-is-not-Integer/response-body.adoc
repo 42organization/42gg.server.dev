@@ -1,0 +1,7 @@
+[source,options="nowrap"]
+----
+{
+  "code" : "E0001",
+  "message" : "잘못된 요청입니다"
+}
+----

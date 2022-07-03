@@ -1,9 +1,10 @@
 spring:
   profiles:
-    active: local
+    active: test
 
   security:
     oauth2.client:
+      authenticationScheme: header
       registration:
         42:
           redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
@@ -50,13 +51,6 @@ spring:
   messages:
     basename: 'messages/validation'
     encoding: UTF-8
-
-  # Redis 설정
-  cache:
-    type: redis
-  redis:
-    host: 127.0.0.1
-    port: 6379
 
 app:
   auth:

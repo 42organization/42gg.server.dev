@@ -34,10 +34,10 @@ public class NotiService {
 
     @Transactional
     public void addNoti(NotiAddDto notiAddDto) throws MessagingException {
-        User user = userRepository.findById(notiAddDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(notiAddDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
         Slot slot = null;
         if (notiAddDto.getSlot() != null) {
-            slot = slotRepository.findById(notiAddDto.getSlot().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+            slot = slotRepository.findById(notiAddDto.getSlot().getId()).orElseThrow(() -> new BusinessException("E0001"));
         }
         Noti noti = Noti.builder()
                 .user(user)
@@ -57,15 +57,21 @@ public class NotiService {
 
     @Transactional
     public List<NotiDto> findNotiByUser(NotiFindDto findDto) {
-        User user = userRepository.findById(findDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
-        List<Noti> notis = notiRepository.findAllByUser(user);
+        User user = userRepository.findById(findDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
+        List<Noti> notis = notiRepository.findAllByUserOrderByIdDesc(user);
         List<NotiDto> notiDtoList = notis.stream().map(NotiDto::from).collect(Collectors.toList());
         return notiDtoList;
     }
 
     @Transactional
+    public NotiDto findNotiByIdAndUser(NotiFindDto findDto) {
+        Noti noti = notiRepository.findByIdAndUserId(findDto.getNotiId(), findDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
+        return NotiDto.from(noti);
+    }
+
+    @Transactional
     public NotiCountDto countAllNByUser(NotiFindDto findDto) {
-        User user = userRepository.findById(findDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(findDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
         Integer count = notiRepository.countAllNByUserAndIsChecked(user, false);
         NotiCountDto countDto = NotiCountDto.builder().notiCount(count).build();
         return countDto;
@@ -73,14 +79,14 @@ public class NotiService {
 
     @Transactional
     public void modifyNotiChecked(NotiModifyDto modifyDto) {
-        User user = userRepository.findById(modifyDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(modifyDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
         List<Noti> notis = notiRepository.findAllByUser(user);
         notis.forEach(noti -> {noti.setIsChecked(true);});
     }
 
     @Transactional
     public void removeAllNotisByUser(NotiDeleteDto deleteDto) {
-        User user = userRepository.findById(deleteDto.getUser().getId()).orElseThrow(() -> new BusinessException("{invalid.request}"));
+        User user = userRepository.findById(deleteDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
         notiRepository.deleteAllByUser(user);
     }
 
@@ -106,7 +112,10 @@ public class NotiService {
     @Transactional
     public void updateNotiByAdmin(NotiUpdateRequestDto updateRequestDto) {
         Noti noti = notiRepository.findById(updateRequestDto.getNotiId()).orElseThrow();
-        noti.setIsChecked(updateRequestDto.getIsChecked()); // 더 고칠게 있을까요
+
+        User user = userRepository.findById(updateRequestDto.getUserId()).orElseThrow(null);
+        Slot slot = slotRepository.findById(updateRequestDto.getSlotId()).orElseThrow(null);
+        noti.update(user, slot, updateRequestDto.getNotiType(), updateRequestDto.getMessage(), updateRequestDto.getIsChecked()); // 더 고칠게 있을까요
     }
 
     @Transactional
@@ -117,7 +126,7 @@ public class NotiService {
 
     @Transactional
     public List<NotiDto> findNotiByAdmin(Pageable pageable) {
-        Page<Noti> notis = notiRepository.findAll(pageable);
+        Page<Noti> notis = notiRepository.findAllByOrderByIdDesc(pageable);
         List<NotiDto> notiDtos = notis.stream().map(NotiDto::from).collect(Collectors.toList());
         return notiDtos;
     }
