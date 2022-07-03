@@ -60,7 +60,7 @@ endif::[]
 
 == 랭킹 페이지
 
-=== 1. 랭킹 리스트 조회
+== 1. 랭킹 리스트 조회
 === curl-request
 include::{snippets}/ranking-List/curl-request.adoc[]
 
