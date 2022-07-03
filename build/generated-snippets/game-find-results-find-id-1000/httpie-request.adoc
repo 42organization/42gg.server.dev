@@ -1,6 +1,0 @@
-[source,bash]
-----
-$ http GET 'http://localhost:8080/pingpong/games?gameId=1000&count=20&status=end' \
-    'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:Bearer 0'
-----
