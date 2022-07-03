@@ -41,7 +41,7 @@ logging:
 
 # cors 설정
 cors:
-  allowed-origins: 'https://42gg.kr'
+  allowed-origins: 'https://42gg.kr,http://42gg.kr,https://api-42gg.shop,http://api-42gg.shop'
   allowed-methods: GET,POST,PUT,DELETE,OPTIONS,PATCH
   allowed-headers: '*'
   allowed-credentials: false

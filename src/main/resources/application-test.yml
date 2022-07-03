@@ -42,7 +42,7 @@ logging:
 
   # cors 설정
 cors:
-  allowed-origins: 'http://localhost:3000'
+  allowed-origins: 'http://localhost:3000,http://localhost:8080,https://localhost:8080,https://localhost:3000,https://dev.api-42gg.shop,https://api.api-42gg.shop,https://api.42gg.shop,https://dev.api-42gg.shop,http://dev.api.42gg.shop'
   allowed-methods: GET,POST,PUT,DELETE,OPTIONS,PATCH
   allowed-headers: '*'
   allowed-credentials: false
