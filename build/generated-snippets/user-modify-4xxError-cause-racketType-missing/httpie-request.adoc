@@ -1,0 +1,8 @@
+[source,bash]
+----
+$ echo '{
+  "statusMessage" : "message"
+}' | http PUT 'http://localhost:8080/pingpong/users/detail' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:Bearer 0'
+----
