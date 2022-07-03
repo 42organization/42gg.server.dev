@@ -1,0 +1,105 @@
+[source,options="nowrap"]
+----
+{
+  "myRank" : -1,
+  "currentPage" : 0,
+  "totalPage" : 0,
+  "rankList" : [ {
+    "intraId" : "hakim",
+    "rank" : -1,
+    "ppp" : 1040,
+    "wins" : 0,
+    "losses" : 0,
+    "statusMessage" : "kikikaka",
+    "winRate" : 0.0
+  }, {
+    "intraId" : "nheo",
+    "rank" : -1,
+    "ppp" : 1030,
+    "wins" : 0,
+    "losses" : 0,
+    "statusMessage" : "kikikaka",
+    "winRate" : 0.0
+  }, {
+    "intraId" : "donghyuk",
+    "rank" : -1,
+    "ppp" : 1020,
+    "wins" : 0,
+    "losses" : 0,
+    "statusMessage" : "kikikaka",
+    "winRate" : 0.0
+  }, {
+    "intraId" : "jiyun",
+    "rank" : -1,
+    "ppp" : 1010,
+    "wins" : 0,
+    "losses" : 0,
+    "statusMessage" : "kikikaka",
+    "winRate" : 0.0
+  }, {
+    "intraId" : "jujeon",
+    "rank" : -1,
+    "ppp" : 1000,
+    "wins" : 0,
+    "losses" : 0,
+    "statusMessage" : "kiki",
+    "winRate" : 0.0
+  }, {
+    "intraId" : "jabae",
+    "rank" : -1,
+    "ppp" : 1000,
+    "wins" : 0,
+    "losses" : 0,
+    "statusMessage" : "kikikaka",
+    "winRate" : 0.0
+  }, {
+    "intraId" : "daekim",
+    "rank" : -1,
+    "ppp" : 996,
+    "wins" : 0,
+    "losses" : 0,
+    "statusMessage" : "kikikaka",
+    "winRate" : 0.0
+  }, {
+    "intraId" : "sujpark",
+    "rank" : -1,
+    "ppp" : 994,
+    "wins" : 0,
+    "losses" : 0,
+    "statusMessage" : "kikikaka",
+    "winRate" : 0.0
+  }, {
+    "intraId" : "jihyukim",
+    "rank" : -1,
+    "ppp" : 992,
+    "wins" : 0,
+    "losses" : 0,
+    "statusMessage" : "kikikaka",
+    "winRate" : 0.0
+  }, {
+    "intraId" : "jekim",
+    "rank" : -1,
+    "ppp" : 990,
+    "wins" : 0,
+    "losses" : 0,
+    "statusMessage" : "kikikaka",
+    "winRate" : 0.0
+  }, {
+    "intraId" : "wochae",
+    "rank" : -1,
+    "ppp" : 980,
+    "wins" : 0,
+    "losses" : 0,
+    "statusMessage" : "kikikaka",
+    "winRate" : 0.0
+  }, {
+    "intraId" : "kipark",
+    "rank" : -1,
+    "ppp" : 100,
+    "wins" : 0,
+    "losses" : 0,
+    "statusMessage" : "kikikaka",
+    "winRate" : 0.0
+  } ]
+}
+----
