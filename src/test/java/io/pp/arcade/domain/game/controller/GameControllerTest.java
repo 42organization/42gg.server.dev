@@ -96,6 +96,7 @@ class GameControllerTest {
 
     }
 
+
     @Transactional
     void addUserInTeam(Team team, User user, boolean is1){
         if (is1)
@@ -137,6 +138,34 @@ class GameControllerTest {
     @Transactional
     @DisplayName("게임 결과 정보 - /games/result")
     void testGameUserInfo() throws  Exception {
+        /*
+         * 테스트 내역
+         * - 진행 중인 게임의 결과가 없는 경우
+         * - 단식 게임이 진행 중인 경우
+         * - 복식 게임이 진행 중인 경우
+         * - gameId 에 integer 가 아닌 값을 넣는 경우 (400)
+         * - gameId 가 음수로 들어온 경우
+         * - gameId 가 null인 경우
+         * - gameId 가 String인 경우
+         * - count 가 음수인 경우
+         * - count 가 null인 경우
+         * - count 가 String인 경우
+         * - count 가 100개 이상인 경우
+         * - gameId 가 100 인 경우 - 200,game 리스트 반환
+         * - status 가 다른 값인 경우
+         * - status 가 null인 경우
+         * - score 가 null인 경우
+         * - 한 쪽 스코어가 3 이상인 경우
+         * - 양측 score 가 1:1로 입력된 경우
+         * - score가 소수인 경우
+         * - score가 음수인 경우
+         * - 양쪽 score 의 합이 4 이상인 경우 >>>> 1:5가 아니라 2:2로 수정필요
+         * - intraId 를 못 찾는 경우
+         * - 유저의 경기기록이 하나도 없는 경우
+         * - 유효하지 않은 토큰으로 매칭 테이블 요청을 보내는 경우
+         * */
+
+
         /*
          * 사용자 - 진행중인 게임 결과가 없는 경우
          * -> 400
