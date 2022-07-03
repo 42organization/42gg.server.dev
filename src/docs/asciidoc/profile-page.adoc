@@ -101,7 +101,7 @@ include::{snippets}/user-find-historics/http-request.adoc[]
 include::{snippets}/user-find-historics/http-response.adoc[]
 
 == 프로필 업데이트
-=== 1. 프로필 수정 실패-racketType 미기입
+== 1. 프로필 수정 실패-racketType 미기입
 === curl-request
 include::{snippets}/user-modify-4xxError-cause-racketType-missing/curl-request.adoc[]
 
@@ -111,7 +111,7 @@ include::{snippets}/user-modify-4xxError-cause-racketType-missing/http-request.a
 === http-response
 include::{snippets}/user-modify-4xxError-cause-racketType-missing/http-response.adoc[]
 
-=== 2. 프로필 수정 실패-racketType 잘못 기입
+== 2. 프로필 수정 실패-racketType 잘못 기입
 === curl-request
 include::{snippets}/user-modify-4xxError-cause-racketType-wrong-value/curl-request.adoc[]
 
@@ -121,7 +121,7 @@ include::{snippets}/user-modify-4xxError-cause-racketType-wrong-value/http-reque
 === http-response
 include::{snippets}/user-modify-4xxError-cause-racketType-wrong-value/http-response.adoc[]
 
-=== 3. 프로필 수정 실패-statusMessage 미기입
+== 3. 프로필 수정 실패-statusMessage 미기입
 === curl-request
 include::{snippets}/user-modify-4xxError-cause-statusMessage-missing/curl-request.adoc[]
 
@@ -131,7 +131,7 @@ include::{snippets}/user-modify-4xxError-cause-statusMessage-missing/http-reques
 === http-response
 include::{snippets}/user-modify-4xxError-cause-statusMessage-missing/http-response.adoc[]
 
-=== 4. 프로필 수정 실패-statusMessage 잘못 기입
+== 4. 프로필 수정 실패-statusMessage 잘못 기입
 === curl-request
 include::{snippets}/user-modify-4xxError-cause-statusMessage-wrong-length/curl-request.adoc[]
 
@@ -141,7 +141,7 @@ include::{snippets}/user-modify-4xxError-cause-statusMessage-wrong-length/http-r
 === http-response
 include::{snippets}/user-modify-4xxError-cause-statusMessage-wrong-length/http-response.adoc[]
 
-=== 5. 프로필 수정 성공
+== 5. 프로필 수정 성공
 === curl-request
 include::{snippets}/user-modify-profile/curl-request.adoc[]
 
