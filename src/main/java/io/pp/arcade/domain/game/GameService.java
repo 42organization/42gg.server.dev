@@ -62,7 +62,7 @@ public class GameService {
     @Transactional
     public GameDto findBySlot(Integer slotId) {
         Slot slot = slotRepository.findById(slotId).orElseThrow(() -> new BusinessException("E0001"));
-        GameDto game = GameDto.from(gameRepository.findBySlot(slot).orElseThrow(() -> new BusinessException("E0001")));
+        GameDto game = GameDto.from(gameRepository.findBySlot(slot).orElse(null));
         return game;
     }
 
