@@ -1,3 +1,6 @@
+ifndef::snippets[]
+:snippets: ./build/generated-snippets
+endif::[]
 = 42PINGPONG API DOCS
 :doctype: book
 :icons: font
@@ -7,7 +10,7 @@
 :sectlinks:
 
 [[overview-http-status-codes]]
-=== HTTP status codes
+== HTTP status codes
 
 |===
 | 상태 코드 | 설명
@@ -32,23 +35,22 @@
 |===
 
 [[overview-error-codes]]
-=== Error status codes
+== Error status codes
 
 |===
 | 상태 코드 | 설명
-| Slot_POST
-|
+| `E0001`
+| 기타 에러 발생
+| SLOT_POST
+| 슬롯 생성 실패
 | `SC001`
 | 슬롯의 status가 close인 경우
-
 | `SC002`
 | 유저가 이미 예약한 슬롯이 존재하는 경우
-
 | `SC003`
 | 패널티 유저가 등록한 경우
-
-| Slot_DELETE
-|
+| SLOT_DELETE
+| 슬롯 삭제 실패
 | `SD001`
 | 등록되지 않은 슬롯에서 취소한 경우
 
@@ -808,5 +810,3 @@ include::{snippets}/game-find-results-find-id-1000/http-request.adoc[]
 
 === http-response
 include::{snippets}/game-find-results-find-id-1000/http-response.adoc[]
-
-=
