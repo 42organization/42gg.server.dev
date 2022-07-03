@@ -45,7 +45,6 @@ cors:
 info:
   web:
     frontUrl: 'http://localhost:8080'
-
 #logging:
 #  level:
 #    org:

@@ -1,6 +1,0 @@
-[source,bash]
-----
-$ http DELETE 'http://localhost:8080/pingpong/notifications/49' \
-    'Content-Type:application/json;charset=UTF-8' \
-    'Authorization:Bearer 1'
-----

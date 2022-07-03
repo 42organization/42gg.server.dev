@@ -62,7 +62,7 @@ endif::[]
 
 == 알림 조회
 
-=== 1. 처음 조회
+== 1. 처음 조회
 === curl-request
 include::{snippets}/notifications-find/curl-request.adoc[]
 
@@ -72,7 +72,7 @@ include::{snippets}/notifications-find/http-request.adoc[]
 === http-response
 include::{snippets}/notifications-find/http-response.adoc[]
 
-=== 2. 두 번째 조회
+== 2. 두 번째 조회
 === curl-request
 include::{snippets}/notifications-find-twice/curl-request.adoc[]
 
@@ -84,7 +84,7 @@ include::{snippets}/notifications-find-twice/http-response.adoc[]
 
 == 알림 삭제
 
-=== 1. 알림 하나 삭제 요청
+== 1. 알림 하나 삭제 요청
 === curl-request
 include::{snippets}/notification-delete-one/curl-request.adoc[]
 
@@ -94,7 +94,7 @@ include::{snippets}/notification-delete-one/http-request.adoc[]
 === http-response
 include::{snippets}/notification-delete-one/http-response.adoc[]
 
-=== 2. 해당 유저가 아닌 다른 유저가 삭제 시도 시, 에러
+== 2. 해당 유저가 아닌 다른 유저가 삭제 시도 시, 에러
 === curl-request
 include::{snippets}/notification-delete-4xxError-cause-other-user-try/curl-request.adoc[]
 
@@ -104,7 +104,7 @@ include::{snippets}/notification-delete-4xxError-cause-other-user-try/http-reque
 === http-response
 include::{snippets}/notification-delete-4xxError-cause-other-user-try/http-response.adoc[]
 
-=== 3. notiId가 음수인 경, 에러
+== 3. notiId가 음수인 경, 에러
 === curl-request
 include::{snippets}/notification-delete-4xxError-cause-notiId-is-negative/curl-request.adoc[]
 
@@ -114,7 +114,7 @@ include::{snippets}/notification-delete-4xxError-cause-notiId-is-negative/http-r
 === http-response
 include::{snippets}/notification-delete-4xxError-cause-notiId-is-negative/http-response.adoc[]
 
-=== 4. notiId가 존재하지 않는 경우, 에러
+== 4. notiId가 존재하지 않는 경우, 에러
 === curl-request
 include::{snippets}/notification-delete-4xxError-cause-notiId-don't-exist/curl-request.adoc[]
 
@@ -124,7 +124,7 @@ include::{snippets}/notification-delete-4xxError-cause-notiId-don't-exist/http-r
 === http-response
 include::{snippets}/notification-delete-4xxError-cause-notiId-don't-exist/http-response.adoc[]
 
-=== 5. notiId가 숫자가 아 경우, 에러
+== 5. notiId가 숫자가 아 경우, 에러
 === curl-request
 include::{snippets}/notification-delete-4xxError-cause-notiId-is-not-integer/curl-request.adoc[]
 
@@ -134,7 +134,7 @@ include::{snippets}/notification-delete-4xxError-cause-notiId-is-not-integer/htt
 === http-response
 include::{snippets}/notification-delete-4xxError-cause-notiId-is-not-integer/http-response.adoc[]
 
-=== 6. noti 삭제 요청 정상 처리 후
+== 6. noti 삭제 요청 정상 처리 후
 === curl-request
 include::{snippets}/notification-after-delete-one/curl-request.adoc[]
 
@@ -146,7 +146,7 @@ include::{snippets}/notification-after-delete-one/http-response.adoc[]
 
 == 알림 전체 삭제
 
-=== 1. 알림 전체 삭제 요청
+== 1. 알림 전체 삭제 요청
 === curl-request
 include::{snippets}/notification-delete-all/curl-request.adoc[]
 
@@ -156,7 +156,7 @@ include::{snippets}/notification-delete-all/http-request.adoc[]
 === http-response
 include::{snippets}/notification-delete-all/http-response.adoc[]
 
-=== 2. 알림 전체 삭제 요청 정상 처리 후
+== 2. 알림 전체 삭제 요청 정상 처리 후
 === curl-request
 include::{snippets}/notification-after-delete-all/curl-request.adoc[]
 

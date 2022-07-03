@@ -1,7 +1,0 @@
-[source,options="nowrap"]
-----
-{
-  "myTeamScore" : "1",
-  "enemyTeamScore" : "1"
-}
-----
