@@ -9,6 +9,7 @@ import java.util.List;
 @Getter
 @Builder
 public class RankListResponseDto {
+    private String myIntraId;
     private Integer myRank;
     private Integer currentPage;
     private Integer totalPage;
