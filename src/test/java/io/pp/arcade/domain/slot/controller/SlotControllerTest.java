@@ -729,7 +729,7 @@ class SlotControllerTest {
             /* slot - user1 등록 취소 imminent라서 취소 불가*/
             mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[7].getAccessToken()))
-                    .andExpect(status().isIAmATeapot())
+                    .andExpect(status().isBadRequest())
                     .andDo(document("slot-cancel-live-game"));
         }
 
@@ -816,7 +816,7 @@ class SlotControllerTest {
 
             CurrentMatch user1CurrentMatch = currentMatchRepository.findByUser(team1User).orElse(null);
             CurrentMatch user2CurrentMatch = currentMatchRepository.findByUser(team2User).orElse(null);
-            Noti user1Noti = notiRepository.findAllByUser(team1User).get(1); // matched(0), canceled(1)
+            Noti user1Noti = notiRepository.findAllByUser(team1User).get(0); // matched(0), canceled(1)
             Noti user2Noti = notiRepository.findAllByUser(team2User).get(1); // matched(0), canceled(1)
 
             Assertions.assertThat(slot.getTeam1().getUser1()).isEqualTo(null);
@@ -834,7 +834,7 @@ class SlotControllerTest {
             Assertions.assertThat(user1CurrentMatch).isEqualTo(null);
             Assertions.assertThat(user2CurrentMatch.getIsMatched()).isEqualTo(false);
 
-            Assertions.assertThat(user1Noti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
+            Assertions.assertThat(user1Noti.getType()).isEqualTo(NotiType.MATCHED);
             Assertions.assertThat(user2Noti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
             flushAll();
 
@@ -877,7 +877,7 @@ class SlotControllerTest {
             CurrentMatch user1CurrentMatch = currentMatchRepository.findByUser(team1User).orElse(null);
             CurrentMatch user2CurrentMatch = currentMatchRepository.findByUser(team2User).orElse(null);
             Noti user1Noti = notiRepository.findAllByUser(team1User).get(1);
-            Noti user2Noti = notiRepository.findAllByUser(team2User).get(1);
+            Noti user2Noti = notiRepository.findAllByUser(team2User).get(0);
 
             Assertions.assertThat(slot.getTeam1().getUser1()).isEqualTo(team1User);
             Assertions.assertThat(slot.getTeam1().getHeadCount()).isEqualTo(1);
@@ -891,7 +891,7 @@ class SlotControllerTest {
             Assertions.assertThat(user1CurrentMatch.getIsMatched()).isEqualTo(false);
             Assertions.assertThat(user2CurrentMatch).isEqualTo(null);
             Assertions.assertThat(user1Noti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
-            Assertions.assertThat(user2Noti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
+            Assertions.assertThat(user2Noti.getType()).isEqualTo(NotiType.MATCHED);
             flushAll();
         }
         flushAll();
@@ -991,14 +991,14 @@ class SlotControllerTest {
             Assertions.assertThat(donghyukMatch.getIsMatched()).isEqualTo(false);
             Assertions.assertThat(jiyunMatch).isEqualTo(null);
 
-            Noti hakimNoti = notiRepository.findAllByUser(hakim).get(1); // matched 알림이 given에서 왔기 때문에 ! 그 다음걸 확인
+            Noti hakimNoti = notiRepository.findAllByUser(hakim).get(0); // matched 알림이 given에서 왔기 때문에 ! 그 다음걸 확인
             Noti nheoNoti = notiRepository.findAllByUser(nheo).get(1);
             Noti donghyukNoti = notiRepository.findAllByUser(donghyuk).get(1);
-            Noti jiyunNoti = notiRepository.findAllByUser(jiyun).get(1);
-            Assertions.assertThat(hakimNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
+            Noti jiyunNoti = notiRepository.findAllByUser(jiyun).get(0);
+            Assertions.assertThat(hakimNoti.getType()).isEqualTo(NotiType.MATCHED);
             Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
             Assertions.assertThat(donghyukNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
-            Assertions.assertThat(jiyunNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
+            Assertions.assertThat(jiyunNoti.getType()).isEqualTo(NotiType.MATCHED);
         }
 
         /* slot에서 user2 제거 */
@@ -1052,7 +1052,7 @@ class SlotControllerTest {
             Assertions.assertThat(hakimNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
             Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
             Assertions.assertThat(donghyukNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
-            Assertions.assertThat(jiyunNotiSize).isEqualTo(2);
+            Assertions.assertThat(jiyunNotiSize).isEqualTo(1);
         }
 
         flushAll();
@@ -1116,7 +1116,7 @@ class SlotControllerTest {
             Assertions.assertThat(hakimNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
             Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
             Assertions.assertThat(donghyukNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
-            Assertions.assertThat(jiyunNotiSize).isEqualTo(2);
+            Assertions.assertThat(jiyunNotiSize).isEqualTo(1);
         }
 
         /* slot에서 user1 제거 */
@@ -1170,7 +1170,7 @@ class SlotControllerTest {
             Assertions.assertThat(hakimNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
             Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
             Assertions.assertThat(donghyukNotiSize).isEqualTo(2);
-            Assertions.assertThat(jiyunNotiSize).isEqualTo(2);
+            Assertions.assertThat(jiyunNotiSize).isEqualTo(1);
         }
 
         flushAll();
@@ -1226,7 +1226,7 @@ class SlotControllerTest {
             Assertions.assertThat(hakimNotiSize).isEqualTo(2);
             Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
             Assertions.assertThat(donghyukNotiSize).isEqualTo(2);
-            Assertions.assertThat(jiyunNotiSize).isEqualTo(2);
+            Assertions.assertThat(jiyunNotiSize).isEqualTo(1);
         }
         flushAll();
     }
