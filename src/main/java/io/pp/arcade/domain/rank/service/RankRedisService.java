@@ -178,7 +178,7 @@ public class RankRedisService implements RankNTService {
 
     @Transactional
     protected void saveUserRankingPpp(RankRedis userRank, Integer ppp) {
-        Integer isRanked = userRank.getWinRate() != 0 ? 1 : 0;
+        Integer isRanked = userRank.getLosses() + userRank.getWins() != 0 ? 1 : 0;
         redisRank.opsForZSet().add(userRank.getGameType().getCode(), getUserRankKey(userRank.getIntraId(), userRank.getGameType()), ppp * isRanked);
     }
 
