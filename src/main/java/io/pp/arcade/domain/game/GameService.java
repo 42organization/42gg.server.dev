@@ -62,7 +62,7 @@ public class GameService {
     @Transactional
     public GameDto findBySlot(Integer slotId) {
         Slot slot = slotRepository.findById(slotId).orElseThrow(() -> new BusinessException("E0001"));
-        GameDto game = GameDto.from(gameRepository.findBySlot(slot).orElse(null));
+        GameDto game = GameDto.from(gameRepository.findBySlot(slot).orElseThrow(() -> new BusinessException("E0001")));
         return game;
     }
 
@@ -85,6 +85,8 @@ public class GameService {
 
         GameResultPageDto resultPageDto = GameResultPageDto.builder()
                 .gameList(gameDtoList)
+                .totalPage(games.getTotalPages())
+                .currentPage(games.getNumber())
                 .build();
         return resultPageDto;
     }
