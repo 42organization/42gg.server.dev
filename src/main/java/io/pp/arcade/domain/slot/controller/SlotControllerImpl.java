@@ -119,12 +119,13 @@ public class SlotControllerImpl implements SlotController {
         currentMatchService.removeCurrentMatch(currentMatchRemoveDto);
         teamService.removeUserInTeam(getTeamRemoveUserDto(slot, user));
         slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
+        slot = slotService.findSlotById(slot.getId());
         checkIsSlotMatched(user, currentMatch, slot);
     }
 
     private void checkIsSlotMatched(UserDto user, CurrentMatchDto currentMatch, SlotDto slot) throws MessagingException {
         if (currentMatch.getIsMatched() == true) {
-            falsifyIsMatchedForRemainders(currentMatch.getSlot());
+            falsifyIsMatchedForRemainders(slot);
             redisTemplate.opsForValue().set(Key.PENALTY_USER + user.getIntraId(), "true", 60, TimeUnit.SECONDS);
             notiGenerater.addCancelNotisBySlot(NotiCanceledTypeDto.builder().slotDto(slot).notiType(NotiType.CANCELEDBYMAN).build());
         }

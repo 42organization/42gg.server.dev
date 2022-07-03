@@ -88,12 +88,12 @@ bootJar {
 	dependsOn asciidoctor
 	copy {
 		from "${asciidoctor.outputDir}"
-		into 'BOOT-INF/classes/static/docs'
+		into 'src/main/resources/static'
 	}
 }
 
 task copyDocument(type: Copy) {
 	dependsOn asciidoctor
 	from file("build/docs/asciidoc")
-	into file("src/main/resources/static/docs")
+	into file("src/main/resources/static")
 }
