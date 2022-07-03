@@ -10,6 +10,6 @@ import java.util.List;
 public class GameResultResponseDto {
     List<GameResultDto> games;
     Integer lastGameId;
-//    Integer currentPage;
-//    Integer totalPage;
+    Integer currentPage;
+    Integer totalPage;
 }

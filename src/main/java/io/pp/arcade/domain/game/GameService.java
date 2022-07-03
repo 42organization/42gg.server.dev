@@ -85,6 +85,8 @@ public class GameService {
 
         GameResultPageDto resultPageDto = GameResultPageDto.builder()
                 .gameList(gameDtoList)
+                .totalPage(games.getTotalPages())
+                .currentPage(games.getNumber())
                 .build();
         return resultPageDto;
     }

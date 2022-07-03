@@ -76,8 +76,8 @@ public class PChangeService {
         Page<PChange> pChangePage = pChangeRepository.findAllByUserAndGameIdLessThanOrderByIdDesc(user, gameId, findDto.getPageable());
         PChangePageDto dto = PChangePageDto.builder()
                 .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()))
-//                .totalPage(pChangePage.getTotalPages())
-//                .currentPage(pChangePage.getPageable().getPageNumber())
+                .totalPage(pChangePage.getTotalPages())
+                .currentPage(pChangePage.getPageable().getPageNumber())
                 .build();
         return dto;
     }

@@ -9,6 +9,6 @@ import java.util.List;
 @Builder
 public class PChangePageDto {
     List<PChangeDto> pChangeList;
-//    Integer currentPage;
-//    Integer totalPage;
+    Integer currentPage;
+    Integer totalPage;
 }
