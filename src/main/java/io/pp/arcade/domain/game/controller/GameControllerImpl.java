@@ -124,6 +124,8 @@ public class GameControllerImpl implements GameController {
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
                 .lastGameId(lastGameId)
+                .totalPage(resultPageDto.getTotalPage())
+                .currentPage(resultPageDto.getCurrentPage() + 1)
                 .build();
         return gameResultResponse;
     }
@@ -160,8 +162,8 @@ public class GameControllerImpl implements GameController {
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
                 .lastGameId(lastGameId)
-//                .currentPage(pChangePageDto.getCurrentPage())
-//                .totalPage(pChangePageDto.getTotalPage())
+                .totalPage(pChangePageDto.getTotalPage())
+                .currentPage(pChangePageDto.getCurrentPage() + 1)
                 .build();
         return gameResultResponse;
     }
