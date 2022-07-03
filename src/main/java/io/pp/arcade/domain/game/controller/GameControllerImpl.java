@@ -107,7 +107,8 @@ public class GameControllerImpl implements GameController {
 
     @Override
     @GetMapping(value = "/games")
-    public GameResultResponseDto gameResultByGameIdAndCount(GameResultPageRequestDto requestDto) {
+    public GameResultResponseDto gameResultByGameIdAndCount(GameResultPageRequestDto requestDto, HttpServletRequest request) {
+        tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         Pageable pageable = PageRequest.of(0, requestDto.getCount());
         GameResultPageDto resultPageDto = gameService.findGamesAfterId(GameFindDto.builder().id(requestDto.getGameId()).status(requestDto.getStatus()).pageable(pageable).build());
         List<GameResultDto> gameResultList = new ArrayList<>();
@@ -123,19 +124,22 @@ public class GameControllerImpl implements GameController {
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
                 .lastGameId(lastGameId)
+                .totalPage(resultPageDto.getTotalPage())
+                .currentPage(resultPageDto.getCurrentPage() + 1)
                 .build();
         return gameResultResponse;
     }
 
     @Override
     @GetMapping(value = "/users/{intraId}/games")
-    public GameResultResponseDto gameResultByUserIdAndByGameIdAndCount(String intraId, GameResultUserPageRequestDto requestDto) {
+    public GameResultResponseDto gameResultByUserIdAndByGameIdAndCount(String intraId, GameResultUserPageRequestDto requestDto, HttpServletRequest request) {
         //Pageable
         /*
          * 1. PChange에서 유저별 게임 목록을 가져온다
          * 2. 얘네를 바탕으로 게임을 다 긁어온다.
          * 3. 얘네를 DTO로 만들어준다
          */
+        tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         Pageable pageable = PageRequest.of(0, requestDto.getCount());
         PChangeFindDto findDto = PChangeFindDto.builder()
                 .userId(intraId)
@@ -158,8 +162,8 @@ public class GameControllerImpl implements GameController {
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
                 .lastGameId(lastGameId)
-//                .currentPage(pChangePageDto.getCurrentPage())
-//                .totalPage(pChangePageDto.getTotalPage())
+                .totalPage(pChangePageDto.getTotalPage())
+                .currentPage(pChangePageDto.getCurrentPage() + 1)
                 .build();
         return gameResultResponse;
     }
