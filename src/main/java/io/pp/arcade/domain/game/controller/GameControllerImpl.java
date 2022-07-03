@@ -213,18 +213,19 @@ public class GameControllerImpl implements GameController {
     private void modifyUsersPppAndPChange(GameDto game, TeamDto team1, TeamDto team2) {
         TeamDto savedTeam1 = teamService.findById(team1.getId());
         TeamDto savedTeam2 = teamService.findById(team2.getId());
-        modifyUserPppAndAddPchangeAndRank(game.getId(), team1.getUser1(), savedTeam2);
-        modifyUserPppAndAddPchangeAndRank(game.getId(), team1.getUser2(), savedTeam2);
-        modifyUserPppAndAddPchangeAndRank(game.getId(), team2.getUser1(), savedTeam1);
-        modifyUserPppAndAddPchangeAndRank(game.getId(), team2.getUser2(), savedTeam1);
+        Boolean isOneSide = Math.abs(savedTeam1.getScore() - savedTeam2.getScore()) == 2;
+        modifyUserPppAndAddPchangeAndRank(game, team1.getUser1(), savedTeam2, isOneSide);
+        modifyUserPppAndAddPchangeAndRank(game, team1.getUser2(), savedTeam2, isOneSide);
+        modifyUserPppAndAddPchangeAndRank(game, team2.getUser1(), savedTeam1, isOneSide);
+        modifyUserPppAndAddPchangeAndRank(game, team2.getUser2(), savedTeam1, isOneSide);
         
     }
     
-    private void modifyUserPppAndAddPchangeAndRank(Integer gameId, UserDto user, TeamDto enemyTeam) {
+    private void modifyUserPppAndAddPchangeAndRank(GameDto game, UserDto user, TeamDto enemyTeam, Boolean isOneSide) {
         if (user == null) {
             return;
         }
-        Integer pppChange = EloRating.pppChange(user.getPpp(), enemyTeam.getTeamPpp(), !enemyTeam.getWin());
+        Integer pppChange = EloRating.pppChange(user.getPpp(), enemyTeam.getTeamPpp(), !enemyTeam.getWin(), isOneSide);
         Integer ppp = (user.getPpp() + pppChange);
         Integer userPpp = ppp > 0 ? ppp : 0;
         UserModifyPppDto modifyPppDto = UserModifyPppDto.builder()
@@ -233,13 +234,13 @@ public class GameControllerImpl implements GameController {
                 .build();
         userService.modifyUserPpp(modifyPppDto);
         PChangeAddDto pChangeAddDto = PChangeAddDto.builder()
-                .gameId(gameId)
+                .gameId(game.getId())
                 .userId(user.getId())
                 .pppChange(pppChange)
                 .pppResult(userPpp)
                 .build();
         pChangeService.addPChange(pChangeAddDto);
-        GameType gameType = gameService.findById(gameId).getType();
+        GameType gameType = gameService.findById(game.getId()).getType();
         RankModifyDto rankModifyDto =  RankModifyDto.builder()
                 .gameType(gameType)
                 .Ppp(userPpp)
