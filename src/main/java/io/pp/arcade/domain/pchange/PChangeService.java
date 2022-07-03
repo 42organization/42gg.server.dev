@@ -59,7 +59,7 @@ public class PChangeService {
     @Transactional
     public PChangePageDto findPChangeByUserId(PChangeFindDto findDto){
         User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
-        Page<PChange> pChangePage = pChangeRepository.findAllByUserOrderByIdDesc(user, findDto.getPageable());
+        Page<PChange> pChangePage = pChangeRepository.findAllByUser(user, findDto.getPageable());
         PChangePageDto dto = PChangePageDto.builder()
                 .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()))
 //                .totalPage(pChangePage.getTotalPages())
