@@ -51,3 +51,4 @@ cors:
 info:
   web:
     frontUrl: 'http://localhost:3000'
+
