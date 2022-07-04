@@ -161,6 +161,29 @@ class UserControllerTest {
                 .matchImminent(true)
                 .isMatched(true)
                 .build());
+        PChange pChange2;
+        Team team3 = teamRepository.save(Team.builder().teamPpp(0)
+                .user1(user).headCount(1).score(0).build());
+        Team team4 = teamRepository.save(Team.builder().teamPpp(0)
+                .user1(user2).headCount(1).score(0).build());
+        Slot slot2 = slotRepository.save(Slot.builder()
+                .team1(team3)
+                .team2(team4)
+                .headCount(2)
+                .type(GameType.SINGLE)
+                .tableId(1)
+                .time(LocalDateTime.now().plusDays(1))
+                .gamePpp(50)
+                .build());
+        gameRepository.save(Game.builder().slot(slot2).team1(team3).team2(team4).type(slot2.getType()).time(slot2.getTime()).season(1).status(StatusType.END).build());
+        gameRepository.save(Game.builder().slot(slot2).team1(team3).team2(team4).type(slot2.getType()).time(slot2.getTime()).season(1).status(StatusType.END).build());
+
+        pChangeRepository.save(PChange.builder()
+                .game(userGame)
+                .user(users[0])
+                .pppChange(4)
+                .pppResult(6 + user.getPpp())
+                .build());
     }
 
     @Test
