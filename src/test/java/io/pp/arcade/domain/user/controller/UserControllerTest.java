@@ -306,11 +306,11 @@ class UserControllerTest {
                         .param("q", "k")
                         .header("Authorization", "Bearer " + initiator.tokens[1].getAccessToken()))
                 .andExpect(jsonPath("$.users").isNotEmpty())
+                .andExpect(jsonPath(checkUsers, "kipark").exists())
                 .andExpect(jsonPath(checkUsers, "hakim").exists())
-                .andExpect(jsonPath(checkUsers, "donghyuk").exists())
                 .andExpect(jsonPath(checkUsers, "jekim").exists())
-                .andExpect(jsonPath(checkUsers, "jihyukim").exists())
                 .andExpect(jsonPath(checkUsers, "daekim").exists())
+                .andExpect(jsonPath(checkUsers, "jihyukim").exists())
                 .andExpect(status().isOk())
                 .andDo(document("user-search-with-partial-string"));
     }
