@@ -100,7 +100,7 @@ public class GameControllerImpl implements GameController {
         // modify users with game result
         modifyUsersPppAndPChange(game, team1, team2);
         endGameStatus(game);
-        removCurrentMatch(game);
+        removeCurrentMatch(game);
         // modify users' ranks with game result
         throw new ResponseStatusException(HttpStatus.CREATED, "");
     }
@@ -254,7 +254,8 @@ public class GameControllerImpl implements GameController {
         rankRedisService.modifyUserPpp(rankModifyDto);
     }
 
-    private void removCurrentMatch(GameDto game) {
+
+    private void removeCurrentMatch(GameDto game) {
     CurrentMatchFindDto findDto = CurrentMatchFindDto.builder()
             .game(game)
             .build();
