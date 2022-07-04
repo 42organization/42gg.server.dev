@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -89,6 +90,7 @@ public class GameControllerImpl implements GameController {
         if (game == null) {
             throw new BusinessException("E0001");
         }
+        removeCurrentMatch(game);
         TeamDto team1 = game.getTeam1();
         TeamDto team2 = game.getTeam2();
         // figuring out team number for myteam and enemyteam
@@ -100,7 +102,6 @@ public class GameControllerImpl implements GameController {
         // modify users with game result
         modifyUsersPppAndPChange(game, team1, team2);
         endGameStatus(game);
-        removCurrentMatch(game);
         // modify users' ranks with game result
         throw new ResponseStatusException(HttpStatus.CREATED, "");
     }
@@ -222,7 +223,6 @@ public class GameControllerImpl implements GameController {
         modifyUserPppAndAddPchangeAndRank(game, team1.getUser2(), savedTeam2, isOneSide);
         modifyUserPppAndAddPchangeAndRank(game, team2.getUser1(), savedTeam1, isOneSide);
         modifyUserPppAndAddPchangeAndRank(game, team2.getUser2(), savedTeam1, isOneSide);
-        
     }
     
     private void modifyUserPppAndAddPchangeAndRank(GameDto game, UserDto user, TeamDto enemyTeam, Boolean isOneSide) {
@@ -254,7 +254,7 @@ public class GameControllerImpl implements GameController {
         rankRedisService.modifyUserPpp(rankModifyDto);
     }
 
-    private void removCurrentMatch(GameDto game) {
+    private void removeCurrentMatch(GameDto game) {
     CurrentMatchFindDto findDto = CurrentMatchFindDto.builder()
             .game(game)
             .build();
