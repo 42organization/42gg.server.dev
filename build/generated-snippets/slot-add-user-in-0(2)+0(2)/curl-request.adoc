@@ -1,0 +1,9 @@
+[source,bash]
+----
+$ curl 'http://localhost:8080/pingpong/match/tables/1/double' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer 0' \
+    -d '{
+  "slotId" : "778"
+}'
+----

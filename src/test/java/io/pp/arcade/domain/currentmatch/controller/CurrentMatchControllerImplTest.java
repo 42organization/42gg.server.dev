@@ -207,7 +207,7 @@ class CurrentMatchControllerImplTest {
         game = saveGame(game1);
         currentMatchSave(game1, slot, user4, true, true);
         mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnauthorized())
+                .andExpect(status().is3xxRedirection())
                 .andDo(document("current-match-info-unauthorized-request"));
     }
 }
