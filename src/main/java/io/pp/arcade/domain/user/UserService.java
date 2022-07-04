@@ -71,7 +71,7 @@ public class UserService {
     public List<UserDto> findByPartsOfIntraId(UserSearchRequestDto userSearchDto) {
         List<UserDto> result = new ArrayList<UserDto>();
         if (!userSearchDto.getIntraId().isEmpty()){
-            Pageable pageable = PageRequest.of(0, 5, JpaSort.unsafe("locate('" + userSearchDto.getIntraId() + "', intraId)").ascending());
+            Pageable pageable = PageRequest.of(0, 5, JpaSort.unsafe("locate('" + userSearchDto.getIntraId() + "', intraId)").ascending().and(Sort.by("intraId")));
             Page<User> users = userRepository.findByIntraIdContains(userSearchDto.getIntraId(), pageable);
             result.addAll(users.stream().map(UserDto::from).collect(Collectors.toList()));
         }
