@@ -1,0 +1,12 @@
+[source,options="nowrap"]
+----
+{
+  "notifications" : [ {
+    "id" : 3,
+    "type" : "matched",
+    "time" : "2022-07-05T15:00:00",
+    "isChecked" : true,
+    "createdAt" : "2022-07-04T14:43:30.181859"
+  } ]
+}
+----
