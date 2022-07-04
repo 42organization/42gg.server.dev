@@ -71,13 +71,14 @@ public class SlotControllerImpl implements SlotController {
     @PostMapping(value = "/match/tables/{tableId}/{type}")
     public void slotAddUser(Integer tableId, GameType type, SlotAddUserRequestDto addReqDto, HttpServletRequest request) throws MessagingException {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        doubleNotSupportedYet(type);
         Integer userId = user.getId();
         SlotDto slot = slotService.findSlotById(addReqDto.getSlotId());
 
         checkIfUserHaveCurrentMatch(user);
         checkIfUserHavePenalty(user);
         checkIfSlotAvailable(slot, type, user);
-//        checkIfSlotTimePassed(slot);
+
         //user가 들어갈 팀을 정한당
         TeamAddUserDto teamAddUserDto = getTeamAddUserDto(slot, user);
 
@@ -101,6 +102,12 @@ public class SlotControllerImpl implements SlotController {
         //유저가 슬롯에 꽉 차면 currentMatch가 전부 바뀐다.
         modifyUsersCurrentMatchStatus(user, slot);
         notiGenerater.addMatchNotisBySlot(slot);
+    }
+
+    private void doubleNotSupportedYet(GameType type) {
+        if (GameType.DOUBLE.equals(type)) {
+            throw new BusinessException("SC004");
+        }
     }
 
     @Override
