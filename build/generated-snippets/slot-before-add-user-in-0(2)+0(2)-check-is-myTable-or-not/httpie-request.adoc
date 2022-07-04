@@ -1,0 +1,6 @@
+[source,bash]
+----
+$ http GET 'http://localhost:8080/pingpong/match/tables/1/double' \
+    'Content-Type:application/json;charset=UTF-8' \
+    'Authorization:Bearer 0'
+----

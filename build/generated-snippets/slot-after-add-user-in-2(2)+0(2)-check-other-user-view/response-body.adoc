@@ -1,0 +1,97 @@
+[source,options="nowrap"]
+----
+{
+  "intervalMinute" : 10,
+  "matchBoards" : [ [ {
+    "slotId" : 778,
+    "time" : "2022-07-05T15:00:00",
+    "status" : "open",
+    "headCount" : 3
+  }, {
+    "slotId" : 779,
+    "time" : "2022-07-05T15:10:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 780,
+    "time" : "2022-07-05T15:20:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 781,
+    "time" : "2022-07-05T15:30:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 782,
+    "time" : "2022-07-05T15:40:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 783,
+    "time" : "2022-07-05T15:50:00",
+    "status" : "open",
+    "headCount" : 0
+  } ], [ {
+    "slotId" : 784,
+    "time" : "2022-07-05T16:00:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 785,
+    "time" : "2022-07-05T16:10:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 786,
+    "time" : "2022-07-05T16:20:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 787,
+    "time" : "2022-07-05T16:30:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 788,
+    "time" : "2022-07-05T16:40:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 789,
+    "time" : "2022-07-05T16:50:00",
+    "status" : "open",
+    "headCount" : 0
+  } ], [ {
+    "slotId" : 790,
+    "time" : "2022-07-05T17:00:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 791,
+    "time" : "2022-07-05T17:10:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 792,
+    "time" : "2022-07-05T17:20:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 793,
+    "time" : "2022-07-05T17:30:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 794,
+    "time" : "2022-07-05T17:40:00",
+    "status" : "open",
+    "headCount" : 0
+  }, {
+    "slotId" : 795,
+    "time" : "2022-07-05T17:50:00",
+    "status" : "open",
+    "headCount" : 0
+  } ] ]
+}
+----

@@ -1,0 +1,7 @@
+[source,options="nowrap"]
+----
+{
+  "code" : "SD002",
+  "message" : "잘못된 요청입니다."
+}
+----
