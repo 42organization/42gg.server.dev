@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,9 +60,9 @@ public class PChangeService {
     @Transactional
     public PChangePageDto findPChangeByUserId(PChangeFindDto findDto){
         User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
-        Page<PChange> pChangePage = pChangeRepository.findAllByUser(user, findDto.getPageable());
+        Page<PChange> pChangePage = pChangeRepository.findAllByUserOrderByIdDesc(user, findDto.getPageable());
         PChangePageDto dto = PChangePageDto.builder()
-                .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()))
+                .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()).stream().sorted(Comparator.comparing(PChangeDto::getId)).collect(Collectors.toList()))
 //                .totalPage(pChangePage.getTotalPages())
 //                .currentPage(pChangePage.getPageable().getPageNumber())
                 .build();
