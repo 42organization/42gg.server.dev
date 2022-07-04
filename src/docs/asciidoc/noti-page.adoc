@@ -165,3 +165,38 @@ include::{snippets}/notification-after-delete-all/http-request.adoc[]
 
 === http-response
 include::{snippets}/notification-after-delete-all/http-response.adoc[]
+
+== 알림 흐름을 따라가보자
+
+== 1. 방이 아직 덜 찼을 때
+=== curl-request
+include::{snippets}/NotiFlowTest-SingleGameType-Positive-MatchedNoti-exist-or-not/curl-request.adoc[]
+
+=== http-request
+include::{snippets}/NotiFlowTest-SingleGameType-Positive-MatchedNoti-exist-or-not/http-request.adoc[]
+
+=== http-response
+include::{snippets}/NotiFlowTest-SingleGameType-Positive-MatchedNoti-exist-or-not/http-response.adoc[]
+
+== 2. 인원이 다 차서 모두에게 알림이 갔을 때, 확인
+=== curl-request
+include::{snippets}/NotiFlowTest-SingleGameType-Positive-MatchedNoti-checked/curl-request.adoc[]
+
+=== http-request
+include::{snippets}/NotiFlowTest-SingleGameType-Positive-MatchedNoti-checked/http-request.adoc[]
+
+=== http-response
+include::{snippets}/NotiFlowTest-SingleGameType-Positive-MatchedNoti-checked/http-response.adoc[]
+
+== 2. 처음 확인하고 그 후 상태
+=== curl-request
+include::{snippets}/NotiFlowTest-SingleGameType-Positive-MatchedNoti-checked-twice/curl-request.adoc[]
+
+=== http-request
+include::{snippets}/NotiFlowTest-SingleGameType-Positive-MatchedNoti-checked-twice/http-request.adoc[]
+
+=== http-response
+include::{snippets}/NotiFlowTest-SingleGameType-Positive-MatchedNoti-checked-twice/http-response.adoc[]
+
+
+

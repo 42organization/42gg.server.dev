@@ -1,0 +1,10 @@
+[source,options="nowrap"]
+----
+{
+  "time" : "2022-07-05T14:43:18.381775",
+  "slotId" : 21,
+  "myTeam" : [ "jiyun", "jekim" ],
+  "enemyTeam" : [ "wochae", "jabae" ],
+  "isMatched" : true
+}
+----

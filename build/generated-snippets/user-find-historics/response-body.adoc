@@ -1,0 +1,9 @@
+[source,options="nowrap"]
+----
+{
+  "historics" : [ {
+    "ppp" : 1042,
+    "date" : "2022-07-05T14:43:55.238394"
+  } ]
+}
+----
