@@ -1,9 +1,0 @@
-[source,bash]
-----
-$ curl 'http://localhost:8080/pingpong/match/slots/1' -i -X DELETE \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer 6' \
-    -d '{
-  "slotId" : "689"
-}'
-----

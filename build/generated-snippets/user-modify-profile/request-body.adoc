@@ -1,7 +1,0 @@
-[source,options="nowrap"]
-----
-{
-  "racketType" : "penholder",
-  "statusMessage" : "message"
-}
-----
