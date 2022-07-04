@@ -35,17 +35,22 @@ public class RankRedisService implements RankNTService {
         int pageNumber = rankFindListDto.getPageable().getPageNumber();
         int count =rankFindListDto.getCount();
         GameType type = rankFindListDto.getGameType();
-
-        int currentPage = (pageNumber < 1) ? 1 : (pageNumber);
         Long size = redisRank.opsForZSet().size(getRankKey(type));
-        int totalPage = (size == null) ? 1 : size.intValue() / count;
+
+        int currentPage = (pageNumber < 1) ? 1 : pageNumber;
+        int totalPage = 1;
+        if (size != null) {
+            totalPage = size.intValue() / (count) + 1;
+            totalPage = size.intValue() % (count) == 0 ? totalPage - 1 : totalPage;
+        }
+        currentPage = currentPage > totalPage ? totalPage : currentPage;
         int start = (currentPage - 1) * count;
         int end = start + count - 1;
 
         Set<String> reverseRange = redisRank.opsForZSet().reverseRange(getRankKey(type), start, end);
         List<RankUserDto> rankUserList = getUserRankingList(reverseRange, type);
         RankListDto findListDto = RankListDto.builder()
-                .currentPage(currentPage > totalPage ? totalPage : currentPage) // 최대값은 totalPage
+                .currentPage(currentPage) // 최대값은 totalPage
                 .totalPage(totalPage)
                 .rankList(rankUserList)
                 .build();
