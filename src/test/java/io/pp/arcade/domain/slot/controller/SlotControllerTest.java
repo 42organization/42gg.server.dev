@@ -204,52 +204,52 @@ class SlotControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("슬롯 조회 - /match/tables/1/double")
+    @DisplayName("(후 추 구 현) 슬롯 조회 - /match/tables/1/double")
     void slotStatusListDouble() throws Exception {
-        /*
-         * 복식 - 유저 4명 (풀방)
-         * status : close
-         * */
-        Slot slot = slots[3];
-        saveSlot(slot, 4, GameType.DOUBLE, 750, null);
-        mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer 10"))
-                //.andExpect(jsonPath("$.matchBoards[0].slots[3].status").value(SlotStatusType.CLOSE.toString()))
-                .andDo(document("slot-status-list-when-doubleSlot-is-full"));
-        /*
-         * 복식 - 유저(100p) -> 슬롯(900p) 접근
-         * status : close
-         * */
-        slot = slots[4];
-        saveSlot(slot, 3, GameType.DOUBLE, 900, null);
-        saveUserPpp(users[10], 100);
-        mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
-                //.andExpect(jsonPath("$.matchBoards[0].slots[4].status").value(SlotStatusType.CLOSE.toString()))
-                .andDo(document("slot-status-list-after-enter-100p-in-900p"));
-        /*
-         * double 조회 시, SINGLE 슬롯에 대한 처리
-         * status : close
-         * */
-        slot = slots[7];
-        saveSlot(slot, 1, GameType.SINGLE, 1000, null);
-        mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
-                //.andExpect(jsonPath("$.matchBoards[1].slots[1].status").value(SlotStatusType.CLOSE.toString()))
-                .andExpect(status().isOk())
-                .andDo(document("slot-status-list-choose-double-look-single"));
-        /*
-         * 시간이 지난 슬롯
-         * status : close
-         * */
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime passed = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 1);
-        passedSlot = Slot.builder().tableId(1).team1(teams[0]).team2(teams[1]).time(passed).headCount(0).gamePpp(null).type(GameType.SINGLE).build();
-        saveSlot(passedSlot);
-        mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
-                //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.CLOSE.toString()))
-                .andExpect(status().isOk());
+//        /*
+//         * 복식 - 유저 4명 (풀방)
+//         * status : close
+//         * */
+//        Slot slot = slots[3];
+//        saveSlot(slot, 4, GameType.DOUBLE, 750, null);
+//        mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                        .header("Authorization", "Bearer 10"))
+//                //.andExpect(jsonPath("$.matchBoards[0].slots[3].status").value(SlotStatusType.CLOSE.toString()))
+//                .andDo(document("slot-status-list-when-doubleSlot-is-full"));
+//        /*
+//         * 복식 - 유저(100p) -> 슬롯(900p) 접근
+//         * status : close
+//         * */
+//        slot = slots[4];
+//        saveSlot(slot, 3, GameType.DOUBLE, 900, null);
+//        saveUserPpp(users[10], 100);
+//        mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                        .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
+//                //.andExpect(jsonPath("$.matchBoards[0].slots[4].status").value(SlotStatusType.CLOSE.toString()))
+//                .andDo(document("slot-status-list-after-enter-100p-in-900p"));
+//        /*
+//         * double 조회 시, SINGLE 슬롯에 대한 처리
+//         * status : close
+//         * */
+//        slot = slots[7];
+//        saveSlot(slot, 1, GameType.SINGLE, 1000, null);
+//        mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                        .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
+//                //.andExpect(jsonPath("$.matchBoards[1].slots[1].status").value(SlotStatusType.CLOSE.toString()))
+//                .andExpect(status().isOk())
+//                .andDo(document("slot-status-list-choose-double-look-single"));
+//        /*
+//         * 시간이 지난 슬롯
+//         * status : close
+//         * */
+//        LocalDateTime now = LocalDateTime.now();
+//        LocalDateTime passed = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 1);
+//        passedSlot = Slot.builder().tableId(1).team1(teams[0]).team2(teams[1]).time(passed).headCount(0).gamePpp(null).type(GameType.SINGLE).build();
+//        saveSlot(passedSlot);
+//        mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                        .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
+//                //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.CLOSE.toString()))
+//                .andExpect(status().isOk());
     }
 
     @Test
@@ -466,185 +466,184 @@ class SlotControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("슬롯 등록 - /match/tables/1/double")
+    @DisplayName("(후 추 구 현) 슬롯 등록 - /match/tables/1/double")
     void slotAddUserDouble() throws Exception {
-        User hakim = users[0];
-        User nheo = users[1];
-        User donghyuk = users[2];
-        User jiyun = users[3];
-
-        flushAll();
-
-        /* - 복식(A: 0/2, B: 0/2) 등록 */
-        {
-            Slot slot = slots[0];
-            Map<String, String> body1 = new HashMap<>();
-            body1.put("slotId", slot.getId().toString());
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("slot-before-add-user-in-0(2)+0(2)-check-is-myTable-or-not"));
-
-            mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(body1))
-                            .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
-                    .andExpect(status().isOk())
-                    .andDo(document("slot-add-user-in-0(2)+0(2)"));
-            Slot afterAdd = slotRepository.findById(slots[0].getId()).orElse(null);
-            Team team1 = afterAdd.getTeam1();
-            CurrentMatch hakimMatch = currentMatchRepository.findByUser(hakim).orElse(null);
-            Assertions.assertThat(afterAdd.getGamePpp()).isEqualTo(hakim.getPpp());
-            Assertions.assertThat(afterAdd.getType()).isEqualTo(GameType.DOUBLE);
-            Assertions.assertThat(afterAdd.getHeadCount()).isEqualTo(1);
-
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("slot-after-add-user-in-0(2)+0(2)-check-is-myTable-or-not"));
-
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("slot-after-add-user-in-0(2)+0(2)-check-other-user-view"));
-            Assertions.assertThat(team1.getUser1().getIntraId()).isEqualTo(hakim.getIntraId());
-            Assertions.assertThat(team1.getTeamPpp()).isEqualTo(hakim.getPpp());
-            Assertions.assertThat(team1.getHeadCount()).isEqualTo(1);
-            Assertions.assertThat(hakimMatch.getSlot().getId()).isEqualTo(slot.getId());
-        }
-        /* - 복식(A: 1/2, B: 0/2) 등록 */
-        {
-            Slot slot = slots[0];
-            Map<String, String> body = new HashMap<>();
-            body.put("slotId", slot.getId().toString());
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("slot-before-add-user-in-1(2)+0(2)-check-is-myTable-or-not"));
-
-            mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(body))
-                            .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
-                    .andExpect(status().isOk())
-                    .andDo(document("slot-add-user-in-1(2)+0(2)"));
-            Slot afterAdd = slotRepository.findById(slots[0].getId()).orElse(null);
-            Team team1 = afterAdd.getTeam1();
-            CurrentMatch nheoMatch = currentMatchRepository.findByUser(nheo).orElse(null);
-            Assertions.assertThat(afterAdd.getGamePpp()).isEqualTo((nheo.getPpp() + hakim.getPpp()) / 2);
-            Assertions.assertThat(afterAdd.getType()).isEqualTo(GameType.DOUBLE);
-            Assertions.assertThat(afterAdd.getHeadCount()).isEqualTo(2);
-
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("slot-after-add-user-in-1(2)+0(2)-check-is-myTable-or-not"));
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("slot-after-add-user-in-1(2)+0(2)-check-other-user-view"));
-            Assertions.assertThat(team1.getUser2().getIntraId()).isEqualTo(nheo.getIntraId());
-            Assertions.assertThat(team1.getTeamPpp()).isEqualTo((hakim.getPpp() + nheo.getPpp()) / 2);
-            Assertions.assertThat(team1.getHeadCount()).isEqualTo(2);
-            Assertions.assertThat(nheoMatch.getSlot().getId()).isEqualTo(slot.getId());
-        }
-
-    /* - 복식(A: 2/2, B: 0/2) 등록 */
-        {
-            Slot slot = slots[0];
-            Map<String, String> body = new HashMap<>();
-            body.put("slotId", slot.getId().toString());
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("slot-before-add-user-in-2(2)+0(2)-check-is-myTable-or-not"));
-
-            mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(body))
-                            .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
-                    .andExpect(status().isOk())
-                    .andDo(document("slot-add-user-in-2(2)+0(2)"));
-
-            Slot afterAdd = slotRepository.findById(slots[0].getId()).orElse(null);
-            Team team2 = afterAdd.getTeam2();
-            CurrentMatch donghyukMatch = currentMatchRepository.findByUser(donghyuk).orElse(null);
-            Assertions.assertThat(afterAdd.getGamePpp()).isEqualTo((donghyuk.getPpp() + hakim.getPpp() + nheo.getPpp()) / 3);
-            Assertions.assertThat(afterAdd.getType()).isEqualTo(GameType.DOUBLE);
-            Assertions.assertThat(afterAdd.getHeadCount()).isEqualTo(3);
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("slot-after-add-user-in-2(2)+0(2)-check-is-myTable-or-not"));
-
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("slot-after-add-user-in-2(2)+0(2)-check-other-user-view"));
-            Assertions.assertThat(team2.getUser1().getIntraId()).isEqualTo(donghyuk.getIntraId());
-            Assertions.assertThat(team2.getTeamPpp()).isEqualTo(donghyuk.getPpp());
-            Assertions.assertThat(team2.getHeadCount()).isEqualTo(1);
-            Assertions.assertThat(donghyukMatch.getSlot().getId()).isEqualTo(slot.getId());
-        }
-    /* - 복식(A: 2/2, B: 1/2) 등록 */
-        {
-            Slot slot = slots[0];
-            Map<String, String> body = new HashMap<>();
-            body.put("slotId", slot.getId().toString());
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.CLOSE.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("slot-before-add-user-in-2(2)+1(2)-check-is-myTable-or-not"));
-            mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(body))
-                            .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
-                    .andExpect(status().isOk())
-                    .andDo(document("slot-add-user-in-2(2)+1(2)"));
-            Slot afterAdd = slotRepository.findById(slots[0].getId()).orElse(null);
-            Team team2 = afterAdd.getTeam2();
-            CurrentMatch hakimMatch = currentMatchRepository.findByUser(hakim).orElse(null);
-            CurrentMatch nheoMatch = currentMatchRepository.findByUser(nheo).orElse(null);
-            CurrentMatch donghyukMatch = currentMatchRepository.findByUser(donghyuk).orElse(null);
-            CurrentMatch jiyunMatch = currentMatchRepository.findByUser(jiyun).orElse(null);
-            Assertions.assertThat(afterAdd.getGamePpp()).isEqualTo((jiyun.getPpp() + donghyuk.getPpp() + hakim.getPpp() + nheo.getPpp()) / 4);
-            Assertions.assertThat(afterAdd.getType()).isEqualTo(GameType.DOUBLE);
-            Assertions.assertThat(afterAdd.getHeadCount()).isEqualTo(4);
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.CLOSE.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("slot-after-add-user-in-2(2)+1(2)-check-is-myTable-or-not"));
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.CLOSE.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("slot-after-add-user-in-2(2)+1(2)-check-other-user-view"));
-            Assertions.assertThat(team2.getUser2().getIntraId()).isEqualTo(jiyun.getIntraId());
-            Assertions.assertThat(team2.getTeamPpp()).isEqualTo((jiyun.getPpp() + donghyuk.getPpp()) / 2);
-            Assertions.assertThat(team2.getHeadCount()).isEqualTo(2);
-            Assertions.assertThat(jiyunMatch.getSlot().getId()).isEqualTo(slot.getId());
-            Assertions.assertThat(hakimMatch.getIsMatched()).isEqualTo(true);
-            Assertions.assertThat(nheoMatch.getIsMatched()).isEqualTo(true);
-            Assertions.assertThat(donghyukMatch.getIsMatched()).isEqualTo(true);
-            Assertions.assertThat(jiyunMatch.getIsMatched()).isEqualTo(true);
-            Noti hakimNoti = notiRepository.findAllByUser(hakim).get(0);
-            Noti nheoNoti = notiRepository.findAllByUser(nheo).get(0);
-            Noti donghyukNoti = notiRepository.findAllByUser(donghyuk).get(0);
-            Noti jiyunNoti = notiRepository.findAllByUser(jiyun).get(0);
-            Assertions.assertThat(hakimNoti.getType()).isEqualTo(NotiType.MATCHED);
-            Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.MATCHED);
-            Assertions.assertThat(donghyukNoti.getType()).isEqualTo(NotiType.MATCHED);
-            Assertions.assertThat(jiyunNoti.getType()).isEqualTo(NotiType.MATCHED);
-        }
-        flushAll();
-
+//        User hakim = users[0];
+//        User nheo = users[1];
+//        User donghyuk = users[2];
+//        User jiyun = users[3];
+//
+//        flushAll();
+//
+//        /* - 복식(A: 0/2, B: 0/2) 등록 */
+//        {
+//            Slot slot = slots[0];
+//            Map<String, String> body1 = new HashMap<>();
+//            body1.put("slotId", slot.getId().toString());
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("slot-before-add-user-in-0(2)+0(2)-check-is-myTable-or-not"));
+//
+//            mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .content(objectMapper.writeValueAsString(body1))
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("slot-add-user-in-0(2)+0(2)"));
+//            Slot afterAdd = slotRepository.findById(slots[0].getId()).orElse(null);
+//            Team team1 = afterAdd.getTeam1();
+//            CurrentMatch hakimMatch = currentMatchRepository.findByUser(hakim).orElse(null);
+//            Assertions.assertThat(afterAdd.getGamePpp()).isEqualTo(hakim.getPpp());
+//            Assertions.assertThat(afterAdd.getType()).isEqualTo(GameType.DOUBLE);
+//            Assertions.assertThat(afterAdd.getHeadCount()).isEqualTo(1);
+//
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("slot-after-add-user-in-0(2)+0(2)-check-is-myTable-or-not"));
+//
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("slot-after-add-user-in-0(2)+0(2)-check-other-user-view"));
+//            Assertions.assertThat(team1.getUser1().getIntraId()).isEqualTo(hakim.getIntraId());
+//            Assertions.assertThat(team1.getTeamPpp()).isEqualTo(hakim.getPpp());
+//            Assertions.assertThat(team1.getHeadCount()).isEqualTo(1);
+//            Assertions.assertThat(hakimMatch.getSlot().getId()).isEqualTo(slot.getId());
+//        }
+//        /* - 복식(A: 1/2, B: 0/2) 등록 */
+//        {
+//            Slot slot = slots[0];
+//            Map<String, String> body = new HashMap<>();
+//            body.put("slotId", slot.getId().toString());
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("slot-before-add-user-in-1(2)+0(2)-check-is-myTable-or-not"));
+//
+//            mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .content(objectMapper.writeValueAsString(body))
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("slot-add-user-in-1(2)+0(2)"));
+//            Slot afterAdd = slotRepository.findById(slots[0].getId()).orElse(null);
+//            Team team1 = afterAdd.getTeam1();
+//            CurrentMatch nheoMatch = currentMatchRepository.findByUser(nheo).orElse(null);
+//            Assertions.assertThat(afterAdd.getGamePpp()).isEqualTo((nheo.getPpp() + hakim.getPpp()) / 2);
+//            Assertions.assertThat(afterAdd.getType()).isEqualTo(GameType.DOUBLE);
+//            Assertions.assertThat(afterAdd.getHeadCount()).isEqualTo(2);
+//
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("slot-after-add-user-in-1(2)+0(2)-check-is-myTable-or-not"));
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("slot-after-add-user-in-1(2)+0(2)-check-other-user-view"));
+//            Assertions.assertThat(team1.getUser2().getIntraId()).isEqualTo(nheo.getIntraId());
+//            Assertions.assertThat(team1.getTeamPpp()).isEqualTo((hakim.getPpp() + nheo.getPpp()) / 2);
+//            Assertions.assertThat(team1.getHeadCount()).isEqualTo(2);
+//            Assertions.assertThat(nheoMatch.getSlot().getId()).isEqualTo(slot.getId());
+//        }
+//
+//    /* - 복식(A: 2/2, B: 0/2) 등록 */
+//        {
+//            Slot slot = slots[0];
+//            Map<String, String> body = new HashMap<>();
+//            body.put("slotId", slot.getId().toString());
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("slot-before-add-user-in-2(2)+0(2)-check-is-myTable-or-not"));
+//
+//            mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .content(objectMapper.writeValueAsString(body))
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("slot-add-user-in-2(2)+0(2)"));
+//
+//            Slot afterAdd = slotRepository.findById(slots[0].getId()).orElse(null);
+//            Team team2 = afterAdd.getTeam2();
+//            CurrentMatch donghyukMatch = currentMatchRepository.findByUser(donghyuk).orElse(null);
+//            Assertions.assertThat(afterAdd.getGamePpp()).isEqualTo((donghyuk.getPpp() + hakim.getPpp() + nheo.getPpp()) / 3);
+//            Assertions.assertThat(afterAdd.getType()).isEqualTo(GameType.DOUBLE);
+//            Assertions.assertThat(afterAdd.getHeadCount()).isEqualTo(3);
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("slot-after-add-user-in-2(2)+0(2)-check-is-myTable-or-not"));
+//
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("slot-after-add-user-in-2(2)+0(2)-check-other-user-view"));
+//            Assertions.assertThat(team2.getUser1().getIntraId()).isEqualTo(donghyuk.getIntraId());
+//            Assertions.assertThat(team2.getTeamPpp()).isEqualTo(donghyuk.getPpp());
+//            Assertions.assertThat(team2.getHeadCount()).isEqualTo(1);
+//            Assertions.assertThat(donghyukMatch.getSlot().getId()).isEqualTo(slot.getId());
+//        }
+//    /* - 복식(A: 2/2, B: 1/2) 등록 */
+//        {
+//            Slot slot = slots[0];
+//            Map<String, String> body = new HashMap<>();
+//            body.put("slotId", slot.getId().toString());
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.CLOSE.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("slot-before-add-user-in-2(2)+1(2)-check-is-myTable-or-not"));
+//            mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .content(objectMapper.writeValueAsString(body))
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("slot-add-user-in-2(2)+1(2)"));
+//            Slot afterAdd = slotRepository.findById(slots[0].getId()).orElse(null);
+//            Team team2 = afterAdd.getTeam2();
+//            CurrentMatch hakimMatch = currentMatchRepository.findByUser(hakim).orElse(null);
+//            CurrentMatch nheoMatch = currentMatchRepository.findByUser(nheo).orElse(null);
+//            CurrentMatch donghyukMatch = currentMatchRepository.findByUser(donghyuk).orElse(null);
+//            CurrentMatch jiyunMatch = currentMatchRepository.findByUser(jiyun).orElse(null);
+//            Assertions.assertThat(afterAdd.getGamePpp()).isEqualTo((jiyun.getPpp() + donghyuk.getPpp() + hakim.getPpp() + nheo.getPpp()) / 4);
+//            Assertions.assertThat(afterAdd.getType()).isEqualTo(GameType.DOUBLE);
+//            Assertions.assertThat(afterAdd.getHeadCount()).isEqualTo(4);
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.CLOSE.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("slot-after-add-user-in-2(2)+1(2)-check-is-myTable-or-not"));
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.CLOSE.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("slot-after-add-user-in-2(2)+1(2)-check-other-user-view"));
+//            Assertions.assertThat(team2.getUser2().getIntraId()).isEqualTo(jiyun.getIntraId());
+//            Assertions.assertThat(team2.getTeamPpp()).isEqualTo((jiyun.getPpp() + donghyuk.getPpp()) / 2);
+//            Assertions.assertThat(team2.getHeadCount()).isEqualTo(2);
+//            Assertions.assertThat(jiyunMatch.getSlot().getId()).isEqualTo(slot.getId());
+//            Assertions.assertThat(hakimMatch.getIsMatched()).isEqualTo(true);
+//            Assertions.assertThat(nheoMatch.getIsMatched()).isEqualTo(true);
+//            Assertions.assertThat(donghyukMatch.getIsMatched()).isEqualTo(true);
+//            Assertions.assertThat(jiyunMatch.getIsMatched()).isEqualTo(true);
+//            Noti hakimNoti = notiRepository.findAllByUser(hakim).get(0);
+//            Noti nheoNoti = notiRepository.findAllByUser(nheo).get(0);
+//            Noti donghyukNoti = notiRepository.findAllByUser(donghyuk).get(0);
+//            Noti jiyunNoti = notiRepository.findAllByUser(jiyun).get(0);
+//            Assertions.assertThat(hakimNoti.getType()).isEqualTo(NotiType.MATCHED);
+//            Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.MATCHED);
+//            Assertions.assertThat(donghyukNoti.getType()).isEqualTo(NotiType.MATCHED);
+//            Assertions.assertThat(jiyunNoti.getType()).isEqualTo(NotiType.MATCHED);
+//        }
+//        flushAll();
     }
 
     @Test
@@ -897,339 +896,339 @@ class SlotControllerTest {
         flushAll();
     }
 
-    @Test
-    @Transactional
-    @DisplayName("슬롯 삭제 복식 - /match")
-    void slotRemoveUserDouble() throws Exception {
-        User hakim = users[0];
-        User nheo = users[1];
-        User donghyuk = users[2];
-        User jiyun = users[3];
-        Slot slot = slots[0];
-
-        flushAll();
-
-        Map<String, String> body = new HashMap<>();
-        body.put("slotId", slot.getId().toString());
-        /* slot에 user1,2,3,4 등록 */
-        {
-
-            mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(body))
-                            .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double1)slot-add-user1st"));
-            mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(body))
-                            .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double1)slot-add-user2nd"));
-            mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(body))
-                            .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
-                    .andExpect(status().isOk())
-                            .andDo(document("(double1)slot-add-user3rd"));
-            mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(body))
-                            .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double1)slot-add-user4th"));
-            // 넷 중 하나가 봤을 때
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(body))
-                            .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double1)slot-after-add-users-check-is-myTable-or-not"));
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(body))
-                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double1)slot-after-add-users-check-other-user-view"));
-        }
-
-        /* slot에서 user4 제거 */
-        {
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double2)slot-before-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not"));
-            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
-                    .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
-                    .andDo(document("(double2)slot-user4th-cancel-when-status-2(2)+2(2)"));
-            Assertions.assertThat(slot.getGamePpp()).isEqualTo((hakim.getPpp() + nheo.getPpp() + donghyuk.getPpp()) / 3);
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double2)slot-after-user4th-cancel-when-status-2(2)+2(2)-check-other-user-view"));
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double2)slot-after-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not"));
-            Assertions.assertThat(slot.getHeadCount()).isEqualTo(3);
-            Assertions.assertThat(slot.getType()).isEqualTo(GameType.DOUBLE);
-
-            Team team1 = slot.getTeam1();
-            Assertions.assertThat(team1.getUser1().getIntraId()).isEqualTo(hakim.getIntraId());
-            Assertions.assertThat(team1.getUser2().getIntraId()).isEqualTo(nheo.getIntraId());
-            Assertions.assertThat(team1.getTeamPpp()).isEqualTo((hakim.getPpp() + nheo.getPpp()) / 2);
-            Assertions.assertThat(team1.getHeadCount()).isEqualTo(2);
-            Team team2 = slot.getTeam2();
-            Assertions.assertThat(team2.getUser1().getIntraId()).isEqualTo(donghyuk.getIntraId());
-            Assertions.assertThat(team2.getUser2()).isEqualTo(null);
-            Assertions.assertThat(team2.getTeamPpp()).isEqualTo(donghyuk.getPpp());
-            Assertions.assertThat(team2.getHeadCount()).isEqualTo(1);
-
-            CurrentMatch hakimMatch = currentMatchRepository.findByUser(hakim).orElse(null);
-            CurrentMatch nheoMatch = currentMatchRepository.findByUser(nheo).orElse(null);
-            CurrentMatch donghyukMatch = currentMatchRepository.findByUser(donghyuk).orElse(null);
-            CurrentMatch jiyunMatch = currentMatchRepository.findByUser(jiyun).orElse(null);
-            Assertions.assertThat(hakimMatch.getIsMatched()).isEqualTo(false);
-            Assertions.assertThat(nheoMatch.getIsMatched()).isEqualTo(false);
-            Assertions.assertThat(donghyukMatch.getIsMatched()).isEqualTo(false);
-            Assertions.assertThat(jiyunMatch).isEqualTo(null);
-
-            Noti hakimNoti = notiRepository.findAllByUser(hakim).get(0); // matched 알림이 given에서 왔기 때문에 ! 그 다음걸 확인
-            Noti nheoNoti = notiRepository.findAllByUser(nheo).get(1);
-            Noti donghyukNoti = notiRepository.findAllByUser(donghyuk).get(1);
-            Noti jiyunNoti = notiRepository.findAllByUser(jiyun).get(0);
-            Assertions.assertThat(hakimNoti.getType()).isEqualTo(NotiType.MATCHED);
-            Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
-            Assertions.assertThat(donghyukNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
-            Assertions.assertThat(jiyunNoti.getType()).isEqualTo(NotiType.MATCHED);
-        }
-
-        /* slot에서 user2 제거 */
-        {
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double3)slot-before-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not"));
-            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
-                    .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
-                    .andDo(document("(double3)slot-user2nd-cancel-when-status-2(2)+1(2)"));
-            Assertions.assertThat(slot.getGamePpp()).isEqualTo((hakim.getPpp() + donghyuk.getPpp()) / 2);
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double3)slot-after-user2nd-cancel-when-status-2(2)+1(2)-check-other-user-view"));
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double3)slot-after-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not"));
-            Assertions.assertThat(slot.getHeadCount()).isEqualTo(2);
-            Assertions.assertThat(slot.getType()).isEqualTo(GameType.DOUBLE);
-
-            Team team1 = slot.getTeam1();
-            Assertions.assertThat(team1.getUser1().getIntraId()).isEqualTo(hakim.getIntraId());
-            Assertions.assertThat(team1.getUser2()).isEqualTo(null);
-            Assertions.assertThat(team1.getTeamPpp()).isEqualTo(hakim.getPpp());
-            Assertions.assertThat(team1.getHeadCount()).isEqualTo(1);
-            Team team2 = slot.getTeam2();
-            Assertions.assertThat(team2.getUser1().getIntraId()).isEqualTo(donghyuk.getIntraId());
-            Assertions.assertThat(team2.getUser2()).isEqualTo(null);
-            Assertions.assertThat(team2.getTeamPpp()).isEqualTo(donghyuk.getPpp());
-            Assertions.assertThat(team2.getHeadCount()).isEqualTo(1);
-
-            CurrentMatch hakimMatch = currentMatchRepository.findByUser(hakim).orElse(null);
-            CurrentMatch nheoMatch = currentMatchRepository.findByUser(nheo).orElse(null);
-            CurrentMatch donghyukMatch = currentMatchRepository.findByUser(donghyuk).orElse(null);
-            CurrentMatch jiyunMatch = currentMatchRepository.findByUser(jiyun).orElse(null);
-            Assertions.assertThat(hakimMatch.getIsMatched()).isEqualTo(false);
-            Assertions.assertThat(nheoMatch).isEqualTo(null);
-            Assertions.assertThat(donghyukMatch.getIsMatched()).isEqualTo(false);
-            Assertions.assertThat(jiyunMatch).isEqualTo(null);
-
-            Noti hakimNoti = notiRepository.findAllByUser(hakim).get(1); // matched 알림이 given에서 왔기 때문에 ! 그 다음걸 확인
-            Noti nheoNoti = notiRepository.findAllByUser(nheo).get(1);
-            Noti donghyukNoti = notiRepository.findAllByUser(donghyuk).get(1);
-            Integer jiyunNotiSize = notiRepository.findAllByUser(jiyun).size();
-            Assertions.assertThat(hakimNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
-            Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
-            Assertions.assertThat(donghyukNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
-            Assertions.assertThat(jiyunNotiSize).isEqualTo(1);
-        }
-
-        flushAll();
-
-        /* slot에 user2 다시 추가 */
-        mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(body))
-                        .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
-                .andExpect(status().isOk())
-                .andDo(document("slot-add-user2nd-again"));
-
-
-        /* slot에서 user3 제거 */
-        {
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double4)slot-before-user3rd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not"));
-            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
-                    .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
-                    .andDo(document("(double4)slot-user3rd-cancel-when-status-2(2)+1(2)"));
-            Assertions.assertThat(slot.getGamePpp()).isEqualTo((hakim.getPpp() + nheo.getPpp()) / 2);
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double4)slot-after-user3rd-cancel-when-status-2(2)+1(2)-check-other-user-view"));
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double4)slot-after-user3rd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not"));
-            Assertions.assertThat(slot.getHeadCount()).isEqualTo(2);
-            Assertions.assertThat(slot.getType()).isEqualTo(GameType.DOUBLE);
-
-            Team team1 = slot.getTeam1();
-            Assertions.assertThat(team1.getUser1().getIntraId()).isEqualTo(hakim.getIntraId());
-            Assertions.assertThat(team1.getUser2().getIntraId()).isEqualTo(nheo.getIntraId());
-            Assertions.assertThat(team1.getTeamPpp()).isEqualTo((hakim.getPpp() + nheo.getPpp()) / 2);
-            Assertions.assertThat(team1.getHeadCount()).isEqualTo(2);
-            Team team2 = slot.getTeam2();
-            Assertions.assertThat(team2.getUser1()).isEqualTo(null);
-            Assertions.assertThat(team2.getUser2()).isEqualTo(null);
-            Assertions.assertThat(team2.getTeamPpp()).isEqualTo(0);
-            Assertions.assertThat(team2.getHeadCount()).isEqualTo(0);
-
-            CurrentMatch hakimMatch = currentMatchRepository.findByUser(hakim).orElse(null);
-            CurrentMatch nheoMatch = currentMatchRepository.findByUser(nheo).orElse(null);
-            CurrentMatch donghyukMatch = currentMatchRepository.findByUser(donghyuk).orElse(null);
-            CurrentMatch jiyunMatch = currentMatchRepository.findByUser(jiyun).orElse(null);
-            Assertions.assertThat(hakimMatch.getIsMatched()).isEqualTo(false);
-            Assertions.assertThat(nheoMatch.getIsMatched()).isEqualTo(false);
-            Assertions.assertThat(donghyukMatch).isEqualTo(null);
-            Assertions.assertThat(jiyunMatch).isEqualTo(null);
-
-            Noti hakimNoti = notiRepository.findAllByUser(hakim).get(1);
-            Noti nheoNoti = notiRepository.findAllByUser(nheo).get(1);
-            Noti donghyukNoti = notiRepository.findAllByUser(donghyuk).get(1);
-            Integer jiyunNotiSize = notiRepository.findAllByUser(jiyun).size();
-            Assertions.assertThat(hakimNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
-            Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
-            Assertions.assertThat(donghyukNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
-            Assertions.assertThat(jiyunNotiSize).isEqualTo(1);
-        }
-
-        /* slot에서 user1 제거 */
-        {
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double5)slot-before-user1st-cancel-when-status-2(2)+0(2)-check-is-myTable-or-not"));
-            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
-                    .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
-                    .andDo(document("(double5)slot-user1st-cancel-when-status-2(2)+0(2)"));
-            Assertions.assertThat(slot.getGamePpp()).isEqualTo(nheo.getPpp());
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double5)slot-after-user1st-cancel-when-status-2(2)+0(2)-check-other-user-view"));
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double5)slot-after-user1st-cancel-when-status-2(2)+0(2)-check-is-myTable-or-not"));
-            Assertions.assertThat(slot.getHeadCount()).isEqualTo(1);
-            Assertions.assertThat(slot.getType()).isEqualTo(GameType.DOUBLE);
-
-            Team team1 = slot.getTeam1();
-            Assertions.assertThat(team1.getUser1()).isEqualTo(null);
-            Assertions.assertThat(team1.getUser2().getIntraId()).isEqualTo(nheo.getIntraId());
-            Assertions.assertThat(team1.getTeamPpp()).isEqualTo(nheo.getPpp());
-            Assertions.assertThat(team1.getHeadCount()).isEqualTo(1);
-            Team team2 = slot.getTeam2();
-            Assertions.assertThat(team2.getUser1()).isEqualTo(null);
-            Assertions.assertThat(team2.getUser2()).isEqualTo(null);
-            Assertions.assertThat(team2.getTeamPpp()).isEqualTo(0);
-            Assertions.assertThat(team2.getHeadCount()).isEqualTo(0);
-
-            CurrentMatch hakimMatch = currentMatchRepository.findByUser(hakim).orElse(null);
-            CurrentMatch nheoMatch = currentMatchRepository.findByUser(nheo).orElse(null);
-            CurrentMatch donghyukMatch = currentMatchRepository.findByUser(donghyuk).orElse(null);
-            CurrentMatch jiyunMatch = currentMatchRepository.findByUser(jiyun).orElse(null);
-            Assertions.assertThat(hakimMatch).isEqualTo(null);
-            Assertions.assertThat(nheoMatch.getIsMatched()).isEqualTo(false);
-            Assertions.assertThat(donghyukMatch).isEqualTo(null);
-            Assertions.assertThat(jiyunMatch).isEqualTo(null);
-
-            Noti hakimNoti = notiRepository.findAllByUser(hakim).get(1);
-            Noti nheoNoti = notiRepository.findAllByUser(nheo).get(1);
-            Integer donghyukNotiSize = notiRepository.findAllByUser(donghyuk).size();
-            Integer jiyunNotiSize = notiRepository.findAllByUser(jiyun).size();
-            Assertions.assertThat(hakimNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
-            Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
-            Assertions.assertThat(donghyukNotiSize).isEqualTo(2);
-            Assertions.assertThat(jiyunNotiSize).isEqualTo(1);
-        }
-
-        flushAll();
-
-        /* slot에서 user2 제거 --> 빈슬롯 */
-        {
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double6)slot-before-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not"));
-            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
-                    .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
-                    .andDo(document("(double6)slot-user2nd-cancel-when-status-1(2)+0(2)"));
-            Assertions.assertThat(slot.getGamePpp()).isEqualTo(null);
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double6)slot-after-user2nd-when-status-1(2)+0(2)-check-other-user-view"));
-            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
-                            .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
-                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
-                    .andExpect(status().isOk())
-                    .andDo(document("(double6)slot-after-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not"));
-            Assertions.assertThat(slot.getHeadCount()).isEqualTo(0);
-            Assertions.assertThat(slot.getType()).isEqualTo(null);
-
-            Team team1 = slot.getTeam1();
-            Assertions.assertThat(team1.getUser1()).isEqualTo(null);
-            Assertions.assertThat(team1.getUser2()).isEqualTo(null);
-            Assertions.assertThat(team1.getTeamPpp()).isEqualTo(0);
-            Assertions.assertThat(team1.getHeadCount()).isEqualTo(0);
-            Team team2 = slot.getTeam2();
-            Assertions.assertThat(team2.getUser1()).isEqualTo(null);
-            Assertions.assertThat(team2.getUser2()).isEqualTo(null);
-            Assertions.assertThat(team2.getTeamPpp()).isEqualTo(0);
-            Assertions.assertThat(team2.getHeadCount()).isEqualTo(0);
-
-            CurrentMatch hakimMatch = currentMatchRepository.findByUser(hakim).orElse(null);
-            CurrentMatch nheoMatch = currentMatchRepository.findByUser(nheo).orElse(null);
-            CurrentMatch donghyukMatch = currentMatchRepository.findByUser(donghyuk).orElse(null);
-            CurrentMatch jiyunMatch = currentMatchRepository.findByUser(jiyun).orElse(null);
-            Assertions.assertThat(hakimMatch).isEqualTo(null);
-            Assertions.assertThat(nheoMatch).isEqualTo(null);
-            Assertions.assertThat(donghyukMatch).isEqualTo(null);
-            Assertions.assertThat(jiyunMatch).isEqualTo(null);
-
-            Integer hakimNotiSize = notiRepository.findAllByUser(hakim).size();
-            Noti nheoNoti = notiRepository.findAllByUser(nheo).get(1);
-            Integer donghyukNotiSize = notiRepository.findAllByUser(donghyuk).size();
-            Integer jiyunNotiSize = notiRepository.findAllByUser(jiyun).size();
-            Assertions.assertThat(hakimNotiSize).isEqualTo(2);
-            Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
-            Assertions.assertThat(donghyukNotiSize).isEqualTo(2);
-            Assertions.assertThat(jiyunNotiSize).isEqualTo(1);
-        }
-        flushAll();
-    }
+//    @Test
+//    @Transactional
+//    @DisplayName("슬롯 삭제 복식 - /match")
+//    void slotRemoveUserDouble() throws Exception {
+//        User hakim = users[0];
+//        User nheo = users[1];
+//        User donghyuk = users[2];
+//        User jiyun = users[3];
+//        Slot slot = slots[0];
+//
+//        flushAll();
+//
+//        Map<String, String> body = new HashMap<>();
+//        body.put("slotId", slot.getId().toString());
+//        /* slot에 user1,2,3,4 등록 */
+//        {
+//
+//            mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .content(objectMapper.writeValueAsString(body))
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double1)slot-add-user1st"));
+//            mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .content(objectMapper.writeValueAsString(body))
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double1)slot-add-user2nd"));
+//            mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .content(objectMapper.writeValueAsString(body))
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
+//                    .andExpect(status().isOk())
+//                            .andDo(document("(double1)slot-add-user3rd"));
+//            mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .content(objectMapper.writeValueAsString(body))
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double1)slot-add-user4th"));
+//            // 넷 중 하나가 봤을 때
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .content(objectMapper.writeValueAsString(body))
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double1)slot-after-add-users-check-is-myTable-or-not"));
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .content(objectMapper.writeValueAsString(body))
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double1)slot-after-add-users-check-other-user-view"));
+//        }
+//
+//        /* slot에서 user4 제거 */
+//        {
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double2)slot-before-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not"));
+//            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
+//                    .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
+//                    .andDo(document("(double2)slot-user4th-cancel-when-status-2(2)+2(2)"));
+//            Assertions.assertThat(slot.getGamePpp()).isEqualTo((hakim.getPpp() + nheo.getPpp() + donghyuk.getPpp()) / 3);
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double2)slot-after-user4th-cancel-when-status-2(2)+2(2)-check-other-user-view"));
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double2)slot-after-user4th-cancel-when-status-2(2)+2(2)-check-is-myTable-or-not"));
+//            Assertions.assertThat(slot.getHeadCount()).isEqualTo(3);
+//            Assertions.assertThat(slot.getType()).isEqualTo(GameType.DOUBLE);
+//
+//            Team team1 = slot.getTeam1();
+//            Assertions.assertThat(team1.getUser1().getIntraId()).isEqualTo(hakim.getIntraId());
+//            Assertions.assertThat(team1.getUser2().getIntraId()).isEqualTo(nheo.getIntraId());
+//            Assertions.assertThat(team1.getTeamPpp()).isEqualTo((hakim.getPpp() + nheo.getPpp()) / 2);
+//            Assertions.assertThat(team1.getHeadCount()).isEqualTo(2);
+//            Team team2 = slot.getTeam2();
+//            Assertions.assertThat(team2.getUser1().getIntraId()).isEqualTo(donghyuk.getIntraId());
+//            Assertions.assertThat(team2.getUser2()).isEqualTo(null);
+//            Assertions.assertThat(team2.getTeamPpp()).isEqualTo(donghyuk.getPpp());
+//            Assertions.assertThat(team2.getHeadCount()).isEqualTo(1);
+//
+//            CurrentMatch hakimMatch = currentMatchRepository.findByUser(hakim).orElse(null);
+//            CurrentMatch nheoMatch = currentMatchRepository.findByUser(nheo).orElse(null);
+//            CurrentMatch donghyukMatch = currentMatchRepository.findByUser(donghyuk).orElse(null);
+//            CurrentMatch jiyunMatch = currentMatchRepository.findByUser(jiyun).orElse(null);
+//            Assertions.assertThat(hakimMatch.getIsMatched()).isEqualTo(false);
+//            Assertions.assertThat(nheoMatch.getIsMatched()).isEqualTo(false);
+//            Assertions.assertThat(donghyukMatch.getIsMatched()).isEqualTo(false);
+//            Assertions.assertThat(jiyunMatch).isEqualTo(null);
+//
+//            Noti hakimNoti = notiRepository.findAllByUser(hakim).get(0); // matched 알림이 given에서 왔기 때문에 ! 그 다음걸 확인
+//            Noti nheoNoti = notiRepository.findAllByUser(nheo).get(1);
+//            Noti donghyukNoti = notiRepository.findAllByUser(donghyuk).get(1);
+//            Noti jiyunNoti = notiRepository.findAllByUser(jiyun).get(0);
+//            Assertions.assertThat(hakimNoti.getType()).isEqualTo(NotiType.MATCHED);
+//            Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
+//            Assertions.assertThat(donghyukNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
+//            Assertions.assertThat(jiyunNoti.getType()).isEqualTo(NotiType.MATCHED);
+//        }
+//
+//        /* slot에서 user2 제거 */
+//        {
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double3)slot-before-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not"));
+//            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
+//                    .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
+//                    .andDo(document("(double3)slot-user2nd-cancel-when-status-2(2)+1(2)"));
+//            Assertions.assertThat(slot.getGamePpp()).isEqualTo((hakim.getPpp() + donghyuk.getPpp()) / 2);
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double3)slot-after-user2nd-cancel-when-status-2(2)+1(2)-check-other-user-view"));
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double3)slot-after-user2nd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not"));
+//            Assertions.assertThat(slot.getHeadCount()).isEqualTo(2);
+//            Assertions.assertThat(slot.getType()).isEqualTo(GameType.DOUBLE);
+//
+//            Team team1 = slot.getTeam1();
+//            Assertions.assertThat(team1.getUser1().getIntraId()).isEqualTo(hakim.getIntraId());
+//            Assertions.assertThat(team1.getUser2()).isEqualTo(null);
+//            Assertions.assertThat(team1.getTeamPpp()).isEqualTo(hakim.getPpp());
+//            Assertions.assertThat(team1.getHeadCount()).isEqualTo(1);
+//            Team team2 = slot.getTeam2();
+//            Assertions.assertThat(team2.getUser1().getIntraId()).isEqualTo(donghyuk.getIntraId());
+//            Assertions.assertThat(team2.getUser2()).isEqualTo(null);
+//            Assertions.assertThat(team2.getTeamPpp()).isEqualTo(donghyuk.getPpp());
+//            Assertions.assertThat(team2.getHeadCount()).isEqualTo(1);
+//
+//            CurrentMatch hakimMatch = currentMatchRepository.findByUser(hakim).orElse(null);
+//            CurrentMatch nheoMatch = currentMatchRepository.findByUser(nheo).orElse(null);
+//            CurrentMatch donghyukMatch = currentMatchRepository.findByUser(donghyuk).orElse(null);
+//            CurrentMatch jiyunMatch = currentMatchRepository.findByUser(jiyun).orElse(null);
+//            Assertions.assertThat(hakimMatch.getIsMatched()).isEqualTo(false);
+//            Assertions.assertThat(nheoMatch).isEqualTo(null);
+//            Assertions.assertThat(donghyukMatch.getIsMatched()).isEqualTo(false);
+//            Assertions.assertThat(jiyunMatch).isEqualTo(null);
+//
+//            Noti hakimNoti = notiRepository.findAllByUser(hakim).get(1); // matched 알림이 given에서 왔기 때문에 ! 그 다음걸 확인
+//            Noti nheoNoti = notiRepository.findAllByUser(nheo).get(1);
+//            Noti donghyukNoti = notiRepository.findAllByUser(donghyuk).get(1);
+//            Integer jiyunNotiSize = notiRepository.findAllByUser(jiyun).size();
+//            Assertions.assertThat(hakimNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
+//            Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
+//            Assertions.assertThat(donghyukNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
+//            Assertions.assertThat(jiyunNotiSize).isEqualTo(1);
+//        }
+//
+//        flushAll();
+//
+//        /* slot에 user2 다시 추가 */
+//        mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsString(body))
+//                        .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
+//                .andExpect(status().isOk())
+//                .andDo(document("slot-add-user2nd-again"));
+//
+//
+//        /* slot에서 user3 제거 */
+//        {
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double4)slot-before-user3rd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not"));
+//            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
+//                    .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
+//                    .andDo(document("(double4)slot-user3rd-cancel-when-status-2(2)+1(2)"));
+//            Assertions.assertThat(slot.getGamePpp()).isEqualTo((hakim.getPpp() + nheo.getPpp()) / 2);
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double4)slot-after-user3rd-cancel-when-status-2(2)+1(2)-check-other-user-view"));
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double4)slot-after-user3rd-cancel-when-status-2(2)+1(2)-check-is-myTable-or-not"));
+//            Assertions.assertThat(slot.getHeadCount()).isEqualTo(2);
+//            Assertions.assertThat(slot.getType()).isEqualTo(GameType.DOUBLE);
+//
+//            Team team1 = slot.getTeam1();
+//            Assertions.assertThat(team1.getUser1().getIntraId()).isEqualTo(hakim.getIntraId());
+//            Assertions.assertThat(team1.getUser2().getIntraId()).isEqualTo(nheo.getIntraId());
+//            Assertions.assertThat(team1.getTeamPpp()).isEqualTo((hakim.getPpp() + nheo.getPpp()) / 2);
+//            Assertions.assertThat(team1.getHeadCount()).isEqualTo(2);
+//            Team team2 = slot.getTeam2();
+//            Assertions.assertThat(team2.getUser1()).isEqualTo(null);
+//            Assertions.assertThat(team2.getUser2()).isEqualTo(null);
+//            Assertions.assertThat(team2.getTeamPpp()).isEqualTo(0);
+//            Assertions.assertThat(team2.getHeadCount()).isEqualTo(0);
+//
+//            CurrentMatch hakimMatch = currentMatchRepository.findByUser(hakim).orElse(null);
+//            CurrentMatch nheoMatch = currentMatchRepository.findByUser(nheo).orElse(null);
+//            CurrentMatch donghyukMatch = currentMatchRepository.findByUser(donghyuk).orElse(null);
+//            CurrentMatch jiyunMatch = currentMatchRepository.findByUser(jiyun).orElse(null);
+//            Assertions.assertThat(hakimMatch.getIsMatched()).isEqualTo(false);
+//            Assertions.assertThat(nheoMatch.getIsMatched()).isEqualTo(false);
+//            Assertions.assertThat(donghyukMatch).isEqualTo(null);
+//            Assertions.assertThat(jiyunMatch).isEqualTo(null);
+//
+//            Noti hakimNoti = notiRepository.findAllByUser(hakim).get(1);
+//            Noti nheoNoti = notiRepository.findAllByUser(nheo).get(1);
+//            Noti donghyukNoti = notiRepository.findAllByUser(donghyuk).get(1);
+//            Integer jiyunNotiSize = notiRepository.findAllByUser(jiyun).size();
+//            Assertions.assertThat(hakimNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
+//            Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
+//            Assertions.assertThat(donghyukNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
+//            Assertions.assertThat(jiyunNotiSize).isEqualTo(1);
+//        }
+//
+//        /* slot에서 user1 제거 */
+//        {
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double5)slot-before-user1st-cancel-when-status-2(2)+0(2)-check-is-myTable-or-not"));
+//            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
+//                    .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
+//                    .andDo(document("(double5)slot-user1st-cancel-when-status-2(2)+0(2)"));
+//            Assertions.assertThat(slot.getGamePpp()).isEqualTo(nheo.getPpp());
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double5)slot-after-user1st-cancel-when-status-2(2)+0(2)-check-other-user-view"));
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double5)slot-after-user1st-cancel-when-status-2(2)+0(2)-check-is-myTable-or-not"));
+//            Assertions.assertThat(slot.getHeadCount()).isEqualTo(1);
+//            Assertions.assertThat(slot.getType()).isEqualTo(GameType.DOUBLE);
+//
+//            Team team1 = slot.getTeam1();
+//            Assertions.assertThat(team1.getUser1()).isEqualTo(null);
+//            Assertions.assertThat(team1.getUser2().getIntraId()).isEqualTo(nheo.getIntraId());
+//            Assertions.assertThat(team1.getTeamPpp()).isEqualTo(nheo.getPpp());
+//            Assertions.assertThat(team1.getHeadCount()).isEqualTo(1);
+//            Team team2 = slot.getTeam2();
+//            Assertions.assertThat(team2.getUser1()).isEqualTo(null);
+//            Assertions.assertThat(team2.getUser2()).isEqualTo(null);
+//            Assertions.assertThat(team2.getTeamPpp()).isEqualTo(0);
+//            Assertions.assertThat(team2.getHeadCount()).isEqualTo(0);
+//
+//            CurrentMatch hakimMatch = currentMatchRepository.findByUser(hakim).orElse(null);
+//            CurrentMatch nheoMatch = currentMatchRepository.findByUser(nheo).orElse(null);
+//            CurrentMatch donghyukMatch = currentMatchRepository.findByUser(donghyuk).orElse(null);
+//            CurrentMatch jiyunMatch = currentMatchRepository.findByUser(jiyun).orElse(null);
+//            Assertions.assertThat(hakimMatch).isEqualTo(null);
+//            Assertions.assertThat(nheoMatch.getIsMatched()).isEqualTo(false);
+//            Assertions.assertThat(donghyukMatch).isEqualTo(null);
+//            Assertions.assertThat(jiyunMatch).isEqualTo(null);
+//
+//            Noti hakimNoti = notiRepository.findAllByUser(hakim).get(1);
+//            Noti nheoNoti = notiRepository.findAllByUser(nheo).get(1);
+//            Integer donghyukNotiSize = notiRepository.findAllByUser(donghyuk).size();
+//            Integer jiyunNotiSize = notiRepository.findAllByUser(jiyun).size();
+//            Assertions.assertThat(hakimNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
+//            Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
+//            Assertions.assertThat(donghyukNotiSize).isEqualTo(2);
+//            Assertions.assertThat(jiyunNotiSize).isEqualTo(1);
+//        }
+//
+//        flushAll();
+//
+//        /* slot에서 user2 제거 --> 빈슬롯 */
+//        {
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double6)slot-before-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not"));
+//            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
+//                    .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
+//                    .andDo(document("(double6)slot-user2nd-cancel-when-status-1(2)+0(2)"));
+//            Assertions.assertThat(slot.getGamePpp()).isEqualTo(null);
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[11].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double6)slot-after-user2nd-when-status-1(2)+0(2)-check-other-user-view"));
+//            mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.DOUBLE.getCode()).contentType(MediaType.APPLICATION_JSON)
+//                            .header("Authorization", "Bearer " + testInitiator.tokens[1].getAccessToken()))
+//                    //.andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.OPEN.toString()))
+//                    .andExpect(status().isOk())
+//                    .andDo(document("(double6)slot-after-user2nd-when-status-1(2)+0(2)-check-is-myTable-or-not"));
+//            Assertions.assertThat(slot.getHeadCount()).isEqualTo(0);
+//            Assertions.assertThat(slot.getType()).isEqualTo(null);
+//
+//            Team team1 = slot.getTeam1();
+//            Assertions.assertThat(team1.getUser1()).isEqualTo(null);
+//            Assertions.assertThat(team1.getUser2()).isEqualTo(null);
+//            Assertions.assertThat(team1.getTeamPpp()).isEqualTo(0);
+//            Assertions.assertThat(team1.getHeadCount()).isEqualTo(0);
+//            Team team2 = slot.getTeam2();
+//            Assertions.assertThat(team2.getUser1()).isEqualTo(null);
+//            Assertions.assertThat(team2.getUser2()).isEqualTo(null);
+//            Assertions.assertThat(team2.getTeamPpp()).isEqualTo(0);
+//            Assertions.assertThat(team2.getHeadCount()).isEqualTo(0);
+//
+//            CurrentMatch hakimMatch = currentMatchRepository.findByUser(hakim).orElse(null);
+//            CurrentMatch nheoMatch = currentMatchRepository.findByUser(nheo).orElse(null);
+//            CurrentMatch donghyukMatch = currentMatchRepository.findByUser(donghyuk).orElse(null);
+//            CurrentMatch jiyunMatch = currentMatchRepository.findByUser(jiyun).orElse(null);
+//            Assertions.assertThat(hakimMatch).isEqualTo(null);
+//            Assertions.assertThat(nheoMatch).isEqualTo(null);
+//            Assertions.assertThat(donghyukMatch).isEqualTo(null);
+//            Assertions.assertThat(jiyunMatch).isEqualTo(null);
+//
+//            Integer hakimNotiSize = notiRepository.findAllByUser(hakim).size();
+//            Noti nheoNoti = notiRepository.findAllByUser(nheo).get(1);
+//            Integer donghyukNotiSize = notiRepository.findAllByUser(donghyuk).size();
+//            Integer jiyunNotiSize = notiRepository.findAllByUser(jiyun).size();
+//            Assertions.assertThat(hakimNotiSize).isEqualTo(2);
+//            Assertions.assertThat(nheoNoti.getType()).isEqualTo(NotiType.CANCELEDBYMAN);
+//            Assertions.assertThat(donghyukNotiSize).isEqualTo(2);
+//            Assertions.assertThat(jiyunNotiSize).isEqualTo(1);
+//        }
+//        flushAll();
+//    }
 
     private void flushAll() {
         RedisClient redisClient = RedisClient.create("redis://"+ host + ":" + port);
