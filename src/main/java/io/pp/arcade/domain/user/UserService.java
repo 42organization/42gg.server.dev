@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -69,7 +71,7 @@ public class UserService {
     public List<UserDto> findByPartsOfIntraId(UserSearchRequestDto userSearchDto) {
         List<UserDto> result = new ArrayList<UserDto>();
         if (!userSearchDto.getIntraId().isEmpty()){
-            Pageable pageable = PageRequest.of(0, 5);
+            Pageable pageable = PageRequest.of(0, 5, JpaSort.unsafe("locate('" + userSearchDto.getIntraId() + "', intraId)").ascending());
             Page<User> users = userRepository.findByIntraIdContains(userSearchDto.getIntraId(), pageable);
             result.addAll(users.stream().map(UserDto::from).collect(Collectors.toList()));
         }
