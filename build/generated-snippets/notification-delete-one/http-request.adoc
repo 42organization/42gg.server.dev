@@ -1,8 +1,0 @@
-[source,http,options="nowrap"]
-----
-DELETE /pingpong/notifications/33 HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer 0
-Host: localhost:8080
-
-----

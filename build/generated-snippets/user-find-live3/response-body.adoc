@@ -1,7 +1,0 @@
-[source,options="nowrap"]
-----
-{
-  "notiCount" : 0,
-  "event" : "game"
-}
-----

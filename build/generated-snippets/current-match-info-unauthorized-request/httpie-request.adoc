@@ -1,5 +1,0 @@
-[source,bash]
-----
-$ http GET 'http://localhost:8080/pingpong/match/current' \
-    'Content-Type:application/json;charset=UTF-8'
-----

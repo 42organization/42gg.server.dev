@@ -1,7 +1,0 @@
-[source,options="nowrap"]
-----
-{
-  "code" : "SC001",
-  "message" : "잘못된 요청입니다."
-}
-----
