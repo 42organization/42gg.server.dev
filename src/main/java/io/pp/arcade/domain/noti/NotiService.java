@@ -48,9 +48,9 @@ public class NotiService {
                 .build();
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
-        helper.setSubject("🧚‍핑퐁요정🧚‍으로부터 도착한 편지");
+        helper.setSubject("핑퐁요정🧚으로부터 도착한 편지");
         helper.setTo(user.getEMail());
-        helper.setText("새로운 알림이 도착했습니다:\n\t\t " + notiAddDto.getType().getMessage() + "\n\n 🏓42GG와 함께하는 행복한 탁구생활🏓");
+        helper.setText("🧚: \"새로운 알림이 도착했핑.\"\n" + "🧚: \"" + notiAddDto.getType().getMessage() + "\"\n\n 🏓42GG와 함께하는 행복한 탁구생활🏓");
         asyncMailSender.send(message);
         notiRepository.save(noti);
     }
