@@ -50,7 +50,8 @@ public class NotiService {
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setSubject("핑퐁요정🧚으로부터 도착한 편지");
         helper.setTo(user.getEMail());
-        helper.setText("🧚: \"새로운 알림이 도착했핑.\"\n" + "🧚: \"" + notiAddDto.getType().getMessage() + "\"\n\n 🏓42GG와 함께하는 행복한 탁구생활🏓");
+        helper.setText("🧚: \"새로운 알림이 도착했핑.\"\n" + "🧚: \"" + notiAddDto.getType().getMessage() + "\"\n\n 🏓42GG와 함께하는 행복한 탁구생활🏓" +
+                "\n$$지금 즉시 접속$$ ----> https://42gg.kr");
         asyncMailSender.send(message);
         notiRepository.save(noti);
     }
