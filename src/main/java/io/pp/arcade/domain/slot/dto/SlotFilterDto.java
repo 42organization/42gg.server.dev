@@ -4,11 +4,13 @@ import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.SlotStatusType;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@ToString
 public class SlotFilterDto {
     private Integer slotId;
     private Integer userSlotId;
