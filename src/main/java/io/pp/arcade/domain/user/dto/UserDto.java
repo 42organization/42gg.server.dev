@@ -5,12 +5,14 @@ import io.pp.arcade.global.type.RacketType;
 import io.pp.arcade.global.type.RoleType;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
 @Builder
+@ToString
 public class UserDto {
     private Integer id;
     private String intraId;

@@ -1,11 +1,13 @@
 package io.pp.arcade.domain.game.dto;
 
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.lang.Nullable;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 @Getter
+@ToString
 public class GameFindRequestDto {
     @Max(100)
     @Min(1)
