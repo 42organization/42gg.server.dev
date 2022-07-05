@@ -81,7 +81,7 @@ public class GameControllerImpl implements GameController {
     public void gameResultSave(GameResultRequestDto requestDto, HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUser(user);
-
+        validateInput(requestDto);
         // if the result already exists, throw 202 error
         if (currentMatch == null) {
             throw new ResponseStatusException(HttpStatus.ACCEPTED, "");
@@ -104,6 +104,11 @@ public class GameControllerImpl implements GameController {
         endGameStatus(game);
         // modify users' ranks with game result
         throw new ResponseStatusException(HttpStatus.CREATED, "");
+    }
+
+    private void validateInput(GameResultRequestDto requestDto) {
+        requestDto.getMyTeamScore();
+        requestDto.getEnemyTeamScore();
     }
 
     @Override
