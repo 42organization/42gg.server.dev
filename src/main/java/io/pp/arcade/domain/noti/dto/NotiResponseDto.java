@@ -8,7 +8,13 @@ import java.util.List;
 
 @Getter
 @Builder
-@ToString
 public class NotiResponseDto<T> {
     private List<T> notifications;
+
+    @Override
+    public String toString() {
+        return "NotiResponseDto{" +
+                "notifications=" + notifications +
+                '}';
+    }
 }

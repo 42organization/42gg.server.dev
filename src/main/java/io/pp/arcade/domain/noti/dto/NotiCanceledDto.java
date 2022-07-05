@@ -3,13 +3,10 @@ package io.pp.arcade.domain.noti.dto;
 import io.pp.arcade.global.type.NotiType;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.Locale;
 
 @Getter
-@ToString
 public class NotiCanceledDto {
     private Integer id;
     private String type;
@@ -26,4 +23,15 @@ public class NotiCanceledDto {
     }
 
     private LocalDateTime createdAt;
+
+    @Override
+    public String toString() {
+        return "NotiCanceledDto{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", time=" + time +
+                ", isChecked=" + isChecked +
+                ", createdAt=" + createdAt +
+                '}';
+    }
 }

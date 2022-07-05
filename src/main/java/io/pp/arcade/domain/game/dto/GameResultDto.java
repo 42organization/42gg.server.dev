@@ -1,17 +1,13 @@
 package io.pp.arcade.domain.game.dto;
 
-import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.StatusType;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.Locale;
 
 @Getter
-@ToString
 public class GameResultDto {
     private Integer gameId;
     private String type;
@@ -28,5 +24,17 @@ public class GameResultDto {
         this.time = time;
         this.team1 = team1;
         this.team2 = team2;
+    }
+
+    @Override
+    public String toString() {
+        return "GameResultDto{" +
+                "gameId=" + gameId +
+                ", type='" + type + '\'' +
+                ", status='" + status + '\'' +
+                ", time=" + time +
+                ", team1=" + team1 +
+                ", team2=" + team2 +
+                '}';
     }
 }

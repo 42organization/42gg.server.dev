@@ -7,7 +7,13 @@ import lombok.ToString;
 
 @Getter
 @Builder
-@ToString
 public class NotiModifyDto {
     private UserDto user;
+
+    @Override
+    public String toString() {
+        return "NotiModifyDto{" +
+                "user=" + user +
+                '}';
+    }
 }

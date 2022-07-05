@@ -6,13 +6,11 @@ import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.NotiType;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
-@ToString
 public class NotiDto {
     private Integer id;
     private UserDto user;
@@ -32,5 +30,18 @@ public class NotiDto {
                 .message(noti.getMessage())
                 .creatdDate(noti.getCreatedAt())
                 .build();
+    }
+
+    @Override
+    public String toString() {
+        return "NotiDto{" +
+                "id=" + id +
+                ", user=" + user +
+                ", slot=" + slot +
+                ", type=" + type +
+                ", isChecked=" + isChecked +
+                ", message='" + message + '\'' +
+                ", creatdDate=" + creatdDate +
+                '}';
     }
 }
