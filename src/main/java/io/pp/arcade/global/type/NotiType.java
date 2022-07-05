@@ -9,11 +9,11 @@ import java.util.Locale;
 @Getter
 @RequiredArgsConstructor
 public enum NotiType implements Constant{
-    MATCHED("matched", "매칭이 성사되었습니다."),
-    CANCELEDBYMAN("canceledbyman", "매칭이 취소되었습니다."),
-    CANCELEDBYTIME("canceledbytime", "매칭이 상대 없음으로 취소되었습니다."),
-    IMMINENT("imminent", "매치가 곧 시작됩니다."),
-    ANNOUNCE("announce", "공지사항이 도착했습니다.");
+    MATCHED("matched", "매칭이 성사되었퐁."),
+    CANCELEDBYMAN("canceledbyman", "매칭이 취소되었퐁."),
+    CANCELEDBYTIME("canceledbytime", "매칭이 상대 없음으로 취소되었퐁."),
+    IMMINENT("imminent", "매치가 곧 시작될퐁."),
+    ANNOUNCE("announce", "공지사항이 도착했퐁.");
 
     private final String code;
     private final String message;
