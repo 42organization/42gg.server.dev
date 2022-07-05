@@ -1,13 +1,10 @@
 package io.pp.arcade.domain.game.dto;
 
-import io.pp.arcade.global.type.StatusType;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 public class GameResultUserPageRequestDto {
     private Integer gameId = Integer.MAX_VALUE;
     private Integer count = 20;
@@ -22,5 +19,13 @@ public class GameResultUserPageRequestDto {
         else if (count < 1)
             count = 20;
         return count;
+    }
+
+    @Override
+    public String toString() {
+        return "GameResultUserPageRequestDto{" +
+                "gameId=" + gameId +
+                ", count=" + count +
+                '}';
     }
 }

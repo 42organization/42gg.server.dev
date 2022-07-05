@@ -8,8 +8,14 @@ import javax.validation.constraints.NotNull;
 
 @Builder
 @Getter
-@ToString
 public class UserSearchRequestDto {
     @NotNull(message = "")
     String intraId;
+
+    @Override
+    public String toString() {
+        return "UserSearchRequestDto{" +
+                "intraId='" + intraId + '\'' +
+                '}';
+    }
 }

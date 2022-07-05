@@ -7,8 +7,15 @@ import lombok.ToString;
 
 @Getter
 @Builder
-@ToString
 public class NotiFindDto {
     UserDto user;
     Integer notiId;
+
+    @Override
+    public String toString() {
+        return "NotiFindDto{" +
+                "user=" + user +
+                ", notiId=" + notiId +
+                '}';
+    }
 }

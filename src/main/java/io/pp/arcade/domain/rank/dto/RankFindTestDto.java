@@ -4,11 +4,9 @@ import io.pp.arcade.domain.rank.Rank;
 import io.pp.arcade.domain.user.dto.UserDto;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
 @Builder
-@ToString
 public class RankFindTestDto {
     private UserDto user;
     private Integer ranking;
@@ -25,5 +23,16 @@ public class RankFindTestDto {
                 .losses(rank.getLosses())
                 .build();
         return findRankDto;
+    }
+
+    @Override
+    public String toString() {
+        return "RankFindTestDto{" +
+                "user=" + user +
+                ", ranking=" + ranking +
+                ", ppp=" + ppp +
+                ", wins=" + wins +
+                ", losses=" + losses +
+                '}';
     }
 }

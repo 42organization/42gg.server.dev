@@ -7,13 +7,11 @@ import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.StatusType;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
-@ToString
 public class GameDto {
     private Integer id;
     private SlotDto slot;
@@ -35,5 +33,19 @@ public class GameDto {
                 .season(game.getSeason())
                 .status(game.getStatus())
                 .build();
+    }
+
+    @Override
+    public String toString() {
+        return "GameDto{" +
+                "id=" + id +
+                ", slot=" + slot +
+                ", team1=" + team1 +
+                ", team2=" + team2 +
+                ", type=" + type +
+                ", time=" + time +
+                ", season=" + season +
+                ", status=" + status +
+                '}';
     }
 }

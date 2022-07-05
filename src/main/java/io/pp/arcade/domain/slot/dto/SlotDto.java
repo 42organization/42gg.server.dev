@@ -4,16 +4,13 @@ package io.pp.arcade.domain.slot.dto;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.global.type.GameType;
-import io.pp.arcade.global.type.SlotStatusType;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
-@ToString
 public class SlotDto {
     private Integer id;
     private Integer tableId;
@@ -36,5 +33,19 @@ public class SlotDto {
                 .headCount(slot.getHeadCount())
                 .type(slot.getType())
                 .build();
+    }
+
+    @Override
+    public String toString() {
+        return "SlotDto{" +
+                "id=" + id +
+                ", tableId=" + tableId +
+                ", team1=" + team1 +
+                ", team2=" + team2 +
+                ", time=" + time +
+                ", gamePpp=" + gamePpp +
+                ", headCount=" + headCount +
+                ", type=" + type +
+                '}';
     }
 }

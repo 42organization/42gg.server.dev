@@ -4,11 +4,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.pp.arcade.domain.rank.RankRedis;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
 @Builder
-@ToString
 public class RankUserDto {
     private String intraId;
     private Integer rank;
@@ -30,5 +28,18 @@ public class RankUserDto {
                 .statusMessage(userRank.getStatusMessage())
                 .build();
         return dto;
+    }
+
+    @Override
+    public String toString() {
+        return "RankUserDto{" +
+                "intraId='" + intraId + '\'' +
+                ", rank=" + rank +
+                ", ppp=" + ppp +
+                ", wins=" + wins +
+                ", losses=" + losses +
+                ", statusMessage='" + statusMessage + '\'' +
+                ", winRate=" + winRate +
+                '}';
     }
 }

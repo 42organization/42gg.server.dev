@@ -2,14 +2,21 @@ package io.pp.arcade.domain.pchange.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 import org.springframework.data.domain.Pageable;
 
 @Builder
 @Getter
-@ToString
 public class PChangeFindDto {
     private Integer gameId;
     private String userId;
     private Pageable pageable;
+
+    @Override
+    public String toString() {
+        return "PChangeFindDto{" +
+                "gameId=" + gameId +
+                ", userId='" + userId + '\'' +
+                ", pageable=" + pageable +
+                '}';
+    }
 }
