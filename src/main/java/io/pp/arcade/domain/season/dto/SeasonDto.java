@@ -3,13 +3,11 @@ package io.pp.arcade.domain.season.dto;
 import io.pp.arcade.domain.season.Season;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
-@ToString
 public class SeasonDto {
     private Integer id;
     private String seasonName;
@@ -27,5 +25,17 @@ public class SeasonDto {
                 .startPpp(season.getStartPpp())
                 .pppGap(season.getPppGap())
                 .build();
+    }
+
+    @Override
+    public String toString() {
+        return "SeasonDto{" +
+                "id=" + id +
+                ", seasonName='" + seasonName + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", startPpp=" + startPpp +
+                ", pppGap=" + pppGap +
+                '}';
     }
 }

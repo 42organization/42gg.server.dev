@@ -3,14 +3,11 @@ package io.pp.arcade.domain.noti.dto;
 import io.pp.arcade.global.type.NotiType;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Locale;
 
 @Getter
-@ToString
 public class NotiImminentMatchDto {
     private Integer id;
     private String type;
@@ -29,5 +26,18 @@ public class NotiImminentMatchDto {
         this.myTeam = myTeam;
         this.enemyTeam = enemyTeam;
         this.createdAt = createdAt;
+    }
+
+    @Override
+    public String toString() {
+        return "NotiImminentMatchDto{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", time=" + time +
+                ", isChecked=" + isChecked +
+                ", myTeam=" + myTeam +
+                ", enemyTeam=" + enemyTeam +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

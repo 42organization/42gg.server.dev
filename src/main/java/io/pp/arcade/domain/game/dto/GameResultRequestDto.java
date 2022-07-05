@@ -8,8 +8,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
-@Getter
 @ToString
+@Getter
 public class GameResultRequestDto {
     @Min(0)
     @Max(2)

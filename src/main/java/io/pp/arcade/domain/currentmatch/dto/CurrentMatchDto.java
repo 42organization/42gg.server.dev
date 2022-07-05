@@ -5,11 +5,9 @@ import io.pp.arcade.domain.game.dto.GameDto;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
 @Builder
-@ToString
 public class CurrentMatchDto {
     private Integer id;
     private Integer userId;
@@ -28,5 +26,17 @@ public class CurrentMatchDto {
                 .matchImminent(currentMatch.getMatchImminent())
                 .isMatched(currentMatch.getIsMatched())
                 .build();
+    }
+
+    @Override
+    public String toString() {
+        return "CurrentMatchDto{" +
+                "id=" + id +
+                ", userId=" + userId +
+                ", slot=" + slot +
+                ", matchImminent=" + matchImminent +
+                ", game=" + game +
+                ", isMatched=" + isMatched +
+                '}';
     }
 }

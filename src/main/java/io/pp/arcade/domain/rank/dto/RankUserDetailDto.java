@@ -2,11 +2,9 @@ package io.pp.arcade.domain.rank.dto;
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 @Getter
 @Builder
-@ToString
 public class RankUserDetailDto {
     private String intraId;
     private Integer rank;
@@ -15,4 +13,17 @@ public class RankUserDetailDto {
     private Integer wins;
     private Integer losses;
     private Double winRate;
+
+    @Override
+    public String toString() {
+        return "RankUserDetailDto{" +
+                "intraId='" + intraId + '\'' +
+                ", rank=" + rank +
+                ", ppp=" + ppp +
+                ", statusMessage='" + statusMessage + '\'' +
+                ", wins=" + wins +
+                ", losses=" + losses +
+                ", winRate=" + winRate +
+                '}';
+    }
 }

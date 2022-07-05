@@ -5,12 +5,8 @@ import io.pp.arcade.domain.rank.dto.DtoSerialize;
 import io.pp.arcade.global.type.RacketType;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
-
-import java.util.Locale;
 
 @Getter
-@ToString
 public class UserDetailResponseDto {
     private String intraId;
     private String userImageUri;
@@ -36,5 +32,21 @@ public class UserDetailResponseDto {
         this.racketType = racketType.getCode();
         this.statusMessage = statusMessage;
         this.rivalRecord = rivalRecord;
+    }
+
+    @Override
+    public String toString() {
+        return "UserDetailResponseDto{" +
+                "intraId='" + intraId + '\'' +
+                ", userImageUri='" + userImageUri + '\'' +
+                ", rank=" + rank +
+                ", ppp=" + ppp +
+                ", wins=" + wins +
+                ", losses=" + losses +
+                ", winRate=" + winRate +
+                ", racketType='" + racketType + '\'' +
+                ", statusMessage='" + statusMessage + '\'' +
+                ", rivalRecord=" + rivalRecord +
+                '}';
     }
 }
