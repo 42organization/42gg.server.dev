@@ -6,11 +6,13 @@ import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.NotiType;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Builder
+@ToString
 public class NotiDto {
     private Integer id;
     private UserDto user;

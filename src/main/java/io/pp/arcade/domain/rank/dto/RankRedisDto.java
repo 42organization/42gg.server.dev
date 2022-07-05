@@ -8,12 +8,14 @@ import io.pp.arcade.global.type.RacketType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.redis.core.index.Indexed;
 
 import javax.persistence.Id;
 
 @Getter
 @Builder
+@ToString
 public class RankRedisDto {
     private Integer id;
     private String intraId;

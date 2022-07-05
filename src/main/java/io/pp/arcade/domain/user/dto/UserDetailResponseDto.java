@@ -5,10 +5,12 @@ import io.pp.arcade.domain.rank.dto.DtoSerialize;
 import io.pp.arcade.global.type.RacketType;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.util.Locale;
 
 @Getter
+@ToString
 public class UserDetailResponseDto {
     private String intraId;
     private String userImageUri;

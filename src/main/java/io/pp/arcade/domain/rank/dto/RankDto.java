@@ -7,9 +7,11 @@ import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.RacketType;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @Builder
+@ToString
 public class RankDto {
     private Integer id;
     private UserDto user;
