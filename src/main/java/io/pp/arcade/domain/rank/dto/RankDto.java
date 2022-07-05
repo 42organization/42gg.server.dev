@@ -1,17 +1,15 @@
 package io.pp.arcade.domain.rank.dto;
 
 import io.pp.arcade.domain.rank.Rank;
-import io.pp.arcade.domain.rank.RankRedis;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.RacketType;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
+
 
 @Getter
 @Builder
-@ToString
 public class RankDto {
     private Integer id;
     private UserDto user;
@@ -36,5 +34,20 @@ public class RankDto {
                 .racketType(rank.getRacketType())
                 .build();
         return rankDto;
+    }
+
+    @Override
+    public String toString() {
+        return "RankDto{" +
+                "id=" + id +
+                ", user=" + user +
+                ", seasonId=" + seasonId +
+                ", ranking=" + ranking +
+                ", gameType=" + gameType +
+                ", racketType=" + racketType +
+                ", wins=" + wins +
+                ", losses=" + losses +
+                ", ppp=" + ppp +
+                '}';
     }
 }

@@ -3,13 +3,10 @@ package io.pp.arcade.domain.slot.dto;
 import io.pp.arcade.global.type.SlotStatusType;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
 import java.time.LocalDateTime;
-import java.util.Locale;
 
 @Getter
-@ToString
 public class SlotStatusDto {
     private Integer slotId;
     private LocalDateTime time;
@@ -22,5 +19,15 @@ public class SlotStatusDto {
         this.time = time;
         this.status = status.getCode();
         this.headCount = headCount;
+    }
+
+    @Override
+    public String toString() {
+        return "SlotStatusDto{" +
+                "slotId=" + slotId +
+                ", time=" + time +
+                ", status='" + status + '\'' +
+                ", headCount=" + headCount +
+                '}';
     }
 }

@@ -5,14 +5,11 @@ import io.pp.arcade.global.type.RacketType;
 import io.pp.arcade.global.type.RoleType;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.ToString;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 @Getter
 @Builder
-@ToString
 public class UserDto {
     private Integer id;
     private String intraId;
@@ -53,5 +50,19 @@ public class UserDto {
     @Override
     public int hashCode() {
         return Objects.hash(id, intraId, imageUri, racketType, statusMessage, ppp);
+    }
+
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "id=" + id +
+                ", intraId='" + intraId + '\'' +
+                ", eMail='" + eMail + '\'' +
+                ", imageUri='" + imageUri + '\'' +
+                ", racketType=" + racketType +
+                ", statusMessage='" + statusMessage + '\'' +
+                ", roleType=" + roleType +
+                ", ppp=" + ppp +
+                '}';
     }
 }
