@@ -4,9 +4,11 @@ import io.pp.arcade.domain.rank.Rank;
 import io.pp.arcade.domain.user.dto.UserDto;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @Builder
+@ToString
 public class RankFindTestDto {
     private UserDto user;
     private Integer ranking;

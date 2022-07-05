@@ -5,9 +5,11 @@ import io.pp.arcade.domain.pchange.PChange;
 import io.pp.arcade.domain.user.dto.UserDto;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @Builder
+@ToString
 public class PChangeDto {
     private Integer id;
     private GameDto game;

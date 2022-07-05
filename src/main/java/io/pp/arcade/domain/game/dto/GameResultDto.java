@@ -5,11 +5,13 @@ import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.StatusType;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.Locale;
 
 @Getter
+@ToString
 public class GameResultDto {
     private Integer gameId;
     private String type;

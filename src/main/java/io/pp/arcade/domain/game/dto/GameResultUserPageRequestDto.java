@@ -3,9 +3,11 @@ package io.pp.arcade.domain.game.dto;
 import io.pp.arcade.global.type.StatusType;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 public class GameResultUserPageRequestDto {
     private Integer gameId = Integer.MAX_VALUE;
     private Integer count = 20;

@@ -4,9 +4,11 @@ import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.user.dto.UserDto;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
 @Builder
+@ToString
 public class TeamDto {
     private Integer id;
     private UserDto user1;

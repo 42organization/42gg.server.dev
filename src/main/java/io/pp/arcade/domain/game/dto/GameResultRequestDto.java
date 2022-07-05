@@ -2,11 +2,14 @@ package io.pp.arcade.domain.game.dto;
 
 import io.pp.arcade.global.exception.BusinessException;
 import lombok.Getter;
+import lombok.ToString;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @Getter
+@ToString
 public class GameResultRequestDto {
     @Min(0)
     @Max(2)
