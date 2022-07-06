@@ -79,3 +79,66 @@ include::{snippets}/user-find-live2/http-request.adoc[]
 
 === http-response
 include::{snippets}/user-find-live2/http-response.adoc[]
+
+== 현재 내 예약 정보 조회(상단바)
+
+== 1. 예약한 경기 없음
+=== curl-request
+include::{snippets}/current-match-info-none/curl-request.adoc[]
+
+=== http-request
+include::{snippets}/current-match-info-none/http-request.adoc[]
+
+=== http-response
+include::{snippets}/current-match-info-none/http-response.adoc[]
+
+== 2. 예약한 경기 있음, 아직 5분전(imminent)가 아닐 때
+=== curl-request
+include::{snippets}/current-match-info-standby-not-Imminent/curl-request.adoc[]
+
+=== http-request
+include::{snippets}/current-match-info-standby-not-Imminent/http-request.adoc[]
+
+=== http-response
+include::{snippets}/current-match-info-standby-not-Imminent/http-response.adoc[]
+
+== 3. 예약한 경기 있음, 5분전(imminent)일
+=== curl-request
+include::{snippets}/current-match-info-standby-Imminent/curl-request.adoc[]
+
+=== http-request
+include::{snippets}/current-match-info-standby-Imminent/http-request.adoc[]
+
+=== http-response
+include::{snippets}/current-match-info-standby-Imminent/http-response.adoc[]
+
+== 4. 예약한 경기 있음, 매치가 성사됐을 때
+=== curl-request
+include::{snippets}/current-match-info-matching-Imminent/curl-request.adoc[]
+
+=== http-request
+include::{snippets}/current-match-info-matching-Imminent
+/http-request.adoc[]
+
+=== http-response
+include::{snippets}/current-match-info-matching-Imminent/http-response.adoc[]
+
+== 5. 경기 중일 때
+=== curl-request
+include::{snippets}/current-match-info-gaming/curl-request.adoc[]
+
+=== http-request
+include::{snippets}/current-match-info-gaming/http-request.adoc[]
+
+=== http-response
+include::{snippets}/current-match-info-gaming/http-response.adoc[]
+
+== 5. 유효하지 않은 토큰으로 현재 예약 상태에 대한 정보 요청을 보낼 경우
+=== curl-request
+include::{snippets}/current-match-info-unauthorized-request/curl-request.adoc[]
+
+=== http-request
+include::{snippets}/current-match-info-unauthorized-request/http-request.adoc[]
+
+=== http-response
+include::{snippets}/current-match-info-unauthorized-request/http-response.adoc[]
