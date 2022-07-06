@@ -18,8 +18,8 @@
     <td align=center><a href="https://github.com/nheo9143">허남준 @nheo</a></td>
     <td align=center><a href="https://github.com/reg0145">김동현 @donghyuk</a></td>
     <td align=center><a href="https://github.com/triplecheeseburger">김한결 @hakim</a></td>
-    <td align=center><a href="https://github.com/wochae">채우석 @wochae</a></td>
     <td align=center><a href="https://github.com/tomatozil">윤지윤 @jiyun</a></td>
+    <td align=center><a href="https://github.com/wochae">채우석 @wochae</a></td>
     <td align=center><a href="https://github.com/Two-Jay">김정준 @jekim</a></td>
   </tr>
 </table>
