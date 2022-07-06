@@ -12,7 +12,7 @@
     <td align=center>메인 로직, 관리자 페이지 뷰 담당 🦑</td>
     <td align=center>서브 로직, 테스트코드, 관리자 api, 문서화 담당 🦦</td>
     <td align=center>서브 로직, 클라우드 서버 구축, 원격DB 담당🐆</td>
-    <td align=center>서브 로직, 테스트코드,</br>서비스 리서치 담당🍖</td>
+    <td align=center>서브 로직, 테스트코드, 서비스 리서치 담당🍖</td>
   </tr>
   <tr>
     <td align=center><a href="https://github.com/nheo9143">허남준 @nheo</a></td>
