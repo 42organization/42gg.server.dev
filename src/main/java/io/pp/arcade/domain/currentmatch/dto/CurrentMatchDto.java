@@ -18,6 +18,9 @@ public class CurrentMatchDto {
     private Boolean isMatched;
 
     public static CurrentMatchDto from(CurrentMatch currentMatch) {
+        if (currentMatch == null) {
+            return null;
+        }
         return CurrentMatchDto.builder()
                 .id(currentMatch.getId())
                 .userId(currentMatch.getUser().getId())
