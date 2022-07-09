@@ -39,7 +39,7 @@ public class FeedbackAdminControllerImpl implements FeedbackAdminController {
     }
 
     @Override
-    @GetMapping(value = "/feedback")
+    @GetMapping(value = "/feedback/all")
     public List<FeedbackDto> feedbackAll(Pageable pageable, HttpServletRequest request) {
         List<FeedbackDto> feedbackDtos = feedbackService.findFeedbackByAdmin(pageable);
         return feedbackDtos;
@@ -60,7 +60,7 @@ public class FeedbackAdminControllerImpl implements FeedbackAdminController {
     }
 
     @Override
-    @GetMapping(value = "/feedback")
+    @GetMapping(value = "/feedback/categorized")
     public List<FeedbackDto> feedbackFindByCategoryAndIsSolved(FeedbackFindRequestDto findRequestDto, Pageable pageable, HttpServletRequest request) {
         FeedbackType category = findRequestDto.getCategory();
         Boolean isSolved = findRequestDto.getIsSolved();
