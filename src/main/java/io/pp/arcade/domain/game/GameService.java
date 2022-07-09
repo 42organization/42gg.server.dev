@@ -3,6 +3,8 @@ package io.pp.arcade.domain.game;
 import io.pp.arcade.domain.admin.dto.create.GameCreateDto;
 import io.pp.arcade.domain.admin.dto.delete.GameDeleteDto;
 import io.pp.arcade.domain.game.dto.*;
+import io.pp.arcade.domain.season.Season;
+import io.pp.arcade.domain.season.SeasonRepository;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.slot.dto.SlotDto;
@@ -17,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +29,7 @@ public class GameService {
     private final GameRepository gameRepository;
     private final TeamRepository teamRepository;
     private final SlotRepository slotRepository;
+    private final SeasonRepository seasonRepository;
 
     @Transactional
     public GameDto findById(Integer gameId) {
@@ -38,6 +42,7 @@ public class GameService {
     @Transactional
     public void addGame(GameAddDto addDto) {
         SlotDto slotDto = addDto.getSlotDto();
+        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(LocalDateTime.now(), LocalDateTime.now()).orElse(null);
         Slot slot = slotRepository.findById(slotDto.getId()).orElseThrow(() -> new BusinessException("E0001"));
         Team team1 = teamRepository.findById(slotDto.getTeam1().getId()).orElseThrow(() -> new BusinessException("E0001"));
         Team team2 = teamRepository.findById(slotDto.getTeam2().getId()).orElseThrow(() -> new BusinessException("E0001"));
@@ -48,7 +53,7 @@ public class GameService {
                 .type(slotDto.getType())
                 .time(slotDto.getTime())
                 .status(StatusType.LIVE)
-                .season(1) //season 추가
+                .season(season == null ? 1 : season.getId()) //season 추가
                 .build()
         );
     }
