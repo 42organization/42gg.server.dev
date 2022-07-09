@@ -464,6 +464,49 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_http_response_2">http-response</a></li>
 </ul>
 </li>
+<li><a href="#_현재_내_예약_정보_조회상단바">현재 내 예약 정보 조회(상단바)</a></li>
+<li><a href="#_1_예약한_경기_없음">1. 예약한 경기 없음</a>
+<ul class="sectlevel2">
+<li><a href="#_curl_request_3">curl-request</a></li>
+<li><a href="#_http_request_3">http-request</a></li>
+<li><a href="#_http_response_3">http-response</a></li>
+</ul>
+</li>
+<li><a href="#_2_예약한_경기_있음_아직_5분전imminent가_아닐_때">2. 예약한 경기 있음, 아직 5분전(imminent)가 아닐 때</a>
+<ul class="sectlevel2">
+<li><a href="#_curl_request_4">curl-request</a></li>
+<li><a href="#_http_request_4">http-request</a></li>
+<li><a href="#_http_response_4">http-response</a></li>
+</ul>
+</li>
+<li><a href="#_3_예약한_경기_있음_5분전imminent일">3. 예약한 경기 있음, 5분전(imminent)일</a>
+<ul class="sectlevel2">
+<li><a href="#_curl_request_5">curl-request</a></li>
+<li><a href="#_http_request_5">http-request</a></li>
+<li><a href="#_http_response_5">http-response</a></li>
+</ul>
+</li>
+<li><a href="#_4_예약한_경기_있음_매치가_성사됐을_때">4. 예약한 경기 있음, 매치가 성사됐을 때</a>
+<ul class="sectlevel2">
+<li><a href="#_curl_request_6">curl-request</a></li>
+<li><a href="#_http_request_6">http-request</a></li>
+<li><a href="#_http_response_6">http-response</a></li>
+</ul>
+</li>
+<li><a href="#_5_경기_중일_때">5. 경기 중일 때</a>
+<ul class="sectlevel2">
+<li><a href="#_curl_request_7">curl-request</a></li>
+<li><a href="#_http_request_7">http-request</a></li>
+<li><a href="#_http_response_7">http-response</a></li>
+</ul>
+</li>
+<li><a href="#_5_유효하지_않은_토큰으로_현재_예약_상태에_대한_정보_요청을_보낼_경우">5. 유효하지 않은 토큰으로 현재 예약 상태에 대한 정보 요청을 보낼 경우</a>
+<ul class="sectlevel2">
+<li><a href="#_curl_request_8">curl-request</a></li>
+<li><a href="#_http_request_8">http-request</a></li>
+<li><a href="#_http_response_8">http-response</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -663,11 +706,320 @@ Content-Length: 42
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_현재_내_예약_정보_조회상단바"><a class="link" href="#_현재_내_예약_정보_조회상단바">현재 내 예약 정보 조회(상단바)</a></h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_1_예약한_경기_없음"><a class="link" href="#_1_예약한_경기_없음">1. 예약한 경기 없음</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_curl_request_3"><a class="link" href="#_curl_request_3">curl-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/match/current' -i -X GET \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer 0'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_request_3"><a class="link" href="#_http_request_3">http-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/current HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer 0
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_response_3"><a class="link" href="#_http_response_3">http-response</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 100
+
+{
+  "time" : null,
+  "slotId" : null,
+  "myTeam" : [ ],
+  "enemyTeam" : [ ],
+  "isMatched" : false
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_2_예약한_경기_있음_아직_5분전imminent가_아닐_때"><a class="link" href="#_2_예약한_경기_있음_아직_5분전imminent가_아닐_때">2. 예약한 경기 있음, 아직 5분전(imminent)가 아닐 때</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_curl_request_4"><a class="link" href="#_curl_request_4">curl-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/match/current' -i -X GET \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer 1'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_request_4"><a class="link" href="#_http_request_4">http-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/current HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer 1
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_response_4"><a class="link" href="#_http_response_4">http-response</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 122
+
+{
+  "time" : "2022-07-07T20:48:54.141488",
+  "slotId" : 19,
+  "myTeam" : [ ],
+  "enemyTeam" : [ ],
+  "isMatched" : false
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_3_예약한_경기_있음_5분전imminent일"><a class="link" href="#_3_예약한_경기_있음_5분전imminent일">3. 예약한 경기 있음, 5분전(imminent)일</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_curl_request_5"><a class="link" href="#_curl_request_5">curl-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/match/current' -i -X GET \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer 2'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_request_5"><a class="link" href="#_http_request_5">http-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/current HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer 2
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_response_5"><a class="link" href="#_http_response_5">http-response</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 122
+
+{
+  "time" : "2022-07-07T20:48:54.197657",
+  "slotId" : 20,
+  "myTeam" : [ ],
+  "enemyTeam" : [ ],
+  "isMatched" : false
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_4_예약한_경기_있음_매치가_성사됐을_때"><a class="link" href="#_4_예약한_경기_있음_매치가_성사됐을_때">4. 예약한 경기 있음, 매치가 성사됐을 때</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_curl_request_6"><a class="link" href="#_curl_request_6">curl-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/match/current' -i -X GET \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer 3'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_request_6"><a class="link" href="#_http_request_6">http-request</a></h3>
+<div class="paragraph">
+<p>include::./build/generated-snippets/current-match-info-matching-Imminent
+/http-request.adoc[]</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_response_6"><a class="link" href="#_http_response_6">http-response</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 156
+
+{
+  "time" : "2022-07-07T20:48:54.224805",
+  "slotId" : 21,
+  "myTeam" : [ "jiyun", "jekim" ],
+  "enemyTeam" : [ "wochae", "jabae" ],
+  "isMatched" : true
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_5_경기_중일_때"><a class="link" href="#_5_경기_중일_때">5. 경기 중일 때</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_curl_request_7"><a class="link" href="#_curl_request_7">curl-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/match/current' -i -X GET \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer 4'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_request_7"><a class="link" href="#_http_request_7">http-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/current HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer 4
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_response_7"><a class="link" href="#_http_response_7">http-response</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 156
+
+{
+  "time" : "2022-07-07T20:48:54.266617",
+  "slotId" : 22,
+  "myTeam" : [ "jiyun", "jekim" ],
+  "enemyTeam" : [ "wochae", "jabae" ],
+  "isMatched" : true
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_5_유효하지_않은_토큰으로_현재_예약_상태에_대한_정보_요청을_보낼_경우"><a class="link" href="#_5_유효하지_않은_토큰으로_현재_예약_상태에_대한_정보_요청을_보낼_경우">5. 유효하지 않은 토큰으로 현재 예약 상태에 대한 정보 요청을 보낼 경우</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_curl_request_8"><a class="link" href="#_curl_request_8">curl-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/match/current' -i -X GET \
+    -H 'Content-Type: application/json;charset=UTF-8'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_request_8"><a class="link" href="#_http_request_8">http-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/match/current HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Host: localhost:8080</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_response_8"><a class="link" href="#_http_response_8">http-response</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 303 See Other
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Location: http://localhost:8080/login
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-07-03 16:38:40 +0900
+Last updated 2022-07-06 20:46:41 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

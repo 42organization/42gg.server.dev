@@ -148,12 +148,6 @@ class RankControllerTest {
                 .andDo(document("ranking-List"));
     }
 
-    private String getUserKey(String key) { return Key.RANK_USER + key; }
-
-    private String getUserKey(String intraId, GameType gameType) {
-        return Key.RANK_USER + intraId + gameType.getCode();
-    }
-
     private String getUserRankKey(String intraId, GameType gameType) {
         return intraId + gameType.getCode();
     }
