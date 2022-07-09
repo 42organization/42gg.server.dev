@@ -13,7 +13,7 @@
                     <div class="">
                         <div class="page-title">
                             <div class="title_left">
-                                <h3>관리자 등록/삭제 </h3>
+                                <h3>피드백 관리</h3>
                             </div>
                             <div class="title_right">
                                 <div class="col-md-5 col-sm-5   form-group pull-right top_search">
@@ -31,7 +31,7 @@
                             <div class="col-md-12 col-sm-12  ">
                                 <div class="x_panel">
                                     <div class="x_title">
-                                        <h2>현재 관리자</h2>
+                                        <h2>처리되지 않은 피드백</h2>
                                         <ul class="nav navbar-right panel_toolbox">
                                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                             </li>
@@ -46,33 +46,28 @@
                                             <table class="table table-striped jambo_table bulk_action">
                                                 <thead>
                                                 <tr class="headings">
-                                                    <th>
-                                                        <input type="checkbox" id="check-all" class="flat">
-                                                    </th>
-                                                    <th class="column-title">유저 ID</th>
-                                                    <th class="column-title">유저 Intra ID</th>
-                                                    <th class="column-title">유저 타입</th>
-                                                    <th class="column-title">비 고</th>
+                                                    <th class="column-title">Feedback ID</th>
+                                                    <th class="column-title">User Intra ID</th>
+                                                    <th class="column-title">Category</th>
+                                                    <th class="column-title">Content</th>
+                                                    <th></th>
                                                     </th>
                                                 </tr>
                                                 </thead>
-                                                <tbody>
-                                                <tr class="even pointer" th:each="admin, i : ${adminList}">
-                                                    <td class="a-center">
-                                                        <input type="checkbox" name="table_records">
-                                                    </td>
-                                                    <td class=" " th:text="${admin.getId()}"></td>
-                                                    <td class=" " th:text="${admin.getIntraId()}"></td>
-                                                    <td class=" " th:text="${admin.getRoleType()}"></td>
+                                                <tr class="even pointer" th:each="feedback, i : ${unsolvedFeedbackList}">
+                                                    <td class=" " th:text="${feedback.getId()}"></td>
+                                                    <td class=" " th:text="${feedback.getUser().getIntraId()}"></td>
+                                                    <td class=" " th:text="${feedback.getCategory()}"></td>
+                                                    <td class=" " th:text="${feedback.getContent()}"></td>
                                                     <td class=" last">
                                                         <form>
                                                             <input type="hidden" id="url" name="url"
-                                                                   value="/admin/user/">
-                                                            <input type="hidden" id="method" value="delete">
-                                                            <input type="hidden" id="path" th:value="${admin.getId()}">
+                                                                   value="/admin/feedback">
+                                                            <input type="hidden" id="feedbackId" th:value="${feedback.getId()}">
+                                                            <input type="hidden" id="isSolved" th:value="${true}">
                                                             <input type="hidden" id="token" th:value="${token}">
-                                                            <input type="submit" value="해제"
-                                                                   th:onclick='js_request_path(this.form)'>
+                                                            <input type="submit" value="처리완료"
+                                                                   th:onclick='js_request_feedback_put(this.form)'>
                                                         </form>
                                                     </td>
                                                 </tr>
@@ -84,7 +79,7 @@
                             <div class="col-md-12 col-sm-12  ">
                                 <div class="x_panel">
                                     <div class="x_title">
-                                        <h2>유저 리스트</h2>
+                                        <h2>처리된 피드백</h2>
                                         <ul class="nav navbar-right panel_toolbox">
                                             <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
                                             </li>
@@ -99,28 +94,28 @@
                                             <table class="table table-striped jambo_table bulk_action">
                                                 <thead>
                                                 <tr class="headings">
-                                                    <th class="column-title">유저 ID</th>
-                                                    <th class="column-title">유저 Intra ID</th>
-                                                    <th class="column-title">가입 날짜</th>
-                                                    <th class="column-title">비 고</th>
+                                                    <th class="column-title">Feedback ID</th>
+                                                    <th class="column-title">User Intra ID</th>
+                                                    <th class="column-title">Category</th>
+                                                    <th class="column-title">Content</th>
+                                                    <th></th>
                                                     </th>
                                                 </tr>
                                                 </thead>
-                                                <tbody>
-
-                                                <tr class="even pointer" th:each="user, i : ${userList}">
-                                                    <td class=" " th:text="${user.getId()}"></td>
-                                                    <td class=" " th:text="${user.getIntraId()}"></td>
-                                                    <td class=" " th:text="${user.getRoleType()}"></td>
+                                                <tr class="even pointer" th:each="feedback, i : ${solvedFeedbackList}">
+                                                    <td class=" " th:text="${feedback.getId()}"></td>
+                                                    <td class=" " th:text="${feedback.getUser().getIntraId()}"></td>
+                                                    <td class=" " th:text="${feedback.getCategory()}"></td>
+                                                    <td class=" " th:text="${feedback.getContent()}"></td>
                                                     <td class=" last">
                                                         <form>
                                                             <input type="hidden" id="url" name="url"
-                                                                   value="/admin/user/">
-                                                            <input type="hidden" id="method" value="delete">
-                                                            <input type="hidden" id="path" th:value="${user.getId()}">
+                                                                   value="/admin/feedback">
+                                                            <input type="hidden" id="feedbackId" th:value="${feedback.getId()}">
+                                                            <input type="hidden" id="isSolved" th:value="${false}">
                                                             <input type="hidden" id="token" th:value="${token}">
-                                                            <input type="submit" value="등록"
-                                                                   th:onclick='js_request_path(this.form)'>
+                                                            <input type="submit" value="사실처리안됨"
+                                                                   th:onclick='js_request_feedback_put(this.form)'>
                                                         </form>
                                                     </td>
                                                 </tr>
