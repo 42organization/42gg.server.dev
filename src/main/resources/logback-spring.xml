@@ -15,9 +15,9 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>./was-logs/all.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
+                <maxFileSize>50MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>180</maxHistory>
+            <maxHistory>90</maxHistory>
         </rollingPolicy>
     </appender>
 
@@ -35,17 +35,17 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>./was-logs/info.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
+                <maxFileSize>50MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>180</maxHistory>
+            <maxHistory>30</maxHistory>
         </rollingPolicy>
     </appender>
 
-    <appender name="DEBUG_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="TRACE_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
-        <file>./logs/debug.log</file>
+        <file>./logs/trace.log</file>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>DEBUG</level>
+            <level>TRACE</level>
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
@@ -53,11 +53,11 @@
             <pattern>[%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %-5level %logger{35} - %msg%n</pattern>
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>./was-logs/debug.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
+            <fileNamePattern>./was-logs/trace.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <maxFileSize>100MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>180</maxHistory>
+            <maxHistory>15</maxHistory>
         </rollingPolicy>
     </appender>
 
@@ -75,9 +75,9 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>./was-logs/hiber.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
+                <maxFileSize>50MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>180</maxHistory>
+            <maxHistory>30</maxHistory>
         </rollingPolicy>
     </appender>
 
@@ -95,9 +95,9 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>./was-logs/error.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <maxFileSize>100MB</maxFileSize>
+                <maxFileSize>20MB</maxFileSize>
             </timeBasedFileNamingAndTriggeringPolicy>
-            <maxHistory>180</maxHistory>
+            <maxHistory>30</maxHistory>
         </rollingPolicy>
     </appender>
 
@@ -108,15 +108,13 @@
         <appender-ref ref="STDOUT"/>
     </root>
 
-    <logger name="LogController" additivity="false">
-        <level value = "DEBUG" />
-        <appender-ref ref="ALL_LOG" />
-        <appender-ref ref="DEBUG_LOG" />
-        <appender-ref ref="ERROR_LOG" />
-    </logger>
+<!--    <logger name="LogController" additivity="false">-->
+<!--        <level value = "TRACE" />-->
+<!--        <appender-ref ref="TRACE_LOG" />-->
+<!--    </logger>-->
 
-    <logger name="org.hibernate.SQL" additivity="false">
-        <level value = "DEBUG" />
+    <logger name="org.hibernate.type.descriptor.sql.BasicBinder" additivity="false">
+        <level value = "TRACE" />
         <appender-ref ref="HIBER_LOG" />
     </logger>
 
