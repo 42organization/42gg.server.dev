@@ -150,7 +150,6 @@ public class ManagementController {
         return "slot_management";
     }
 
-
     @GetMapping("/admin/user")
     public String userPage(Model model, HttpServletRequest request) {
         List<UserDto> userList = userService.findUserByAdmin(Pageable.unpaged());

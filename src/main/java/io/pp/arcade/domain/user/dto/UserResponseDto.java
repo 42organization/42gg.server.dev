@@ -8,6 +8,7 @@ import lombok.Getter;
 public class UserResponseDto {
     private String intraId;
     private String userImageUri;
+    private Boolean isAdmin;
 
     @Override
     public String toString() {
