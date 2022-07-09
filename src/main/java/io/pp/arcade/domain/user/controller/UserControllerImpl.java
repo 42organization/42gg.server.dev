@@ -18,6 +18,7 @@ import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.*;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.RoleType;
 import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -51,6 +52,7 @@ public class UserControllerImpl implements UserController {
         UserResponseDto responseDto = UserResponseDto.builder()
                 .intraId(user.getIntraId())
                 .userImageUri(user.getImageUri())
+                .isAdmin(user.getRoleType() == RoleType.ADMIN)
                 .build();
         return responseDto;
     }
