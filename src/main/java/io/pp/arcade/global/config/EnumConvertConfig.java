@@ -1,5 +1,6 @@
 package io.pp.arcade.global.config;
 
+import io.pp.arcade.global.type.FeedbackType;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.RacketType;
 import io.pp.arcade.global.type.StatusType;
@@ -40,6 +41,18 @@ public class EnumConvertConfig {
         public RacketType convert(String source) {
             try {
                 return RacketType.valueOf(source.toUpperCase(Locale.ROOT));
+            } catch (Exception e) {
+                return null;
+            }
+        }
+    }
+
+    @Component
+    public class StringToFeedbackTypeEnumConverter implements Converter<String, FeedbackType> {
+        @Override
+        public FeedbackType convert(String source) {
+            try {
+                return FeedbackType.valueOf(source.toUpperCase(Locale.ROOT));
             } catch (Exception e) {
                 return null;
             }
