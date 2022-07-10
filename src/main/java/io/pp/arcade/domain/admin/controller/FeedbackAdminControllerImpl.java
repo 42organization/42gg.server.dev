@@ -5,7 +5,6 @@ import io.pp.arcade.domain.feedback.dto.FeedbackDto;
 import io.pp.arcade.domain.feedback.dto.FeedbackFindRequestDto;
 import io.pp.arcade.domain.admin.dto.update.FeedbackUpdateDto;
 import io.pp.arcade.domain.admin.dto.update.FeedbackUpdateRequestDto;
-import io.pp.arcade.global.type.FeedbackType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +46,7 @@ public class FeedbackAdminControllerImpl implements FeedbackAdminController {
 
     @Override
     @GetMapping(value = "/feedback/{category}")
-    public List<FeedbackDto> feedbackFindByCategory(FeedbackType category, Pageable pageable, HttpServletRequest request) {
+    public List<FeedbackDto> feedbackFindByCategory(String category, Pageable pageable, HttpServletRequest request) {
         List<FeedbackDto> feedbackDtos = feedbackService.feedbackFindByCategoryByAdmin(category, pageable);
         return feedbackDtos;
     }
@@ -62,7 +61,7 @@ public class FeedbackAdminControllerImpl implements FeedbackAdminController {
     @Override
     @GetMapping(value = "/feedback/categorized")
     public List<FeedbackDto> feedbackFindByCategoryAndIsSolved(FeedbackFindRequestDto findRequestDto, Pageable pageable, HttpServletRequest request) {
-        FeedbackType category = findRequestDto.getCategory();
+        String category = findRequestDto.getCategory();
         Boolean isSolved = findRequestDto.getIsSolved();
         List<FeedbackDto> feedbackDtos = feedbackService.feedbackFindByCategoryAndIsSolvedByAdmin(category, isSolved, pageable);
         return feedbackDtos;

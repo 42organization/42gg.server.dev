@@ -15,7 +15,7 @@ public interface FeedbackAdminController {
     void feedbackUpdate(@RequestBody FeedbackUpdateRequestDto updateRequestDto, HttpServletRequest request);
     void feedbackDelete(@PathVariable Integer feedbackId, HttpServletRequest request);
     List<FeedbackDto> feedbackAll(Pageable pageable, HttpServletRequest request);
-    List<FeedbackDto> feedbackFindByCategory(@PathVariable FeedbackType category, Pageable pageable, HttpServletRequest request);
+    List<FeedbackDto> feedbackFindByCategory(@PathVariable String category, Pageable pageable, HttpServletRequest request);
     List<FeedbackDto> feedbackFindByIsSolved(@PathVariable Boolean isSolved, Pageable pageable, HttpServletRequest request);
     List<FeedbackDto> feedbackFindByCategoryAndIsSolved(@RequestBody FeedbackFindRequestDto findRequestDto, Pageable pageable, HttpServletRequest request);
 }

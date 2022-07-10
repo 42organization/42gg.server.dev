@@ -27,7 +27,7 @@ public class Feedback extends BaseTimeEntity {
 
     @NotNull
     @Column(name = "category")
-    private FeedbackType category;
+    private String category;
 
     @NotNull
     @Column(name = "content", length = 600)
@@ -39,7 +39,7 @@ public class Feedback extends BaseTimeEntity {
     private Boolean isSolved;
 
     @Builder
-    public Feedback(User user, FeedbackType category, String content) {
+    public Feedback(User user, String category, String content) {
         this.user = user;
         this.category = category;
         this.content = content;
