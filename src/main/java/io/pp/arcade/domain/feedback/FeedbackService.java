@@ -25,8 +25,6 @@ public class FeedbackService {
     @Transactional
     public void addFeedback(FeedbackAddDto addDto) {
         User user = userRepository.findById(addDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
-        if (addDto.getContent().length() > 300)
-            throw new BusinessException("E0001");
         Feedback feedback = Feedback.builder()
                 .user(user)
                 .category(addDto.getCategory())
