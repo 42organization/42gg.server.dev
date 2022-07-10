@@ -6,5 +6,6 @@ import lombok.ToString;
 @Getter
 @ToString
 public class FeedbackRequestDto {
+    private String category;
     private String content;
 }

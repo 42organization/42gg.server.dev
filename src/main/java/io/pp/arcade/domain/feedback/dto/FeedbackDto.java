@@ -11,7 +11,7 @@ import lombok.Getter;
 public class FeedbackDto {
     private Integer id;
     private UserDto user;
-    private FeedbackType category;
+    private String category;
     private String content;
     private Boolean isSolved;
 
