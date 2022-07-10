@@ -7,6 +7,8 @@ import org.hibernate.validator.constraints.Length;
 @Getter
 @ToString
 public class FeedbackRequestDto {
+    private String category;
+
     @Length(max = 600)
     private String content;
 }

@@ -448,70 +448,34 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel1">
 <li><a href="#overview-http-status-codes">HTTP status codes</a></li>
 <li><a href="#overview-error-codes">Error status codes</a></li>
-<li><a href="#_프로필_페이지">프로필 페이지</a>
+<li><a href="#_건의_사항_페이지">건의 사항 페이지</a>
 <ul class="sectlevel1">
-<li><a href="#_1_유저_정보_조회_실패_intraid를_찾을_수_없다">1. 유저 정보 조회 실패-intraId를 찾을 수 없다</a>
+<li><a href="#_건의_사항_요청1">건의 사항 요청1</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request">curl-request</a></li>
 <li><a href="#_http_request">http-request</a></li>
 <li><a href="#_http_response">http-response</a></li>
 </ul>
 </li>
-<li><a href="#_2_유저_정보_조회_성공">2. 유저 정보 조회 성공</a>
+<li><a href="#_건의_사항_요청2">건의 사항 요청2</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_2">curl-request</a></li>
 <li><a href="#_http_request_2">http-request</a></li>
 <li><a href="#_http_response_2">http-response</a></li>
 </ul>
 </li>
-<li><a href="#_1_최근_경기_결과_그래프_보여주기_실패_intraid를_찾을_수_없다">1. 최근 경기 결과 그래프 보여주기 실패-intraId를 찾을 수 없다</a>
+<li><a href="#_건의_사항_요청3">건의 사항 요청3</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_3">curl-request</a></li>
 <li><a href="#_http_request_3">http-request</a></li>
 <li><a href="#_http_response_3">http-response</a></li>
 </ul>
 </li>
-<li><a href="#_2_최근_경기_결과_그래프_보여주기_성공">2. 최근 경기 결과 그래프 보여주기 성공</a>
+<li><a href="#_건의_사항_요청_실패내용_300자_초과">건의 사항 요청 실패(내용 300자 초과)</a>
 <ul class="sectlevel2">
 <li><a href="#_curl_request_4">curl-request</a></li>
 <li><a href="#_http_request_4">http-request</a></li>
 <li><a href="#_http_response_4">http-response</a></li>
-</ul>
-</li>
-<li><a href="#_프로필_업데이트">프로필 업데이트</a></li>
-<li><a href="#_1_프로필_수정_실패_rackettype_미기입">1. 프로필 수정 실패-racketType 미기입</a>
-<ul class="sectlevel2">
-<li><a href="#_curl_request_5">curl-request</a></li>
-<li><a href="#_http_request_5">http-request</a></li>
-<li><a href="#_http_response_5">http-response</a></li>
-</ul>
-</li>
-<li><a href="#_2_프로필_수정_실패_rackettype_잘못_기입">2. 프로필 수정 실패-racketType 잘못 기입</a>
-<ul class="sectlevel2">
-<li><a href="#_curl_request_6">curl-request</a></li>
-<li><a href="#_http_request_6">http-request</a></li>
-<li><a href="#_http_response_6">http-response</a></li>
-</ul>
-</li>
-<li><a href="#_3_프로필_수정_실패_statusmessage_미기입">3. 프로필 수정 실패-statusMessage 미기입</a>
-<ul class="sectlevel2">
-<li><a href="#_curl_request_7">curl-request</a></li>
-<li><a href="#_http_request_7">http-request</a></li>
-<li><a href="#_http_response_7">http-response</a></li>
-</ul>
-</li>
-<li><a href="#_4_프로필_수정_실패_statusmessage_잘못_기입">4. 프로필 수정 실패-statusMessage 잘못 기입</a>
-<ul class="sectlevel2">
-<li><a href="#_curl_request_8">curl-request</a></li>
-<li><a href="#_http_request_8">http-request</a></li>
-<li><a href="#_http_response_8">http-response</a></li>
-</ul>
-</li>
-<li><a href="#_5_프로필_수정_성공">5. 프로필 수정 성공</a>
-<ul class="sectlevel2">
-<li><a href="#_curl_request_9">curl-request</a></li>
-<li><a href="#_http_request_9">http-request</a></li>
-<li><a href="#_http_response_9">http-response</a></li>
 </ul>
 </li>
 </ul>
@@ -612,17 +576,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </table>
 </div>
 </div>
-<h1 id="_프로필_페이지" class="sect0"><a class="link" href="#_프로필_페이지">프로필 페이지</a></h1>
+<h1 id="_건의_사항_페이지" class="sect0"><a class="link" href="#_건의_사항_페이지">건의 사항 페이지</a></h1>
 <div class="sect1">
-<h2 id="_1_유저_정보_조회_실패_intraid를_찾을_수_없다"><a class="link" href="#_1_유저_정보_조회_실패_intraid를_찾을_수_없다">1. 유저 정보 조회 실패-intraId를 찾을 수 없다</a></h2>
+<h2 id="_건의_사항_요청1"><a class="link" href="#_건의_사항_요청1">건의 사항 요청1</a></h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_curl_request"><a class="link" href="#_curl_request">curl-request</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/users/notFound/detail' -i -X GET \
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/feedback' -i -X POST \
     -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer 0'</code></pre>
+    -H 'Authorization: Bearer 0' \
+    -d '{
+  "category" : "GAMERESULT",
+  "content" : "방금 한 게임 스코어 0:2에서 2:0으로 바꿔주세요."
+}'</code></pre>
 </div>
 </div>
 </div>
@@ -630,483 +598,21 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="_http_request"><a class="link" href="#_http_request">http-request</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/users/notFound/detail HTTP/1.1
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /pingpong/feedback HTTP/1.1
 Content-Type: application/json;charset=UTF-8
 Authorization: Bearer 0
-Host: localhost:8080</code></pre>
+Content-Length: 113
+Host: localhost:8080
+
+{
+  "category" : "GAMERESULT",
+  "content" : "방금 한 게임 스코어 0:2에서 2:0으로 바꿔주세요."
+}</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_http_response"><a class="link" href="#_http_response">http-response</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 66
-
-{
-  "code" : "E0001",
-  "message" : "잘못된 요청입니다."
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_2_유저_정보_조회_성공"><a class="link" href="#_2_유저_정보_조회_성공">2. 유저 정보 조회 성공</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_curl_request_2"><a class="link" href="#_curl_request_2">curl-request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/users/hakim/detail' -i -X GET \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer 0'</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_http_request_2"><a class="link" href="#_http_request_2">http-request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/users/hakim/detail HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer 0
-Host: localhost:8080</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_http_response_2"><a class="link" href="#_http_response_2">http-response</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 270
-
-{
-  "intraId" : "hakim",
-  "userImageUri" : "hakim.jpg",
-  "rank" : -1,
-  "ppp" : 1040,
-  "wins" : 0,
-  "losses" : 0,
-  "winRate" : 0.0,
-  "racketType" : "shakehand",
-  "statusMessage" : "kikikaka",
-  "rivalRecord" : {
-    "curUserWin" : 0,
-    "targetUserWin" : 0
-  }
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_1_최근_경기_결과_그래프_보여주기_실패_intraid를_찾을_수_없다"><a class="link" href="#_1_최근_경기_결과_그래프_보여주기_실패_intraid를_찾을_수_없다">1. 최근 경기 결과 그래프 보여주기 실패-intraId를 찾을 수 없다</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_curl_request_3"><a class="link" href="#_curl_request_3">curl-request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/users/notFound/historics' -i -X GET \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer 0'</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_http_request_3"><a class="link" href="#_http_request_3">http-request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/users/notFound/historics HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer 0
-Host: localhost:8080</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_http_response_3"><a class="link" href="#_http_response_3">http-response</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 66
-
-{
-  "code" : "E0001",
-  "message" : "잘못된 요청입니다."
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_2_최근_경기_결과_그래프_보여주기_성공"><a class="link" href="#_2_최근_경기_결과_그래프_보여주기_성공">2. 최근 경기 결과 그래프 보여주기 성공</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_curl_request_4"><a class="link" href="#_curl_request_4">curl-request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/users/hakim/historics?chartType=rank' -i -X GET \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer 0'</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_http_request_4"><a class="link" href="#_http_request_4">http-request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">GET /pingpong/users/hakim/historics?chartType=rank HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer 0
-Host: localhost:8080</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_http_response_4"><a class="link" href="#_http_response_4">http-response</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 156
-
-{
-  "historics" : [ {
-    "ppp" : 1042,
-    "date" : "2022-07-11T10:30:41.892539"
-  }, {
-    "ppp" : 1046,
-    "date" : "2022-07-11T10:30:41.892539"
-  } ]
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_프로필_업데이트"><a class="link" href="#_프로필_업데이트">프로필 업데이트</a></h2>
-<div class="sectionbody">
-
-</div>
-</div>
-<div class="sect1">
-<h2 id="_1_프로필_수정_실패_rackettype_미기입"><a class="link" href="#_1_프로필_수정_실패_rackettype_미기입">1. 프로필 수정 실패-racketType 미기입</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_curl_request_5"><a class="link" href="#_curl_request_5">curl-request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/users/detail' -i -X PUT \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer 0' \
-    -d '{
-  "statusMessage" : "message"
-}'</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_http_request_5"><a class="link" href="#_http_request_5">http-request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /pingpong/users/detail HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer 0
-Content-Length: 33
-Host: localhost:8080
-
-{
-  "statusMessage" : "message"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_http_response_5"><a class="link" href="#_http_response_5">http-response</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 66
-
-{
-  "code" : "E0001",
-  "message" : "잘못된 요청입니다."
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_2_프로필_수정_실패_rackettype_잘못_기입"><a class="link" href="#_2_프로필_수정_실패_rackettype_잘못_기입">2. 프로필 수정 실패-racketType 잘못 기입</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_curl_request_6"><a class="link" href="#_curl_request_6">curl-request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/users/detail' -i -X PUT \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer 0' \
-    -d '{
-  "racketType" : "NOTHING",
-  "statusMessage" : "message"
-}'</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_http_request_6"><a class="link" href="#_http_request_6">http-request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /pingpong/users/detail HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer 0
-Content-Length: 61
-Host: localhost:8080
-
-{
-  "racketType" : "NOTHING",
-  "statusMessage" : "message"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_http_response_6"><a class="link" href="#_http_response_6">http-response</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 66
-
-{
-  "code" : "E0001",
-  "message" : "잘못된 요청입니다."
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_3_프로필_수정_실패_statusmessage_미기입"><a class="link" href="#_3_프로필_수정_실패_statusmessage_미기입">3. 프로필 수정 실패-statusMessage 미기입</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_curl_request_7"><a class="link" href="#_curl_request_7">curl-request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/users/detail' -i -X PUT \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer 0' \
-    -d '{
-  "racketType" : "penholder"
-}'</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_http_request_7"><a class="link" href="#_http_request_7">http-request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /pingpong/users/detail HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer 0
-Content-Length: 32
-Host: localhost:8080
-
-{
-  "racketType" : "penholder"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_http_response_7"><a class="link" href="#_http_response_7">http-response</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 66
-
-{
-  "code" : "E0001",
-  "message" : "잘못된 요청입니다."
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_4_프로필_수정_실패_statusmessage_잘못_기입"><a class="link" href="#_4_프로필_수정_실패_statusmessage_잘못_기입">4. 프로필 수정 실패-statusMessage 잘못 기입</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_curl_request_8"><a class="link" href="#_curl_request_8">curl-request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/users/detail' -i -X PUT \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer 0' \
-    -d '{
-  "racketType" : "penholder",
-  "statusMessage" : "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"
-}'</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_http_request_8"><a class="link" href="#_http_request_8">http-request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /pingpong/users/detail HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer 0
-Content-Length: 366
-Host: localhost:8080
-
-{
-  "racketType" : "penholder",
-  "statusMessage" : "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_http_response_8"><a class="link" href="#_http_response_8">http-response</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
-Vary: Origin
-Vary: Access-Control-Request-Method
-Vary: Access-Control-Request-Headers
-Content-Type: application/json
-X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
-Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-Pragma: no-cache
-Expires: 0
-X-Frame-Options: DENY
-Content-Length: 66
-
-{
-  "code" : "E0001",
-  "message" : "잘못된 요청입니다."
-}</code></pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_5_프로필_수정_성공"><a class="link" href="#_5_프로필_수정_성공">5. 프로필 수정 성공</a></h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="_curl_request_9"><a class="link" href="#_curl_request_9">curl-request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/users/detail' -i -X PUT \
-    -H 'Content-Type: application/json;charset=UTF-8' \
-    -H 'Authorization: Bearer 0' \
-    -d '{
-  "racketType" : "penholder",
-  "statusMessage" : "message"
-}'</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_http_request_9"><a class="link" href="#_http_request_9">http-request</a></h3>
-<div class="listingblock">
-<div class="content">
-<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">PUT /pingpong/users/detail HTTP/1.1
-Content-Type: application/json;charset=UTF-8
-Authorization: Bearer 0
-Content-Length: 63
-Host: localhost:8080
-
-{
-  "racketType" : "penholder",
-  "statusMessage" : "message"
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_http_response_9"><a class="link" href="#_http_response_9">http-response</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
@@ -1124,11 +630,177 @@ X-Frame-Options: DENY</code></pre>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_건의_사항_요청2"><a class="link" href="#_건의_사항_요청2">건의 사항 요청2</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_curl_request_2"><a class="link" href="#_curl_request_2">curl-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/feedback' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer 0' \
+    -d '{
+  "category" : "CHEERS",
+  "content" : "프론트 진짜 기가 막히네요!!!!!!!!!! 너무 옙쁘다!"
+}'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_request_2"><a class="link" href="#_http_request_2">http-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /pingpong/feedback HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer 0
+Content-Length: 109
+Host: localhost:8080
+
+{
+  "category" : "CHEERS",
+  "content" : "프론트 진짜 기가 막히네요!!!!!!!!!! 너무 옙쁘다!"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_response_2"><a class="link" href="#_http_response_2">http-response</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_건의_사항_요청3"><a class="link" href="#_건의_사항_요청3">건의 사항 요청3</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_curl_request_3"><a class="link" href="#_curl_request_3">curl-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/feedback' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer 0' \
+    -d '{
+  "category" : "BUG",
+  "content" : "안들어가져요. 서버 터졌나봐!"
+}'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_request_3"><a class="link" href="#_http_request_3">http-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /pingpong/feedback HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer 0
+Content-Length: 82
+Host: localhost:8080
+
+{
+  "category" : "BUG",
+  "content" : "안들어가져요. 서버 터졌나봐!"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_response_3"><a class="link" href="#_http_response_3">http-response</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 200 OK
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_건의_사항_요청_실패내용_300자_초과"><a class="link" href="#_건의_사항_요청_실패내용_300자_초과">건의 사항 요청 실패(내용 300자 초과)</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_curl_request_4"><a class="link" href="#_curl_request_4">curl-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code data-lang="bash" class="language-bash hljs">$ curl 'http://localhost:8080/pingpong/feedback' -i -X POST \
+    -H 'Content-Type: application/json;charset=UTF-8' \
+    -H 'Authorization: Bearer 0' \
+    -d '{
+  "category" : "GAMERESULT",
+  "content" : "개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳"
+}'</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_request_4"><a class="link" href="#_http_request_4">http-request</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">POST /pingpong/feedback HTTP/1.1
+Content-Type: application/json;charset=UTF-8
+Authorization: Bearer 0
+Content-Length: 1021
+Host: localhost:8080
+
+{
+  "category" : "GAMERESULT",
+  "content" : "개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳"
+}</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_http_response_4"><a class="link" href="#_http_response_4">http-response</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight nowrap"><code data-lang="http" class="language-http hljs">HTTP/1.1 400 Bad Request
+Vary: Origin
+Vary: Access-Control-Request-Method
+Vary: Access-Control-Request-Headers
+Content-Type: application/json
+X-Content-Type-Options: nosniff
+X-XSS-Protection: 1; mode=block
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Pragma: no-cache
+Expires: 0
+X-Frame-Options: DENY
+Content-Length: 66
+
+{
+  "code" : "E0001",
+  "message" : "잘못된 요청입니다."
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-07-03 18:25:19 +0900
+Last updated 2022-07-10 10:17:58 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

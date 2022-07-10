@@ -74,7 +74,7 @@ public class TestInitiator {
         users[8] = userRepository.save(User.builder().intraId("daekim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(996).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[9] = userRepository.save(User.builder().intraId("sujpark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(994).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
         users[10] = userRepository.save(User.builder().intraId("kipark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(100).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).build());
-        users[11] = userRepository.save(User.builder().intraId("jujeon").eMail("hihi").imageUri("null").statusMessage("kiki").ppp(1000).roleType(RoleType.USER).racketType(RacketType.DUAL).build());
+        users[11] = userRepository.save(User.builder().intraId("jujeon").eMail("hihi").imageUri("null").statusMessage("kiki").ppp(1000).roleType(RoleType.ADMIN).racketType(RacketType.DUAL).build());
         tokens = new Token[12];
         for (Integer i = 0; i < 12; i++) {
             tokens[i] = tokenRepository.save(new Token(users[i], i.toString(), i.toString()));
