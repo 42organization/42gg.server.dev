@@ -2,6 +2,8 @@ package io.pp.arcade.domain.admin.management;
 
 import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
+import io.pp.arcade.domain.feedback.FeedbackService;
+import io.pp.arcade.domain.feedback.dto.FeedbackDto;
 import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.game.dto.GameDto;
 import io.pp.arcade.domain.noti.NotiService;
@@ -22,6 +24,7 @@ import io.pp.arcade.global.scheduler.CurrentMatchUpdater;
 import io.pp.arcade.global.scheduler.GameGenerator;
 import io.pp.arcade.global.scheduler.RankScheduler;
 import io.pp.arcade.global.scheduler.SlotGenerator;
+import io.pp.arcade.global.type.FeedbackType;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.RoleType;
 import io.pp.arcade.global.util.HeaderUtil;
@@ -47,6 +50,7 @@ public class ManagementController {
     private final NotiService notiService;
     private final PChangeService pChangeService;
     private final RankService rankService;
+    private final FeedbackService feedbackService;
     private final CurrentMatchUpdater currentMatchUpdater;
     private final SlotGenerator slotGenerator;
     private final GameGenerator gameGenerator;
@@ -162,6 +166,34 @@ public class ManagementController {
         List<TeamDto> teamList = teamService.findTeamByAdmin(Pageable.unpaged());
         model.addAttribute("teamList", teamList);
         return "team_management";
+    }
+
+    @GetMapping("/admin/feedback")
+    public String feedbackPage(Model model, HttpServletRequest request) {
+        List<FeedbackDto> solvedFeedbackList = feedbackService.feedbackFindByIsSolvedByAdmin(true, Pageable.unpaged());
+        List<FeedbackDto> unsolvedFeedbackList = feedbackService.feedbackFindByIsSolvedByAdmin(false, Pageable.unpaged());
+
+        model.addAttribute("solvedFeedbackList", solvedFeedbackList);
+        model.addAttribute("unsolvedFeedbackList", unsolvedFeedbackList);
+        return "feedback_management";
+    }
+
+    @GetMapping("/admin/feedbackcategory")
+    public String feedbackCategorizedPage(Model model, HttpServletRequest request) {
+        List<FeedbackDto> bugFeedbackList = feedbackService.feedbackFindByCategoryByAdmin(FeedbackType.BUG, Pageable.unpaged());
+        List<FeedbackDto> gameResultFeedbackList = feedbackService.feedbackFindByCategoryByAdmin(FeedbackType.GAMERESULT, Pageable.unpaged());
+        List<FeedbackDto> complaintFeedbackList = feedbackService.feedbackFindByCategoryByAdmin(FeedbackType.COMPLAINT, Pageable.unpaged());
+        List<FeedbackDto> cheersFeedbackList = feedbackService.feedbackFindByCategoryByAdmin(FeedbackType.CHEERS, Pageable.unpaged());
+        List<FeedbackDto> opinionFeedbackList = feedbackService.feedbackFindByCategoryByAdmin(FeedbackType.OPINION, Pageable.unpaged());
+        List<FeedbackDto> etcFeedbackList = feedbackService.feedbackFindByCategoryByAdmin(FeedbackType.ETC, Pageable.unpaged());
+
+        model.addAttribute("bugFeedbackList", bugFeedbackList);
+        model.addAttribute("gameResultFeedbackList", gameResultFeedbackList);
+        model.addAttribute("complaintFeedbackList", complaintFeedbackList);
+        model.addAttribute("cheersFeedbackList", cheersFeedbackList);
+        model.addAttribute("opinionFeedbackList", opinionFeedbackList);
+        model.addAttribute("etcFeedbackList", etcFeedbackList);
+        return "feedback_list_by_category";
     }
 
     @GetMapping("/admin")
