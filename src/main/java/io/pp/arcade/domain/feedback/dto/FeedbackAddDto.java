@@ -9,7 +9,7 @@ import lombok.ToString;
 @Builder
 public class FeedbackAddDto {
     private Integer userId;
-    private String category;
+    private FeedbackType category;
     private String content;
 
     @Override
