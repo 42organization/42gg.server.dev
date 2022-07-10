@@ -65,7 +65,7 @@ public class FeedbackService {
     }
 
     @Transactional
-    public List<FeedbackDto> feedbackFindByCategoryByAdmin(String category, Pageable pageable) {
+    public List<FeedbackDto> feedbackFindByCategoryByAdmin(FeedbackType category, Pageable pageable) {
         Page<Feedback> feedbacks = feedbackRepository.findAllByCategory(category, pageable);
         List<FeedbackDto> feedbackDtos = feedbacks.stream().map(FeedbackDto::from).collect(Collectors.toList());
         return feedbackDtos;
@@ -79,7 +79,7 @@ public class FeedbackService {
     }
 
     @Transactional
-    public List<FeedbackDto> feedbackFindByCategoryAndIsSolvedByAdmin(String category, Boolean isSolved, Pageable pageable) {
+    public List<FeedbackDto> feedbackFindByCategoryAndIsSolvedByAdmin(FeedbackType category, Boolean isSolved, Pageable pageable) {
         Page<Feedback> feedbacks = feedbackRepository.findAllByCategoryAndIsSolved(category, isSolved, pageable);
         List<FeedbackDto> feedbackDtos = feedbacks.stream().map(FeedbackDto::from).collect(Collectors.toList());
         return feedbackDtos;

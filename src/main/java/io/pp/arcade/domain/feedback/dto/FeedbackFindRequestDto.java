@@ -5,6 +5,6 @@ import lombok.Getter;
 
 @Getter
 public class FeedbackFindRequestDto {
-    private String category;
+    private FeedbackType category;
     private Boolean isSolved;
 }
