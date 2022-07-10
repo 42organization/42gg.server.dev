@@ -77,7 +77,7 @@ public class FeedbackControllerTest {
 
         alreadySavedFeedback1 = Feedback.builder()
                 .user(user1)
-                .category(FeedbackType.BUG.toString())
+                .category(FeedbackType.BUG)
                 .content("게임 결과 페이지가 안보여요")
                 .build();
 
@@ -85,7 +85,7 @@ public class FeedbackControllerTest {
 
         alreadySavedFeedback2 = Feedback.builder()
                 .user(user2)
-                .category(FeedbackType.GAMERESULT.toString())
+                .category(FeedbackType.GAMERESULT)
                 .content("방금 한 게임 스코어 1:0에서 2:0으로 바꿔주세요!")
                 .build();
 
@@ -93,7 +93,7 @@ public class FeedbackControllerTest {
 
         alreadySavedFeedback3 = Feedback.builder()
                 .user(user3)
-                .category(FeedbackType.CHEERS.toString())
+                .category(FeedbackType.CHEERS)
                 .content("색 조합이 너무 귀여워요. 프론트 짱이다..!")
                 .build();
 
@@ -101,7 +101,7 @@ public class FeedbackControllerTest {
 
         alreadySavedFeedback4 = Feedback.builder()
                 .user(user4)
-                .category(FeedbackType.CHEERS.toString())
+                .category(FeedbackType.CHEERS)
                 .content("서비스 진짜 최곱니다. 이거 하러 클러스터 온다..!")
                 .build();
 
@@ -121,7 +121,7 @@ public class FeedbackControllerTest {
          */
 
         Map<String, String> body = new HashMap<>();
-        body.put("category", FeedbackType.GAMERESULT.toString());
+        body.put("category", FeedbackType.GAMERESULT.getCode());
         body.put("content", "방금 한 게임 스코어 0:2에서 2:0으로 바꿔주세요.");
         mockMvc.perform(post("/pingpong/feedback").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken())
@@ -130,7 +130,7 @@ public class FeedbackControllerTest {
                 .andDo(document("feedback-save1"));
 
         Map<String, String> body2 = new HashMap<>();
-        body2.put("category", FeedbackType.CHEERS.toString());
+        body2.put("category", FeedbackType.CHEERS.getCode());
         body2.put("content", "프론트 진짜 기가 막히네요!!!!!!!!!! 너무 옙쁘다!");
         mockMvc.perform(post("/pingpong/feedback").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken())
@@ -139,7 +139,7 @@ public class FeedbackControllerTest {
                 .andDo(document("feedback-save2"));
 
         Map<String, String> body3 = new HashMap<>();
-        body3.put("category", FeedbackType.BUG.toString());
+        body3.put("category", FeedbackType.BUG.getCode());
         body3.put("content", "안들어가져요. 서버 터졌나봐!");
         mockMvc.perform(post("/pingpong/feedback").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken())
@@ -154,8 +154,9 @@ public class FeedbackControllerTest {
         }
 
         Map<String, String> body4 = new HashMap<>();
-        body4.put("category", FeedbackType.GAMERESULT.toString());
-        body4.put("content", "개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳");
+        body4.put("category", FeedbackType.GAMERESULT.getCode());
+        body4.put("content", "개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳"
+        + "개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳");
         mockMvc.perform(post("/pingpong/feedback").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken())
                         .content(objectMapper.writeValueAsString(body4)))
