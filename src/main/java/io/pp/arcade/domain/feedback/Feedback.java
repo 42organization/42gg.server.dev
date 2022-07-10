@@ -30,7 +30,7 @@ public class Feedback extends BaseTimeEntity {
     private FeedbackType category;
 
     @NotNull
-    @Column(name = "content")
+    @Column(name = "content", length = 600)
     private String content;
 
     @Setter
