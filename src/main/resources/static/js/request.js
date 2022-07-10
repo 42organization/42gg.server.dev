@@ -896,3 +896,34 @@ function js_request_team_delete(form) {
         }
     })
 }
+
+function js_request_feedback_put(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let feedback_id = form['feedbackId'].value;
+    let is_solved = form['isSolved'].value;
+    let data = {
+        "feedbackId": feedback_id,
+        "isSolved": is_solved
+    };
+    $.ajax({
+        url: `${url}`,
+        type: `PUT`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
