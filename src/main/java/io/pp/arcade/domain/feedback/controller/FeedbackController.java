@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import javax.servlet.http.HttpServletRequest;
 
 public interface FeedbackController {
-    void feedbackSave(@RequestBody FeedbackRequestDto saveReqDto,
+    void feedbackSave(@RequestBody @Validated FeedbackRequestDto saveReqDto,
                       HttpServletRequest request);
 }
