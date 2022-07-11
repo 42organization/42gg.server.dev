@@ -29,7 +29,6 @@ public class RankControllerImpl implements RankController {
     @Override
     @GetMapping(value = "/ranks/{gameType}")
     public RankListResponseDto rankList(Pageable pageable, Integer count, GameType gameType, HttpServletRequest request) {
-        // 아무런 값이 없을 떄 테스트 해보기
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         RankListDto rankListDto = rankRedisService.findRankList(RankFindListDto.builder().pageable(pageable).gameType(gameType).count(count).build());
         RankUserDto userRank = rankRedisService.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(gameType).build());

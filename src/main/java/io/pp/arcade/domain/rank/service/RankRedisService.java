@@ -103,7 +103,7 @@ public class RankRedisService implements RankNTService {
     }
 
     public List<RankRedisDto> findRankAll() {
-        Set rankKeys = redisRank.keys(Key.RANK_USER_ALL);
+        Set rankKeys = redisRank.keys(Key.RANK_USER_ALL + SINGLE.getCode());
         List<RankRedis> rankList = redisUser.opsForValue().multiGet(rankKeys);
         List<RankRedisDto> rankRedisDtos = new ArrayList<RankRedisDto>();
         if (!Collections.isEmpty(rankList)) {

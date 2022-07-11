@@ -17,7 +17,6 @@ public class HeaderUtil {
         if (headerValue.startsWith(TOKEN_PREFIX)) {
             return headerValue.substring(TOKEN_PREFIX.length());
         }
-
         return null;
     }
 }
