@@ -56,10 +56,12 @@ public class LoginAccessHandler {
 
         /* 예기치 못한 로직은 그대로 흘려보내기 */
         String uri = request.getRequestURI();
-        if (uri == null || !uri.equals("/login/oauth2/code/42"))
-            return method.invoke(target,args);
-
+        if ("/login/oauth2/code/42".equals(uri))
+            result = login.tryStart(method, target, args);
+        else
+            result = method.invoke(target,args);
         /* 요청한 유저들을 IP를 통해 식별하기 */
+        /*
         String ip = ClientUtil.getClientIP(request);
         if (queue.contains(ip)) {
             result = returnBadResponse(response);
@@ -70,6 +72,7 @@ public class LoginAccessHandler {
             result = isSuccess ? login.tryStart(method, target, args) : method.invoke(target,args);
             queue.remove(ip);
         }
+         */
         return result;
     }
 
