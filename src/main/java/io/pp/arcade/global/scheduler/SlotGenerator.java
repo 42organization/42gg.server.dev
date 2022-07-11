@@ -26,7 +26,7 @@ public class SlotGenerator extends AbstractScheduler {
     }
 
     @Getter @Setter
-    private Integer startTime = 15;
+    private Integer startTime = 14;
     @Getter @Setter
     private Integer interval = 10;
     @Getter @Setter
