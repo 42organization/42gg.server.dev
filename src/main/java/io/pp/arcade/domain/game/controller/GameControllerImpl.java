@@ -13,7 +13,7 @@ import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.rank.dto.RankFindDto;
-import io.pp.arcade.domain.rank.dto.RankModifyDto;
+import io.pp.arcade.domain.rank.dto.RankUpdateDto;
 import io.pp.arcade.domain.rank.dto.RankUserDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.team.TeamService;
@@ -36,7 +36,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -250,13 +249,13 @@ public class GameControllerImpl implements GameController {
                 .build();
         pChangeService.addPChange(pChangeAddDto);
         GameType gameType = gameService.findById(game.getId()).getType();
-        RankModifyDto rankModifyDto =  RankModifyDto.builder()
+        RankUpdateDto rankUpdateDto =  RankUpdateDto.builder()
                 .gameType(gameType)
                 .Ppp(userPpp)
                 .intraId(user.getIntraId())
                 .isWin(!enemyTeam.getWin())
                 .build();
-        rankRedisService.modifyUserPpp(rankModifyDto);
+        rankRedisService.updateUserPpp(rankUpdateDto);
     }
 
     private void removeCurrentMatch(GameDto game) {
