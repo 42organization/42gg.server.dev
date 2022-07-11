@@ -82,9 +82,9 @@ public class GameService {
     public GameResultPageDto findGamesAfterId(GameFindDto findDto) {
         Page<Game> games;
         if (findDto.getStatus() != null) {
-            games = gameRepository.findByIdLessThanAndStatusOrderByIdDesc(findDto.getId(), findDto.getStatus(), findDto.getPageable());
+            games = gameRepository.findByIdLessThanAndStatusOrderByTimeDesc(findDto.getId(), findDto.getStatus(), findDto.getPageable());
         } else {
-            games = gameRepository.findByIdLessThanOrderByIdDesc(findDto.getId(), findDto.getPageable());
+            games = gameRepository.findByIdLessThanOrderByTimeDesc(findDto.getId(), findDto.getPageable());
         }
         List<GameDto> gameDtoList = games.stream().map(GameDto::from).collect(Collectors.toList());
 
