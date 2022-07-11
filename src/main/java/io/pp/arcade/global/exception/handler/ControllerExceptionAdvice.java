@@ -94,7 +94,7 @@ public class ControllerExceptionAdvice {
         log.error("BusinessException", ex);
         //String message = messageSource.getMessage(filter(ex.getMessage()), null, Locale.KOREA);
         ExceptionResponse response = ExceptionResponse.from(ex.getMessage());
-        sendMail(response.getMessage());
+//        sendMail(response.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
