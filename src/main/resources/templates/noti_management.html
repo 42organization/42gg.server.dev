@@ -28,8 +28,49 @@
 
                         <div class="row" style="display: block;">
                             <div class="clearfix"></div>
-
                             <div class="col-md-12 col-sm-12  ">
+                                <div class="x_panel">
+                                    <div class="x_title">
+                                        <h2>전체 Noti 생성</h2>
+                                        <ul class="nav navbar-right panel_toolbox">
+                                            <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                            </li>
+                                            <li><a class="close-link"><i class="fa fa-close"></i></a>
+                                            </li>
+                                        </ul>
+                                        <div class="clearfix"></div>
+                                    </div>
+
+                                    <div class="x_content">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped jambo_table bulk_action">
+                                                <thead>
+                                                <tr class="headings">
+                                                    <th class="column-title">Message</th>
+                                                    <th class="column-title"></th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <form>
+                                                    <tr>
+                                                        <input type="hidden" id="url" name="url"
+                                                               value="/admin/noti/all">
+                                                        <input type="hidden" id="token" th:value="${token}">
+                                                        <td>
+                                                            <input type="text" id="message" name="message">
+                                                        </td>
+                                                        <td>
+                                                            <input type="submit" value="전체 발송"
+                                                                   th:onclick='js_request_noti_create_all(this.form)'>
+                                                        </td>
+                                                    </tr>
+                                                </form>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12 col-sm-12  ">
                                 <div class="x_panel">
                                     <div class="x_title">
                                         <h2>Noti 생성</h2>
@@ -79,8 +120,11 @@
                                                             <input type="text" id="isChecked" name="isChecked">
                                                         </td>
                                                         <td>
-                                                            <input type="submit" value="생성"
+                                                            <input type="submit" value="메일없이"
                                                                    th:onclick='js_request_noti_create(this.form)'>
+                                                            /
+                                                            <input type="submit" value="메일과함께"
+                                                                   th:onclick='js_request_noti_create_with_mail(this.form)'>
                                                         </td>
                                                     </tr>
                                                 </form>
@@ -126,10 +170,12 @@
                                                         <input type="hidden" id="token" th:value="${token}">
                                                         <input type="hidden" id="id" name="id" th:value="${noti.getId()}">
                                                         <input type="hidden" id="userId" name="userId" th:value="${noti.getUser.getId()}">
-                                                        <input type="hidden" id="slotId" name="slotId" th:value="${noti.getSlot().getId()}">
+                                                        <input th:if="${noti.getSlot() != null}" type="hidden" id="slotId" name="slotId" th:value="${noti.getSlot().getId()}">
+                                                        <input th:unless="${noti.getSlot() != null}" type="hidden" id="slotId" name="slotId" th:value="0">
                                                         <td th:text="${noti.getId()}"></td>
                                                         <td th:text="${noti.getUser().getId()}"></td>
-                                                        <td th:text="${noti.getSlot().getId()}"></td>
+                                                        <td th:if="${noti.getSlot() != null}" th:text="${noti.getSlot().getId()}"></td>
+                                                        <td th:unless="${noti.getSlot() != null}" th:text="null"></td>
                                                         <td>
                                                             <input type="text" id="type" name="type" th:value="${noti.getType()}">
                                                         </td>
