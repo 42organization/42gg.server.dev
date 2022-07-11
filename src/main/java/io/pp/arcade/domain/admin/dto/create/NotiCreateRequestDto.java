@@ -10,4 +10,5 @@ public class NotiCreateRequestDto {
     private NotiType notiType;
     private Boolean isChecked;
     private String message;
+    private Boolean sendMail;
 }

@@ -24,7 +24,7 @@ public class NotiDto {
         return NotiDto.builder()
                 .id(noti.getId())
                 .user(UserDto.from(noti.getUser()))
-                .slot(SlotDto.from(noti.getSlot()))
+                .slot(noti.getSlot() == null ? null : SlotDto.from(noti.getSlot()))
                 .type(noti.getType())
                 .isChecked(noti.getIsChecked())
                 .message(noti.getMessage())
