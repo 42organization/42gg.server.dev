@@ -17,6 +17,8 @@ import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.*;
+import io.pp.arcade.global.scheduler.CurrentMatchUpdater;
+import io.pp.arcade.global.scheduler.GameGenerator;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.RoleType;
 import io.pp.arcade.global.util.HeaderUtil;
@@ -24,7 +26,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -40,7 +44,8 @@ public class UserControllerImpl implements UserController {
     private final CurrentMatchService currentMatchService;
     private final TokenService tokenService;
     private final RankRedisService rankRedisService;
-
+    private final GameGenerator gameGenerator;
+    private final CurrentMatchUpdater currentMatchUpdater;
     /*
      * [메인 페이지]
      * - 유저 정보 조회
@@ -138,11 +143,12 @@ public class UserControllerImpl implements UserController {
 
     @Override
     @GetMapping(value = "/users/live")
-    public UserLiveInfoResponseDto userLiveInfo(HttpServletRequest request) {
+    public UserLiveInfoResponseDto userLiveInfo(HttpServletRequest request) throws MessagingException {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByIntraId(user.getIntraId());
         GameDto currentMatchGame = currentMatch == null ? null : currentMatch.getGame();
         String event = currentMatch == null ? null : "match";
+        doubleCheckForSchedulers(currentMatch);
         if ("match".equals(event) && currentMatch.getGame() != null) {
             event = "game";
         }
@@ -152,6 +158,39 @@ public class UserControllerImpl implements UserController {
                 .event(event)
                 .build();
         return userLiveInfoResponse;
+    }
+
+    private void doubleCheckForSchedulers(CurrentMatchDto currentMatch) throws MessagingException {
+        if (schedulersNoProblem(currentMatch)) {
+            return ;
+        }
+        if (currentMatch.getMatchImminent() == false) {
+            checkForCurrentMatchUpdater(currentMatch);
+        } else {
+            checkForGameGenerator(currentMatch);
+        }
+    }
+
+    private boolean schedulersNoProblem(CurrentMatchDto currentMatch) {
+        if (currentMatch == null) {
+            return true;
+        }
+        if (currentMatch.getIsMatched() == false) {
+            return true;
+        }
+        return false;
+    }
+
+    private void checkForGameGenerator(CurrentMatchDto currentMatch) throws MessagingException {
+        if (currentMatch.getGame() == null && LocalDateTime.now().isAfter(currentMatch.getSlot().getTime())) {
+            gameGenerator.gameGenerator(currentMatch.getSlot().getTime());
+        }
+    }
+
+    private void checkForCurrentMatchUpdater(CurrentMatchDto currentMatch) throws MessagingException {
+        if (currentMatch.getGame() == null && LocalDateTime.now().isAfter(currentMatch.getSlot().getTime().minusMinutes(5))) {
+            currentMatchUpdater.updateIsImminent(currentMatch.getSlot().getTime());
+        }
     }
 
     private UserRivalRecordDto getRivalRecord(UserDto curUser, UserDto targetUser) {

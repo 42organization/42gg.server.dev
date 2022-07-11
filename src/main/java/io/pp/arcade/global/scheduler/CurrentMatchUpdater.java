@@ -37,7 +37,14 @@ public class CurrentMatchUpdater extends AbstractScheduler {
         LocalDateTime now = LocalDateTime.now();
         now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
         now = now.plusMinutes(5);
+        update(now);
+    }
 
+    public void updateIsImminent(LocalDateTime time) throws MessagingException {
+        update(time);
+    }
+
+    private void update(LocalDateTime now) throws MessagingException {
         SlotDto slot = slotService.findByTime(now);
         if (slot == null) {
             return;
