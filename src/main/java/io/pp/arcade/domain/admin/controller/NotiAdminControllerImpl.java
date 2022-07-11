@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.List;
@@ -21,7 +22,7 @@ public class NotiAdminControllerImpl implements NotiAdminController {
 
     @Override
     @PostMapping(value = "/noti")
-    public void notiCreate(NotiCreateRequestDto createRequestDto, HttpServletRequest request) {
+    public void notiCreate(NotiCreateRequestDto createRequestDto, HttpServletRequest request) throws MessagingException {
         notiService.createNotiByAdmin(createRequestDto);
     }
 
@@ -42,5 +43,10 @@ public class NotiAdminControllerImpl implements NotiAdminController {
     public List<NotiDto> notiAll(Pageable pageable, HttpServletRequest request) {
         List<NotiDto> notis = notiService.findNotiByAdmin(pageable);
         return notis;
+    }
+
+    @PostMapping(value = "/noti/all")
+    public void notiCreateForAll(NotiCreateRequestDto createRequestDto, HttpServletRequest request) {
+        notiService.createNotiForAll(createRequestDto);
     }
 }
