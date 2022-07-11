@@ -10,6 +10,7 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Entity
@@ -29,6 +30,7 @@ public class Feedback extends BaseTimeEntity {
     @Column(name = "category")
     private FeedbackType category;
 
+    @NotBlank
     @NotNull
     @Column(name = "content", length = 600)
     private String content;
