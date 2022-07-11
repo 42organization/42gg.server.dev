@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -20,5 +21,5 @@ public interface UserController {
     UserHistoricResponseDto userFindHistorics(@PathVariable String userId, @PageableDefault(size = 10) Pageable pageable);
     void userModifyProfile(@RequestBody @Valid UserModifyProfileRequestDto userModifyProfileRequestDto, HttpServletRequest request);
     UserSearchResultResponseDto userSearchResult(@RequestParam(value="q", required = false, defaultValue = "") String inquiringString, HttpServletRequest request); // 유효성 검사 해야함
-    UserLiveInfoResponseDto userLiveInfo(HttpServletRequest request);
+    UserLiveInfoResponseDto userLiveInfo(HttpServletRequest request) throws MessagingException;
 }
