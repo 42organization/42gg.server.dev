@@ -70,6 +70,16 @@ public class RankRedisService implements RankNTService {
     public void modifyUserPpp(RankModifyDto modifyDto) {
         String intraId = modifyDto.getIntraId();
         GameType gameType = modifyDto.getGameType();
+        RankRedis userRank = getUserRank(intraId, gameType);
+        userRank.update(modifyDto.getIsWin(), modifyDto.getPpp());
+        saveUserRank(userRank);
+        saveUserRankingPpp(userRank, modifyDto.getPpp());
+    }
+
+    @Transactional
+    public void updateUserPpp(RankUpdateDto modifyDto) {
+        String intraId = modifyDto.getIntraId();
+        GameType gameType = modifyDto.getGameType();
 
         RankRedis userRank = getUserRank(intraId, gameType);
         userRank.update(modifyDto.getIsWin(), modifyDto.getPpp());
