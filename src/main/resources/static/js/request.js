@@ -583,7 +583,79 @@ function js_request_noti_create(form) {
         'slotId': slotId,
         'notiType': type,
         'message': message,
-        'isChecked': isChecked
+        'isChecked': isChecked,
+        'sendMail': false
+    };
+
+    $.ajax({
+        url: `${url}`,
+        type: `POST`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_noti_create_with_mail(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let userId = form['userId'].value;
+    let slotId = form['slotId'].value;
+    let type = form['type'].value;
+    let message = form['message'].value;
+    let isChecked = form['isChecked'].value;
+
+    let data = {
+        'userId': userId,
+        'slotId': slotId,
+        'notiType': type,
+        'message': message,
+        'isChecked': isChecked,
+        'sendMail': true
+    };
+
+    $.ajax({
+        url: `${url}`,
+        type: `POST`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
+function js_request_noti_create_all(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let message = form['message'].value;
+
+    let data = {
+        'message': message
     };
 
     $.ajax({

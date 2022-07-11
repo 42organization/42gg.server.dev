@@ -8,6 +8,7 @@ import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.NotiType;
 import io.pp.arcade.global.util.AsyncMailSender;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -46,14 +47,23 @@ public class NotiService {
                 .message(notiAddDto.getMessage())
                 .isChecked(false)
                 .build();
+        sendMail(noti, user);
+        notiRepository.save(noti);
+    }
+
+    private void sendMail(Noti noti, User user) throws MessagingException {
         MimeMessage message = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message);
         helper.setSubject("핑퐁요정🧚으로부터 도착한 편지");
         helper.setTo(user.getEMail());
-        helper.setText("🧚: \"새로운 알림이 도착했핑.\"\n" + "🧚: \"" + notiAddDto.getType().getMessage() + "\"\n\n 🏓42GG와 함께하는 행복한 탁구생활🏓" +
-                "\n$$지금 즉시 접속$$ ----> https://42gg.kr");
+        if (noti.getType() != NotiType.ANNOUNCE) {
+            helper.setText("🧚: \"새로운 알림이 도착했핑.\"\n" + "🧚: \"" + noti.getType().getMessage() + "\"\n\n 🏓42GG와 함께하는 행복한 탁구생활🏓" +
+                    "\n$$지금 즉시 접속$$ ----> https://42gg.kr");
+        } else {
+            helper.setText("🧚: \"새로운 알림이 도착했핑.\"\n" + "🧚: \"" + noti.getType().getMessage() + "\"\n\n공지사항: " + noti.getMessage() + "\n\n 🏓42GG와 함께하는 행복한 탁구생활🏓" +
+                    "\n$$지금 즉시 접속$$ ----> https://42gg.kr");
+        }
         asyncMailSender.send(message);
-        notiRepository.save(noti);
     }
 
     @Transactional
@@ -97,8 +107,8 @@ public class NotiService {
     }
 
     @Transactional
-    public void createNotiByAdmin(NotiCreateRequestDto createRequestDto) {
-        Slot slot = slotRepository.findById(createRequestDto.getSlotId()).orElseThrow();
+    public void createNotiByAdmin(NotiCreateRequestDto createRequestDto) throws MessagingException {
+        Slot slot = createRequestDto.getSlotId() == null ? null : slotRepository.findById(createRequestDto.getSlotId()).orElse(null);
         User user = userRepository.findById(createRequestDto.getUserId()).orElseThrow();
         Noti noti = Noti.builder()
                 .slot(slot)
@@ -108,14 +118,17 @@ public class NotiService {
                 .isChecked(createRequestDto.getIsChecked())
                 .build();
         notiRepository.save(noti);
+        if (createRequestDto.getSendMail()) {
+            sendMail(noti, user);
+        }
     }
 
     @Transactional
     public void updateNotiByAdmin(NotiUpdateRequestDto updateRequestDto) {
         Noti noti = notiRepository.findById(updateRequestDto.getNotiId()).orElseThrow();
 
-        User user = userRepository.findById(updateRequestDto.getUserId()).orElseThrow(null);
-        Slot slot = slotRepository.findById(updateRequestDto.getSlotId()).orElseThrow(null);
+        User user = userRepository.findById(updateRequestDto.getUserId()).orElse(null);
+        Slot slot = slotRepository.findById(updateRequestDto.getSlotId()).orElse(null);
         noti.update(user, slot, updateRequestDto.getNotiType(), updateRequestDto.getMessage(), updateRequestDto.getIsChecked()); // 더 고칠게 있을까요
     }
 
@@ -130,5 +143,18 @@ public class NotiService {
         Page<Noti> notis = notiRepository.findAllByOrderByIdDesc(pageable);
         List<NotiDto> notiDtos = notis.stream().map(NotiDto::from).collect(Collectors.toList());
         return notiDtos;
+    }
+
+    public void createNotiForAll(NotiCreateRequestDto createRequestDto) {
+        List<User> users = userRepository.findAll();
+        users.forEach(user -> {
+            Noti noti = Noti.builder()
+                    .user(user)
+                    .type(NotiType.ANNOUNCE)
+                    .message(createRequestDto.getMessage())
+                    .isChecked(false)
+                    .build();
+            notiRepository.save(noti);
+        });
     }
 }
