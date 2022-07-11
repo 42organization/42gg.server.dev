@@ -39,42 +39,63 @@ public class GameGenerator extends AbstractScheduler {
         this.setInterval(10);
     }
 
-    public void addGame() throws MessagingException {
-        Integer maxHeadCount = 2;
+    public void gameGenerator() throws MessagingException {
         LocalDateTime now = LocalDateTime.now();
         now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
         SlotDto slotDto = slotService.findByTime(now);
 
-        if (slotDto != null && GameType.DOUBLE.equals(slotDto.getType())) {
-            maxHeadCount = 4;
+        if (slotDto != null) {
+            addGameOrNotiCanceled(slotDto);
         }
+    }
+
+    public void gameGenerator(LocalDateTime time) throws MessagingException {
+        SlotDto slotDto = slotService.findByTime(time);
 
         if (slotDto != null) {
-            TeamDto team1 = slotDto.getTeam1();
-            TeamDto team2 = slotDto.getTeam2();
-            if (slotDto.getHeadCount().equals(maxHeadCount)) {
-
-                GameAddDto gameAddDto = GameAddDto.builder()
-                        .slotDto(slotDto)
-                        .build();
-                gameService.addGame(gameAddDto);
-                GameDto game = gameService.findBySlot(slotDto.getId());
-
-                saveCurrentMatch(team1.getUser1(), game);
-                saveCurrentMatch(team1.getUser2(), game);
-                saveCurrentMatch(team2.getUser1(), game);
-                saveCurrentMatch(team2.getUser2(), game);
-            } else {
-
-                NotiCanceledTypeDto canceledDto = NotiCanceledTypeDto.builder().slotDto(slotDto).notiType(NotiType.CANCELEDBYTIME).build();
-                notiGenerater.addCancelNotisBySlot(canceledDto);
-
-                removeCurrentMatch(team1.getUser1());
-                removeCurrentMatch(team1.getUser2());
-                removeCurrentMatch(team2.getUser1());
-                removeCurrentMatch(team2.getUser2());
-            }
+            addGameOrNotiCanceled(slotDto);
         }
+    }
+
+    private void addGameOrNotiCanceled(SlotDto slotDto) throws MessagingException {
+        TeamDto team1 = slotDto.getTeam1();
+        TeamDto team2 = slotDto.getTeam2();
+        if (slotDto.getHeadCount().equals(getMaxHeadCount(slotDto.getType()))) {
+            addGame(slotDto, team1, team2);
+        } else {
+            notiCanceled(slotDto, team1, team2);
+        }
+    }
+
+    private Integer getMaxHeadCount(GameType type) {
+        Integer maxHeadCount = 2;
+        if (GameType.DOUBLE.equals(type)) {
+            maxHeadCount = 4;
+        }
+        return maxHeadCount;
+    }
+
+    private void notiCanceled(SlotDto slotDto, TeamDto team1, TeamDto team2) throws MessagingException {
+        NotiCanceledTypeDto canceledDto = NotiCanceledTypeDto.builder().slotDto(slotDto).notiType(NotiType.CANCELEDBYTIME).build();
+        notiGenerater.addCancelNotisBySlot(canceledDto);
+
+        removeCurrentMatch(team1.getUser1());
+        removeCurrentMatch(team1.getUser2());
+        removeCurrentMatch(team2.getUser1());
+        removeCurrentMatch(team2.getUser2());
+    }
+
+    private void addGame(SlotDto slotDto, TeamDto team1, TeamDto team2) {
+        GameAddDto gameAddDto = GameAddDto.builder()
+                .slotDto(slotDto)
+                .build();
+        gameService.addGame(gameAddDto);
+        GameDto game = gameService.findBySlot(slotDto.getId());
+
+        saveCurrentMatch(team1.getUser1(), game);
+        saveCurrentMatch(team1.getUser2(), game);
+        saveCurrentMatch(team2.getUser1(), game);
+        saveCurrentMatch(team2.getUser2(), game);
     }
 
     public void gameLiveToWait() {
@@ -112,7 +133,7 @@ public class GameGenerator extends AbstractScheduler {
     public Runnable runnable() {
         return () -> {
             try {
-                addGame();
+                gameGenerator();
                 gameLiveToWait();
             } catch (MessagingException e) {
                 e.printStackTrace();
