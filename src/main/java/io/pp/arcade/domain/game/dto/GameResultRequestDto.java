@@ -22,20 +22,25 @@ public class GameResultRequestDto {
     private Integer enemyTeamScore;
 
     public Integer getMyTeamScore() {
-        if (myTeamScore + enemyTeamScore > 3) {
-            throw new BusinessException("E0001");
-        } else if (myTeamScore == 1 && enemyTeamScore == 1) {
+        if (validate() == false) {
             throw new BusinessException("E0001");
         }
         return myTeamScore;
     }
 
     public Integer getEnemyTeamScore() {
-        if (myTeamScore + enemyTeamScore > 3) {
-            throw new BusinessException("E0001");
-        } else if (myTeamScore == 1 && enemyTeamScore == 1) {
+        if (validate() == false) {
             throw new BusinessException("E0001");
         }
         return enemyTeamScore;
+    }
+
+    private boolean validate() {
+        if (myTeamScore + enemyTeamScore > 3) {
+            return false;
+        } else if (myTeamScore == enemyTeamScore) {
+            return false;
+        }
+        return true;
     }
 }
