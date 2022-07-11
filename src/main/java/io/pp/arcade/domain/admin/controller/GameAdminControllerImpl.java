@@ -3,27 +3,21 @@ package io.pp.arcade.domain.admin.controller;
 import io.pp.arcade.domain.admin.dto.create.GameCreateDto;
 import io.pp.arcade.domain.admin.dto.create.GameCreateRequestDto;
 import io.pp.arcade.domain.admin.dto.delete.GameDeleteDto;
-import io.pp.arcade.domain.admin.dto.update.GameUpdateDto;
 import io.pp.arcade.domain.admin.dto.update.GameUpdateRequestDto;
 import io.pp.arcade.domain.admin.dto.update.PChangeUpdateDto;
-import io.pp.arcade.domain.admin.dto.update.TeamUpdateDto;
-import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.game.dto.GameDto;
-import io.pp.arcade.domain.pchange.PChange;
-import io.pp.arcade.domain.pchange.PChangeRepository;
 import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.rank.dto.RankModifyDto;
+import io.pp.arcade.domain.rank.dto.RankUpdateDto;
 import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
-import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.team.dto.TeamModifyGameResultDto;
-import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
@@ -34,9 +28,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @AllArgsConstructor
