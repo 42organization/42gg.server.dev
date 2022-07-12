@@ -110,6 +110,7 @@
                                             <table class="table table-striped jambo_table bulk_action">
                                                 <thead>
                                                 <tr class="headings">
+                                                    <th class="column-title">id</th>
                                                     <th class="column-title">intra_id</th>
                                                     <th class="column-title">email</th>
                                                     <th class="column-title">image_uri</th>
@@ -126,6 +127,7 @@
                                                         <input type="hidden" id="url" name="url" value="/admin/user">
                                                         <input type="hidden" id="token" th:value="${token}">
                                                         <input type="hidden" id="id" th:value="${user.getId()}">
+                                                        <th class="text" id="userId" th:text="${user.getId()}">
                                                         <th class="text" id="userIntraId" th:text="${user.getIntraId()}">
                                                         <th class="text" id="userEmail" th:text="${user.getEMail()}">
                                                         <td>
