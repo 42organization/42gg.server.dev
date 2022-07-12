@@ -6,6 +6,7 @@ import io.pp.arcade.domain.feedback.dto.FeedbackAddDto;
 import io.pp.arcade.domain.feedback.dto.FeedbackRequestDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.FeedbackType;
 import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,9 @@ public class FeedbackControllerImpl implements FeedbackController {
     @Override
     @PostMapping(value = "/feedback")
     public void feedbackSave(FeedbackRequestDto saveReqDto, HttpServletRequest request) {
+        if (saveReqDto.getContent().isBlank() == true) {
+            throw new BusinessException("RP001");
+        }
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         FeedbackAddDto feedbackAddDto = FeedbackAddDto.builder()
                 .userId(user.getId())

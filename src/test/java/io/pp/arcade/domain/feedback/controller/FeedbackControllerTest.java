@@ -153,6 +153,7 @@ public class FeedbackControllerTest {
             System.out.println("->" + f.getIsSolved());
         }
 
+        /* 300자 이상 에러 */
         Map<String, String> body4 = new HashMap<>();
         body4.put("category", FeedbackType.GAMERESULT.getCode());
         body4.put("content", "개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳개굳"
@@ -163,6 +164,17 @@ public class FeedbackControllerTest {
                 .andExpect(status().isBadRequest())
                 .andDo(document("feedback-save-error-cause-content-length-300-up"));
 
+        /* 공백만 있을 때 에러 */
+
+        Map<String, String> body5 = new HashMap<>();
+        body5.put("category", FeedbackType.CHEERS.getCode());
+        body5.put("content", "   \n      " +
+                "        ");
+        mockMvc.perform(post("/pingpong/feedback").contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken())
+                        .content(objectMapper.writeValueAsString(body5)))
+                .andExpect(status().isBadRequest())
+                .andDo(document("feedback-save-error-cause-content-isBlank"));
     }
 
     /* 세션에서 유저 가져와서 어드민인지 확인하는 부분이 잘 안됨. 일단 보류.
