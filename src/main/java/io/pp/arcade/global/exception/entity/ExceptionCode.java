@@ -24,7 +24,10 @@ public enum ExceptionCode {
     ENTITY_NOT_FOUND(HttpStatus.BAD_REQUEST, "E1000", "잘못된 입력입니다."),
 
 
-    SECURITY_01(HttpStatus.UNAUTHORIZED, "S0001", "권한이 없습니다.");
+    SECURITY_01(HttpStatus.UNAUTHORIZED, "S0001", "권한이 없습니다."),
+
+    /* 피드백 공백 에러 */
+    FEEDBACK_RP_BLANK(HttpStatus.BAD_REQUEST, "RP001");
 
     private final HttpStatus status;
     private final String code;
