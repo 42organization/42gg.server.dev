@@ -9,6 +9,8 @@ import io.pp.arcade.global.scheduler.SlotGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/admin")
@@ -32,6 +34,12 @@ public class SchedulerControllerImpl implements SchedulerController {
         rankScheduler.setInterval(cron.getInterval());
         rankScheduler.setCron(cron.getCron());
         rankScheduler.renewScheduler();
+    }
+
+    @Override
+    @PostMapping(value = "/scheduler/rank")
+    public void rankDailyProcessNow() {
+        rankScheduler.dailyProcess();
     }
 
     @PutMapping(value = "/scheduler/current")

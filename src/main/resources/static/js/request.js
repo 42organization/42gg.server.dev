@@ -251,6 +251,32 @@ function js_request_rank_cron_put(form) {
     })
 }
 
+function js_request_rank_cron_run(form) {
+
+    let url = form['url'].value;
+    let token = form['token'].value;
+    let data = {}
+    $.ajax({
+        url: `${url}`,
+        type: `POST`,
+        headers: {
+            "Authorization": "Bearer " + token
+        },
+        contentType: 'application/json',
+        data: JSON.stringify(data),
+        async: false,
+        error: function () {
+            alert("Error!");
+        },
+        success: function () {
+            alert("success!");
+        },
+        complete: function () {
+            history.replaceState({}, null, location.pathname);
+        }
+    })
+}
+
 function js_request_path(form) {
 
     let url = form['url'].value;

@@ -50,6 +50,7 @@
                                                     <th class="column-title">Minute</th>
                                                     <th class="column-title">Hour</th>
                                                     <th class="column-title"></th>
+                                                    <th class="column-title"></th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -70,6 +71,9 @@
                                                         </td>
                                                         <td>
                                                             <input type="submit" value="수정 & 재시작" th:onclick='js_request_rank_cron_put(this.form)'>
+                                                        </td>
+                                                        <td>
+                                                            <input type="submit" value="즉시 실행" th:onclick='js_request_rank_cron_run(this.form)'>
                                                         </td>
                                                     </tr>
                                                 </form>
