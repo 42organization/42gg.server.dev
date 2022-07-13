@@ -1,11 +1,18 @@
 package io.pp.arcade.domain.game.controller;
 
+import io.pp.arcade.domain.admin.dto.create.NotiCreateRequestDto;
 import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchFindDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchRemoveDto;
+import io.pp.arcade.domain.event.EventService;
+import io.pp.arcade.domain.event.dto.EventUserDto;
+import io.pp.arcade.domain.event.dto.FindEventDto;
+import io.pp.arcade.domain.event.dto.SaveEventUserDto;
 import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.game.dto.*;
+import io.pp.arcade.domain.noti.NotiService;
+import io.pp.arcade.domain.noti.dto.NotiAddDto;
 import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
@@ -25,19 +32,23 @@ import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.NotiType;
 import io.pp.arcade.global.type.StatusType;
 import io.pp.arcade.global.util.EloRating;
 import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang3.RandomUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @RestController
@@ -51,6 +62,8 @@ public class GameControllerImpl implements GameController {
     private final CurrentMatchService currentMatchService;
     private final RankRedisService rankRedisService;
     private final TokenService tokenService;
+    private final EventService eventService;
+    private final NotiService notiService;
 
     @Override
     @GetMapping(value = "/games/result")
@@ -77,7 +90,7 @@ public class GameControllerImpl implements GameController {
 
     @Override
     @PostMapping(value = "/games/result")
-    public void gameResultSave(GameResultRequestDto requestDto, HttpServletRequest request) {
+    public void gameResultSave(GameResultRequestDto requestDto, HttpServletRequest request) throws MessagingException {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUser(user);
         validateInput(requestDto);
@@ -101,6 +114,7 @@ public class GameControllerImpl implements GameController {
         // modify users with game result
         modifyUsersPppAndPChange(game, team1, team2);
         endGameStatus(game);
+        checkEvent(game);
         // modify users' ranks with game result
         throw new ResponseStatusException(HttpStatus.CREATED, "");
     }
@@ -360,5 +374,43 @@ public class GameControllerImpl implements GameController {
                     .build();
             gamePlayerList.add(gamePlayerDto);
         }
+    }
+
+    private void checkEvent(GameDto game) throws MessagingException {
+        Random random = new Random();
+        random.setSeed(System.currentTimeMillis());
+        if (random.nextInt() % 100 == 42){
+            addEventUser(game.getTeam1().getUser1(), "랜덤 당첨 이벤트");
+            addEventUser(game.getTeam1().getUser2(), "랜덤 당첨 이벤트");
+            addEventUser(game.getTeam2().getUser1(), "랜덤 당첨 이벤트");
+            addEventUser(game.getTeam2().getUser2(), "랜덤 당첨 이벤트");
+        }
+    }
+
+    private void addEventUser(UserDto user, String eventName) throws MessagingException {
+        List<EventUserDto> eventUserList = eventService.findByEventName(FindEventDto.builder().eventName("랜덤 당첨 이벤트").build());
+        if (user != null && checkUserExist(user.getIntraId(), eventUserList)) {
+            SaveEventUserDto saveEventUserDto = SaveEventUserDto.builder()
+                    .intraId(user.getIntraId())
+                    .eventName(eventName)
+                    .build();
+            NotiAddDto notiAddDto = NotiAddDto.builder()
+                    .user(user)
+                    .type(NotiType.ANNOUNCE)
+                    .message(user.getIntraId() + "님이 랜덤 슬롯 이벤트에 당첨되었습니다🎉")
+                    .build();
+            eventService.saveEventUser(saveEventUserDto);
+            notiService.createEventNotiForAll(notiAddDto);
+            notiService.sendEventMail(notiAddDto);
+        }
+    }
+
+    private boolean checkUserExist(String intraId, List<EventUserDto> eventUserList) {
+        for (EventUserDto eventUser : eventUserList) {
+            if (eventUser.getIntraId().equals(intraId)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
