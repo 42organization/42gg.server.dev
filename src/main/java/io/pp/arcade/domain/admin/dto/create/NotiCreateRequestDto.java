@@ -1,6 +1,7 @@
 package io.pp.arcade.domain.admin.dto.create;
 
 import io.pp.arcade.global.type.NotiType;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter

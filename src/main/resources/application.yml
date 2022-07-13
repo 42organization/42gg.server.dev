@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: main
 
   security:
     oauth2.client:

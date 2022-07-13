@@ -145,6 +145,7 @@ public class NotiService {
         return notiDtos;
     }
 
+    @Transactional
     public void createNotiForAll(NotiCreateRequestDto createRequestDto) {
         List<User> users = userRepository.findAll();
         users.forEach(user -> {
@@ -156,5 +157,31 @@ public class NotiService {
                     .build();
             notiRepository.save(noti);
         });
+    }
+
+    @Transactional
+    public void createEventNotiForAll(NotiAddDto addDto) {
+        List<User> users = userRepository.findAll();
+        users.forEach(user -> {
+            Noti noti = Noti.builder()
+                    .user(user)
+                    .type(NotiType.ANNOUNCE)
+                    .message(addDto.getMessage())
+                    .isChecked(false)
+                    .build();
+            notiRepository.save(noti);
+        });
+    }
+
+    @Transactional
+    public void sendEventMail(NotiAddDto addDto) throws MessagingException {
+        User user = userRepository.findById(addDto.getUser().getId()).orElse(null);
+        Noti noti = Noti.builder()
+                .user(user)
+                .type(NotiType.ANNOUNCE)
+                .message("축하합니다!! 이벤트에 당첨되었습니다🎉")
+                .isChecked(false)
+                .build();
+        sendMail(noti, user);
     }
 }
