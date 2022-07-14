@@ -18,5 +18,10 @@ public class FortyTwoOAuthUserInfo extends OAuthUserInfo {
         return attributes.get("email").toString();
     }
 
-    public String getImageUrl() { return attributes.get("image_url").toString(); }
+    public String getImageUrl() {
+        if (attributes.get("image_url") == null) {
+            return "https://cdn.intra.42.fr/users/small_default.jpg";
+        }
+        return attributes.get("image_url").toString();
+    }
 }
