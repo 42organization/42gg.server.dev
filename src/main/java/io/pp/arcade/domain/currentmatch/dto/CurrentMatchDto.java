@@ -25,7 +25,7 @@ public class CurrentMatchDto {
                 .id(currentMatch.getId())
                 .userId(currentMatch.getUser().getId())
                 .slot(SlotDto.from(currentMatch.getSlot()))
-                .game(GameDto.from(currentMatch.getGame()))
+                .game(currentMatch.getGame() == null ? null : GameDto.from(currentMatch.getGame()))
                 .matchImminent(currentMatch.getMatchImminent())
                 .isMatched(currentMatch.getIsMatched())
                 .build();
