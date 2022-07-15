@@ -72,24 +72,18 @@ public class ManagementController {
     /* 게임 결과 관리 */
     @GetMapping("/admin/game")
     public String gameResultPage(Model model, HttpServletRequest request) {
-        List<GameDto> singleGameList = gameService.findGameByTypeByAdmin(Pageable.unpaged(), GameType.SINGLE);
-        List<GameDto> bungleGameList = gameService.findGameByTypeByAdmin(Pageable.unpaged(), GameType.DOUBLE);
+        List<GameDto> singleGameList = gameService.findGameByTypeByAdmin(Pageable.ofSize(200), GameType.SINGLE);
+        List<GameDto> bungleGameList = gameService.findGameByTypeByAdmin(Pageable.ofSize(200), GameType.DOUBLE);
         model.addAttribute("singleGameList", singleGameList);
         model.addAttribute("bungleGameList", bungleGameList);
         model.addAttribute("token", HeaderUtil.getAccessToken(request));
         return "game_management";
     }
 
-    @GetMapping("/admin/game_result")
-    public GameDto gameResultCheck(Model model, @RequestParam Integer gameId, HttpServletRequest request) {
-        GameDto game = gameService.findById(gameId);
-        return game;
-    }
-
     /* 시즌 관리 */
     @GetMapping("/admin/season")
     public String seasonPage(Model model, HttpServletRequest request) {
-        List<SeasonDto> seasonList = seasonService.findSeasonsByAdmin(Pageable.unpaged());
+        List<SeasonDto> seasonList = seasonService.findSeasonsByAdmin(Pageable.ofSize(200));
 
         model.addAttribute("seasonList", seasonList);
         model.addAttribute("token", HeaderUtil.getAccessToken(request));
@@ -98,7 +92,7 @@ public class ManagementController {
 
     @GetMapping("/admin/currentMatch")
     public String currentMatchPage(Model model, HttpServletRequest request) {
-        List<CurrentMatchDto> currentMatchList = currentMatchService.findCurrentMatchByAdmin(Pageable.unpaged());
+        List<CurrentMatchDto> currentMatchList = currentMatchService.findCurrentMatchByAdmin(Pageable.ofSize(200));
 
         model.addAttribute("currentMatchList", currentMatchList);
         model.addAttribute("token", HeaderUtil.getAccessToken(request));
@@ -107,7 +101,7 @@ public class ManagementController {
 
     @GetMapping("/admin/noti")
     public String notiPage(Model model, HttpServletRequest request) {
-        List<NotiDto> notiList = notiService.findNotiByAdmin(Pageable.unpaged());
+        List<NotiDto> notiList = notiService.findNotiByAdmin(Pageable.ofSize(200));
 
         model.addAttribute("notiList", notiList);
         model.addAttribute("token", HeaderUtil.getAccessToken(request));
@@ -116,7 +110,7 @@ public class ManagementController {
 
     @GetMapping("/admin/pChange")
     public String pchangePage(Model model, HttpServletRequest request) {
-        List<PChangeDto> pchangeList = pChangeService.findPChangeByAdmin(Pageable.unpaged());
+        List<PChangeDto> pchangeList = pChangeService.findPChangeByAdmin(Pageable.ofSize(200));
 
         model.addAttribute("pchangeList", pchangeList);
         model.addAttribute("token", HeaderUtil.getAccessToken(request));
@@ -125,7 +119,7 @@ public class ManagementController {
 
     @GetMapping("/admin/rank")
     public String rankPage(Model model, HttpServletRequest request) {
-        List<RankDto> rankList = rankService.findRankByAdmin(Pageable.unpaged());
+        List<RankDto> rankList = rankService.findRankByAdmin(Pageable.ofSize(200));
 
         model.addAttribute("rankList", rankList);
         model.addAttribute("token", HeaderUtil.getAccessToken(request));
@@ -145,7 +139,7 @@ public class ManagementController {
 
     @GetMapping("/admin/slot")
     public String slotPage(Model model, HttpServletRequest request) {
-        List<SlotDto> slotList = slotService.findSlotByAdmin(Pageable.unpaged());
+        List<SlotDto> slotList = slotService.findSlotByAdmin(Pageable.ofSize(200));
         model.addAttribute("slotStartTime", slotGenerator.getStartTime());
         model.addAttribute("slotInterval", slotGenerator.getInterval());
         model.addAttribute("slotNum", slotGenerator.getSlotNum());
@@ -163,14 +157,14 @@ public class ManagementController {
 
     @GetMapping("/admin/team")
     public String teamPage(Model model, HttpServletRequest request) {
-        List<TeamDto> teamList = teamService.findTeamByAdmin(Pageable.unpaged());
+        List<TeamDto> teamList = teamService.findTeamByAdmin(Pageable.ofSize(200));
         model.addAttribute("teamList", teamList);
         return "team_management";
     }
 
     @GetMapping("/admin/feedback")
     public String feedbackPage(Model model, HttpServletRequest request) {
-        List<FeedbackDto> solvedFeedbackList = feedbackService.feedbackFindByIsSolvedByAdmin(true, Pageable.unpaged());
+        List<FeedbackDto> solvedFeedbackList = feedbackService.feedbackFindByIsSolvedByAdmin(true, Pageable.ofSize(200));
         List<FeedbackDto> unsolvedFeedbackList = feedbackService.feedbackFindByIsSolvedByAdmin(false, Pageable.unpaged());
 
         model.addAttribute("solvedFeedbackList", solvedFeedbackList);
