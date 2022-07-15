@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 public class TeamUpdateRequestDto {
     private Integer teamId;
-    private Integer user1Id;
-    private Integer user2Id;
+    private String user1Id;
+    private String user2Id;
     private Integer teamPpp;
     private Integer headCount;
     private Integer score;

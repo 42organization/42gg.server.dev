@@ -121,10 +121,10 @@
                                                         <input type="hidden" id="token" th:value="${token}">
                                                         <input type="hidden" id="id" name="id" th:value="${pChange.getId()}">
                                                         <input type="hidden" id="gameId" name="gameId" th:value="${pChange.getGame().getId()}">
-                                                        <input type="hidden" id="userId" name="userId" th:value="${pChange.getUser().getId()}">
+                                                        <input type="hidden" id="userId" name="userId" th:value="${pChange.getUser().getIntraId()}">
                                                         <td th:text="${pChange.getId()}"></td>
                                                         <td th:text="${pChange.getGame().getId()}"></td>
-                                                        <td th:text="${pChange.getUser().getId()}"></td>
+                                                        <td th:text="${pChange.getUser().getIntraId()}"></td>
                                                          <td>
                                                             <input type="text" id="pppChange" name="pppChange" th:value="${pChange.getPppChange()}">
                                                         </td>
