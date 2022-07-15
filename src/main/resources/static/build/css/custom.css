@@ -1661,6 +1661,21 @@ h2 {
   -webkit-transition: all .2s ease;
   transition: all .2s ease; }
 
+.x_panel2 {
+  position: relative;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 10px 17px;
+  display: inline-block;
+  background: #4e73df;
+  border: 1px solid #E6E9ED;
+  -webkit-column-break-inside: avoid;
+  -moz-column-break-inside: avoid;
+  column-break-inside: avoid;
+  opacity: 1;
+  -webkit-transition: all .2s ease;
+  transition: all .2s ease; }
+
 .x_title {
   border-bottom: 2px solid #E6E9ED;
   padding: 1px 5px 6px;
