@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 public class NotiCreateRequestDto {
-    private Integer userId;
+    private String userId;
     private Integer slotId;
     private NotiType notiType;
     private Boolean isChecked;

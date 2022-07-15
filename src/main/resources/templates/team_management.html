@@ -116,13 +116,13 @@
                                                         <input type="hidden" id="token" th:value="${token}">
                                                         <input type="hidden" id="id" th:value="${team.getId()}">
                                                         <td class=" " th:if="${team.getUser1() != null}">
-                                                            <input type="text" name="teamUser1" id="teamUser1" th:value="${team.getUser1().getId()}">
+                                                            <input type="text" name="teamUser1" id="teamUser1" th:value="${team.getUser1().getIntraId()}">
                                                         </td>
                                                         <td class=" " th:unless="${team.getUser1() != null}">
                                                             <input type="text" name="teamUser1" id="teamUser1">
                                                         </td>
                                                         <td class=" " th:if="${team.getUser2() != null}">
-                                                            <input type="text" name="teamUser2" id="teamUser2" th:value="${team.getUser2().getId()}">
+                                                            <input type="text" name="teamUser2" id="teamUser2" th:value="${team.getUser2().getIntraId()}">
                                                         </td>
                                                         <td class=" " th:unless="${team.getUser2() != null}">
                                                             <input type="text" name="teamUser2" id="teamUser2">
