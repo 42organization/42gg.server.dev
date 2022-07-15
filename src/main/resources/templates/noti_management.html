@@ -169,11 +169,11 @@
                                                                value="/admin/noti">
                                                         <input type="hidden" id="token" th:value="${token}">
                                                         <input type="hidden" id="id" name="id" th:value="${noti.getId()}">
-                                                        <input type="hidden" id="userId" name="userId" th:value="${noti.getUser.getId()}">
+                                                        <input type="hidden" id="userId" name="userId" th:value="${noti.getUser.getIntraId()}">
                                                         <input th:if="${noti.getSlot() != null}" type="hidden" id="slotId" name="slotId" th:value="${noti.getSlot().getId()}">
                                                         <input th:unless="${noti.getSlot() != null}" type="hidden" id="slotId" name="slotId" th:value="0">
                                                         <td th:text="${noti.getId()}"></td>
-                                                        <td th:text="${noti.getUser().getId()}"></td>
+                                                        <td th:text="${noti.getUser().getIntraId()}"></td>
                                                         <td th:if="${noti.getSlot() != null}" th:text="${noti.getSlot().getId()}"></td>
                                                         <td th:unless="${noti.getSlot() != null}" th:text="null"></td>
                                                         <td>

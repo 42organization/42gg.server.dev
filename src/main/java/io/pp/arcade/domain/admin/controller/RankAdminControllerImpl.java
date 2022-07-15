@@ -5,6 +5,7 @@ import io.pp.arcade.domain.admin.dto.delete.RankDeleteDto;
 import io.pp.arcade.domain.admin.dto.update.RankUpdateRequestDto;
 import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.rank.dto.RankDto;
+import io.pp.arcade.global.scheduler.RankScheduler;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,6 @@ import java.util.List;
 @RequestMapping(value = "/admin")
 public class RankAdminControllerImpl implements RankAdminController {
     private final RankRedisService rankRedisService;
-
 
     @Override
     @PostMapping(value = "/rank")
