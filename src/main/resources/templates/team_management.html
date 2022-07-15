@@ -115,10 +115,16 @@
                                                         <input type="hidden" id="url" name="url" value="/admin/team">
                                                         <input type="hidden" id="token" th:value="${token}">
                                                         <input type="hidden" id="id" th:value="${team.getId()}">
-                                                        <td class=" ">
+                                                        <td class=" " th:if="${team.getUser1() != null}">
+                                                            <input type="text" name="teamUser1" id="teamUser1" th:value="${team.getUser1().getId()}">
+                                                        </td>
+                                                        <td class=" " th:unless="${team.getUser1() != null}">
                                                             <input type="text" name="teamUser1" id="teamUser1">
                                                         </td>
-                                                        <td class=" ">
+                                                        <td class=" " th:if="${team.getUser2() != null}">
+                                                            <input type="text" name="teamUser2" id="teamUser2" th:value="${team.getUser2().getId()}">
+                                                        </td>
+                                                        <td class=" " th:unless="${team.getUser2() != null}">
                                                             <input type="text" name="teamUser2" id="teamUser2">
                                                         </td>
                                                         <td class=" ">
