@@ -114,8 +114,8 @@ public class TeamService {
     @Transactional
     public void updateTeamByAdmin(TeamUpdateDto teamUpdateDto) {
         Team team = teamRepository.findById(teamUpdateDto.getTeamId()).orElse(null);
-        team.setUser1(userRepository.findById(teamUpdateDto.getUser1Id()).orElse(null));
-        team.setUser2(userRepository.findById(teamUpdateDto.getUser2Id()).orElse(null));
+        team.setUser1(teamUpdateDto.getUser1Id() == null ? null : userRepository.findById(teamUpdateDto.getUser1Id()).orElse(null));
+        team.setUser2(teamUpdateDto.getUser2Id() == null ? null : userRepository.findById(teamUpdateDto.getUser2Id()).orElse(null));
         team.setTeamPpp(teamUpdateDto.getTeamPpp());
         team.setHeadCount(teamUpdateDto.getHeadCount());
         team.setScore(teamUpdateDto.getScore());
