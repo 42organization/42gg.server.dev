@@ -124,7 +124,7 @@ public class GameAdminControllerImpl implements GameAdminController {
                 .build());
         pChangeService.updatePChangeByAdmin(pChangeId, PChangeUpdateDto.builder()
                 .gameId(game.getId())
-                .userId(userDto.getId())
+                .userId(userDto.getIntraId())
                 .pppChange(userFinalPpp - userPreviousPpp)
                 .pppResult(userFinalPpp)
                 .build());

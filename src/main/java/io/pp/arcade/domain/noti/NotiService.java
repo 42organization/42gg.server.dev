@@ -109,7 +109,7 @@ public class NotiService {
     @Transactional
     public void createNotiByAdmin(NotiCreateRequestDto createRequestDto) throws MessagingException {
         Slot slot = createRequestDto.getSlotId() == null ? null : slotRepository.findById(createRequestDto.getSlotId()).orElse(null);
-        User user = userRepository.findById(createRequestDto.getUserId()).orElseThrow();
+        User user = userRepository.findByIntraId(createRequestDto.getUserId()).orElseThrow();
         Noti noti = Noti.builder()
                 .slot(slot)
                 .user(user)
