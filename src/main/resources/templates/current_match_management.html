@@ -128,12 +128,12 @@
                                                         <input type="hidden" id="userId" name="userId" th:value="${currentMatch.getUserId()}">
                                                         <input type="hidden" id="slotId" name="slotId" th:value="${currentMatch.getSlot().getId()}">
                                                         <input type="hidden" id="gameId" name="gameId" th:if="${currentMatch.getGame() != null}" th:value="${currentMatch.getGame().getId()}">
-                                                        <input type="hidden" id="gameId" name="gameId" th:unless="${currentMatch.getGame() != null}" th:value="">
+                                                        <input type="hidden" id="gameId" name="gameId" th:unless="${currentMatch.getGame() != null}" th:value="${null}">
                                                         <td th:text="${currentMatch.getId()}"></td>
                                                         <td th:text="${currentMatch.getUserId()}"></td>
                                                         <td th:text="${currentMatch.getSlot().getId()}"></td>
                                                         <td th:if="${currentMatch.getGame() != null}" th:text="${currentMatch.getGame().getId()}"></td>
-                                                        <td th:unless="${currentMatch.getGame() != null}" th:text=""></td>
+                                                        <td th:unless="${currentMatch.getGame() != null}" th:text="null"></td>
                                                         <td>
                                                             <input type="text" id="isMatched" name="isMatched" th:value="${currentMatch.getIsMatched()}">
                                                         </td>
