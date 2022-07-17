@@ -112,7 +112,7 @@ public class CurrentMatchService {
     public void createCurrentMatchByAdmin(CurrentMatchCreateRequestDto createRequestDto) {
         User user = userRepository.findById(createRequestDto.getUserId()).orElseThrow();
         Slot slot = slotRepository.findById(createRequestDto.getSlotId()).orElseThrow();
-        Game game = gameRepository.findById(createRequestDto.getGameId()).orElseThrow();
+        Game game = createRequestDto.getGameId() == null ? null : gameRepository.findById(createRequestDto.getGameId()).orElseThrow();
         CurrentMatch currentMatch = CurrentMatch.builder()
                 .user(user)
                 .slot(slot)
