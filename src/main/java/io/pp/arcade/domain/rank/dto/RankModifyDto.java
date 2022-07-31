@@ -17,7 +17,7 @@ public class RankModifyDto {
         return "RankModifyDto{" +
                 "intraId='" + intraId + '\'' +
                 ", gameType=" + gameType +
-                ", isWin=" + modifyStatus +
+                ", modifyStatus=" + modifyStatus +
                 ", Ppp=" + Ppp +
                 '}';
     }
