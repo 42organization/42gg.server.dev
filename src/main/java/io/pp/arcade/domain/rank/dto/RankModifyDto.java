@@ -9,7 +9,7 @@ import lombok.Getter;
 public class RankModifyDto {
     private String intraId;
     private GameType gameType;
-    private Boolean isWin;
+    private Integer modifyStatus;
     private Integer Ppp;
 
     @Override
@@ -17,7 +17,7 @@ public class RankModifyDto {
         return "RankModifyDto{" +
                 "intraId='" + intraId + '\'' +
                 ", gameType=" + gameType +
-                ", isWin=" + isWin +
+                ", isWin=" + modifyStatus +
                 ", Ppp=" + Ppp +
                 '}';
     }
