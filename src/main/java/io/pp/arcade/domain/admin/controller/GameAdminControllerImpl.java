@@ -11,7 +11,6 @@ import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.rank.dto.RankModifyDto;
-import io.pp.arcade.domain.rank.dto.RankUpdateDto;
 import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
@@ -77,6 +76,7 @@ public class GameAdminControllerImpl implements GameAdminController {
                 .score(team2Score)
                 .win(team2Score > team1Score)
                 .build();
+
         teamService.modifyGameResultInTeam(modifyTeam1GameResultDto);
         teamService.modifyGameResultInTeam(modifyTeam2GameResultDto);
         /* 게임 결과가 수정된 팀 유저들의 ppp 수정 */
@@ -93,13 +93,13 @@ public class GameAdminControllerImpl implements GameAdminController {
         TeamDto updatedTeam1 = teamService.findById(gameDto.getTeam1().getId());
         TeamDto updatedTeam2 = teamService.findById(gameDto.getTeam2().getId());
         Boolean isOneSide = Math.abs(updatedTeam1.getScore() - updatedTeam2.getScore()) == 2;
-        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam1.getUser1(), updatedTeam2, isOneSide);
-        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam2.getUser2(), updatedTeam2, isOneSide);
-        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam1.getUser2(), updatedTeam1, isOneSide);
-        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam2.getUser1(), updatedTeam1, isOneSide);
+        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam1.getUser1(), gameDto.getTeam2(), updatedTeam2, isOneSide);
+        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam2.getUser2(), gameDto.getTeam2(), updatedTeam2, isOneSide);
+        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam1.getUser2(), gameDto.getTeam1(), updatedTeam1, isOneSide);
+        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam2.getUser1(), gameDto.getTeam1(), updatedTeam1, isOneSide);
     }
 
-    private void modifyUserPPPAndPChangeAndRank(GameDto game, UserDto userDto, TeamDto enemyTeamDto, Boolean isOneSide) {
+    private void modifyUserPPPAndPChangeAndRank(GameDto game, UserDto userDto, TeamDto beforeEnemyTeamDto, TeamDto enemyTeamDto, Boolean isOneSide) {
         if (userDto == null) {
             return;
         }
@@ -133,7 +133,7 @@ public class GameAdminControllerImpl implements GameAdminController {
                 .gameType(gameType)
                 .Ppp(userFinalPpp)
                 .intraId(userDto.getIntraId())
-                .isWin(!enemyTeamDto.getWin())
+                .modifyStatus(beforeEnemyTeamDto.getWin() == enemyTeamDto.getWin() ? -1 : booleanToInt(enemyTeamDto.getWin()))
                 .build();
         rankRedisService.modifyUserPpp(rankModifyDto);
     }
@@ -150,5 +150,9 @@ public class GameAdminControllerImpl implements GameAdminController {
     public List<GameDto> gameAll(Pageable pageable, HttpServletRequest request) {
         List<GameDto> games = gameService.findGameByAdmin(pageable);
         return games;
+    }
+
+    private int booleanToInt(boolean value) {
+        return value ? 1 : 0;
     }
 }
