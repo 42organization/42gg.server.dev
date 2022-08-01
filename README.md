@@ -26,7 +26,7 @@
         <td align=center><a href="https://github.com/Two-Jay">김정준 @jekim</a></td>
     </tr>
     <tr>
-        <td align=center>프로젝트 전체 진행자</td>
+        <td align=center>프로젝트 전체 대장</td>
         <td align=center>LEAD 및 PM</td>
         <td align=center>메인 로직, 관리자 페이지 뷰 담당</td>
         <td align=center>서브 로직, 테스트코드, 관리자 api, 문서화 담당</td>
