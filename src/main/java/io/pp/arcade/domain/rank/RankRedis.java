@@ -99,13 +99,17 @@ public class RankRedis implements Serializable {
         this.winRate = (double)wins / (wins + losses) * 100;
     }
 
-    public void modify(Boolean isWin, Integer ppp){
-        update(isWin, ppp);
-        if (isWin == true) {
+    public void modify(Integer modifyStatus, Integer ppp){
+        if (modifyStatus == 0) {
             this.losses--;
-        } else {
+            this.wins++;
+        }
+        else if (modifyStatus == 1) {
+            this.losses++;
             this.wins--;
         }
+        this.ppp = ppp;
+        this.winRate = (double)wins / (wins + losses) * 100;
     }
 
     public void updateStatusMessage(String statusMessage){

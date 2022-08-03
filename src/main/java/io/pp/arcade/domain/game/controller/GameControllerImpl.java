@@ -114,7 +114,7 @@ public class GameControllerImpl implements GameController {
         // modify users with game result
         modifyUsersPppAndPChange(game, team1, team2);
         endGameStatus(game);
-        checkEvent(game);
+        // checkEvent(game);
         // modify users' ranks with game result
         throw new ResponseStatusException(HttpStatus.CREATED, "");
     }

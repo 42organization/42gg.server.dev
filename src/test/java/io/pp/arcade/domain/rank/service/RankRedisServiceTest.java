@@ -124,7 +124,7 @@ class RankRedisServiceTest {
         // given
         testInitiator.letsgo();
         User user =  testInitiator.users[0];
-        RankModifyDto modifyDto = RankModifyDto.builder().intraId(user.getIntraId()).Ppp(1010).isWin(true).gameType(GameType.SINGLE).build();
+        RankModifyDto modifyDto = RankModifyDto.builder().intraId(user.getIntraId()).Ppp(1010).modifyStatus(0).gameType(GameType.SINGLE).build();
 
         // when
         rankRedisService.modifyUserPpp(modifyDto);
@@ -143,7 +143,7 @@ class RankRedisServiceTest {
         // given
         testInitiator.letsgo();
         User user =  testInitiator.users[0];
-        RankModifyDto modifyDto = RankModifyDto.builder().intraId(user.getIntraId()).Ppp(1010).isWin(false).gameType(GameType.SINGLE).build();
+        RankModifyDto modifyDto = RankModifyDto.builder().intraId(user.getIntraId()).Ppp(1010).modifyStatus(1).gameType(GameType.SINGLE).build();
 
         // when
         rankRedisService.modifyUserPpp(modifyDto);
