@@ -50,6 +50,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(RestDocsConfiguration.class)
 class UserControllerNormalTest {
 
+    @Autowired
+    private MockMvc mockMvc;
+
     @BeforeEach
     void init() {
 
@@ -57,16 +60,33 @@ class UserControllerNormalTest {
 
     @Test
     @Transactional
-    @DisplayName("유저 정보 조회 - 상세히, 레벨(공통) (/users/{intraId}/detail)")
+    @DisplayName("유저 정보 조회 - 상세히, 레벨(공통) (/users/{targetIntraId}/detail)")
     void findDetailUserNormal() throws Exception {
-
+        mockMvc.perform(get("/pingpong/users/targetIntraId/detail").contentType(MediaType.APPLICATION_JSON) // intra id 넣어야함
+                .header() // "Authorization", "Bearer " + initiator.tokens[0].getAccessToken())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.userImageUri").equals()) // 이미지 주소
+                .andExpect(jsonPath("$.racketType").equals()) // 라켓타입
+                .andExpect(jsonPath("$.statusMessage").equals()) // 상태메시지
+                .andExpect(jsonPath("$.level").equals()) // 레벨
+                .andExpect(jsonPath("$.currentExp").equals()) // 현재 경험치
+                .andExpect(jsonPath("$.maxExp").equals()) // 현재 레벨 최대 경험치
+                .andDo(document("user-profile-detail"));
     }
 
     @Test
     @Transactional
-    @DisplayName("유저 정보 조회 - 상세히, 랭크 (/users/{intraId}/detail)")
+    @DisplayName("유저 정보 조회 - 상세히, 랭크 (/pingpong/users/{targetIntraId}/rank/{season})")
     void findDetailUserRank() throws Exception {
-
+        mockMvc.perform(get("/pingpong/users/targetIntraId/rank/season").contentType(MediaType.APPLICATION_JSON) // intra id, season 값 넣어야함
+                .header() // "Authorization", "Bearer " + initiator.tokens[0].getAccessToken())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.rank").equals()) // 등수
+                .andExpect(jsonPath("$.ppp").equals()) // 탁구력
+                .andExpect(jsonPath("$.wins").equals()) // 승리
+                .andExpect(jsonPath("$.losses").equals()) // 패배
+                .andExpect(jsonPath("$.winRate").equals()) // 승률
+                .andDo(document("user-profile-rank"));
     }
 
     @Test
@@ -74,6 +94,12 @@ class UserControllerNormalTest {
     @DisplayName("유저 실시간 정보 - mode 추가 (/users/live)")
     void userLiveInfo() throws Exception {
 
+        mockMvc.perform(get("/pingpong/users/live").contentType(MediaType.APPLICATION_JSON)
+                        .header() // "Authorization", "Bearer " + initiator.tokens[0].getAccessToken())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.event").isEmpty())
+                .andExpect(jsonPath("$.mode").equals()) // enum 추가
+                .andDo(document("user-live"));
     }
 
 }
