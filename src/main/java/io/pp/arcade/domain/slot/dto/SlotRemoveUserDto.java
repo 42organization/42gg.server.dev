@@ -7,14 +7,14 @@ import lombok.Getter;
 @Builder
 public class SlotRemoveUserDto {
     private Integer slotId;
-    private String userId;
+    private String intraId;
     private Integer exitUserPpp;
 
     @Override
     public String toString() {
         return "SlotRemoveUserDto{" +
                 "slotId=" + slotId +
-                ", userId='" + userId + '\'' +
+                ", intraId='" + intraId + '\'' +
                 ", exitUserPpp=" + exitUserPpp +
                 '}';
     }

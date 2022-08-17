@@ -58,12 +58,10 @@ public class GameGenerator extends AbstractScheduler {
     }
 
     private void addGameOrNotiCanceled(SlotDto slotDto) throws MessagingException {
-        TeamDto team1 = slotDto.getTeam1();
-        TeamDto team2 = slotDto.getTeam2();
         if (slotDto.getHeadCount().equals(getMaxHeadCount(slotDto.getType()))) {
-            addGame(slotDto, team1, team2);
+            addGame(slotDto);
         } else {
-            notiCanceled(slotDto, team1, team2);
+            notiCanceled(slotDto);
         }
     }
 
@@ -75,27 +73,27 @@ public class GameGenerator extends AbstractScheduler {
         return maxHeadCount;
     }
 
-    private void notiCanceled(SlotDto slotDto, TeamDto team1, TeamDto team2) throws MessagingException {
+    private void notiCanceled(SlotDto slotDto) throws MessagingException {
         NotiCanceledTypeDto canceledDto = NotiCanceledTypeDto.builder().slotDto(slotDto).notiType(NotiType.CANCELEDBYTIME).build();
         notiGenerater.addCancelNotisBySlot(canceledDto);
 
-        removeCurrentMatch(team1.getUser1());
-        removeCurrentMatch(team1.getUser2());
-        removeCurrentMatch(team2.getUser1());
-        removeCurrentMatch(team2.getUser2());
+        CurrentMatchRemoveDto removeDto = CurrentMatchRemoveDto.builder()
+                .slotId(slotDto.getId())
+                .build();
+        currentMatchService.removeCurrentMatch(removeDto);
     }
 
-    private void addGame(SlotDto slotDto, TeamDto team1, TeamDto team2) {
+    private void addGame(SlotDto slotDto) {
         GameAddDto gameAddDto = GameAddDto.builder()
                 .slotDto(slotDto)
                 .build();
         gameService.addGame(gameAddDto);
         GameDto game = gameService.findBySlot(slotDto.getId());
 
-        saveCurrentMatch(team1.getUser1(), game);
-        saveCurrentMatch(team1.getUser2(), game);
-        saveCurrentMatch(team2.getUser1(), game);
-        saveCurrentMatch(team2.getUser2(), game);
+        CurrentMatchSaveGameDto matchSaveGameDto = CurrentMatchSaveGameDto.builder()
+                .gameId(game.getId())
+                .build();
+        currentMatchService.saveGameInCurrentMatch(matchSaveGameDto);
     }
 
     public void gameLiveToWait() {
@@ -112,20 +110,11 @@ public class GameGenerator extends AbstractScheduler {
 
     private void saveCurrentMatch(UserDto user, GameDto game) {
         if (user != null) {
-            CurrentMatchSaveGameDto matchSaveGameDto = CurrentMatchSaveGameDto.builder()
-                    .gameId(game.getId())
-                    .userId(user.getId())
-                    .build();
-            currentMatchService.saveGameInCurrentMatch(matchSaveGameDto);
         }
     }
 
     private void removeCurrentMatch(UserDto user) {
         if (user != null) {
-            CurrentMatchRemoveDto removeDto = CurrentMatchRemoveDto.builder()
-                    .userId(user.getId())
-                    .build();
-            currentMatchService.removeCurrentMatch(removeDto);
         }
     }
 

@@ -8,6 +8,8 @@ import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
@@ -57,6 +59,9 @@ class CurrentMatchControllerImplTest {
     private GameRepository gameRepository;
 
     @Autowired
+    private SlotTeamUserRepository slotTeamUserRepository;
+
+    @Autowired
     TestInitiator initiator;
 
     User user;
@@ -66,6 +71,7 @@ class CurrentMatchControllerImplTest {
     User user4;
     User user5;
     User user6;
+    User user7;
     Slot[] slotList;
 
     @BeforeEach
@@ -78,6 +84,7 @@ class CurrentMatchControllerImplTest {
         user4 = initiator.users[4];
         user5 = initiator.users[5];
         user6 = initiator.users[6];
+        user7 = initiator.users[7];
         slotList = initiator.slots;
     }
 
@@ -109,6 +116,14 @@ class CurrentMatchControllerImplTest {
         return gameRepository.save(game);
     }
 
+    @Transactional
+    public SlotTeamUser saveSlotTeamUser(Slot slot, Team team, User user) {
+        return slotTeamUserRepository.save(SlotTeamUser.builder()
+                .slot(slot)
+                .team(team)
+                .user(user)
+                .build());
+    }
 
     @Test
     @Transactional
@@ -134,11 +149,11 @@ class CurrentMatchControllerImplTest {
         // 해당 유저가 예약된 경기가 있으며 5분전이 아닐 경우
         // 유저 : user1
         // 슬롯 : slotList.get(0)
-        Team team1 = Team.builder().teamPpp(100).headCount(1).user1(user1).user2(null).score(0).build();
-        Team team2 = Team.builder().teamPpp(100).headCount(0).user1(null).user2(null).score(0).build();
+        Team team1 = Team.builder().teamPpp(100).headCount(1).score(0).build();
+        Team team2 = Team.builder().teamPpp(100).headCount(0).score(0).build();
         saveTeam(team1);
         saveTeam(team2);
-        Slot slot = Slot.builder().tableId(1).team1(team1).team2(team2).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
+        Slot slot = Slot.builder().tableId(1).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
         slot = saveSlot(slot);
         currentMatchSave(null, slot, user1, false, false);
         mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON)
@@ -149,11 +164,11 @@ class CurrentMatchControllerImplTest {
         // 해당 유저가 예약된 경기가 있으며 5분전일 때, 매치가 성사되지 않을 경우
         // 유저 : user2
         // 슬롯 : slotList.get(1)
-        team1 = Team.builder().teamPpp(100).headCount(1).user1(user2).user2(null).score(0).build();
-        team2 = Team.builder().teamPpp(100).headCount(0).user1(null).user2(null).score(0).build();
+        team1 = Team.builder().teamPpp(100).headCount(1).score(0).build();
+        team2 = Team.builder().teamPpp(100).headCount(0).score(0).build();
         saveTeam(team1);
         saveTeam(team2);
-        slot = Slot.builder().tableId(1).team1(team1).team2(team2).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
+        slot = Slot.builder().tableId(1).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
         slot = saveSlot(slot);
         currentMatchSave(null, slot, user2, true, false);
         mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON)
@@ -164,11 +179,13 @@ class CurrentMatchControllerImplTest {
         // 해당 유저가 예약된 경기가 있으며 5분전일 때, 매치가 성사된 경우
         // 유저 : user3
         // 슬롯 : slot
-        team1 = Team.builder().teamPpp(100).headCount(2).user1(user3).user2(user4).score(0).build();
-        team2 = Team.builder().teamPpp(100).headCount(2).user1(user5).user2(user6).score(0).build();
+        team1 = Team.builder().teamPpp(100).headCount(2).score(0).build();
+        team2 = Team.builder().teamPpp(100).headCount(2).score(0).build();
         saveTeam(team1);
         saveTeam(team2);
-        slot = Slot.builder().tableId(1).team1(team1).team2(team2).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
+        slot = Slot.builder().tableId(1).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
+        slotTeamUserRepository.save(SlotTeamUser.builder().slot(slot).team(team1).user(user3).build());
+        slotTeamUserRepository.save(SlotTeamUser.builder().slot(slot).team(team2).user(user4).build());
         slot = saveSlot(slot);
 
         currentMatchSave(null, slot, user3, true, true);
@@ -180,14 +197,18 @@ class CurrentMatchControllerImplTest {
         // 해당 유저가 예약된 경기가 있으며 경기가 시작된 경우
         // 유저 : user4
         // 슬롯 : slot
-        team1 = Team.builder().teamPpp(100).headCount(2).user1(user3).user2(user4).score(0).build();
-        team2 = Team.builder().teamPpp(100).headCount(2).user1(user5).user2(user6).score(0).build();
+        team1 = Team.builder().teamPpp(100).headCount(2).score(0).build();
+        team2 = Team.builder().teamPpp(100).headCount(2).score(0).build();
         saveTeam(team1);
         saveTeam(team2);
-        slot = Slot.builder().tableId(1).team1(team1).team2(team2).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
+        slot = Slot.builder().tableId(1).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
         slot = saveSlot(slot);
-        Game game = Game.builder().team1(team1).team2(team2).type(GameType.DOUBLE).season(1).slot(slot).time(slot.getTime()).status(StatusType.LIVE).build();
+        Game game = Game.builder().type(GameType.DOUBLE).season(1).slot(slot).time(slot.getTime()).status(StatusType.LIVE).build();
         game = saveGame(game);
+        saveSlotTeamUser(slot, team1, user4);
+        saveSlotTeamUser(slot, team2, user5);
+        saveSlotTeamUser(slot, team1, user6);
+        saveSlotTeamUser(slot, team2, user7);
         currentMatchSave(game, slot, user4, true, true);
         mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[4].getAccessToken()))
@@ -197,13 +218,13 @@ class CurrentMatchControllerImplTest {
         // 유효하지 않은 토큰으로 매칭 테이블 요청을 보내는 경우
         // 유저 : none
         // 슬롯 : slot
-        team1 = Team.builder().teamPpp(100).headCount(2).user1(user3).user2(user4).score(0).build();
-        team2 = Team.builder().teamPpp(100).headCount(2).user1(user5).user2(user6).score(0).build();
+        team1 = Team.builder().teamPpp(100).headCount(2).score(0).build();
+        team2 = Team.builder().teamPpp(100).headCount(2).score(0).build();
         saveTeam(team1);
         saveTeam(team2);
-        slot = Slot.builder().tableId(1).team1(team1).team2(team2).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
+        slot = Slot.builder().tableId(1).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
         slot = saveSlot(slot);
-        Game game1 = Game.builder().team1(team1).team2(team2).type(GameType.DOUBLE).season(1).slot(slot).time(slot.getTime()).status(StatusType.LIVE).build();
+        Game game1 = Game.builder().type(GameType.DOUBLE).season(1).slot(slot).time(slot.getTime()).status(StatusType.LIVE).build();
         game = saveGame(game1);
         currentMatchSave(game1, slot, user4, true, true);
         mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON))
