@@ -40,6 +40,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(RestDocsConfiguration.class)
 class RankControllerNormalTest {
 
+    @Autowired
+    private MockMvc mockMvc;
+
     @BeforeEach
     void init(){
 
@@ -47,8 +50,32 @@ class RankControllerNormalTest {
 
     @Test
     @Transactional
-    @DisplayName("노말용 VIP 페이지 (/vip")
+    @DisplayName("노말용 VIP 페이지 (/vip)")
     void vipList() throws Exception {
+        /* 유저가 존재히지 않을 경우  -> 얘기를 해봐야 함니다 */
+//        mockMvc.perform((get("/pingpong/vip").contentType(MediaType.APPLICATION_JSON)
+//                        .param("page","1"))
+//                        .header("Authorization", "Bearer " + 0)) // header 해줘야함
+//                .andExpect(jsonPath("$.myRank").value()) //
+//                .andExpect(jsonPath("$.currentPage").value(1)) //
+//                .andExpect(jsonPath("$.totalPage").value(1)) //
+//                .andExpect(jsonPath("$.rankList").isEmpty()) //
+//                .andExpect(status().isOk())
+//                .andDo(document("vip-List"));
+
+        /* 유저가 존재할 경우 */
+        mockMvc.perform((get("/pingpong/vip").contentType(MediaType.APPLICATION_JSON)
+                        .param("page","1"))
+                        .header("Authorization", "Bearer " + 0)) // header 해줘야함
+                .andExpect(jsonPath("$.myRank").value()) //
+                .andExpect(jsonPath("$.currentPage").value(1)) //
+                .andExpect(jsonPath("$.totalPage").value(1)) //
+                .andExpect(jsonPath("$.rankList[0].userId").value()) //
+                .andExpect(jsonPath("$.rankList[0].statusMessage").value()) //
+                .andExpect(jsonPath("$.rankList[0].level").value()) //
+                .andExpect(jsonPath("$.rankList[0].exp").value()) //
+                .andExpect(status().isOk())
+                .andDo(document("vip-List"));
 
     }
 }
