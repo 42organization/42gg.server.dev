@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.team;
 
+import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,14 +19,9 @@ public class Team {
     private Integer id;
 
     @Setter
-    @OneToOne
-    @JoinColumn(name = "user1_id", referencedColumnName = "intra_id")
-    private User user1;
-
-    @Setter
-    @OneToOne
-    @JoinColumn(name = "user2_id", referencedColumnName = "intra_id")
-    private User user2;
+    @ManyToOne
+    @JoinColumn(name = "slot_id")
+    private Slot slot;
 
     @NotNull
     @Setter
@@ -46,10 +42,21 @@ public class Team {
     @Column(name = "win")
     private Boolean win;
 
+    @Setter
+    @OneToOne
+    @JoinColumn(name = "user1_id", referencedColumnName = "intra_id")
+    private User user1;
+
+    @Setter
+    @OneToOne
+    @JoinColumn(name = "user2_id", referencedColumnName = "intra_id")
+    private User user2;
+
     @Builder
-    public Team(User user1, User user2, Integer teamPpp, Integer headCount, Integer score, Boolean win) {
+    public Team(User user1, User user2, Slot slot, Integer teamPpp, Integer headCount, Integer score, Boolean win) {
         this.user1 = user1;
         this.user2 = user2;
+        this.slot = slot;
         this.teamPpp = teamPpp;
         this.headCount = headCount;
         this.score = score;

@@ -10,6 +10,8 @@ import io.pp.arcade.domain.game.dto.GameDto;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.slot.dto.SlotDto;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.domain.user.dto.UserDto;
@@ -30,6 +32,7 @@ public class CurrentMatchService {
     private final UserRepository userRepository;
     private final GameRepository gameRepository;
     private final SlotRepository slotRepository;
+    private final SlotTeamUserRepository slotTeamUserRepository;
 
     @Transactional
     public void addCurrentMatch(CurrentMatchAddDto addDto){
@@ -45,9 +48,11 @@ public class CurrentMatchService {
 
     @Transactional
     public void modifyCurrentMatch(CurrentMatchModifyDto modifyDto){
-        CurrentMatch currentMatch = currentMatchRepository.findByUserId(modifyDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
-        currentMatch.setIsMatched(modifyDto.getIsMatched());
-        currentMatch.setMatchImminent(modifyDto.getMatchImminent());
+        List<CurrentMatch> currentMatchList = currentMatchRepository.findAllBySlotId(modifyDto.getSlotId());
+        currentMatchList.forEach(currentMatch -> {
+            currentMatch.setMatchImminent(modifyDto.getMatchImminent());
+            currentMatch.setIsMatched(modifyDto.getIsMatched());
+        });
     }
 
     @Transactional
@@ -96,16 +101,22 @@ public class CurrentMatchService {
 
     @Transactional
     public List<CurrentMatchDto> findCurrentMatchByGame(CurrentMatchFindDto findDto) {
-        Game game = gameRepository.findById(findDto.getGame().getId()).orElseThrow(() -> new BusinessException("E0001"));
-        List<CurrentMatch> matches = currentMatchRepository.findAllByGame(game);
+        List<CurrentMatch> matches = currentMatchRepository.findAllByGameId(findDto.getGame().getId());
         List<CurrentMatchDto> currentMatchDtos = matches.stream().map(CurrentMatchDto::from).collect(Collectors.toList());
         return currentMatchDtos;
     }
 
     @Transactional
     public void removeCurrentMatch(CurrentMatchRemoveDto removeDto) {
-        User user = userRepository.findById(removeDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
-        currentMatchRepository.deleteByUser(user);
+        if (removeDto.getSlotId() == null) {
+            User user = userRepository.findById(removeDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+            currentMatchRepository.deleteByUser(user);
+        } else {
+            List<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllBySlotId(removeDto.getSlotId());
+            slotTeamUsers.forEach(slotTeamUser -> {
+                slotTeamUserRepository.delete(slotTeamUser);
+            } );
+        }
     }
 
     @Transactional

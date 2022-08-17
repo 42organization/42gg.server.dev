@@ -24,8 +24,8 @@ spring:
     oauth2.client:
       registration:
         42:
-          client-id: "07036ff026b85153a047cf5188ce23a007d3e645b3293f71c4267f7c90917e04"
-          client-secret: "b98634d8305b9d6a4750427bc3d6ecc403a7394916facb4947b4d9377b506bc7"
+          client-id: "353cdada0d271c99afd647ecb5c77f257750a212e40b613fe6847985bc1f21c6"
+          client-secret: "126a9ebf21bb84857bbae746af4f36ba74eefd24af9bceee5abd7cbe6530f5ce"
 
   # Redis 설정
   cache:

@@ -96,8 +96,6 @@ class UserControllerTest {
 
     CurrentMatch currentMatch;
     CurrentMatch currentMatch2;
-    Team team1;
-    Team team2;
 
     User[] users;
     RankRedis[] ranks;
@@ -121,19 +119,17 @@ class UserControllerTest {
         user4 = userRepository.findByIntraId("kipark").orElse(null);
 
         PChange pChange;
-        Team team1 = teamRepository.save(Team.builder().teamPpp(0)
-                .user1(user).headCount(1).score(0).build());
-        Team team2 = teamRepository.save(Team.builder().teamPpp(0)
-                .user1(user2).headCount(1).score(0).build());
         Slot slot = slotRepository.save(Slot.builder()
-                .team1(team1)
-                .team2(team2)
                 .headCount(2)
                 .type(GameType.SINGLE)
                 .tableId(1)
                 .time(LocalDateTime.now().plusDays(1))
                 .gamePpp(50)
                 .build());
+        Team team1 = teamRepository.save(Team.builder().teamPpp(0)
+                .user1(user).headCount(1).score(0).slot(slot).build());
+        Team team2 = teamRepository.save(Team.builder().teamPpp(0)
+                .user1(user2).headCount(1).score(0).slot(slot).build());
         game = gameRepository.save(Game.builder().slot(slot).team1(team1).team2(team2).type(slot.getType()).time(slot.getTime()).season(1).status(StatusType.END).build());
         userGame = gameRepository.save(Game.builder().slot(slot).team1(team1).team2(team2).type(slot.getType()).time(slot.getTime()).season(1).status(StatusType.END).build());
 

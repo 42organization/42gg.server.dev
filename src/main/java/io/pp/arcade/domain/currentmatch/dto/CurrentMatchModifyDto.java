@@ -7,7 +7,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class CurrentMatchModifyDto {
-    private Integer userId;
+    private Integer slotId;
     private Boolean isMatched;
     private Boolean matchImminent;
     private GameDto gameDto;
@@ -15,7 +15,7 @@ public class CurrentMatchModifyDto {
     @Override
     public String toString() {
         return "CurrentMatchModifyDto{" +
-                "userId=" + userId +
+                "slotId=" + slotId +
                 ", isMatched=" + isMatched +
                 ", matchImminent=" + matchImminent +
                 ", gameDto=" + gameDto +
