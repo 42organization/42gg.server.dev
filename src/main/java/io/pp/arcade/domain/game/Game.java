@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.Mode;
 import io.pp.arcade.global.type.StatusType;
 import lombok.Builder;
 import lombok.Getter;
@@ -54,8 +55,12 @@ public class Game {
     @Column(name = "status")
     private StatusType status;
 
+    @NotNull
+    @Setter
+    @Column(name = "mode")
+    private Mode mode;
     @Builder
-    public Game(Slot slot, Team team1, Team team2, GameType type, LocalDateTime time, Integer season, StatusType status) {
+    public Game(Slot slot, Team team1, Team team2, GameType type, LocalDateTime time, Integer season, StatusType status, Mode mode) {
         this.slot = slot;
         this.team1 = team1;
         this.team2 = team2;
@@ -63,5 +68,6 @@ public class Game {
         this.time = time;
         this.season = season;
         this.status = status;
+        this.mode = mode;
     }
 }
