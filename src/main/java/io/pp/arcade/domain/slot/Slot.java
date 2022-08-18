@@ -3,6 +3,7 @@ package io.pp.arcade.domain.slot;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.Mode;
 import io.pp.arcade.global.type.SlotStatusType;
 import io.pp.arcade.global.util.BaseTimeEntity;
 import lombok.Builder;
@@ -54,8 +55,13 @@ public class Slot extends BaseTimeEntity {
     @Column(name = "type")
     private GameType type;
 
+    @NotNull
+    @Setter
+    @Column(name = "mode")
+    private Mode mode;
+
     @Builder
-    public Slot(Integer tableId, Team team1, Team team2, LocalDateTime time, Integer gamePpp, Integer headCount, GameType type) {
+    public Slot(Integer tableId, Team team1, Team team2, LocalDateTime time, Integer gamePpp, Integer headCount, GameType type, Mode mode) {
         this.tableId = tableId;
         this.team1 = team1;
         this.team2 = team2;
@@ -63,5 +69,6 @@ public class Slot extends BaseTimeEntity {
         this.gamePpp = gamePpp;
         this.headCount = headCount;
         this.type = type;
+        this.mode = mode;
     }
 }
