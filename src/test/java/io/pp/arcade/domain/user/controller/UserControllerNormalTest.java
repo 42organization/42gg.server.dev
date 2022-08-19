@@ -71,7 +71,7 @@ class UserControllerNormalTest {
                 .andExpect(jsonPath("$.level").equals()) // 레벨
                 .andExpect(jsonPath("$.currentExp").equals()) // 현재 경험치
                 .andExpect(jsonPath("$.maxExp").equals()) // 현재 레벨 최대 경험치
-                .andDo(document("user-profile-detail"));
+                .andDo(document("user-profile-detail")));
     }
 
     @Test
@@ -86,7 +86,7 @@ class UserControllerNormalTest {
                 .andExpect(jsonPath("$.wins").equals()) // 승리
                 .andExpect(jsonPath("$.losses").equals()) // 패배
                 .andExpect(jsonPath("$.winRate").equals()) // 승률
-                .andDo(document("user-profile-rank"));
+                .andDo(document("user-profile-rank")));
     }
 
     @Test
@@ -99,7 +99,7 @@ class UserControllerNormalTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.event").isEmpty())
                 .andExpect(jsonPath("$.mode").equals()) // enum 추가
-                .andDo(document("user-live"));
+                .andDo(document("user-live")));
     }
 
 }
