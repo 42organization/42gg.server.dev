@@ -570,7 +570,7 @@ class GameControllerNormalTest {
                 .andExpect(jsonPath("$.games").isEmpty())
                 .andExpect(jsonPath("$.lastGameId").value(0))
                 .andExpect(status().isOk())
-                .andDo(document("user-game-find-all-results-theres-no-game-record"));
+                .andDo(document("user-game-find-all-results-theres-no-game-record")));
 
         /*
          * 사용자 - 랭크, 노말 다 잘 나오는지
@@ -584,7 +584,7 @@ class GameControllerNormalTest {
                 .header("Authorization", "Bearer 0")
                 .andExpect(jsonPath().value())
                 .andExpect(status().isOk())
-                .andDo(document("user-game-find-all-results"));
+                .andDo(document("user-game-find-all-results")));
     }
 
     @Test
@@ -617,7 +617,7 @@ class GameControllerNormalTest {
                 .andExpect(jsonPath("$.games").isEmpty())
                 .andExpect(jsonPath("$.lastGameId").value(0))
                 .andExpect(status().isOk())
-                .andDo(document("user-game-find-rank-results-theres-no-game-record"));
+                .andDo(document("user-game-find-rank-results-theres-no-game-record")));
 
         /*
          * 사용자 - 랭크만 잘 나오는지
@@ -631,7 +631,7 @@ class GameControllerNormalTest {
                 .header("Authorization", "Bearer 0")
                 .andExpect(jsonPath().value())
                 .andExpect(status().isOk())
-                .andDo(document("user-game-find-rank-results"));
+                .andDo(document("user-game-find-rank-results")));
     }
 
     @Test
@@ -664,7 +664,7 @@ class GameControllerNormalTest {
                 .andExpect(jsonPath("$.games").isEmpty())
                 .andExpect(jsonPath("$.lastGameId").value(0))
                 .andExpect(status().isOk())
-                .andDo(document("user-game-find-all-results-theres-no-game-record"));
+                .andDo(document("user-game-find-all-results-theres-no-game-record")));
 
         /*
          * 사용자 - 노말만 잘 나오는지
@@ -678,7 +678,7 @@ class GameControllerNormalTest {
                 .header("Authorization", "Bearer 0")
                 .andExpect(jsonPath().value())
                 .andExpect(status().isOk())
-                .andDo(document("user-game-find-normal-results"));
+                .andDo(document("user-game-find-normal-results")));
     }
 
 }
