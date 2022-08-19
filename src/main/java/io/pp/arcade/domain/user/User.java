@@ -52,14 +52,20 @@ public class User extends BaseTimeEntity implements Serializable {
     @Column(name = "role_type")
     private RoleType roleType;
 
+    @NotNull
+    @Setter
+    @Column(name = "total_exp")
+    private Integer totalExp;
+
     @Builder
-    public User(String intraId, String eMail, String imageUri, RacketType racketType, String statusMessage, Integer ppp, RoleType roleType) {
+    public User(String intraId, String eMail, String imageUri, RacketType racketType, String statusMessage, Integer ppp, RoleType roleType, Integer totalExp) {
         this.intraId = intraId;
         this.eMail = eMail;
         this.imageUri = imageUri;
         this.racketType = racketType;
         this.statusMessage = statusMessage;
         this.roleType = roleType;
+        this.totalExp = totalExp;
         this.ppp = ppp;
     }
 }

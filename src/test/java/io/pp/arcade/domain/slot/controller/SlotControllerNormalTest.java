@@ -56,7 +56,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(RestDocsConfiguration.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @RecordApplicationEvents
-class SlotControllerNormalTest {
+class   SlotControllerNormalTest {
 
 
     @Autowired
