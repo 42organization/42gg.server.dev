@@ -8,6 +8,8 @@ import io.pp.arcade.domain.season.SeasonRepository;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.slot.dto.SlotDto;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.global.exception.BusinessException;
@@ -30,6 +32,7 @@ public class GameService {
     private final TeamRepository teamRepository;
     private final SlotRepository slotRepository;
     private final SeasonRepository seasonRepository;
+    private final SlotTeamUserRepository slotTeamUserRepository;
 
     @Transactional
     public GameDto findById(Integer gameId) {
@@ -44,12 +47,8 @@ public class GameService {
         SlotDto slotDto = addDto.getSlotDto();
         Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(LocalDateTime.now(), LocalDateTime.now()).orElse(null);
         Slot slot = slotRepository.findById(slotDto.getId()).orElseThrow(() -> new BusinessException("E0001"));
-        Team team1 = teamRepository.findById(slotDto.getTeam1().getId()).orElseThrow(() -> new BusinessException("E0001"));
-        Team team2 = teamRepository.findById(slotDto.getTeam2().getId()).orElseThrow(() -> new BusinessException("E0001"));
         gameRepository.save(Game.builder()
                 .slot(slot)
-                .team1(team1)
-                .team2(team2)
                 .type(slotDto.getType())
                 .time(slotDto.getTime())
                 .status(StatusType.LIVE)
@@ -82,9 +81,9 @@ public class GameService {
     public GameResultPageDto findGamesAfterId(GameFindDto findDto) {
         Page<Game> games;
         if (findDto.getStatus() != null) {
-            games = gameRepository.findByIdLessThanAndStatusOrderByTimeDesc(findDto.getId(), findDto.getStatus(), findDto.getPageable());
+            games = gameRepository.findByIdLessThanAndStatusOrderByIdDesc(findDto.getId(), findDto.getStatus(), findDto.getPageable());
         } else {
-            games = gameRepository.findByIdLessThanOrderByTimeDesc(findDto.getId(), findDto.getPageable());
+            games = gameRepository.findByIdLessThanOrderByIdDesc(findDto.getId(), findDto.getPageable());
         }
         List<GameDto> gameDtoList = games.stream().map(GameDto::from).collect(Collectors.toList());
 
@@ -101,8 +100,6 @@ public class GameService {
         Slot slot = slotRepository.findById(createDto.getSlotId()).orElseThrow(null);
         Game game = Game.builder()
                 .slot(slot)
-                .team1(slot.getTeam1())
-                .team2(slot.getTeam2())
                 .time(slot.getTime())
                 .season(createDto.getSeasonId())
                 .time(slot.getTime())

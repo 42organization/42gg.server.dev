@@ -10,7 +10,11 @@ import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.pchange.PChange;
 import io.pp.arcade.domain.pchange.PChangeRepository;
 import io.pp.arcade.domain.slot.Slot;
+import io.pp.arcade.domain.slot.SlotRepository;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.team.Team;
+import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.StatusType;
@@ -29,7 +33,9 @@ import org.springframework.util.MultiValueMap;
 
 import javax.transaction.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -50,8 +56,19 @@ class GameControllerTest {
     private GameRepository gameRepository;
     @Autowired
     private CurrentMatchRepository currentMatchRepository;
+
+    @Autowired
+    private SlotRepository slotRepository;
+
+    @Autowired
+    private SlotTeamUserRepository slotTeamUserRepository;
+
     @Autowired
     TestInitiator initiator;
+
+    @Autowired
+    private TeamRepository teamRepository;
+
     private final int GAMESIZE = 200;
     @Autowired
     private PChangeRepository pChangeRepository;
@@ -71,13 +88,92 @@ class GameControllerTest {
         slots = initiator.slots;
         endGames = new Game[GAMESIZE - 2];
 
+        Slot[] slotList = new Slot[GAMESIZE];
+
+        for (int i = 0; i < GAMESIZE - 2; i++) {
+            slotList[i] = slotRepository.save(Slot.builder()
+                    .time(LocalDateTime.now().plusMinutes(i))
+                    .headCount(2)
+                    .tableId(1)
+                    .gamePpp(1000)
+                    .type(GameType.SINGLE)
+                    .build());
+            for (int j = 0; j < 2; j++) {
+                Team team = teamRepository.save(Team.builder()
+                        .slot(slotList[i])
+                        .score(j + 1)
+                        .headCount(1)
+                        .win(j == 0)
+                        .teamPpp(1000)
+                        .build());
+                slotTeamUserRepository.save(SlotTeamUser.builder()
+                        .slot(slotList[i])
+                        .team(team)
+                        .user(users[j])
+                        .build());
+            }
+        }
+        slotList[GAMESIZE - 2] = slotRepository.save(Slot.builder()
+                .time(LocalDateTime.now().plusMinutes(GAMESIZE - 2))
+                .headCount(2)
+                .tableId(1)
+                .gamePpp(1000)
+                .type(GameType.SINGLE)
+                .build());
+        for (int i = 0; i < 2; i++) {
+            Team team = teamRepository.save(Team.builder()
+                    .slot(slotList[GAMESIZE - 2])
+                    .score(i + 1)
+                    .headCount(1)
+                    .win(i == 0)
+                    .teamPpp(1000)
+                    .build());
+            slotTeamUserRepository.save(SlotTeamUser.builder()
+                    .slot(slotList[GAMESIZE - 2])
+                    .team(team)
+                    .user(users[i + 6])
+                    .build());
+        }
+        /*
+        * endGames : user0, user1
+        * doubleGames : user2, 3, 4, 5
+        * liveGame : user0, 1
+        * waitGame : user6, 7
+        * */
+        slotList[GAMESIZE - 1] = slotRepository.save(Slot.builder()
+                .time(LocalDateTime.now().plusMinutes(GAMESIZE - 1))
+                .headCount(2)
+                .tableId(1)
+                .gamePpp(1000)
+                .type(GameType.DOUBLE)
+                .build());
+        for (int j = 0; j < 2; j++) {
+            Team team = teamRepository.save(Team.builder()
+                    .slot(slotList[GAMESIZE - 1])
+                    .score(j + 1)
+                    .headCount(2)
+                    .win(j == 0)
+                    .teamPpp(1000)
+                    .build());
+            slotTeamUserRepository.save(SlotTeamUser.builder()
+                    .slot(slotList[GAMESIZE - 1])
+                    .team(team)
+                    .user(users[2 + j * 2])
+                    .build());
+            slotTeamUserRepository.save(SlotTeamUser.builder()
+                    .slot(slotList[GAMESIZE - 1])
+                    .team(team)
+                    .user(users[2 + j * 2 + 1])
+                    .build());
+        }
+
         for (int i = 0; i < GAMESIZE - 2; i++){
-            endGames[i] = gameRepository.save(Game.builder().slot(slots[0]).team1(teams[0]).team2(teams[1]).type(GameType.SINGLE).time(slots[0].getTime().plusMinutes(i * 10)).season(1).status(StatusType.END).build());
+            endGames[i] = gameRepository.save(Game.builder().slot(slotList[i]).season(1).status(StatusType.END).build());
         }
         // double, wait, live 순으로
-        doubleGame = gameRepository.save(Game.builder().slot(slots[10]).team1(teams[4]).team2(teams[5]).type(GameType.DOUBLE).time(slots[0].getTime().plusMinutes(GAMESIZE * 10 + 10)).season(1).status(StatusType.WAIT).build());
-        waitGame = gameRepository.save(Game.builder().slot(slots[0]).team1(teams[0]).team2(teams[1]).type(GameType.SINGLE).time(slots[0].getTime().plusMinutes(GAMESIZE * 10 + 20)).season(1).status(StatusType.WAIT).build());
-        liveGame = gameRepository.save(Game.builder().slot(slots[0]).team1(teams[0]).team2(teams[1]).type(GameType.SINGLE).time(slots[0].getTime().plusMinutes(GAMESIZE * 10 + 30)).season(1).status(StatusType.LIVE).build());
+        liveGame = gameRepository.save(Game.builder().slot(slotList[GAMESIZE - 3]).season(1).status(StatusType.LIVE).build());
+        waitGame = gameRepository.save(Game.builder().slot(slotList[GAMESIZE - 2]).season(1).status(StatusType.WAIT).build());
+        doubleGame = gameRepository.save(Game.builder().slot(slotList[GAMESIZE - 1]).season(1).status(StatusType.WAIT).build());
 
         /* pChange 생성 */
         for (int i = 0; i < GAMESIZE - 2; i++){
@@ -89,22 +185,20 @@ class GameControllerTest {
         * -> 단식,복식 게임 생성
         * -> matchTable에 단식 복식 유저 등록
         * */
-        currentMatchRepository.save(CurrentMatch.builder().matchImminent(true).isMatched(true)
-                .game(endGames[0]).slot(endGames[0].getSlot()).user(users[0]).build());
-        currentMatchRepository.save(CurrentMatch.builder().matchImminent(true).isMatched(true)
-                .game(doubleGame).slot(doubleGame.getSlot()).user(users[4]).build());
+        List<SlotTeamUser> liveUsers = slotTeamUserRepository.findAllBySlotId(slotList[GAMESIZE - 3].getId());
+        for (SlotTeamUser liveUser : liveUsers) {
+            currentMatchRepository.save(CurrentMatch.builder().user(liveUser.getUser()).slot(liveUser.getSlot()).game(liveGame).build());
+        }
+        List<SlotTeamUser> wiatUsers = slotTeamUserRepository.findAllBySlotId(slotList[GAMESIZE - 2].getId());
+        for (SlotTeamUser wiatUser : wiatUsers) {
+            currentMatchRepository.save(CurrentMatch.builder().user(wiatUser.getUser()).slot(wiatUser.getSlot()).game(waitGame).build());
+        }
+        List<SlotTeamUser> doubleGameUsers = slotTeamUserRepository.findAllBySlotId(slotList[GAMESIZE - 1].getId());
+        for (SlotTeamUser doubleGameUser : doubleGameUsers) {
+            currentMatchRepository.save(CurrentMatch.builder().user(doubleGameUser.getUser()).slot(doubleGameUser.getSlot()).game(doubleGame).build());
+        }
     }
 
-
-    @Transactional
-    void addUserInTeam(Team team, User user, boolean is1){
-        if (is1)
-            team.setUser1(user);
-        else
-            team.setUser2(user);
-        team.setTeamPpp(user.getPpp());
-        team.setHeadCount(1);
-    }
 
     @Transactional
     void addCurrentMatch(Game game, User user) {
@@ -118,17 +212,24 @@ class GameControllerTest {
     }
 
     @Transactional
-    Game saveGame(Slot slot, Team team1, Team team2) {
+    Game saveGame(Slot slot, User user1, User user2) {
+        List<Team> teamList = teamRepository.findAllBySlotId(slot.getId());
+        slotTeamUserRepository.save(SlotTeamUser.builder().slot(slot).team(teamList.get(0)).user(user1).build());
+        slotTeamUserRepository.save(SlotTeamUser.builder().slot(slot).team(teamList.get(1)).user(user2).build());
+        slot.setType(GameType.SINGLE);
+        slot = slotRepository.findById(slot.getId()).orElse(null);
         Game game = Game.builder()
                 .slot(slot)
-                .team1(team1)
-                .team2(team2)
-                .type(GameType.DOUBLE)
+                .type(slot.getType())
                 .time(slot.getTime())
                 .season(1)
                 .status(StatusType.LIVE)
                 .build();
-        gameRepository.save(game);
+        game = gameRepository.save(game);
+        currentMatchRepository.save(CurrentMatch.builder().matchImminent(true).isMatched(true)
+                .game(game).slot(slot).user(user1).build());
+        currentMatchRepository.save(CurrentMatch.builder().matchImminent(true).isMatched(true)
+                .game(game).slot(slot).user(user2).build());
         return game;
     }
 
@@ -170,7 +271,7 @@ class GameControllerTest {
          * -> 400
          * */
         mockMvc.perform(get("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
-                .header("Authorization", "Bearer " + initiator.tokens[3].getAccessToken()))
+                .header("Authorization", "Bearer " + initiator.tokens[10].getAccessToken()))
                 .andExpect(status().isBadRequest())
                 .andDo(document("game-find-result-4XXError-cause-no-exists"));
         /*
@@ -195,15 +296,15 @@ class GameControllerTest {
          * -> 200
          * */
         mockMvc.perform(get("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + initiator.tokens[4].getAccessToken()))
-                .andExpect(jsonPath("$.myTeam[0].intraId").value(users[4].getIntraId()))
-                .andExpect(jsonPath("$.myTeam[0].userImageUri").value(users[4].getImageUri()))
-                .andExpect(jsonPath("$.myTeam[1].intraId").value(users[5].getIntraId()))
-                .andExpect(jsonPath("$.myTeam[1].userImageUri").value(users[5].getImageUri()))
-                .andExpect(jsonPath("$.enemyTeam[0].intraId").value(users[6].getIntraId()))
-                .andExpect(jsonPath("$.enemyTeam[0].userImageUri").value(users[6].getImageUri()))
-                .andExpect(jsonPath("$.enemyTeam[1].intraId").value(users[7].getIntraId()))
-                .andExpect(jsonPath("$.enemyTeam[1].userImageUri").value(users[7].getImageUri()))
+                        .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
+                .andExpect(jsonPath("$.myTeam[0].intraId").value(users[2].getIntraId()))
+                .andExpect(jsonPath("$.myTeam[0].userImageUri").value(users[2].getImageUri()))
+                .andExpect(jsonPath("$.myTeam[1].intraId").value(users[3].getIntraId()))
+                .andExpect(jsonPath("$.myTeam[1].userImageUri").value(users[3].getImageUri()))
+                .andExpect(jsonPath("$.enemyTeam[0].intraId").value(users[4].getIntraId()))
+                .andExpect(jsonPath("$.enemyTeam[0].userImageUri").value(users[4].getImageUri()))
+                .andExpect(jsonPath("$.enemyTeam[1].intraId").value(users[5].getIntraId()))
+                .andExpect(jsonPath("$.enemyTeam[1].userImageUri").value(users[5].getImageUri()))
                 .andExpect(status().isOk())
                 .andDo(document("game-find-results-double"));
     }
@@ -332,9 +433,9 @@ class GameControllerTest {
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                 .params(params6)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(jsonPath("$.games[0].gameId").value(liveGame.getId()))
+                .andExpect(jsonPath("$.games[2].gameId").value(liveGame.getId()))
                 .andExpect(jsonPath("$.games[1].gameId").value(waitGame.getId()))
-                .andExpect(jsonPath("$.games[2].gameId").value(doubleGame.getId()))
+                .andExpect(jsonPath("$.games[0].gameId").value(doubleGame.getId()))
                 .andExpect(jsonPath("$.games[3].gameId").value(endGames[endGames.length - 1].getId()))
                 .andExpect(jsonPath("$.games.length()").value(20))
                 .andExpect(status().isOk())
@@ -350,9 +451,9 @@ class GameControllerTest {
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                 .params(params7)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(jsonPath("$.games[0].gameId").value(liveGame.getId()))
+                .andExpect(jsonPath("$.games[2].gameId").value(liveGame.getId()))
                 .andExpect(jsonPath("$.games[1].gameId").value(waitGame.getId()))
-                .andExpect(jsonPath("$.games[2].gameId").value(doubleGame.getId()))
+                .andExpect(jsonPath("$.games[0].gameId").value(doubleGame.getId()))
                 .andExpect(jsonPath("$.games[3].gameId").value(endGames[endGames.length - 1].getId()))
                 .andExpect(jsonPath("$.games.length()").value(20))
                 .andExpect(status().isOk())
@@ -413,18 +514,12 @@ class GameControllerTest {
     @DisplayName("게임 결과 저장 - /games/result")
     void gameResultSave() throws Exception {
 
-        Team team1 = slots[1].getTeam1();
-        Team team2 = slots[1].getTeam2();
-        addUserInTeam(team1, users[2], true);
-        addUserInTeam(team2, users[3], true);
-        Game game = saveGame(slots[1], team1, team2);
-        addCurrentMatch(game, users[2]);
-        addCurrentMatch(game, users[3]);
+        Game game = saveGame(slots[1], users[8], users[9]);
         Map<String, String> body1 = new HashMap<>();
 
 //        - Score값이 null인 경우
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
-                        .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
+                        .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isBadRequest())
                 .andDo(document("game-result-save-Error-cause-score-is-null"));
 
@@ -434,7 +529,7 @@ class GameControllerTest {
         body2.put("enemyTeamScore", "1");
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body2))
-                        .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
+                        .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isBadRequest())
                 .andDo(document("game-result-save-Error-cause-score-is-bigger-than-3"));
 
@@ -444,7 +539,7 @@ class GameControllerTest {
         body3.put("enemyTeamScore", "1");
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body3))
-                        .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
+                        .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isBadRequest())
                 .andDo(document("game-result-save-Error-cause-score-1:1"));
 
@@ -454,7 +549,7 @@ class GameControllerTest {
         body4.put("enemyTeamScore", "2");
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body4))
-                        .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
+                        .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isBadRequest())
                 .andDo(document("game-result-save-Error-cause-score-sum-is-bigger-than-4"));
 
@@ -464,7 +559,7 @@ class GameControllerTest {
         body5.put("enemyTeamScore", "-3");
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body5))
-                        .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
+                        .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isBadRequest())
                 .andDo(document("game-result-save-Error-cause-score-is-negative"));
 
@@ -474,7 +569,7 @@ class GameControllerTest {
         body6.put("enemyTeamScore", "2");
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body6))
-                        .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
+                        .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isBadRequest())
                 .andDo(document("game-result-save-Error-cause-score-is-decimal"));
 
@@ -484,7 +579,7 @@ class GameControllerTest {
         body7.put("enemyTeamScore", "lose");
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body7))
-                        .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
+                        .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isBadRequest())
                 .andDo(document("game-result-save-Error-cause-score-is-not-integer"));
 
@@ -494,7 +589,7 @@ class GameControllerTest {
         body8.put("enemyTeamScore", "0");
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body8))
-                        .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
+                        .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isCreated())
                 .andDo(document("game-result-save-isCreated"));
 
@@ -505,7 +600,7 @@ class GameControllerTest {
         body9.put("enemyTeamScore", "1");
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body9))
-                        .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
+                        .header("Authorization", "Bearer " + initiator.tokens[9].getAccessToken()))
                 .andExpect(status().isAccepted())
                 .andDo(document("game-result-save-isAccepted"));
 
@@ -514,7 +609,7 @@ class GameControllerTest {
         params.add("count", "20");
         mockMvc.perform(get("/pingpong/users/{intraId}/games", users[2].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                 .params(params)
-                .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
+                .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isOk())
                 .andDo(document("game-find-results-only-user-request"));
     }

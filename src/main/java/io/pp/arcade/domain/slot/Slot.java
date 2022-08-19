@@ -29,16 +29,6 @@ public class Slot extends BaseTimeEntity {
     private Integer tableId;
 
     @NotNull
-    @OneToOne
-    @JoinColumn(name = "team1_id")
-    private Team team1;
-
-    @NotNull
-    @OneToOne
-    @JoinColumn(name = "team2_id")
-    private Team team2;
-
-    @NotNull
     @Column(name = "time")
     private LocalDateTime time;
 
@@ -50,6 +40,14 @@ public class Slot extends BaseTimeEntity {
     @Setter
     @Column(name = "head_count")
     private Integer headCount;
+
+    @ManyToOne
+    @JoinColumn(name = "team1_id")
+    private Team team1;
+
+    @ManyToOne
+    @JoinColumn(name = "team2_id")
+    private Team team2;
 
     @Setter
     @Column(name = "type")

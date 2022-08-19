@@ -8,12 +8,14 @@ import lombok.Getter;
 @Builder
 public class CurrentMatchRemoveDto {
     private Integer userId;
+    private Integer slotId;
     private GameDto game;
 
     @Override
     public String toString() {
         return "CurrentMatchRemoveDto{" +
                 "userId=" + userId +
+                ", slotId=" + slotId +
                 ", game=" + game +
                 '}';
     }

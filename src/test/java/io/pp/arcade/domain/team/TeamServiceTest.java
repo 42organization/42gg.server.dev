@@ -1,11 +1,16 @@
 package io.pp.arcade.domain.team;
 
 import io.pp.arcade.TestInitiator;
+import io.pp.arcade.domain.slot.Slot;
+import io.pp.arcade.domain.slot.SlotRepository;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.team.dto.*;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.GameType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 
 @SpringBootTest
 class TeamServiceTest {
@@ -20,11 +26,18 @@ class TeamServiceTest {
     TeamRepository teamRepository;
     @Autowired
     TeamService teamService;
+
+    @Autowired
+    SlotRepository slotRepository;
+
     @Autowired
     UserService userService;
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    SlotTeamUserRepository slotTeamUserRepository;
 
     @Autowired
     TestInitiator testInitiator;
@@ -43,21 +56,36 @@ class TeamServiceTest {
         testInitiator.letsgo();
         user1 = userRepository.findByIntraId("hakim").orElse(null);
         user2 = userRepository.findByIntraId("daekim").orElse(null);
+
+        Slot slot1 = slotRepository.save(Slot.builder()
+                .gamePpp(0)
+                .type(GameType.SINGLE)
+                .tableId(1)
+                .time(LocalDateTime.now())
+                .headCount(0)
+                .build());
+        Slot slot2 = slotRepository.save(Slot.builder()
+                .gamePpp(0)
+                .type(GameType.SINGLE)
+                .tableId(1)
+                .time(LocalDateTime.now())
+                .headCount(0)
+                .build());
         team0 = teamRepository.save(Team.builder()
                 .teamPpp(0)
+                .slot(slot1)
                 .headCount(0)
                 .score(0)
                 .build());
         team1 = teamRepository.save(Team.builder()
                 .teamPpp(user1.getPpp())
-                .user1(user1)
+                .slot(slot1)
                 .headCount(1)
                 .score(0)
                 .build());
         team2 = teamRepository.save(Team.builder()
                 .teamPpp((user1.getPpp() + user2.getPpp()) / 2)
-                .user1(user1)
-                .user2(user2)
+                .slot(slot2)
                 .headCount(2)
                 .score(0)
                 .build());
@@ -110,13 +138,21 @@ class TeamServiceTest {
     void removeUserInTeam() {
         //given
         TeamRemoveUserDto dto = TeamRemoveUserDto.builder()
-                .teamId(team2.getId())
+                .slotId(team0.getSlot().getId())
                 .userId(user1.getId())
                 .build();
+        team0.setHeadCount(2);
+        team0.setTeamPpp((user1.getPpp() + user2.getPpp()) / 2);
+        team0 = teamRepository.findById(team0.getId()).orElseThrow(() -> new BusinessException("E0001"));
+        slotTeamUserRepository.save(SlotTeamUser.builder()
+                .slot(team0.getSlot())
+                .team(team0)
+                .user(user1)
+                .build());
 
         //when
         teamService.removeUserInTeam(dto);
-        Team team = teamRepository.findById(team2.getId()).orElseThrow(() -> new BusinessException("E0001"));
+        Team team = teamRepository.findById(team0.getId()).orElseThrow(() -> new BusinessException("E0001"));
 
         //then
         Assertions.assertThat(team.getHeadCount()).isEqualTo(1);

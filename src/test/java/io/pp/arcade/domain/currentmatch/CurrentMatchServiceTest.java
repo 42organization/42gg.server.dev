@@ -100,7 +100,7 @@ class CurrentMatchServiceTest {
                 .build());
         CurrentMatchModifyDto modifyDto = CurrentMatchModifyDto.builder()
                 .gameDto(GameDto.from(game))
-                .userId(user1.getId())
+                .slotId(slot.getId())
                 .isMatched(true)
                 .matchImminent(false)
                 .build();

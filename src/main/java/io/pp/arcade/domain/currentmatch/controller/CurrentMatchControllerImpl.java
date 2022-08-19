@@ -3,6 +3,7 @@ package io.pp.arcade.domain.currentmatch.controller;
 import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchResponseDto;
+import io.pp.arcade.domain.game.dto.GameUserInfoDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.TeamService;
@@ -53,15 +54,14 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
         boolean isMatch = false;
         Integer slotId = null;
 
-        if (currentMatch != null)
-        {
+        if (currentMatch != null) {
             SlotDto slot = currentMatch.getSlot();
             slotId = slot.getId();
             slotTime = slot.getTime();
             isMatch = currentMatch.getIsMatched();
             // 경기는 5분전이고 매치가 성사되었는가?
             if (currentMatch.getMatchImminent() && isMatch){
-                TeamPosDto teamPosDto = teamService.getTeamPosNT(curUser, slot.getTeam1(), slot.getTeam2());
+                TeamPosDto teamPosDto = teamService.findUsersByTeamPos(slot, curUser);
                 myTeam = getTeamUsersIntraIdList(teamPosDto.getMyTeam());
                 enemyTeam = getTeamUsersIntraIdList(teamPosDto.getEnemyTeam());
             }
@@ -76,13 +76,10 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
         return responseDto;
     }
 
-    private List<String> getTeamUsersIntraIdList(TeamDto teamDto) {
+    private List<String> getTeamUsersIntraIdList(List<GameUserInfoDto> infoDto) {
         List<String> teamUsers = new ArrayList<>();
-        UserDto user1 = teamDto.getUser1();
-        UserDto user2 = teamDto.getUser2();
-        teamUsers.add(user1.getIntraId());
-        if (user2 != null) {
-            teamUsers.add(user2.getIntraId());
+        for (GameUserInfoDto dto : infoDto) {
+            teamUsers.add(dto.getIntraId());
         }
         return teamUsers;
     }
