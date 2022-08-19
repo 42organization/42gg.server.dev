@@ -33,7 +33,6 @@ public class RankControllerImpl implements RankController {
         RankListDto rankListDto = rankRedisService.findRankList(RankFindListDto.builder().pageable(pageable).gameType(gameType).count(count).build());
         RankUserDto userRank = rankRedisService.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(gameType).build());
         RankListResponseDto rankListResponseDto = RankListResponseDto.builder()
-                    .myIntraId(user.getIntraId())
                     .myRank(userRank.getRank())
                     .currentPage(rankListDto.getCurrentPage())
                     .totalPage(rankListDto.getTotalPage())

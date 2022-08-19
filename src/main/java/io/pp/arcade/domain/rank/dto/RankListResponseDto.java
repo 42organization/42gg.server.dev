@@ -9,7 +9,6 @@ import java.util.List;
 @Getter
 @Builder
 public class RankListResponseDto {
-    private String myIntraId;
     private Integer myRank;
     private Integer currentPage;
     private Integer totalPage;
@@ -18,7 +17,6 @@ public class RankListResponseDto {
     @Override
     public String toString() {
         return "RankListResponseDto{" +
-                "myIntraId='" + myIntraId + '\'' +
                 ", myRank=" + myRank +
                 ", currentPage=" + currentPage +
                 ", totalPage=" + totalPage +
