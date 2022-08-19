@@ -7,8 +7,4 @@ public class Key {
     public static final String RANK_USER = "RANK:USER:";
     public static final String RANK_USER_ALL = "RANK:USER:*";
     public static final String PENALTY_USER = "PENALTY:USER:";
-    // 쓸 일이 있을까 싶어서?
-//    public static final String ALL = "all";
-//    public static final String NORMAL = "normal";
-//    public static final String RANK = "rank";
 }
