@@ -9,7 +9,9 @@ import java.util.Locale;
 @Getter
 @RequiredArgsConstructor
 public enum SlotStatusType implements Constant {
-    OPEN("open"), CLOSE("close"), MYTABLE("mytable");
+    OPEN("open"),
+    CLOSE("close"),
+    MYTABLE("mytable");
 
     private final String code;
 
