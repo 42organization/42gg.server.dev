@@ -4,6 +4,7 @@ import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchModifyDto;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
+import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.GameType;
@@ -51,27 +52,13 @@ public class CurrentMatchUpdater extends AbstractScheduler {
         }
         Integer maxHeadCount = GameType.SINGLE.equals(slot.getType()) ? 2 : 4;
         if (maxHeadCount.equals(slot.getHeadCount())) {
-            TeamDto team1 = slot.getTeam1();
-            TeamDto team2 = slot.getTeam2();
-
-            currentMatchSetter(team1.getUser1());
-            currentMatchSetter(team1.getUser2());
-            currentMatchSetter(team2.getUser1());
-            currentMatchSetter(team2.getUser2());
-            notiGenerater.addMatchNotisBySlot(slot);
-        }
-    }
-
-    private void currentMatchSetter(UserDto user) {
-
-        if (user != null) {
             CurrentMatchModifyDto modifyDto = CurrentMatchModifyDto.builder()
-                    .userId(user.getId())
+                    .slotId(slot.getId())
                     .isMatched(true)
                     .matchImminent(true)
                     .build();
-
             currentMatchService.modifyCurrentMatch(modifyDto);
+            notiGenerater.addMatchNotisBySlot(slot);
         }
     }
 

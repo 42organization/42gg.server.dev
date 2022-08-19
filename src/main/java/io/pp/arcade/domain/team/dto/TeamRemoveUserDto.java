@@ -6,13 +6,13 @@ import lombok.Getter;
 @Getter
 @Builder
 public class TeamRemoveUserDto {
-    private Integer teamId;
+    private Integer slotId;
     private Integer userId;
 
     @Override
     public String toString() {
         return "TeamRemoveUserDto{" +
-                "teamId=" + teamId +
+                "slotId=" + slotId +
                 ", userId=" + userId +
                 '}';
     }

@@ -24,31 +24,21 @@ public class NotiGenerater {
         Boolean isMatched = slot.getHeadCount().equals(maxSlotHeadCount) ? true : false;
         Boolean isImminent = isMatched && slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5)) ? true : false;
         if (isImminent == true) {
-            addNoti(slot.getTeam1().getUser1(), slot, NotiType.IMMINENT);
-            addNoti(slot.getTeam1().getUser2(), slot, NotiType.IMMINENT);
-            addNoti(slot.getTeam2().getUser1(), slot, NotiType.IMMINENT);
-            addNoti(slot.getTeam2().getUser2(), slot, NotiType.IMMINENT);
+            addNoti(null, slot, NotiType.IMMINENT);
         } else if (isMatched == true) {
-            addNoti(slot.getTeam1().getUser1(), slot, NotiType.MATCHED);
-            addNoti(slot.getTeam1().getUser2(), slot, NotiType.MATCHED);
-            addNoti(slot.getTeam2().getUser1(), slot, NotiType.MATCHED);
-            addNoti(slot.getTeam2().getUser2(), slot, NotiType.MATCHED);
+            addNoti(null, slot, NotiType.MATCHED);
         }
     }
 
     public void addCancelNotisBySlot(NotiCanceledTypeDto canceledTypeDto) throws MessagingException {
         SlotDto slot = canceledTypeDto.getSlotDto();
         NotiType notiType = canceledTypeDto.getNotiType();
-        addNoti(slot.getTeam1().getUser1(), slot, notiType);
-        addNoti(slot.getTeam1().getUser2(), slot, notiType);
-        addNoti(slot.getTeam2().getUser1(), slot, notiType);
-        addNoti(slot.getTeam2().getUser2(), slot, notiType);
+        addNoti(null, slot, notiType);
     }
 
     private void addNoti(UserDto user, SlotDto slot, NotiType type) throws MessagingException {
-        if (user != null) {
+        if (user == null) {
             NotiAddDto notiAddDto = NotiAddDto.builder()
-                    .user(user)
                     .slot(slot)
                     .type(type)
                     .build();

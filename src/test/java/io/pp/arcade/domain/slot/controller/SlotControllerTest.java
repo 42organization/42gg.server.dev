@@ -15,7 +15,10 @@ import io.pp.arcade.domain.noti.Noti;
 import io.pp.arcade.domain.noti.NotiRepository;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.team.Team;
+import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.global.type.*;
 import org.assertj.core.api.Assertions;
@@ -61,10 +64,16 @@ class SlotControllerTest {
     @Autowired
     private SlotRepository slotRepository;
 
+    @Autowired
+    private SlotTeamUserRepository slotTeamUserRepository;
+
     @Value("${spring.redis.host}")
     String host;
     @Value("${spring.redis.port}")
     String port;
+
+    @Autowired
+    private TeamRepository teamRepository;
 
 
     @Autowired
@@ -84,7 +93,6 @@ class SlotControllerTest {
         teams = testInitiator.teams;
         users = testInitiator.users;
         slots = testInitiator.slots;
-
     }
 
     @Transactional
@@ -128,6 +136,8 @@ class SlotControllerTest {
     @Transactional
     @DisplayName("슬롯 조회 - 빈 슬롯")
     void noSlots() throws Exception {
+        slotTeamUserRepository.deleteAll();
+        teamRepository.deleteAll();
         slotRepository.deleteAll();
         mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.SINGLE).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 10"))
@@ -396,9 +406,10 @@ class SlotControllerTest {
             Assertions.assertThat(slot.getGamePpp()).isEqualTo(user.getPpp());
             Assertions.assertThat(slot.getHeadCount()).isEqualTo(1);
             Assertions.assertThat(slot.getType()).isEqualTo(GameType.SINGLE);
-            Team team1 = slot.getTeam1();
-            Assertions.assertThat(team1.getUser1().getIntraId()).isEqualTo(user.getIntraId());
-            Assertions.assertThat(team1.getTeamPpp()).isEqualTo(user.getPpp());
+            SlotTeamUser slotTeamUser = slotTeamUserRepository.findSlotTeamUserBySlotIdAndUserId(slot.getId(), user.getId()).orElse(null);
+            Team team1 = slotTeamUser.getTeam();
+            Assertions.assertThat(slotTeamUser.getUser().getIntraId()).isEqualTo(user.getIntraId());
+            Assertions.assertThat(slotTeamUser.getTeam().getTeamPpp()).isEqualTo(user.getPpp());
             Assertions.assertThat(team1.getHeadCount()).isEqualTo(1);
             CurrentMatch user1CurrentMatch = currentMatchRepository.findByUser(user).orElse(null);
             Assertions.assertThat(user1CurrentMatch.getSlot().getId()).isEqualTo(slot.getId());
@@ -436,22 +447,21 @@ class SlotControllerTest {
                     .andExpect(status().isOk())
                     .andDo(document("slot-after-add-user-in-1(2)-check-other-user-view"));
             /* 슬롯 확인 */
-            slot = slotRepository.getById(slot.getId());
+            List<SlotTeamUser> slotTeamUser = slotTeamUserRepository.findAllBySlotId(slot.getId());
+            slot = slotTeamUser.get(0).getSlot();
             Assertions.assertThat(slot.getGamePpp()).isEqualTo((users[0].getPpp() + user.getPpp()) / 2);
             Assertions.assertThat(slot.getHeadCount()).isEqualTo(2);
             Assertions.assertThat(slot.getType()).isEqualTo(GameType.SINGLE);
 
-            Team team1 = slot.getTeam1();
-            Assertions.assertThat(team1.getUser1().getIntraId()).isEqualTo(users[0].getIntraId());
+            Team team1 = slotTeamUser.get(0).getTeam();
             Assertions.assertThat(team1.getTeamPpp()).isEqualTo(users[0].getPpp());
             Assertions.assertThat(team1.getHeadCount()).isEqualTo(1);
 
-            Team team2 = slot.getTeam2();
-            Assertions.assertThat(team2.getUser1().getIntraId()).isEqualTo(user.getIntraId());
+            Team team2 = slotTeamUser.get((slotTeamUser.size() + 1) / 2).getTeam();
             Assertions.assertThat(team2.getTeamPpp()).isEqualTo(user.getPpp());
             Assertions.assertThat(team2.getHeadCount()).isEqualTo(1);
 
-            CurrentMatch user1CurrentMatch = currentMatchRepository.findByUser(team1.getUser1()).orElse(null);
+            CurrentMatch user1CurrentMatch = currentMatchRepository.findByUser(slotTeamUser.get(0).getUser()).orElse(null);
             CurrentMatch user2CurrentMatch = currentMatchRepository.findByUser(user).orElse(null);
             Assertions.assertThat(user2CurrentMatch.getSlot().getId()).isEqualTo(slot.getId());
             Assertions.assertThat(user1CurrentMatch.getIsMatched()).isEqualTo(true);
@@ -767,9 +777,6 @@ class SlotControllerTest {
             /* User1 매치테이블 조회 */
             CurrentMatch user1CurrentMatch = currentMatchRepository.findByUser(team1User).orElse(null);
 
-            Assertions.assertThat(slot.getTeam1().getUser1()).isEqualTo(null);
-            Assertions.assertThat(slot.getTeam1().getHeadCount()).isEqualTo(0);
-            Assertions.assertThat(slot.getTeam1().getTeamPpp()).isEqualTo(0);
             Assertions.assertThat(user1CurrentMatch).isEqualTo(null);
             Assertions.assertThat(slot.getGamePpp()).isEqualTo(null);
             Assertions.assertThat(slot.getHeadCount()).isEqualTo(0);
@@ -817,14 +824,6 @@ class SlotControllerTest {
             CurrentMatch user2CurrentMatch = currentMatchRepository.findByUser(team2User).orElse(null);
             Noti user1Noti = notiRepository.findAllByUser(team1User).get(0); // matched(0), canceled(1)
             Noti user2Noti = notiRepository.findAllByUser(team2User).get(1); // matched(0), canceled(1)
-
-            Assertions.assertThat(slot.getTeam1().getUser1()).isEqualTo(null);
-            Assertions.assertThat(slot.getTeam1().getHeadCount()).isEqualTo(0);
-            Assertions.assertThat(slot.getTeam1().getTeamPpp()).isEqualTo(0);
-
-            Assertions.assertThat(slot.getTeam2().getUser1()).isEqualTo(team2User);
-            Assertions.assertThat(slot.getTeam2().getHeadCount()).isEqualTo(1);
-            Assertions.assertThat(slot.getTeam2().getTeamPpp()).isEqualTo(team2User.getPpp());
 
             Assertions.assertThat(slot.getGamePpp()).isEqualTo(team2User.getPpp());
             Assertions.assertThat(slot.getHeadCount()).isEqualTo(1);
@@ -878,12 +877,6 @@ class SlotControllerTest {
             Noti user1Noti = notiRepository.findAllByUser(team1User).get(1);
             Noti user2Noti = notiRepository.findAllByUser(team2User).get(0);
 
-            Assertions.assertThat(slot.getTeam1().getUser1()).isEqualTo(team1User);
-            Assertions.assertThat(slot.getTeam1().getHeadCount()).isEqualTo(1);
-            Assertions.assertThat(slot.getTeam1().getTeamPpp()).isEqualTo(team1User.getPpp());
-            Assertions.assertThat(slot.getTeam2().getUser1()).isEqualTo(null);
-            Assertions.assertThat(slot.getTeam2().getHeadCount()).isEqualTo(0);
-            Assertions.assertThat(slot.getTeam2().getTeamPpp()).isEqualTo(0);
             Assertions.assertThat(slot.getGamePpp()).isEqualTo(team1User.getPpp());
             Assertions.assertThat(slot.getHeadCount()).isEqualTo(1);
             Assertions.assertThat(slot.getType()).isEqualTo(GameType.SINGLE);

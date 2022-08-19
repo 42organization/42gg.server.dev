@@ -8,23 +8,15 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.TestInitiator;
-import io.pp.arcade.domain.currentmatch.CurrentMatch;
-import io.pp.arcade.domain.game.Game;
-import io.pp.arcade.domain.noti.dto.NotiDto;
-import io.pp.arcade.domain.noti.dto.NotiFindDto;
 import io.pp.arcade.domain.security.jwt.Token;
 import io.pp.arcade.domain.slot.Slot;
-import io.pp.arcade.domain.slot.dto.SlotRemoveUserDto;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.user.User;
-import org.aspectj.weaver.patterns.ExactTypePattern;
-import org.assertj.core.api.Assertions;
-import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.GameType;
-import io.pp.arcade.global.type.StatusType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -63,6 +55,9 @@ public class NotiFlowTest {
     @Autowired
     TestInitiator testInitiator;
 
+    @Autowired
+    SlotTeamUserRepository slotTeamUserRepository;
+
     @Value("${spring.redis.host}")
     String host;
     @Value("${spring.redis.port}")
@@ -88,8 +83,7 @@ public class NotiFlowTest {
         // 싱글 슬롯 생성 후 유저 진입 및 매칭 성사시
 
         Slot slot = slots[0];
-        Team team1 = slots[0].getTeam1();
-        Team team2 = slots[0].getTeam2();
+
         User user1 = users[0];
         User user2 = users[1];
         Token userToken1 = testInitiator.tokens[0];
@@ -237,8 +231,8 @@ public class NotiFlowTest {
     @Transactional
     void testNotiFlowSingleCancelledCases() throws Exception {
         Slot slot = slots[0];
-        Team team1 = slots[0].getTeam1();
-        Team team2 = slots[0].getTeam2();
+        Team team1 = teams[0];
+        Team team2 = teams[1];
         User user1 = users[0];
         User user2 = users[1];
         Token userToken1 = testInitiator.tokens[0];

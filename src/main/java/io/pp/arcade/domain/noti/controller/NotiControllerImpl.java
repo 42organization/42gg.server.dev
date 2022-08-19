@@ -52,21 +52,11 @@ public class NotiControllerImpl implements NotiController {
                         .createdAt(noti.getCreatdDate())
                         .build());
             } else if (noti.getType().equals(NotiType.IMMINENT)) {
-                TeamPosDto teamPosDto = teamService.getTeamPosNT(user, noti.getSlot().getTeam1(), noti.getSlot().getTeam2());
+                TeamPosDto teamPosDto = teamService.findUsersByTeamPos(noti.getSlot(), user);
                 List<String> myTeam = new ArrayList<>();
                 List<String> enemyTeam = new ArrayList<>();
-                if (teamPosDto.getMyTeam().getUser1() != null) {
-                    myTeam.add(teamPosDto.getMyTeam().getUser1().getIntraId());
-                }
-                if (teamPosDto.getMyTeam().getUser2() != null) {
-                    myTeam.add(teamPosDto.getMyTeam().getUser2().getIntraId());
-                }
-                if (teamPosDto.getEnemyTeam().getUser1() != null) {
-                    enemyTeam.add(teamPosDto.getEnemyTeam().getUser1().getIntraId());
-                }
-                if (teamPosDto.getEnemyTeam().getUser2() != null) {
-                    enemyTeam.add(teamPosDto.getEnemyTeam().getUser2().getIntraId());
-                }
+                teamPosDto.getMyTeam().forEach(userDto -> myTeam.add(userDto.getIntraId()));
+                teamPosDto.getEnemyTeam().forEach(userDto -> enemyTeam.add(userDto.getIntraId()));
                 notiDtos.add(NotiImminentMatchDto.builder()
                         .id(noti.getId())
                         .type(noti.getType())

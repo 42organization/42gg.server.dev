@@ -64,8 +64,6 @@ class GameServiceTest {
         user4 = initiator.users[3];
 
         slot = initiator.slots[0];
-        team1 = slot.getTeam1();
-        team2 = slot.getTeam2();
     }
 
     @Test
@@ -81,8 +79,8 @@ class GameServiceTest {
         gameService.addGame(addDto);
 
         //then
-        Assertions.assertThat(gameRepository.findAll().get(0).getTeam1()).isEqualTo(team1);
-        Assertions.assertThat(gameRepository.findAll().get(0).getTeam2()).isEqualTo(team2);
+        Assertions.assertThat(gameRepository.findAll().get(0).getSlot()).isEqualTo(slot);
+        Assertions.assertThat(gameRepository.findAll().get(0).getTime()).isEqualTo(slot.getTime());
     }
 
     @Test
@@ -92,11 +90,8 @@ class GameServiceTest {
         slot.setType(GameType.SINGLE);
 
         Game game = gameRepository.save(Game.builder()
-                .team1(team1)
-                .team2(team2)
                 .slot(slot)
                 .type(slot.getType())
-                .time(slot.getTime())
                 .status(StatusType.LIVE)
                 .season(1) //season 추가
                 .build());
@@ -119,8 +114,6 @@ class GameServiceTest {
         slot.setType(GameType.SINGLE);
 
         Game game = gameRepository.save(Game.builder()
-                .team1(team1)
-                .team2(team2)
                 .slot(slot)
                 .type(slot.getType())
                 .time(slot.getTime())
@@ -129,8 +122,6 @@ class GameServiceTest {
                 .build());
 
         Game game2 = gameRepository.save(Game.builder()
-                .team1(team1)
-                .team2(team2)
                 .slot(slot)
                 .type(slot.getType())
                 .time(slot.getTime())
