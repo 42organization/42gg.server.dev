@@ -12,6 +12,8 @@ import io.pp.arcade.domain.security.jwt.Token;
 import io.pp.arcade.domain.security.jwt.TokenRepository;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
@@ -53,6 +55,8 @@ public class TestInitiator {
     @Autowired
     UserRepository userRepository;
     @Autowired
+    SlotTeamUserRepository slotTeamUserRepository;
+    @Autowired
     private RedisTemplate redisTemplate;
 
 
@@ -60,6 +64,7 @@ public class TestInitiator {
     public Token[] tokens;
     public Team[] teams;
     public Slot[] slots;
+    public SlotTeamUser[] slotTeamUser;
     public RankRedis[] ranks;
     public void letsgo() {
         users = new User[12];
@@ -97,23 +102,23 @@ public class TestInitiator {
         }
 
         teams = new Team[8];
-        teams[0] = teamRepository.save(Team.builder().user1(users[0]).user2(null).teamPpp(1004).headCount(1).score(0).build());
-        teams[1] = teamRepository.save(Team.builder().user1(users[1]).user2(null).teamPpp(1030).headCount(1).score(0).build());
-        teams[2] = teamRepository.save(Team.builder().user1(users[2]).user2(null).teamPpp(1020).headCount(1).score(0).build());
-        teams[3] = teamRepository.save(Team.builder().user1(users[3]).user2(null).teamPpp(1010).headCount(1).score(0).build());
-        teams[4] = teamRepository.save(Team.builder().user1(users[4]).user2(users[5]).teamPpp(985).headCount(2).score(0).build());
-        teams[5] = teamRepository.save(Team.builder().user1(users[6]).user2(users[7]).teamPpp(996).headCount(2).score(0).build());
-        teams[6] = teamRepository.save(Team.builder().user1(users[8]).user2(users[9]).teamPpp(995).headCount(2).score(0).build());
-        teams[7] = teamRepository.save(Team.builder().user1(users[10]).user2(users[0]).teamPpp(1006).headCount(2).score(0).build());
+        teams[0] = teamRepository.save(Team.builder().teamPpp(1004).headCount(1).score(0).build());
+        teams[1] = teamRepository.save(Team.builder().teamPpp(1030).headCount(1).score(0).build());
+        teams[2] = teamRepository.save(Team.builder().teamPpp(1020).headCount(1).score(0).build());
+        teams[3] = teamRepository.save(Team.builder().teamPpp(1010).headCount(1).score(0).build());
+        teams[4] = teamRepository.save(Team.builder().teamPpp(985).headCount(2).score(0).build());
+        teams[5] = teamRepository.save(Team.builder().teamPpp(996).headCount(2).score(0).build());
+        teams[6] = teamRepository.save(Team.builder().teamPpp(995).headCount(2).score(0).build());
+        teams[7] = teamRepository.save(Team.builder().teamPpp(1006).headCount(2).score(0).build());
 
         slots = new Slot[18];
         LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
         for (int i = 0; i < 18; i++) {
-            Team t1 = teamRepository.save(Team.builder().teamPpp(0).headCount(0).score(0).build());
-            Team t2 = teamRepository.save(Team.builder().teamPpp(0).headCount(0).score(0).build());
             LocalDateTime time = LocalDateTime.of(tomorrow.getYear(), tomorrow.getMonth(), tomorrow.getDayOfMonth(),
                     15 + i / 6, (i * 10) % 60, 0); // 3시부터 10분 간격으로 18개 슬롯 생성
-            slots[i] = slotRepository.save(Slot.builder().team1(t1).team2(t2).tableId(1).headCount(0).time(time).build());
+            slots[i] = slotRepository.save(Slot.builder().tableId(1).headCount(0).time(time).build());
+            teamRepository.save(Team.builder().teamPpp(0).headCount(0).score(0).slot(slots[i]).build());
+            teamRepository.save(Team.builder().teamPpp(0).headCount(0).score(0).slot(slots[i]).build());
         }
 
         Season testSeason = seasonRepository.save(Season.builder().seasonName("Test").startTime(LocalDateTime.now().minusYears(1)).endTime(LocalDateTime.now().plusYears(1)).startPpp(1000).pppGap(150).build());

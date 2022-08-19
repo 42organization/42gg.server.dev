@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.team.dto;
 
+import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.user.dto.UserDto;
 import lombok.Builder;
@@ -15,16 +16,18 @@ public class TeamDto {
     private Integer headCount;
     private Integer score;
     private Boolean win;
+    private SlotDto slot;
 
     public static TeamDto from(Team team) {
         return TeamDto.builder()
                 .id(team.getId())
-                .user1(UserDto.from(team.getUser1()))
-                .user2(UserDto.from(team.getUser2()))
+                .user1(null)
+                .user2(null)
                 .teamPpp(team.getTeamPpp())
                 .headCount(team.getHeadCount())
                 .score(team.getScore())
                 .win(team.getWin())
+                .slot(SlotDto.from(team.getSlot()))
                 .build();
     }
 
@@ -32,12 +35,11 @@ public class TeamDto {
     public String toString() {
         return "TeamDto{" +
                 "id=" + id +
-                ", user1=" + user1 +
-                ", user2=" + user2 +
                 ", teamPpp=" + teamPpp +
                 ", headCount=" + headCount +
                 ", score=" + score +
                 ", win=" + win +
+                ", slot=" + slot +
                 '}';
     }
 }

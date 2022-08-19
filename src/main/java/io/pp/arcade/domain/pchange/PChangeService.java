@@ -6,12 +6,14 @@ import io.pp.arcade.domain.admin.dto.update.PChangeUpdateDto;
 import io.pp.arcade.domain.admin.dto.update.PChangeUpdateRequestDto;
 import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
+import io.pp.arcade.domain.game.dto.GameDto;
 import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.exception.BusinessException;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -87,7 +89,9 @@ public class PChangeService {
     public PChangeDto findPChangeByUserAndGame(PChangeFindDto findDto) {
         Game game = gameRepository.findById(findDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
         User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
-        PChangeDto pChangeDto = PChangeDto.from(pChangeRepository.findByUserAndGame(user, game).orElseThrow(() -> new BusinessException("E0001")));
+        PChange pChange = pChangeRepository.findByUserAndGame(user, game).orElse(PChange.builder().game(game).user(user).pppChange(0).pppResult(user.getPpp()).build());
+
+        PChangeDto pChangeDto = PChangeDto.from(pChange);
         return  pChangeDto;
     }
 
