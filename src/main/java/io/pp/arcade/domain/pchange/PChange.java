@@ -32,24 +32,18 @@ public class PChange extends BaseTimeEntity {
     @Setter
     @NotNull
     @Column(name = "ppp_change")
-    private Integer pppChange;
+    private  Integer pppChange;
 
     @Setter
     @NotNull
     @Column(name = "ppp_result")
-    private Integer pppResult;
-
-    @Setter
-    @NotNull
-    @Column(name = "exp")
-    private Integer exp;
+    private  Integer pppResult;
 
     @Builder
-    public PChange(Game game, User user, Integer pppChange, Integer pppResult, Integer exp) {
+    public PChange(Game game, User user, Integer pppChange, Integer pppResult) {
         this.game = game;
         this.user = user;
         this.pppChange = pppChange;
         this.pppResult = pppResult;
-        this.exp = exp;
     }
 }
