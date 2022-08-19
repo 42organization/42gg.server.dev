@@ -114,7 +114,7 @@ public class CurrentMatchService {
         } else {
             List<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllBySlotId(removeDto.getSlotId());
             slotTeamUsers.forEach(slotTeamUser -> {
-                slotTeamUserRepository.delete(slotTeamUser);
+                currentMatchRepository.deleteByUser(slotTeamUser.getUser());
             } );
         }
     }
