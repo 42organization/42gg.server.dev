@@ -58,15 +58,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RecordApplicationEvents
 class   SlotControllerNormalTest {
 
+    @Autowired
+    private TestInitiator testInitiator;
 
     @Autowired
     private CurrentMatchRepository currentMatchRepository;
 
     @Autowired
     private MockMvc mockMvc;
+
     @BeforeEach
     void init() {
-
+        testInitiator.letsgo();
     }
 
     // given
