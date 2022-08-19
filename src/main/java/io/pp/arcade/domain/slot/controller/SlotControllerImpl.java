@@ -11,6 +11,7 @@ import io.pp.arcade.domain.season.dto.SeasonDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.*;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamAddUserDto;
 import io.pp.arcade.domain.team.dto.TeamDto;
@@ -97,9 +98,8 @@ public class SlotControllerImpl implements SlotController {
         slotService.addUserInSlot(addDto);
         teamService.addUserInTeam(teamAddUserDto);
 
-        slot = slotService.findSlotById(slot.getId());
-
         //유저가 슬롯에 꽉 차면 currentMatch가 전부 바뀐다.
+        slot = slotService.findSlotById(slot.getId());
         modifyUsersCurrentMatchStatus(user, slot);
         notiGenerater.addMatchNotisBySlot(slot);
     }
@@ -124,9 +124,10 @@ public class SlotControllerImpl implements SlotController {
         CurrentMatchRemoveDto currentMatchRemoveDto = CurrentMatchRemoveDto.builder()
                 .userId(user.getId()).build();
         currentMatchService.removeCurrentMatch(currentMatchRemoveDto);
-        teamService.removeUserInTeam(getTeamRemoveUserDto(slot, user));
+        teamService.removeUserInTeam(TeamRemoveUserDto.builder()
+                .slotId(slot.getId()).userId(user.getId()).build());
         slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
-        slot = slotService.findSlotById(slot.getId());
+//        slot = slotService.findSlotById(slot.getId());
         checkIsSlotMatched(user, currentMatch, slot);
     }
 
@@ -152,20 +153,12 @@ public class SlotControllerImpl implements SlotController {
 
     private void falsifyIsMatchedForRemainders(SlotDto slot) {
         List<UserDto> users = new ArrayList<>();
-        users.add(slot.getTeam1().getUser1());
-        users.add(slot.getTeam1().getUser2());
-        users.add(slot.getTeam2().getUser1());
-        users.add(slot.getTeam2().getUser2());
 
-        for (UserDto user : users) {
-            if (user != null) {
-                currentMatchService.modifyCurrentMatch(CurrentMatchModifyDto.builder()
-                        .userId(user.getId())
-                        .isMatched(false)
-                        .matchImminent(false)
-                        .build());
-            }
-        }
+        currentMatchService.modifyCurrentMatch(CurrentMatchModifyDto.builder()
+                .slotId(slot.getId())
+                .isMatched(false)
+                .matchImminent(false)
+                .build());
     }
 
     private List<List<SlotStatusDto>> groupingSlots(List<SlotStatusDto> slots) {
@@ -192,33 +185,28 @@ public class SlotControllerImpl implements SlotController {
     }
 
     private void modifyUsersCurrentMatchStatus(UserDto user, SlotDto slot) {
-        TeamDto team1 = slot.getTeam1();
-        TeamDto team2 = slot.getTeam2();
         Integer maxSlotHeadCount = GameType.SINGLE.equals(slot.getType()) ? 2 : 4;
-        Boolean isMatched = slot.getHeadCount().equals(maxSlotHeadCount);
+        Boolean isMatched = (slot.getHeadCount()).equals(maxSlotHeadCount);
         Boolean isImminent = slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5));
         CurrentMatchModifyDto matchModifyDto = CurrentMatchModifyDto.builder()
-                .userId(user.getId())
+                .slotId(slot.getId())
                 .isMatched(isMatched)
                 .matchImminent(isImminent)
                 .build();
-        modifyCurrentMatch(team1.getUser1(), matchModifyDto);
-        modifyCurrentMatch(team1.getUser2(), matchModifyDto);
-        modifyCurrentMatch(team2.getUser1(), matchModifyDto);
-        modifyCurrentMatch(team2.getUser2(), matchModifyDto);
+        currentMatchService.modifyCurrentMatch(matchModifyDto);
     }
 
     private TeamAddUserDto getTeamAddUserDto(SlotDto slot, UserDto user) {
-        Integer teamId;
-        TeamDto team1 = slot.getTeam1();
-        TeamDto team2 = slot.getTeam2();
+        Integer teamId = null;
+        List<TeamDto> teams = teamService.findAllBySlotId(slot.getId());
         GameType slotType = slot.getType();
         Integer maxTeamHeadCount = GameType.SINGLE.equals(slotType) ? 1 : 2;
 
-        if (team1.getHeadCount() < maxTeamHeadCount) {
-            teamId = team1.getId();
-        } else {
-            teamId = team2.getId();
+        for (TeamDto team : teams) {
+            if (team.getHeadCount() < maxTeamHeadCount) {
+                teamId = team.getId();
+                break;
+            }
         }
         TeamAddUserDto teamAddUserDto = TeamAddUserDto.builder()
                 .teamId(teamId)
@@ -256,33 +244,13 @@ public class SlotControllerImpl implements SlotController {
         return pppGap;
     }
 
-    private TeamRemoveUserDto getTeamRemoveUserDto(SlotDto slot, UserDto user) {
-        TeamPosDto teamPos = teamService.getTeamPosNT(user, slot.getTeam1(), slot.getTeam2());
-        TeamRemoveUserDto teamRemoveUserDto = TeamRemoveUserDto.builder()
-                .userId(user.getId())
-                .teamId(teamPos.getMyTeam().getId())
-                .build();
-        return teamRemoveUserDto;
-    }
-
     private SlotRemoveUserDto getSlotRemoveUserDto(SlotDto slot, UserDto user) {
         SlotRemoveUserDto slotRemoveUserDto = SlotRemoveUserDto.builder()
                 .slotId(slot.getId())
-                .userId(user.getIntraId())
+                .intraId(user.getIntraId())
                 .exitUserPpp(user.getPpp())
                 .build();
         return slotRemoveUserDto;
-    }
-
-    private void modifyCurrentMatch(UserDto user, CurrentMatchModifyDto modifyDto) {
-        if (user != null) {
-            CurrentMatchModifyDto matchModifyDto = CurrentMatchModifyDto.builder()
-                    .userId(user.getId())
-                    .isMatched(modifyDto.getIsMatched())
-                    .matchImminent(modifyDto.getMatchImminent())
-                    .build();
-            currentMatchService.modifyCurrentMatch(matchModifyDto);
-        }
     }
 
     private void checkIfUserHavePenalty(UserDto user) {

@@ -10,10 +10,10 @@ import io.pp.arcade.domain.season.SeasonRepository;
 import io.pp.arcade.domain.slot.dto.*;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
+import io.pp.arcade.domain.team.dto.TeamRemoveUserDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.exception.BusinessException;
-import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.SlotStatusType;
 import lombok.AllArgsConstructor;
@@ -26,7 +26,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -41,28 +40,38 @@ public class SlotService {
 
     @Transactional
     public void addSlot(SlotAddDto addDto) {
-        Team team1 = teamRepository.save(Team.builder()
-                .teamPpp(0)
-                .headCount(0)
-                .score(0)
-                .build()
-        );
-
-        Team team2 = teamRepository.save(Team.builder()
-                .teamPpp(0)
-                .headCount(0)
-                .score(0)
-                .build()
-        );
-
-        slotRepository.save(Slot.builder()
+        Slot slot = slotRepository.save(Slot.builder()
                 .tableId(addDto.getTableId())
                 .time(addDto.getTime())
-                .team1(team1)
-                .team2(team2)
+                .headCount(0)
+                .build());
+
+        teamRepository.save(Team.builder()
+                .teamPpp(0)
+                .headCount(0)
+                .score(0)
+                .slot(slot)
+                .build());
+
+        teamRepository.save(Team.builder()
+                .teamPpp(0)
+                .headCount(0)
+                .score(0)
+                .slot(slot)
+                .build());
+
+        /*
+        Slot slot = slotRepository.save(Slot.builder()
+                .tableId(addDto.getTableId())
+                .time(addDto.getTime())
                 .headCount(0)
                 .build()
         );
+
+        for (int i = 0; i < 2; i++) {
+            generateNewTeamInSlotTeam(slot);
+        }
+        */
     }
 
     @Transactional
@@ -97,6 +106,7 @@ public class SlotService {
         return SlotDto.from(slot);
     }
 
+    @Transactional
     public List<SlotStatusDto> findSlotsStatus(SlotFindStatusDto findDto) {
         LocalDateTime now = findDto.getCurrentTime();
         LocalDateTime todayStartTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 0);
@@ -187,8 +197,6 @@ public class SlotService {
     public void createSlotByAdmin(SlotCreateRequestDto createDto) {
         slotRepository.save(Slot.builder()
                 .tableId(createDto.getTableId())
-                .team1(teamRepository.getById(createDto.getTeam1Id()))
-                .team2(teamRepository.getById(createDto.getTeam2Id()))
                 .time(createDto.getTime())
                 .gamePpp(createDto.getGamePpp())
                 .headCount(createDto.getHeadCount())

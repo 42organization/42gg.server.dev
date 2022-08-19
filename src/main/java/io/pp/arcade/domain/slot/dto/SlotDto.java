@@ -14,8 +14,6 @@ import java.time.LocalDateTime;
 public class SlotDto {
     private Integer id;
     private Integer tableId;
-    private TeamDto team1;
-    private TeamDto team2;
     private LocalDateTime time;
     private Integer gamePpp;
     private Integer headCount;
@@ -26,8 +24,6 @@ public class SlotDto {
         return SlotDto.builder()
                 .id(slot.getId())
                 .tableId(slot.getTableId())
-                .team1(TeamDto.from(slot.getTeam1()))
-                .team2(TeamDto.from(slot.getTeam2()))
                 .time(slot.getTime())
                 .gamePpp(slot.getGamePpp())
                 .headCount(slot.getHeadCount())
@@ -40,8 +36,6 @@ public class SlotDto {
         return "SlotDto{" +
                 "id=" + id +
                 ", tableId=" + tableId +
-                ", team1=" + team1 +
-                ", team2=" + team2 +
                 ", time=" + time +
                 ", gamePpp=" + gamePpp +
                 ", headCount=" + headCount +

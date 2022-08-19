@@ -5,6 +5,8 @@ import io.pp.arcade.domain.admin.dto.update.NotiUpdateRequestDto;
 import io.pp.arcade.domain.noti.dto.*;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.exception.BusinessException;
@@ -32,23 +34,36 @@ public class NotiService {
     private final SlotRepository slotRepository;
     private final JavaMailSender javaMailSender;
     private final AsyncMailSender asyncMailSender;
+    private final SlotTeamUserRepository slotTeamUserRepository;
 
     @Transactional
     public void addNoti(NotiAddDto notiAddDto) throws MessagingException {
-        User user = userRepository.findById(notiAddDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
         Slot slot = null;
         if (notiAddDto.getSlot() != null) {
             slot = slotRepository.findById(notiAddDto.getSlot().getId()).orElseThrow(() -> new BusinessException("E0001"));
+            List<SlotTeamUser> slotTeamUser = slotTeamUserRepository.findAllBySlotId(notiAddDto.getSlot().getId());
+            for (SlotTeamUser users : slotTeamUser) {
+                Noti noti = notiRepository.save(Noti.builder()
+                        .slot(slot)
+                        .user(users.getUser())
+                        .type(notiAddDto.getType())
+                        .message(notiAddDto.getMessage())
+                        .isChecked(false)
+                        .build());
+                sendMail(noti, users.getUser());
+            }
+        } else {
+            User user = userRepository.findById(notiAddDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
+            Noti noti = notiRepository.save(Noti.builder()
+                    .slot(slot)
+                    .user(user)
+                    .type(notiAddDto.getType())
+                    .message(notiAddDto.getMessage())
+                    .isChecked(false)
+                    .build());
+            sendMail(noti, user);
+            notiRepository.save(noti);
         }
-        Noti noti = Noti.builder()
-                .user(user)
-                .slot(slot)
-                .type(notiAddDto.getType())
-                .message(notiAddDto.getMessage())
-                .isChecked(false)
-                .build();
-        sendMail(noti, user);
-        notiRepository.save(noti);
     }
 
     private void sendMail(Noti noti, User user) throws MessagingException {

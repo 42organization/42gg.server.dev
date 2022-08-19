@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.game.dto;
 
+import io.pp.arcade.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,5 +16,12 @@ public class GameUserInfoDto {
                 "intraId='" + intraId + '\'' +
                 ", userImageUri='" + userImageUri + '\'' +
                 '}';
+    }
+
+    public static GameUserInfoDto from(User user) {
+        return GameUserInfoDto.builder()
+                .intraId(user.getIntraId())
+                .userImageUri(user.getImageUri())
+                .build();
     }
 }

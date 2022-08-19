@@ -8,12 +8,15 @@ import io.pp.arcade.domain.noti.NotiRepository;
 import io.pp.arcade.domain.noti.NotiService;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.NotiType;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -63,6 +66,9 @@ class NotiControllerTest {
     SlotRepository slotRepository;
 
     @Autowired
+    SlotTeamUserRepository slotTeamUserRepository;
+
+    @Autowired
     TestInitiator initiator;
 
     Slot slot;
@@ -70,8 +76,6 @@ class NotiControllerTest {
     User user2;
     User user3;
     User user4;
-    Team team1;
-    Team team2;
     List<Noti> notis;
 
     @BeforeEach
@@ -90,12 +94,8 @@ class NotiControllerTest {
         notis.add(notiRepository.save(Noti.builder().type(NotiType.MATCHED).user(user1).isChecked(false).slot(slot).build()));
         notis.add(notiRepository.save(Noti.builder().type(NotiType.IMMINENT).user(user1).isChecked(false).slot(slot).build()));
         notis.add(notiRepository.save(Noti.builder().type(NotiType.ANNOUNCE).user(user1).message("공지사항").isChecked(false).slot(slot).build()));
-
         slot.setType(GameType.SINGLE);
-        team1 = slot.getTeam1();
-        team2 = slot.getTeam2();
-        team1.setUser1(user1);
-        team2.setUser1(user2);
+        slotTeamUserRepository.save(SlotTeamUser.builder().user(user1).slot(slot).team(initiator.teams[0]).build());
     }
 
     @Test

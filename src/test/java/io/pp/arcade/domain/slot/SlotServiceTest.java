@@ -2,6 +2,8 @@ package io.pp.arcade.domain.slot;
 
 import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.slot.dto.*;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
@@ -34,6 +36,8 @@ class SlotServiceTest {
     SlotService slotService;
     @Autowired
     TestInitiator testInitiator;
+    @Autowired
+    SlotTeamUserRepository slotTeamUserRepository;
 
     Slot slot;
     User user1;
@@ -61,13 +65,11 @@ class SlotServiceTest {
         //when
         slotService.addSlot(dto);
         Slot addedSlot = slotRepository.findByTime(time).orElseThrow();
-        Team team1 = addedSlot.getTeam1();
-        Team team2 = addedSlot.getTeam2();
 
         //then
         Assertions.assertThat(dto.getTime()).isEqualTo(addedSlot.getTime());
-        Assertions.assertThat(team1).isNotEqualTo(null);
-        Assertions.assertThat(team2).isNotEqualTo(null);
+        Assertions.assertThat(dto.getTableId()).isEqualTo(addedSlot.getTableId());
+        Assertions.assertThat(addedSlot.getType()).isEqualTo(null);
     }
 
     @Test

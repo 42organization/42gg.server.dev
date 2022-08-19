@@ -1,6 +1,5 @@
 package io.pp.arcade.domain.game.controller;
 
-import io.pp.arcade.domain.admin.dto.create.NotiCreateRequestDto;
 import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchFindDto;
@@ -9,6 +8,7 @@ import io.pp.arcade.domain.event.EventService;
 import io.pp.arcade.domain.event.dto.EventUserDto;
 import io.pp.arcade.domain.event.dto.FindEventDto;
 import io.pp.arcade.domain.event.dto.SaveEventUserDto;
+import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.game.dto.*;
 import io.pp.arcade.domain.noti.NotiService;
@@ -18,17 +18,27 @@ import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
+import io.pp.arcade.domain.rank.RankRedis;
 import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.rank.dto.RankFindDto;
 import io.pp.arcade.domain.rank.dto.RankUpdateDto;
 import io.pp.arcade.domain.rank.dto.RankUserDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
+import io.pp.arcade.domain.slot.Slot;
+import io.pp.arcade.domain.slot.SlotService;
+import io.pp.arcade.domain.slot.dto.SlotDto;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUserService;
+import io.pp.arcade.domain.slotteamuser.dto.SlotTeamUserDto;
+import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.team.dto.TeamModifyGameResultDto;
 import io.pp.arcade.domain.team.dto.TeamPosDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.domain.user.dto.UserFindDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.GameType;
@@ -37,7 +47,6 @@ import io.pp.arcade.global.type.StatusType;
 import io.pp.arcade.global.util.EloRating;
 import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
-import org.apache.commons.lang3.RandomUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -57,6 +66,7 @@ import java.util.stream.Collectors;
 public class GameControllerImpl implements GameController {
     private final GameService gameService;
     private final TeamService teamService;
+    private final SlotTeamUserService slotTeamUserService;
     private final UserService userService;
     private final PChangeService pChangeService;
     private final CurrentMatchService currentMatchService;
@@ -73,17 +83,15 @@ public class GameControllerImpl implements GameController {
 
         checkIfUserHavePlayingGame(currentMatch);
 
-        GameDto game = currentMatch.getGame();
-        List<GameUserInfoDto> myTeams = new ArrayList<>();
-        List<GameUserInfoDto> enemyTeams = new ArrayList<>();
+        SlotDto slot = currentMatch.getSlot();
 
         //figuring out team number for myteam and enemyteam, and put each team's user infos in the right team
-        putUsersDataInTeams(game, user, myTeams, enemyTeams);
 
         //make Dto to return
+        TeamPosDto teamPosDto = teamService.findUsersByTeamPos(slot, user);
         GameUserInfoResponseDto gameUserInfoResponseDto = GameUserInfoResponseDto.builder()
-                .myTeam(myTeams)
-                .enemyTeam(enemyTeams)
+                .myTeam(teamPosDto.getMyTeam())
+                .enemyTeam(teamPosDto.getEnemyTeam())
                 .build();
         return gameUserInfoResponseDto;
     }
@@ -99,20 +107,17 @@ public class GameControllerImpl implements GameController {
             throw new ResponseStatusException(HttpStatus.ACCEPTED, "");
         }
         GameDto game = currentMatch.getGame();
+        List<SlotTeamUserDto> slotTeamUsers = slotTeamUserService.findAllBySlotId(currentMatch.getSlot().getId());
         if (game == null) {
             throw new BusinessException("E0001");
         }
         removeCurrentMatch(game);
-        TeamDto team1 = game.getTeam1();
-        TeamDto team2 = game.getTeam2();
-        // figuring out team number for myteam and enemyteam
-        List<TeamModifyGameResultDto> eachTeamModifyDto = getTeamModifyDto(team1, team2, requestDto, user);
         // modify team with game result
-        for (TeamModifyGameResultDto dto : eachTeamModifyDto) {
-            teamService.modifyGameResultInTeam(dto);
-        }
+        modifyTeams(game, requestDto, slotTeamUsers);
+        slotTeamUsers = slotTeamUserService.findAllBySlotId(currentMatch.getSlot().getId());
+        // figuring out team number for myteam and enemyteam
         // modify users with game result
-        modifyUsersPppAndPChange(game, team1, team2);
+//        modifyUsersPppAndPChange(game, requestDto, slotTeamUsers);
         endGameStatus(game);
         // checkEvent(game);
         // modify users' ranks with game result
@@ -175,8 +180,9 @@ public class GameControllerImpl implements GameController {
         } else {
             lastGameId = gameLists.get(gameLists.size() - 1).getId();
         }
+        UserDto user = userService.findByIntraId(UserFindDto.builder().intraId(intraId).build());
 
-        putResultInGames(gameResultList, gameLists, intraId);
+        putResultInGames(gameResultList, gameLists, user);
 
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
@@ -205,71 +211,58 @@ public class GameControllerImpl implements GameController {
         gameService.modifyGameStatus(modifyStatusDto);
     }
 
-    private List<TeamModifyGameResultDto> getTeamModifyDto(TeamDto team1, TeamDto team2, GameResultRequestDto requestDto, UserDto user) {
-        Integer team1Score;
-        Integer team2Score;
-        if (user.equals(team1.getUser1()) || user.equals(team1.getUser2())) {
-            team1Score = requestDto.getMyTeamScore();
-            team2Score = requestDto.getEnemyTeamScore();
-        } else if (user.equals(team2.getUser1()) || user.equals(team2.getUser2())) {
-            team2Score = requestDto.getMyTeamScore();
-            team1Score = requestDto.getEnemyTeamScore();
-        } else {
-            throw new BusinessException("E0001");
-        }
-        List<TeamModifyGameResultDto> modifyList = new ArrayList<>();
-        modifyList.add(TeamModifyGameResultDto.builder()
-                .teamId(team1.getId())
-                .score(team1Score)
-                .win(team1Score > team2Score)
-                .build()
-        );
-        modifyList.add(TeamModifyGameResultDto.builder()
-                .teamId(team2.getId())
-                .score(team2Score)
-                .win(team2Score > team1Score)
-                .build()
-        );
-        return modifyList;
-    }
+    private void modifyTeams(GameDto game, GameResultRequestDto requestDto, List<SlotTeamUserDto> slotTeamUsers) {
+        Integer gamePpp = game.getSlot().getGamePpp();
+        SlotDto slot = game.getSlot();
+        Boolean isOneSide = Math.abs(requestDto.getMyTeamScore() - requestDto.getEnemyTeamScore()) == 2;
 
-    private void modifyUsersPppAndPChange(GameDto game, TeamDto team1, TeamDto team2) {
-        TeamDto savedTeam1 = teamService.findById(team1.getId());
-        TeamDto savedTeam2 = teamService.findById(team2.getId());
-        Boolean isOneSide = Math.abs(savedTeam1.getScore() - savedTeam2.getScore()) == 2;
-        modifyUserPppAndAddPchangeAndRank(game, team1.getUser1(), savedTeam2, isOneSide);
-        modifyUserPppAndAddPchangeAndRank(game, team1.getUser2(), savedTeam2, isOneSide);
-        modifyUserPppAndAddPchangeAndRank(game, team2.getUser1(), savedTeam1, isOneSide);
-        modifyUserPppAndAddPchangeAndRank(game, team2.getUser2(), savedTeam1, isOneSide);
-    }
-    
-    private void modifyUserPppAndAddPchangeAndRank(GameDto game, UserDto user, TeamDto enemyTeam, Boolean isOneSide) {
-        if (user == null) {
-            return;
+        for(SlotTeamUserDto slotTeamUser : slotTeamUsers) {
+            TeamDto team;
+            TeamModifyGameResultDto teamModifyGameResultDto;
+            Integer enemyPpp;
+            Integer pppChange;
+            Integer score;
+            Boolean isWin;
+            TeamPosDto teamPosDto = teamService.findUsersByTeamPos(slotTeamUser.getSlot(), slotTeamUser.getUser());
+
+            if (teamPosDto.getMyTeam().contains(slotTeamUser.getUser().getIntraId())) {
+                enemyPpp = (gamePpp * 2 - slotTeamUser.getTeam().getTeamPpp());
+                team = slotTeamUser.getTeam();
+                isWin = requestDto.getMyTeamScore() > requestDto.getEnemyTeamScore();
+                score = requestDto.getMyTeamScore();
+            } else {
+                isWin = requestDto.getMyTeamScore() < requestDto.getEnemyTeamScore();
+                enemyPpp = slotTeamUser.getTeam().getTeamPpp();
+                team = slotTeamUser.getTeam();
+                score = requestDto.getEnemyTeamScore();
+            }
+            pppChange = EloRating.pppChange(slotTeamUser.getUser().getPpp(), enemyPpp, isWin, isOneSide);
+            teamModifyGameResultDto = TeamModifyGameResultDto.builder()
+                    .teamId(team.getId())
+                    .score(score)
+                    .win(isWin)
+                    .build();
+            UserModifyPppDto modifyPppDto = UserModifyPppDto.builder()
+                    .userId(slotTeamUser.getUser().getId())
+                    .ppp(slotTeamUser.getUser().getPpp() + pppChange)
+                    .build();
+            PChangeAddDto pChangeAddDto = PChangeAddDto.builder()
+                    .gameId(game.getId())
+                    .userId(slotTeamUser.getUser().getId())
+                    .pppChange(pppChange)
+                    .pppResult(slotTeamUser.getUser().getPpp() + pppChange)
+                    .build();
+            RankUpdateDto rankUpdateDto =  RankUpdateDto.builder()
+                    .gameType(slotTeamUser.getSlot().getType())
+                    .Ppp(slotTeamUser.getUser().getPpp() + pppChange)
+                    .intraId(slotTeamUser.getUser().getIntraId())
+                    .isWin(isWin)
+                    .build();
+            teamService.modifyGameResultInTeam(teamModifyGameResultDto);
+            rankRedisService.updateUserPpp(rankUpdateDto);
+            userService.modifyUserPpp(modifyPppDto);
+            pChangeService.addPChange(pChangeAddDto);
         }
-        Integer pppChange = EloRating.pppChange(user.getPpp(), enemyTeam.getTeamPpp(), !enemyTeam.getWin(), isOneSide);
-        Integer ppp = (user.getPpp() + pppChange);
-        Integer userPpp = ppp > 0 ? ppp : 0;
-        UserModifyPppDto modifyPppDto = UserModifyPppDto.builder()
-                .userId(user.getId())
-                .ppp(userPpp)
-                .build();
-        userService.modifyUserPpp(modifyPppDto);
-        PChangeAddDto pChangeAddDto = PChangeAddDto.builder()
-                .gameId(game.getId())
-                .userId(user.getId())
-                .pppChange(pppChange)
-                .pppResult(userPpp)
-                .build();
-        pChangeService.addPChange(pChangeAddDto);
-        GameType gameType = gameService.findById(game.getId()).getType();
-        RankUpdateDto rankUpdateDto =  RankUpdateDto.builder()
-                .gameType(gameType)
-                .Ppp(userPpp)
-                .intraId(user.getIntraId())
-                .isWin(!enemyTeam.getWin())
-                .build();
-        rankRedisService.updateUserPpp(rankUpdateDto);
     }
 
     private void removeCurrentMatch(GameDto game) {
@@ -284,95 +277,90 @@ public class GameControllerImpl implements GameController {
         });
     }
 
-    private void putUsersDataInTeams(GameDto game, UserDto user, List<GameUserInfoDto> myTeams, List<GameUserInfoDto> enemyTeams) {
-        //figuring out team number for myteam and enemyteam
-        TeamPosDto teamPos = teamService.getTeamPosNT(user, game.getTeam1(), game.getTeam2());
+    private void putResultInGames(List<GameResultDto> gameResultList, List<GameDto> gameLists, UserDto curUser) {
+        SlotDto slot;
+        List<SlotTeamUserDto> slotTeamUserDtos;
+        UserDto leftUser;
 
-        TeamDto myTeam = teamPos.getMyTeam();
-        TeamDto enemyTeam = teamPos.getEnemyTeam();
-        UserDto myTeamUser1 = myTeam.getUser1();
-        UserDto myTeamUser2 = myTeam.getUser2();
-        UserDto enemyTeamUser1 = enemyTeam.getUser1();
-        UserDto enemyTeamUser2 = enemyTeam.getUser2();
-        if (myTeamUser1 != null) {
-            myTeams.add(GameUserInfoDto.builder().intraId(myTeamUser1.getIntraId()).userImageUri(myTeamUser1.getImageUri()).build());
-        }
-        if (myTeamUser2 != null) {
-            myTeams.add(GameUserInfoDto.builder().intraId(myTeamUser2.getIntraId()).userImageUri(myTeamUser2.getImageUri()).build());
-        }
-        if (enemyTeamUser1 != null) {
-            enemyTeams.add(GameUserInfoDto.builder().intraId(enemyTeamUser1.getIntraId()).userImageUri(enemyTeamUser1.getImageUri()).build());
-        }
-        if (enemyTeamUser2 != null) {
-            enemyTeams.add(GameUserInfoDto.builder().intraId(enemyTeamUser2.getIntraId()).userImageUri(enemyTeamUser2.getImageUri()).build());
-        }
-    }
-  
-    private void putResultInGames(List<GameResultDto> gameResultList, List<GameDto> gameLists, String curUserId) {
-        TeamDto team1;
-        TeamDto team2;
-        GameTeamDto teamDto1;
-        GameTeamDto teamDto2;
+        /*
+        * GameResultDto -> GameTeamDto -> GamePlayerDto
+        * */
         for (GameDto game : gameLists) {
-            team1 = game.getTeam1();
-            team2 = game.getTeam2();
+            slot = game.getSlot();
+            GameTeamDto gameTeamDto1;
+            GameTeamDto gameTeamDto2;
+            List<GamePlayerDto> myTeamPlayerDtos = new ArrayList<>();
+            List<GamePlayerDto> enemyTeamPlayerDtos = new ArrayList<>();
+            Integer team1Score = 0;
+            Integer team2Score = 0;
+            Boolean isWin = null;
+            TeamPosDto teamPosDto = null;
 
-            /* 왼 쪽 정 렬 */
-            if (curUserId != null &&
-                    ((team2.getUser1() != null && curUserId.equals(team2.getUser1().getIntraId()))
-                    || (team2.getUser2() != null && curUserId.equals(team2.getUser2().getIntraId())))) {
-                team1 = game.getTeam2();
-                team2 = game.getTeam1();
+            slotTeamUserDtos = slotTeamUserService.findAllBySlotId(slot.getId());
+
+            if (curUser == null) {
+                leftUser = slotTeamUserDtos.get(0).getUser();
+            } else {
+                leftUser = curUser;
             }
-            teamDto1 = getTeamDtoFromGamePlayers(team1, game);
-            teamDto2 = getTeamDtoFromGamePlayers(team2, game);
+
+            teamPosDto = teamService.findUsersByTeamPos(slot, leftUser);
+            for (SlotTeamUserDto slotTeamUser : slotTeamUserDtos) {
+                RankUserDto rankUserDto = rankRedisService.findRankById(RankFindDto.builder()
+                        .gameType(slot.getType())
+                        .intraId(slotTeamUser.getUser().getIntraId()).build());
+                PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder()
+                        .gameId(game.getId())
+                        .userId(slotTeamUser.getUser().getIntraId()).build());
+
+                /* 왼 쪽 정 렬 */
+                if (teamPosDto.getMyTeam().contains(leftUser.getIntraId())) {
+                    //왼쪽에 넣는다.
+                    isWin = slotTeamUser.getTeam().getWin();
+                    team1Score = slotTeamUser.getTeam().getScore();
+
+                    myTeamPlayerDtos.add(GamePlayerDto.builder()
+                            .intraId(slotTeamUser.getUser().getIntraId())
+                            .userImageUri(slotTeamUser.getUser().getImageUri())
+                            .wins(rankUserDto.getWins())
+                            .losses(rankUserDto.getLosses())
+                            .winRate(rankUserDto.getWinRate())
+                            .pppChange(pChangeDto.getPppChange())
+                            .build());
+                } else {
+                    //오른쪽에 넣는다.
+                    isWin = !slotTeamUser.getTeam().getWin();
+                    team2Score = slotTeamUser.getTeam().getScore();
+
+                    enemyTeamPlayerDtos.add(GamePlayerDto.builder()
+                            .intraId(slotTeamUser.getUser().getIntraId())
+                            .userImageUri(slotTeamUser.getUser().getImageUri())
+                            .wins(rankUserDto.getWins())
+                            .losses(rankUserDto.getLosses())
+                            .winRate(rankUserDto.getWinRate())
+                            .pppChange(pChangeDto.getPppChange())
+                            .build());
+                }
+            }
+            gameTeamDto1 = GameTeamDto.builder()
+                    .isWin(isWin)
+                    .players(myTeamPlayerDtos)
+                    .score(team1Score)
+                    .build();
+            gameTeamDto2 = GameTeamDto.builder()
+                    .isWin(!isWin)
+                    .players(enemyTeamPlayerDtos)
+                    .score(team2Score)
+                    .build();
 
             gameResultList.add(GameResultDto.builder()
                     .gameId(game.getId())
-                    .team1(teamDto1)
-                    .team2(teamDto2)
-                    .type(game.getType())
+                    .team1(gameTeamDto1)
+                    .team2(gameTeamDto2)
+                    .type(game.getSlot().getType())
                     .status(game.getStatus())
-                    .time(game.getTime())
+                    .time(game.getSlot().getTime())
                     .build());
-        }
-    }
-
-    private GameTeamDto getTeamDtoFromGamePlayers(TeamDto team, GameDto game) {
-        GameTeamDto teamDto;
-        List<GamePlayerDto> gamePlayerList;
-        gamePlayerList = new ArrayList<>();
-        putGamePlayerDto(game, team.getUser1(), gamePlayerList);
-        putGamePlayerDto(game, team.getUser2(), gamePlayerList);
-        teamDto = GameTeamDto.builder()
-                .isWin(team.getWin())
-                .score(team.getScore())
-                .players(gamePlayerList)
-                .build();
-        return teamDto;
-    }
-
-    private void putGamePlayerDto(GameDto game, UserDto user, List<GamePlayerDto> gamePlayerList) {
-        if (user == null) {
-            return;
-        } else {
-            Integer pppChange;
-            if (!StatusType.END.equals(game.getStatus())) {
-                pppChange = null;
-            } else {
-                PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().gameId(game.getId()).userId(user.getIntraId()).build());
-                pppChange = pChangeDto.getPppChange();
-            }
-            RankUserDto userRankDto = rankRedisService.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(game.getType()).build());
-            GamePlayerDto gamePlayerDto = GamePlayerDto.builder()
-                    .intraId(user.getIntraId())
-                    .userImageUri(user.getImageUri())
-                    .wins(userRankDto.getWins())
-                    .losses(userRankDto.getLosses())
-                    .winRate(userRankDto.getWinRate())
-                    .pppChange(pppChange)
-                    .build();
-            gamePlayerList.add(gamePlayerDto);
         }
     }
 
