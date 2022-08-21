@@ -7,12 +7,10 @@ import io.pp.arcade.domain.admin.dto.update.RankUpdateRequestDto;
 import io.pp.arcade.domain.rank.Rank;
 import io.pp.arcade.domain.rank.RankRedis;
 import io.pp.arcade.domain.rank.RankRepository;
-import io.pp.arcade.domain.rank.dto.RankDto;
-import io.pp.arcade.domain.rank.dto.RankRedisDto;
-import io.pp.arcade.domain.rank.dto.RankSaveAllDto;
-import io.pp.arcade.domain.rank.dto.RankUserDto;
+import io.pp.arcade.domain.rank.dto.*;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,6 +35,22 @@ public class RankService {
             return null;
         }
         return RankDto.from(rank);
+    }
+    
+    @Transactional
+    public VipListResponseDto vipList(Pageable pageable) {
+        Page<User> userPage = userRepository.findAllByOrderByTotalExpAsec(pageable);
+        List<VipUserDto> vipUserList = new ArrayList<>();
+        Integer index = (pageable.getPageSize() - 1) * pageable.getPageNumber();
+        for (User user : userPage) {
+            vipUserList.add(VipUserDto.from(user, ++index);
+        }
+        return VipListResponseDto.builder()
+                .vipList(vipUserList)
+                .myRank(-1)
+                .totalPage(userPage.getTotalPages())
+                .currentPage(userPage.getNumber())
+                .build();
     }
 
     @Transactional
