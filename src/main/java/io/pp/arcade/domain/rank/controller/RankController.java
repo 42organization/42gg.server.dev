@@ -1,6 +1,7 @@
 package io.pp.arcade.domain.rank.controller;
 
 import io.pp.arcade.domain.rank.dto.RankListResponseDto;
+import io.pp.arcade.domain.rank.dto.VipListResponseDto;
 import io.pp.arcade.global.type.GameType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,4 +15,5 @@ import javax.validation.constraints.PositiveOrZero;
 
 public interface RankController {
         RankListResponseDto rankList(@SortDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(required = false, defaultValue = "20") Integer count, @PathVariable GameType gametype, HttpServletRequest request);
+        VipListResponseDto vipList(Pageable pageable, HttpServletRequest request)
 }

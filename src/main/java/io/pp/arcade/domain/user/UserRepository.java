@@ -18,4 +18,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Page<User> findByIntraIdContains(@Param("partial") String partial, Pageable pageable);
     List<User> findAllByRoleType(RoleType roleType);
     User getUserByIntraId(String IntraId);
+    Page<User> findAllByOrderByTotalExpAsec(Pageable pageable);
 }
