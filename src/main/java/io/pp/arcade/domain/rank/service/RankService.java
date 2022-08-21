@@ -30,6 +30,15 @@ public class RankService {
     private final UserRepository userRepository;
 
     @Transactional
+    public RankDto findBySeasonIdAndUserId(Integer seasonId, Integer userId) {
+        Rank rank = rankRepository.findBySeasonIdAndUserId(seasonId, userId).orElse(null);
+        if (rank == null) {
+            return null;
+        }
+        return RankDto.from(rank);
+    }
+
+    @Transactional
     public void saveAll(RankSaveAllDto saveAllDto) {
         if (saveAllDto.getSeasonId() == null) {
             throw new BusinessException("{server.internal.error}");
