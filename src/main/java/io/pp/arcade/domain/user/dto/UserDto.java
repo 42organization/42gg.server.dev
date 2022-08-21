@@ -19,6 +19,8 @@ public class UserDto {
     private String statusMessage;
     private RoleType roleType;
     private Integer ppp;
+    private Integer totalExp;
+
 
     public static UserDto from(User user) {
         UserDto userDto;
@@ -34,6 +36,7 @@ public class UserDto {
                     .statusMessage(user.getStatusMessage())
                     .roleType(user.getRoleType())
                     .ppp(user.getPpp())
+                    .totalExp(user.getTotalExp())
                     .build();
         }
         return userDto;
@@ -44,12 +47,12 @@ public class UserDto {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         UserDto userDto = (UserDto) o;
-        return Objects.equals(id, userDto.id) && Objects.equals(intraId, userDto.intraId) && Objects.equals(imageUri, userDto.imageUri) && racketType == userDto.racketType && Objects.equals(statusMessage, userDto.statusMessage) && Objects.equals(ppp, userDto.ppp);
+        return Objects.equals(id, userDto.id) && Objects.equals(intraId, userDto.intraId) && Objects.equals(imageUri, userDto.imageUri) && racketType == userDto.racketType && Objects.equals(statusMessage, userDto.statusMessage) && Objects.equals(ppp, userDto.ppp) && Objects.equals(totalExp, userDto.totalExp);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, intraId, imageUri, racketType, statusMessage, ppp);
+        return Objects.hash(id, intraId, imageUri, racketType, statusMessage, ppp, totalExp);
     }
 
     @Override
@@ -63,6 +66,7 @@ public class UserDto {
                 ", statusMessage='" + statusMessage + '\'' +
                 ", roleType=" + roleType +
                 ", ppp=" + ppp +
+                ", totalExp=" + totalExp +
                 '}';
     }
 }

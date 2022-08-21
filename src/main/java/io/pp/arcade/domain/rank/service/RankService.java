@@ -29,6 +29,15 @@ public class RankService {
     private final UserRepository userRepository;
 
     @Transactional
+    public RankDto findBySeasonIdAndUserId(Integer seasonId, Integer userId) {
+        Rank rank = rankRepository.findBySeasonIdAndUserId(seasonId, userId).orElse(null);
+        if (rank == null) {
+            return null;
+        }
+        return RankDto.from(rank);
+    }
+    
+    @Transactional
     public VipListResponseDto vipList(Pageable pageable) {
         Page<User> userPage = userRepository.findAllByOrderByTotalExpAsec(pageable);
         List<VipUserDto> vipUserList = new ArrayList<>();
