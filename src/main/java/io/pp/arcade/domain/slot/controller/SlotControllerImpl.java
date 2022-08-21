@@ -23,6 +23,7 @@ import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.scheduler.SlotGenerator;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.Mode;
 import io.pp.arcade.global.type.NotiType;
 import io.pp.arcade.global.type.SlotStatusType;
 import io.pp.arcade.global.util.HeaderUtil;
@@ -78,6 +79,7 @@ public class SlotControllerImpl implements SlotController {
 
         checkIfUserHaveCurrentMatch(user);
         checkIfUserHavePenalty(user);
+        checkIfModeMatches(addReqDto, slot);
         checkIfSlotAvailable(slot, type, user);
 
         //user가 들어갈 팀을 정한당
@@ -94,6 +96,7 @@ public class SlotControllerImpl implements SlotController {
                 .slotId(addReqDto.getSlotId())
                 .type(type)
                 .joinUserPpp(user.getPpp())
+                .mode(addReqDto.getMode())
                 .build();
         slotService.addUserInSlot(addDto);
         teamService.addUserInTeam(teamAddUserDto);
@@ -102,6 +105,12 @@ public class SlotControllerImpl implements SlotController {
         slot = slotService.findSlotById(slot.getId());
         modifyUsersCurrentMatchStatus(user, slot);
         notiGenerater.addMatchNotisBySlot(slot);
+    }
+
+    private void checkIfModeMatches(SlotAddUserRequestDto addReqDto, SlotDto slot) {
+        if (slot.getMode() != Mode.ALL || slot.getMode() != addReqDto.getMode()) {
+            throw new BusinessException("SC004");
+        }
     }
 
     private void doubleNotSupportedYet(GameType type) {
@@ -130,7 +139,6 @@ public class SlotControllerImpl implements SlotController {
 //        slot = slotService.findSlotById(slot.getId());
         checkIsSlotMatched(user, currentMatch, slot);
     }
-
     private void checkIsSlotMatched(UserDto user, CurrentMatchDto currentMatch, SlotDto slot) throws MessagingException {
         if (currentMatch.getIsMatched() == true) {
             falsifyIsMatchedForRemainders(slot);
