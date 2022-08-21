@@ -7,6 +7,8 @@ import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.TestInitiator;
 import io.pp.arcade.domain.rank.RankRedis;
+import io.pp.arcade.domain.security.jwt.Token;
+import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
@@ -43,9 +45,21 @@ class RankControllerNormalTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private TestInitiator testInitiator;
+
+    private User[] users;
+    private Token[] tokens;
+    private Team[] teams;
+    private Slot[] slots;
+
     @BeforeEach
     void init(){
-
+        testInitiator.letsgo();
+        users = testInitiator.users;
+        tokens = testInitiator.tokens;
+        teams = testInitiator.teams;
+        slots = testInitiator.slots;
     }
 
     @Test
@@ -67,13 +81,17 @@ class RankControllerNormalTest {
         mockMvc.perform((get("/pingpong/vip").contentType(MediaType.APPLICATION_JSON)
                         .param("page","1"))
                         .header("Authorization", "Bearer " + 0)) // header 해줘야함
-                .andExpect(jsonPath("$.myRank").value()) //
+                .andExpect(jsonPath("$.myRank").value(1)) //
                 .andExpect(jsonPath("$.currentPage").value(1)) //
                 .andExpect(jsonPath("$.totalPage").value(1)) //
-                .andExpect(jsonPath("$.rankList[0].userId").value()) //
-                .andExpect(jsonPath("$.rankList[0].statusMessage").value()) //
-                .andExpect(jsonPath("$.rankList[0].level").value()) //
-                .andExpect(jsonPath("$.rankList[0].exp").value()) //
+                .andExpect(jsonPath("$.rankList[0].userId").value("hakim")) //
+                .andExpect(jsonPath("$.rankList[0].statusMessage").value("kikikaka")) //
+                .andExpect(jsonPath("$.rankList[0].level").value(10)) //
+                .andExpect(jsonPath("$.rankList[0].exp").value(0)) //
+                .andExpect(jsonPath("$.rankList[11].userId").value("jujeon")) //
+                .andExpect(jsonPath("$.rankList[11].statusMessage").value("kiki")) //
+                .andExpect(jsonPath("$.rankList[11].level").value(1)) //
+                .andExpect(jsonPath("$.rankList[11].exp").value(0)) //
                 .andExpect(status().isOk())
                 .andDo(document("vip-List"));
 
