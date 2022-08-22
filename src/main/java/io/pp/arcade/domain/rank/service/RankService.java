@@ -43,7 +43,7 @@ public class RankService {
         List<VipUserDto> vipUserList = new ArrayList<>();
         Integer index = (pageable.getPageSize() - 1) * pageable.getPageNumber();
         for (User user : userPage) {
-            vipUserList.add(VipUserDto.from(user, ++index);
+            vipUserList.add(VipUserDto.from(user, ++index));
         }
         return VipListResponseDto.builder()
                 .vipList(vipUserList)
