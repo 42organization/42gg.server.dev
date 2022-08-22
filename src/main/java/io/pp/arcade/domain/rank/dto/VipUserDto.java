@@ -32,11 +32,9 @@ public class VipUserDto {
         return "VipUserDto{" +
                 "intraId='" + intraId + '\'' +
                 ", rank=" + rank +
-                ", ppp=" + ppp +
-                ", wins=" + wins +
-                ", losses=" + losses +
                 ", statusMessage='" + statusMessage + '\'' +
-                ", winRate=" + winRate +
+                ", level=" + level +
+                ", exp=" + exp +
                 '}';
     }
 }
