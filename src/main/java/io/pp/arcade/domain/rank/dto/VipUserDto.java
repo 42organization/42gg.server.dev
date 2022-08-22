@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.pp.arcade.domain.rank.RankRedis;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.global.util.ExpLevelCalculator;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -21,8 +22,8 @@ public class VipUserDto {
                 .intraId(user.getIntraId())
                 .rank(rank)
                 .statusMessage(user.getStatusMessage())
-                .level(user.getTotalExp()) // 머시기 해야함
-                .exp(user.getTotalExp()) // 머시기 해야함
+                .level(ExpLevelCalculator.getLevel(user.getTotalExp()))
+                .exp(ExpLevelCalculator.getCurrentLevelMyExp(user.getTotalExp()))
                 .build();
         return dto;
     }
