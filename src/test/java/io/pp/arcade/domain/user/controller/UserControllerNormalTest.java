@@ -18,6 +18,7 @@ import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.Mode;
 import io.pp.arcade.global.type.RacketType;
 import io.pp.arcade.global.type.StatusType;
 import org.assertj.core.api.Assertions;
@@ -98,7 +99,8 @@ class UserControllerNormalTest {
                         .header() // "Authorization", "Bearer " + initiator.tokens[0].getAccessToken())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.event").isEmpty())
-                .andExpect(jsonPath("$.mode").equals()) // enum 추가
+                .andExpect(jsonPath("$.currentMatchMode").equals()) // enum 추가
+                .andExpect(jsonPath("$.seasonMode").equals(Mode.NORMAL)) // enum 추가
                 .andDo(document("user-live")));
     }
 
