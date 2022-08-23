@@ -2,6 +2,7 @@ package io.pp.arcade.domain.game;
 
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.Mode;
 import io.pp.arcade.global.type.StatusType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,4 +17,8 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
     Page<Game> findByStatus(String status, Pageable pageable);
     Page<Game> findByIdLessThanAndStatusOrderByIdDesc(Integer id, StatusType status, Pageable pageable);
     Page<Game> findByIdLessThanOrderByIdDesc (Integer id, Pageable pageable);
+
+    Page<Game> findByIdLessThanAndStatusAndModeOrderByIdDesc(Integer id, StatusType status, Mode mode, Pageable pageable);
+
+    Page<Game> findByIdLessThanAndModeOrderByIdDesc(Integer id, Mode mode, Pageable pageable);
 }

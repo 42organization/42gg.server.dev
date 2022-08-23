@@ -4,6 +4,7 @@ import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.Mode;
 import io.pp.arcade.global.type.StatusType;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,8 @@ public class GameDto {
     private Integer season;
     private StatusType status;
 
+    private Mode mode;
+
     public static GameDto from(Game game) {
         return GameDto.builder()
                 .id(game.getId())
@@ -32,9 +35,9 @@ public class GameDto {
                 .time(game.getTime())
                 .season(game.getSeason())
                 .status(game.getStatus())
+                .mode(game.getMode())
                 .build();
     }
-
     @Override
     public String toString() {
         return "GameDto{" +
@@ -46,6 +49,7 @@ public class GameDto {
                 ", time=" + time +
                 ", season=" + season +
                 ", status=" + status +
+                ", mode=" + mode +
                 '}';
     }
 }
