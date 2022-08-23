@@ -24,6 +24,7 @@ import io.pp.arcade.domain.user.dto.*;
 import io.pp.arcade.global.scheduler.CurrentMatchUpdater;
 import io.pp.arcade.global.scheduler.GameGenerator;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.Mode;
 import io.pp.arcade.global.type.RoleType;
 import io.pp.arcade.global.util.ExpLevelCalculator;
 import io.pp.arcade.global.util.HeaderUtil;
@@ -35,7 +36,6 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,6 +53,7 @@ public class UserControllerImpl implements UserController {
     private final SeasonService seasonService;
     private final GameGenerator gameGenerator;
     private final CurrentMatchUpdater currentMatchUpdater;
+    private final Mode seasonMode = Mode.NORMAL;
     /*
      * [메인 페이지]
      * - 유저 정보 조회
@@ -64,6 +65,7 @@ public class UserControllerImpl implements UserController {
         UserResponseDto responseDto = UserResponseDto.builder()
                 .intraId(user.getIntraId())
                 .userImageUri(user.getImageUri())
+                .mode(seasonMode)
                 .isAdmin(user.getRoleType() == RoleType.ADMIN)
                 .build();
         return responseDto;
@@ -209,6 +211,8 @@ public class UserControllerImpl implements UserController {
         NotiCountDto notiCount = notiService.countAllNByUser(NotiFindDto.builder().user(user).build());
         UserLiveInfoResponseDto userLiveInfoResponse = UserLiveInfoResponseDto.builder()
                 .notiCount(notiCount.getNotiCount())
+                .currentMatchMode(currentMatch == null ? null : currentMatch.getSlot().getMode()) // is it right to find mode in slot?
+                .seasonMode(seasonMode)
                 .event(event)
                 .build();
         return userLiveInfoResponse;
