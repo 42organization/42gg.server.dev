@@ -109,24 +109,46 @@ public class TeamService {
     }
 
     @Transactional
+    public TeamsUserListDto findUserListInTeams(SlotDto slotDto, UserDto curUser) {
+        List<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllBySlotId(slotDto.getId());
+        SlotTeamUser currentUser = slotTeamUserRepository.findSlotTeamUserBySlotIdAndUserId(slotDto.getId(), curUser.getId()).orElseThrow(() -> new BusinessException("E0001"));
+
+        List<GameUserInfoDto> myTeam = new ArrayList<>();
+        List<GameUserInfoDto> enemyTeam = new ArrayList<>();
+        for (SlotTeamUser slotTeamUser : slotTeamUsers) {
+            if (slotTeamUser.getTeam().equals(currentUser.getTeam())) {
+                myTeam.add(GameUserInfoDto.from(slotTeamUser.getUser()));
+            } else {
+                enemyTeam.add(GameUserInfoDto.from(slotTeamUser.getUser()));
+            }
+        }
+
+        TeamsUserListDto dto = TeamsUserListDto.builder()
+                .myTeam(myTeam)
+                .enemyTeam(enemyTeam)
+                .build();
+        return dto;
+    }
+
+    @Transactional
     public TeamPosDto findUsersByTeamPos(SlotDto slotDto, UserDto curUser) {
         List<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllBySlotId(slotDto.getId());
 
         SlotTeamUser currentUser = slotTeamUserRepository.findSlotTeamUserBySlotIdAndUserId(slotDto.getId(), curUser.getId()).orElseThrow(() -> new BusinessException("E0001"));
 
-        List<GameUserInfoDto> myTeamUserInfos = new ArrayList<>();
-        List<GameUserInfoDto> enemyTeamUserInfos = new ArrayList<>();
+        TeamDto myTeam = null;
+        TeamDto enemyTeam = null;
         for (SlotTeamUser slotTeamUser : slotTeamUsers) {
             if (slotTeamUser.getTeam().equals(currentUser.getTeam())) {
-                myTeamUserInfos.add(GameUserInfoDto.from(slotTeamUser.getUser()));
+                myTeam = TeamDto.from(slotTeamUser.getTeam());
             } else {
-                enemyTeamUserInfos.add(GameUserInfoDto.from(slotTeamUser.getUser()));
+                enemyTeam = TeamDto.from(slotTeamUser.getTeam());
             }
         }
 
         TeamPosDto dto = TeamPosDto.builder()
-                .myTeam(myTeamUserInfos)
-                .enemyTeam(enemyTeamUserInfos)
+                .myTeam(myTeam)
+                .enemyTeam(enemyTeam)
                 .build();
         return dto;
     }

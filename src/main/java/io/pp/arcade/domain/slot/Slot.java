@@ -40,10 +40,12 @@ public class Slot extends BaseTimeEntity {
     @Column(name = "head_count")
     private Integer headCount;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "team1_id")
     private Team team1;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "team2_id")
     private Team team2;

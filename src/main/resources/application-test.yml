@@ -5,7 +5,7 @@ spring:
 
   # 데이터 소스 설정
   datasource:
-    url: jdbc:mysql://localhost:3306/TEST?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/MAIN?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     driverClassName: com.mysql.cj.jdbc.Driver
     username: 42gg
     password: pingPongpower42#
@@ -26,7 +26,7 @@ spring:
       registration:
         42:
           client-id: "353cdada0d271c99afd647ecb5c77f257750a212e40b613fe6847985bc1f21c6"
-          client-secret: "126a9ebf21bb84857bbae746af4f36ba74eefd24af9bceee5abd7cbe6530f5ce"
+          client-secret: "88a2e5c53365399e884a05d6d09b7e251b187abc6f7b292a71fc1d2031dfdd9b"
 
   # Redis 설정
   cache:
