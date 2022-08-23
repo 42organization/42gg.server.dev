@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.game.dto;
 
+import io.pp.arcade.global.type.Mode;
 import io.pp.arcade.global.type.StatusType;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,12 +13,15 @@ public class GameFindDto {
     StatusType status;
     Pageable pageable;
 
+    Mode mode;
+
     @Override
     public String toString() {
         return "GameFindDto{" +
                 "id=" + id +
                 ", status=" + status +
                 ", pageable=" + pageable +
+                ", mode=" + mode +
                 '}';
     }
 }

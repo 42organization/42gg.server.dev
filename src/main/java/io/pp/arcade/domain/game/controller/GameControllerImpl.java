@@ -8,7 +8,6 @@ import io.pp.arcade.domain.event.EventService;
 import io.pp.arcade.domain.event.dto.EventUserDto;
 import io.pp.arcade.domain.event.dto.FindEventDto;
 import io.pp.arcade.domain.event.dto.SaveEventUserDto;
-import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.game.dto.*;
 import io.pp.arcade.domain.noti.NotiService;
@@ -18,20 +17,14 @@ import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
-import io.pp.arcade.domain.rank.RankRedis;
 import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.rank.dto.RankFindDto;
 import io.pp.arcade.domain.rank.dto.RankUpdateDto;
 import io.pp.arcade.domain.rank.dto.RankUserDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
-import io.pp.arcade.domain.slot.Slot;
-import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
-import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
-import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.slotteamuser.SlotTeamUserService;
 import io.pp.arcade.domain.slotteamuser.dto.SlotTeamUserDto;
-import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.team.dto.TeamModifyGameResultDto;
@@ -41,7 +34,7 @@ import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserFindDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import io.pp.arcade.global.exception.BusinessException;
-import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.Mode;
 import io.pp.arcade.global.type.NotiType;
 import io.pp.arcade.global.type.StatusType;
 import io.pp.arcade.global.util.EloRating;
@@ -135,6 +128,31 @@ public class GameControllerImpl implements GameController {
         tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         Pageable pageable = PageRequest.of(0, requestDto.getCount());
         GameResultPageDto resultPageDto = gameService.findGamesAfterId(GameFindDto.builder().id(requestDto.getGameId()).status(requestDto.getStatus()).pageable(pageable).build());
+        List<GameResultDto> gameResultList = new ArrayList<>();
+        List<GameDto> gameLists = resultPageDto.getGameList();
+        Integer lastGameId;
+        if (gameLists.size() == 0) {
+            lastGameId = 0;
+        } else {
+            lastGameId = gameLists.get(gameLists.size() - 1).getId();
+        }
+        putResultInGames(gameResultList, gameLists, null);
+
+        GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
+                .games(gameResultList)
+                .lastGameId(lastGameId)
+                .totalPage(resultPageDto.getTotalPage())
+                .currentPage(resultPageDto.getCurrentPage() + 1)
+                .build();
+        return gameResultResponse;
+    }
+
+    @Override
+    @GetMapping(value = "/games/{mode}")
+    public GameResultResponseDto gameResultByGameIdAndCount(@PathVariable Mode mode, GameResultPageRequestDto requestDto, HttpServletRequest request) {
+        tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        Pageable pageable = PageRequest.of(0, requestDto.getCount());
+        GameResultPageDto resultPageDto = gameService.findGamesAfterId(GameFindDto.builder().id(requestDto.getGameId()).status(requestDto.getStatus()).mode(mode).pageable(pageable).build());
         List<GameResultDto> gameResultList = new ArrayList<>();
         List<GameDto> gameLists = resultPageDto.getGameList();
         Integer lastGameId;
