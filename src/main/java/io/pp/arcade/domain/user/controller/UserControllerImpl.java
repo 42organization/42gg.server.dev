@@ -25,6 +25,7 @@ import io.pp.arcade.global.scheduler.CurrentMatchUpdater;
 import io.pp.arcade.global.scheduler.GameGenerator;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.RoleType;
+import io.pp.arcade.global.util.ExpLevelCalculator;
 import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -87,9 +88,9 @@ public class UserControllerImpl implements UserController {
                 .userImageUri(targetUser.getImageUri())
                 .racketType(targetUser.getRacketType())
                 .statusMessage(targetUser.getStatusMessage())
-                .level(targetUser.getTotalExp())
-                .currentExp(targetUser.getTotalExp())
-                .maxExp(targetUser.getTotalExp())
+                .level(ExpLevelCalculator.getLevel(targetUser.getTotalExp()))
+                .currentExp(ExpLevelCalculator.getCurrentLevelMyExp(targetUser.getTotalExp()))
+                .maxExp(ExpLevelCalculator.getLevelMaxExp(targetUser.getTotalExp()))
                 .rivalRecord(rivalRecord)
                 .build();
         return responseDto;

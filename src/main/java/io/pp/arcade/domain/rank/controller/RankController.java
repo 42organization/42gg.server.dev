@@ -15,5 +15,5 @@ import javax.validation.constraints.PositiveOrZero;
 
 public interface RankController {
         RankListResponseDto rankList(@SortDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @RequestParam(required = false, defaultValue = "20") Integer count, @PathVariable GameType gametype, HttpServletRequest request);
-        VipListResponseDto vipList(Pageable pageable, HttpServletRequest request)
+        VipListResponseDto vipList(Pageable pageable, HttpServletRequest request);
 }
