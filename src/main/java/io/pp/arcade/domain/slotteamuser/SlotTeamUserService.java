@@ -8,6 +8,8 @@ import io.pp.arcade.domain.slotteamuser.dto.SlotTeamUserDto;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -23,72 +25,6 @@ public class SlotTeamUserService {
     private final GameRepository gameRepository;
 
     @Transactional
-    public void saveFromSlot() {
-//        slotTeamUserRepository.deleteAll();
-        List<Slot> slots = slotRepository.findAll();
-        for (Slot slot : slots) {
-            if (slot.getTeam1() != null) {
-                if (slot.getTeam1().getUser1() != null) {
-                    SlotTeamUser slotTeamUser = SlotTeamUser.builder()
-                            .slot(slot)
-                            .team(slot.getTeam1())
-                            .user(slot.getTeam1().getUser1())
-                            .build();
-                    slotTeamUserRepository.save(slotTeamUser);
-                }
-                if (slot.getTeam2().getUser1() != null) {
-                    SlotTeamUser slotTeamUser = SlotTeamUser.builder()
-                            .slot(slot)
-                            .team(slot.getTeam2())
-                            .user(slot.getTeam2().getUser1())
-                            .build();
-                    slotTeamUserRepository.save(slotTeamUser);
-                }
-            }
-        }
-    }
-
-    @Transactional
-    public void addSlotInTeam() {
-        List<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAll();
-        for (SlotTeamUser slotTeamUser : slotTeamUsers) {
-            Team team = slotTeamUser.getTeam();
-            team.setSlot(slotTeamUser.getSlot());
-        }
-    }
-
-    @Transactional
-    public void deleteTeamInSlot() {
-        List<Team> teams = teamRepository.findAll();
-        for (Team team : teams) {
-            team.setUser1(null);
-            team.setUser2(null);
-        }
-        List<Slot> slt = slotRepository.findAll();
-        for (Slot slot : slt) {
-            if (slot.getTeam1() != null) {;
-                slot.getTeam1().setUser1(null);
-                slot.setTeam1(null);
-            }
-            if (slot.getTeam2() != null) {
-                slot.getTeam2().setUser1(null);
-                slot.setTeam2(null);
-            }
-        }
-    }
-
-    @Transactional
-    public void deleteTeamInGame() {
-        List<Game> games = gameRepository.findAll();
-        for (Game game : games) {
-            game.setTeam1(null);
-            game.setTeam2(null);
-            game.setType(null);
-            game.setTime(null);
-        }
-    }
-
-    @Transactional
     public List<SlotTeamUserDto> findAllByTeamId(Integer teamId) {
         return slotTeamUserRepository.findAllByTeamId(teamId).stream().map(SlotTeamUserDto::from).collect(Collectors.toList());
     }
@@ -101,6 +37,13 @@ public class SlotTeamUserService {
     @Transactional
     public List<SlotTeamUserDto> findAllBySlotId(Integer slotId) {
         List<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllBySlotId(slotId);
+        List<SlotTeamUserDto> slotTeamUserDtos = slotTeamUsers.stream().map(SlotTeamUserDto::from).collect(Collectors.toList());
+        return slotTeamUserDtos;
+    }
+
+    @Transactional
+    public List<SlotTeamUserDto> findAllByAdmin(Pageable pageable) {
+        Page<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllByOrderByTeamUserId(pageable);
         List<SlotTeamUserDto> slotTeamUserDtos = slotTeamUsers.stream().map(SlotTeamUserDto::from).collect(Collectors.toList());
         return slotTeamUserDtos;
     }
