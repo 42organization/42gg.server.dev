@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class GamePlayerDto {
+public class GamePlayerRankDto {
     private String intraId;
     private String userImageUri;
     private Integer wins;

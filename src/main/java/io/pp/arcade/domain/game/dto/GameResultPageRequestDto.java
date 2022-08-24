@@ -10,6 +10,7 @@ public class GameResultPageRequestDto {
     private Integer gameId = Integer.MAX_VALUE;
     private Integer count = 20;
     private StatusType status;
+    private Integer season;
 
     public Integer getGameId() {
         return gameId < 1 ? Integer.MAX_VALUE : gameId;
