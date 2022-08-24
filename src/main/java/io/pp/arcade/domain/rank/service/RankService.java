@@ -39,7 +39,7 @@ public class RankService {
     
     @Transactional
     public VipListResponseDto vipList(Pageable pageable) {
-        Page<User> userPage = userRepository.findAllByOrderByTotalExpAsec(pageable);
+        Page<User> userPage = userRepository.findAllByOrderByTotalExpAsc(pageable);
         List<VipUserDto> vipUserList = new ArrayList<>();
         Integer index = (pageable.getPageSize() - 1) * pageable.getPageNumber();
         for (User user : userPage) {
@@ -52,6 +52,7 @@ public class RankService {
                 .currentPage(userPage.getNumber())
                 .build();
     }
+
 
     @Transactional
     public void saveAll(RankSaveAllDto saveAllDto) {

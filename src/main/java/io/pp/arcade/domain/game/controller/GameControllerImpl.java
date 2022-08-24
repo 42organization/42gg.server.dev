@@ -21,8 +21,11 @@ import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.rank.dto.RankFindDto;
 import io.pp.arcade.domain.rank.dto.RankUpdateDto;
 import io.pp.arcade.domain.rank.dto.RankUserDto;
+import io.pp.arcade.domain.season.SeasonService;
+import io.pp.arcade.domain.season.dto.SeasonDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
 import io.pp.arcade.domain.slotteamuser.SlotTeamUserService;
 import io.pp.arcade.domain.slotteamuser.dto.SlotTeamUserDto;
 import io.pp.arcade.domain.team.TeamService;
@@ -65,6 +68,7 @@ public class GameControllerImpl implements GameController {
     private final CurrentMatchService currentMatchService;
     private final RankRedisService rankRedisService;
     private final TokenService tokenService;
+    private final SeasonService seasonService;
     private final EventService eventService;
     private final NotiService notiService;
 
@@ -124,7 +128,7 @@ public class GameControllerImpl implements GameController {
 
     @Override
     @GetMapping(value = "/games")
-    public GameResultResponseDto gameResultByGameIdAndCount(GameResultPageRequestDto requestDto, HttpServletRequest request) {
+    public GameResultResponseDto gameResultByGameIdAndCount(GameResultPageRequestDto requestDto, HttpServletRequest request)
         tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         Pageable pageable = PageRequest.of(0, requestDto.getCount());
         GameResultPageDto resultPageDto = gameService.findGamesAfterId(GameFindDto.builder().id(requestDto.getGameId()).status(requestDto.getStatus()).pageable(pageable).build());
@@ -150,18 +154,28 @@ public class GameControllerImpl implements GameController {
     @Override
     @GetMapping(value = "/games/{mode}")
     public GameResultResponseDto gameResultByGameIdAndCount(@PathVariable Mode mode, GameResultPageRequestDto requestDto, HttpServletRequest request) {
+        // 유저 유효성 검사
         tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         Pageable pageable = PageRequest.of(0, requestDto.getCount());
-        GameResultPageDto resultPageDto = gameService.findGamesAfterId(GameFindDto.builder().id(requestDto.getGameId()).status(requestDto.getStatus()).mode(mode).pageable(pageable).build());
+        // 현재 시즌 정보 가져오기
+        GameFindDto gameFindDto = getGameFindDto(requestDto, mode);
+        GameResultPageDto resultPageDto = gameService.findGamesAfterId(gameFindDto);
         List<GameResultDto> gameResultList = new ArrayList<>();
         List<GameDto> gameLists = resultPageDto.getGameList();
+
+
+        // GameResultResponseDto - lastGameId 처리
         Integer lastGameId;
         if (gameLists.size() == 0) {
             lastGameId = 0;
         } else {
             lastGameId = gameLists.get(gameLists.size() - 1).getId();
         }
-        putResultInGames(gameResultList, gameLists, null);
+
+        // GameResultResponseDto - GameResultDto 처리
+        // All, Rank, Normal(처리중) 분리
+        sortingAndPutResultInGames(mode, gameResultList, gameLists);
+
 
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
@@ -170,6 +184,28 @@ public class GameControllerImpl implements GameController {
                 .currentPage(resultPageDto.getCurrentPage() + 1)
                 .build();
         return gameResultResponse;
+    }
+
+    private GameFindDto getGameFindDto(GameResultPageRequestDto requestDto, Mode mode) {\
+        GameFindDto gameFindDto;
+
+        /* 시즌별 조회 정보 */
+        Integer seasonId = 0;
+        if (requestDto.getSeason() == null) {
+            if (seasonService.findCurrentSeason() == ㅜㅕ
+            gameFindDto = GameFindDto.builder().id(requestDto.getGameId()).status(requestDto.getStatus()).mode(mode).seasonId(currentSeason).pageable(pageable).build();
+        } else {
+            gameFindDto = GameFindDto
+        }
+    }
+
+    private void sortingAndPutResultInGames(Mode mode, List<GameResultDto> gameResultList, List<GameDto> gameLists) {
+        if (mode == Mode.RANK)
+            putResultInGames(gameResultList, gameLists, null);
+        else if (mode == Mode.NORMAL)
+            putResultInNormalGames(gameResultList, gameLists, null);
+        else if (mode == Mode.ALL)
+            putResultInGames(gameResultList, gameLists, null);
     }
 
     @Override
@@ -294,8 +330,52 @@ public class GameControllerImpl implements GameController {
             currentMatchService.removeCurrentMatch(removeDto);
         });
     }
+    private void putResultInNormalGames(List<GameResultDto> gameResultList, List<GameDto> gameLists){
 
+    }
+
+    private void putResultInNormalGames(List<GameResultDto> gameResultList, List<GameDto> gameLists, UserDto curUser) {
+
+
+        /* gameResultDto -> GameResultList에 추가 */
+        /* game -> gameResultDto */
+        TeamDto leftTeam;
+        if(curUser == null){
+            putResultInNormalGames(gameResultList,gameLists);
+        }else{
+            for (GameDto game : gameLists) {
+                List<SlotTeamUserDto> slotTeamUserDtos = slotTeamUserService.findAllBySlotId(game.getSlot().getId());
+                if (curUser == null) {
+                    leftTeam = slotTeamUserDtos.get(0).getTeam();
+                } else {
+                    //프로필 페이지 조회
+                    leftTeam = slotTeamUserDtos.get(0).getTeam();
+                }
+                // team1
+                // GamePlayerNormalDto (여기는 나)
+                List<GamePlayerNormalDto> myTeamPlayers = new ArrayList<>();
+                List<GamePlayerNormalDto> enemyTeamPlayers = new ArrayList<>();
+
+                for (SlotTeamUserDto slotTeamUserDto : slotTeamUserDtos) {
+                        myTeamPlayers.add(GamePlayerNormalDto.builder().intraId(leftUser.getIntraId()).userImageUri(leftUser.getImageUri()).level(0).build());
+                    GameTeamNormalDto gameTeamNormalDto1 = GameTeamNormalDto.builder().players(myTeamPlayers).build();
+                }
+
+                gameResultList.add(GameResultDto.builder()
+                        .gameId(game.getId()game)
+                        .type(game.getSlot().getType())
+                        .status(game.getStatus())
+                        .time(game.getSlot().getTime())
+                        .team1(gameTeamNormalDto1)
+                        .team2(gameTeamNormalDto2)
+                        .build());
+            }
+        }
+
+    }
     private void putResultInGames(List<GameResultDto> gameResultList, List<GameDto> gameLists, UserDto curUser) {
+
+
         SlotDto slot;
         List<SlotTeamUserDto> slotTeamUserDtos;
         UserDto leftUser;
@@ -305,10 +385,10 @@ public class GameControllerImpl implements GameController {
         * */
         for (GameDto game : gameLists) {
             slot = game.getSlot();
-            GameTeamDto gameTeamDto1;
-            GameTeamDto gameTeamDto2;
-            List<GamePlayerDto> myTeamPlayerDtos = new ArrayList<>();
-            List<GamePlayerDto> enemyTeamPlayerDtos = new ArrayList<>();
+            GameTeamRankDto gameTeamRankDto1;
+            GameTeamRankDto gameTeamRankDto2;
+            List<GamePlayerRankDto> myTeamPlayerDtos = new ArrayList<>();
+            List<GamePlayerRankDto> enemyTeamPlayerDtos = new ArrayList<>();
             Integer team1Score = 0;
             Integer team2Score = 0;
             Boolean isWin = null;
@@ -337,7 +417,7 @@ public class GameControllerImpl implements GameController {
                     isWin = slotTeamUser.getTeam().getWin();
                     team1Score = slotTeamUser.getTeam().getScore();
 
-                    myTeamPlayerDtos.add(GamePlayerDto.builder()
+                    myTeamPlayerDtos.add(GamePlayerRankDto.builder()
                             .intraId(slotTeamUser.getUser().getIntraId())
                             .userImageUri(slotTeamUser.getUser().getImageUri())
                             .wins(rankUserDto.getWins())
@@ -350,7 +430,7 @@ public class GameControllerImpl implements GameController {
                     isWin = !slotTeamUser.getTeam().getWin();
                     team2Score = slotTeamUser.getTeam().getScore();
 
-                    enemyTeamPlayerDtos.add(GamePlayerDto.builder()
+                    enemyTeamPlayerDtos.add(GamePlayerRankDto.builder()
                             .intraId(slotTeamUser.getUser().getIntraId())
                             .userImageUri(slotTeamUser.getUser().getImageUri())
                             .wins(rankUserDto.getWins())
@@ -360,12 +440,12 @@ public class GameControllerImpl implements GameController {
                             .build());
                 }
             }
-            gameTeamDto1 = GameTeamDto.builder()
+            gameTeamRankDto1 = GameTeamRankDto.builder()
                     .isWin(isWin)
                     .players(myTeamPlayerDtos)
                     .score(team1Score)
                     .build();
-            gameTeamDto2 = GameTeamDto.builder()
+            gameTeamRankDto2 = GameTeamRankDto.builder()
                     .isWin(!isWin)
                     .players(enemyTeamPlayerDtos)
                     .score(team2Score)
@@ -373,8 +453,8 @@ public class GameControllerImpl implements GameController {
 
             gameResultList.add(GameResultDto.builder()
                     .gameId(game.getId())
-                    .team1(gameTeamDto1)
-                    .team2(gameTeamDto2)
+                    .team1(gameTeamRankDto1)
+                    .team2(gameTeamRankDto2)
                     .type(game.getSlot().getType())
                     .status(game.getStatus())
                     .time(game.getSlot().getTime())
