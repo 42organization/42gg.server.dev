@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface GameRepository extends JpaRepository<Game, Integer> {
     Optional<Game> findBySlot(Slot slot);
     Optional<Game> findBySlotId(Integer slotId);
-    Page<Game> findAllByTypeOrderByIdDesc(Pageable pageable, GameType type);
+//    Page<Game> findAllByTypeOrderByIdDesc(Pageable pageable, GameType type);
     Page<Game> findByStatus(String status, Pageable pageable);
     Page<Game> findByIdLessThanAndStatusOrderByIdDesc(Integer id, StatusType status, Pageable pageable);
     Page<Game> findByIdLessThanOrderByIdDesc (Integer id, Pageable pageable);

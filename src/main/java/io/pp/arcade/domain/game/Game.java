@@ -26,21 +26,17 @@ public class Game {
     @JoinColumn(name = "slot_id")
     Slot slot;
 
-    @Setter
     @OneToOne
     @JoinColumn(name = "team1_id")
     private Team team1;
 
-    @Setter
     @OneToOne
     @JoinColumn(name = "team2_id")
     private Team team2;
 
-    @Setter
     @Column(name = "type")
     private GameType type;
 
-    @Setter
     @Column(name = "time")
     private LocalDateTime time;
 
