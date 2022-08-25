@@ -10,4 +10,5 @@ public class CurrentMatchUpdateRequestDto {
     private Integer gameId;
     private Boolean matchImminent;
     private Boolean isMatched;
+    private Boolean isDel;
 }

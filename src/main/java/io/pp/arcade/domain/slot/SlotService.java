@@ -10,7 +10,6 @@ import io.pp.arcade.domain.season.SeasonRepository;
 import io.pp.arcade.domain.slot.dto.*;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
-import io.pp.arcade.domain.team.dto.TeamRemoveUserDto;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.exception.BusinessException;
@@ -120,7 +119,7 @@ public class SlotService {
         } else {
             pppGap = season.getPppGap();
         }
-        CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
+        CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(user, false).orElse(null);
         Integer userSlotId = currentMatch == null ? null : currentMatch.getSlot().getId();
 
         List<SlotStatusDto> slotDtos = new ArrayList<>();

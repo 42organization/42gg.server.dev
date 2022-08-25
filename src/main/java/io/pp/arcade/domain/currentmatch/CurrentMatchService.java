@@ -52,6 +52,7 @@ public class CurrentMatchService {
         currentMatchList.forEach(currentMatch -> {
             currentMatch.setMatchImminent(modifyDto.getMatchImminent());
             currentMatch.setIsMatched(modifyDto.getIsMatched());
+            currentMatch.setIsDel(modifyDto.getIsDel());
         });
     }
 
@@ -59,14 +60,14 @@ public class CurrentMatchService {
     public void saveGameInCurrentMatch(CurrentMatchSaveGameDto saveDto) {
         Game game = gameRepository.findById(saveDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
         User user = userRepository.findById(saveDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
-        CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
+        CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(user, false).orElse(null);
         currentMatch.setGame(game);
     }
 
     @Transactional
     public CurrentMatchDto findCurrentMatchByUser(UserDto userDto) {
         //User user = userRepository.findById(userId).orElseThrow(() -> new BusinessException("E0001"));
-        CurrentMatch currentMatch = currentMatchRepository.findByUserId(userDto.getId()).orElse(null);
+        CurrentMatch currentMatch = currentMatchRepository.findByUserIdAndIsDel(userDto.getId(),false).orElse(null);
         CurrentMatchDto dto = null;
 
         if (currentMatch != null) {
@@ -84,7 +85,7 @@ public class CurrentMatchService {
     @Transactional
     public CurrentMatchDto findCurrentMatchByIntraId(String intraId) {
         User user = userRepository.findByIntraId(intraId).orElseThrow(() -> new BusinessException("E0001"));
-        CurrentMatch currentMatch = currentMatchRepository.findByUser(user).orElse(null);
+        CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(user, false).orElse(null);
         CurrentMatchDto dto = null;
 
         if (currentMatch != null) {
@@ -138,8 +139,10 @@ public class CurrentMatchService {
         CurrentMatch currentMatch = currentMatchRepository.findById(updateRequestDto.getCurrentMatchId()).orElseThrow();
         currentMatch.setMatchImminent(updateRequestDto.getMatchImminent());
         currentMatch.setIsMatched(updateRequestDto.getIsMatched());
+        currentMatch.setIsDel(updateRequestDto.getIsDel());
     }
 
+    /* delete by admin 있는게 맞나?*/
     @Transactional
     public void deleteCurrentMatchByAdmin(CurrentMatchDeleteDto deleteDto) {
         CurrentMatch currentMatch = currentMatchRepository.findById(deleteDto.getCurrentMatchId()).orElseThrow();
