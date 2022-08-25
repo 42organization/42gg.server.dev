@@ -1,9 +1,6 @@
 package io.pp.arcade.global.config;
 
-import io.pp.arcade.global.type.FeedbackType;
-import io.pp.arcade.global.type.GameType;
-import io.pp.arcade.global.type.RacketType;
-import io.pp.arcade.global.type.StatusType;
+import io.pp.arcade.global.type.*;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
@@ -53,6 +50,19 @@ public class EnumConvertConfig {
         public FeedbackType convert(String source) {
             try {
                 return FeedbackType.valueOf(source.toUpperCase(Locale.ROOT));
+            } catch (Exception e) {
+                return null;
+            }
+        }
+    }
+
+    @Component
+    public class StringToDateTypeEnumConverter implements Converter<String, DateType> {
+
+        @Override
+        public DateType convert(String source) {
+            try {
+                return DateType.valueOf(source.toUpperCase(Locale.ROOT));
             } catch (Exception e) {
                 return null;
             }
