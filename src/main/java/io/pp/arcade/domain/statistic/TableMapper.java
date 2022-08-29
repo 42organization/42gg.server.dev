@@ -1,6 +1,11 @@
 package io.pp.arcade.domain.statistic;
 
-public interface TableMapper {
-    String getlabels();
-    Integer getdata();
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class TableMapper{
+    String labels;
+    Integer data;
 }

@@ -5,6 +5,7 @@ import io.pp.arcade.domain.statistic.StatisticService;
 import io.pp.arcade.domain.statistic.TableMapper;
 import io.pp.arcade.domain.statistic.dto.DataSet;
 import io.pp.arcade.domain.statistic.dto.DateRangeDto;
+import io.pp.arcade.domain.statistic.dto.FindDataDto;
 import io.pp.arcade.domain.statistic.dto.StatisticResponseDto;
 import io.pp.arcade.global.type.DateType;
 import lombok.RequiredArgsConstructor;
@@ -22,19 +23,28 @@ import java.util.stream.Collectors;
 @RequestMapping(value = "/pingpong/stat")
 public class StatisticControllerImpl implements StatisticController {
     private final StatisticService statisticService;
-    private final RankService rankService;
 
+    /*
+     * startAt, endAt null일 경우, 초기화 필요
+     * endat 1일 안 보이는 현상 처리 필요
+     */
     @GetMapping(value = "/visit/{date}")
-    public StatisticResponseDto visit(DateType date, DateRangeDto dateRangeDto, HttpServletRequest request) {
+    public StatisticResponseDto visit(DateType date, DateRangeDto dateRangeDto) {
         /* datetype에 따라서 일별, 주별, 월별로 일자 변환 -> 리스트에 startat, endat 2개 담기 */
-        DateRangeDto changedDataRangeDto = getFirstAndLastDate(date, dateRangeDto);
+        DateRangeDto changedDateRangeDto = getFirstAndLastDate(date, dateRangeDto);
+        FindDataDto findDataDto = FindDataDto.builder()
+                .table("visit")
+                .dateType(date)
+                .startAt(changedDateRangeDto.getFormattedStartAt())
+                .endAt(changedDateRangeDto.getFormattedEndAt())
+                .build();
 
         /* service 호출해서 DB에서 변환하면서 데이터 가져오기*/
-        List<TableMapper> labelsAndData = statisticService.findVisit(date, changedDataRangeDto);
+        List<TableMapper> labelsAndData = statisticService.findDataByCreatedAt(findDataDto);
 
         /* 데이터 구성 정리하기 */
-        List<String> labels = labelsAndData.stream().map(TableMapper::getlabels).collect(Collectors.toList());
-        List<Integer> data = labelsAndData.stream().map(TableMapper::getdata).collect(Collectors.toList());
+        List<String> labels = labelsAndData.stream().map(TableMapper::getLabels).collect(Collectors.toList());
+        List<Integer> data = labelsAndData.stream().map(TableMapper::getData).collect(Collectors.toList());
 
         List<DataSet> dataSets = new ArrayList<>();
         dataSets.add(DataSet.builder()
@@ -45,86 +55,7 @@ public class StatisticControllerImpl implements StatisticController {
         /* 정리한 데이터 responseDto에 넣어주기 */
         StatisticResponseDto responseDto = StatisticResponseDto.builder()
                 .labels(labels)
-                .dataSets(dataSets)
-                .build();
-        return responseDto;
-    }
-
-    @GetMapping(value = "/visit/{date}/types/rank/section/{section}")
-    public StatisticResponseDto visitByRank(@PathVariable DateType date, @PathVariable Integer section, @RequestParam DateRangeDto dateRangeDto, HttpServletRequest request) {
-        /* 일자수, 주차수, 월수가 1 넘어가면 안됨 ex) 08-01만, 08.1만, 08만 가능 -> 그걸 검사해야함 */
-        DateRangeDto changedDateRangeDto = getFirstAndLastDate(date, dateRangeDto);
-
-        List<TableMapper> labelsAndData = statisticService.findVisit(date, changedDateRangeDto);
-
-        List<String> labels = labelsAndData.stream().map(TableMapper::getlabels).collect(Collectors.toList());
-        List<Integer> data = labelsAndData.stream().map(TableMapper::getdata).collect(Collectors.toList());
-
-        List<DataSet> dataSets = new ArrayList<>();
-        dataSets.add(DataSet.builder()
-                .label("rank" + changedDateRangeDto.getStartat().toString())
-                .data(data)
-                .build());
-
-        StatisticResponseDto responseDto = StatisticResponseDto.builder()
-                .labels(labels)
-                .dataSets(dataSets)
-                .build();
-        return responseDto;
-    }
-
-    @GetMapping(value = "/match/{date}")
-    public StatisticResponseDto match(@PathVariable DateType date, @RequestParam DateRangeDto dateRangeDto, HttpServletRequest request) {
-        DateRangeDto changedDateRangeDto = getFirstAndLastDate(date, dateRangeDto);
-
-        List<TableMapper> labelsAndDataAllCnt = statisticService.findMatch(changedDateRangeDto);
-        List<TableMapper> labelsAndDataPureCnt = statisticService.findMatch(changedDateRangeDto);
-
-        List<String> labels = labelsAndDataAllCnt.stream().map(TableMapper::getlabels).collect(Collectors.toList());
-        List<Integer> dataAllCnt = labelsAndDataAllCnt.stream().map(TableMapper::getdata).collect(Collectors.toList());
-        List<Integer> dataPureCnt = labelsAndDataPureCnt.stream().map(TableMapper::getdata).collect(Collectors.toList());
-
-        List<DataSet> dataSets = new ArrayList<>();
-        dataSets.add(DataSet.builder()
-                .label("AllCount")
-                .data(dataAllCnt)
-                .build());
-        dataSets.add(DataSet.builder()
-                .label("PureCount")
-                .data(dataPureCnt)
-                .build());
-
-        StatisticResponseDto responseDto = StatisticResponseDto.builder()
-                .labels(labels)
-                .dataSets(dataSets)
-                .build();
-        return responseDto;
-    }
-
-    @GetMapping(value = "/match/{date}/types/rank/section/{section}")
-    public StatisticResponseDto matchByRank(@PathVariable DateType date, @PathVariable Integer section, @RequestParam DateRangeDto dateRangeDto, HttpServletRequest request) {
-        DateRangeDto changedDateRangeDto = getFirstAndLastDate(date, dateRangeDto);
-
-        List<TableMapper> labelsAndDataAllCnt = statisticService.findMatch(changedDateRangeDto);
-        List<TableMapper> labelsAndDataPureCnt = statisticService.findMatch(changedDateRangeDto);
-
-        List<String> labels = labelsAndDataAllCnt.stream().map(TableMapper::getlabels).collect(Collectors.toList());
-        List<Integer> dataAllCnt = labelsAndDataAllCnt.stream().map(TableMapper::getdata).collect(Collectors.toList());
-        List<Integer> dataPureCnt = labelsAndDataPureCnt.stream().map(TableMapper::getdata).collect(Collectors.toList());
-
-        List<DataSet> dataSets = new ArrayList<>();
-        dataSets.add(DataSet.builder()
-                .label("AllCount")
-                .data(dataAllCnt)
-                .build());
-        dataSets.add(DataSet.builder()
-                .label("PureCount")
-                .data(dataPureCnt)
-                .build());
-
-        StatisticResponseDto responseDto = StatisticResponseDto.builder()
-                .labels(labels)
-                .dataSets(dataSets)
+                .datasets(dataSets)
                 .build();
         return responseDto;
     }
@@ -151,6 +82,103 @@ public class StatisticControllerImpl implements StatisticController {
     }
     */
 
+    @GetMapping(value = "/match/{date}")
+    public StatisticResponseDto match(@PathVariable DateType date, @RequestParam DateRangeDto dateRangeDto, HttpServletRequest request) {
+        DateRangeDto changedDateRangeDto = getFirstAndLastDate(date, dateRangeDto);
+        FindDataDto findDataDto = FindDataDto.builder()
+                .table("user")
+                .dateType(date)
+                .startAt(changedDateRangeDto.getFormattedStartAt())
+                .endAt(changedDateRangeDto.getFormattedEndAt())
+                .build();
+        List<TableMapper> labelsAndDataAllCnt = statisticService.findDataByCreatedAt(findDataDto);
+        List<TableMapper> labelsAndDataPureCnt = statisticService.findDataByCreatedAt(findDataDto);
+
+
+        List<String> labels = labelsAndDataAllCnt.stream().map(TableMapper::getLabels).collect(Collectors.toList());
+        List<Integer> dataAllCnt = labelsAndDataAllCnt.stream().map(TableMapper::getData).collect(Collectors.toList());
+        List<Integer> dataPureCnt = labelsAndDataPureCnt.stream().map(TableMapper::getData).collect(Collectors.toList());
+
+        List<DataSet> dataSets = new ArrayList<>();
+        dataSets.add(DataSet.builder()
+                .label("AllCount")
+                .data(dataAllCnt)
+                .build());
+        dataSets.add(DataSet.builder()
+                .label("PureCount")
+                .data(dataPureCnt)
+                .build());
+
+        StatisticResponseDto responseDto = StatisticResponseDto.builder()
+                .labels(labels)
+                .datasets(dataSets)
+                .build();
+        return responseDto;
+    }
+
+    @GetMapping(value = "/visit/{date}/types/rank/section/{section}")
+    public StatisticResponseDto visitByRank(@PathVariable DateType date, @PathVariable Integer section, @RequestParam DateRangeDto dateRangeDto, HttpServletRequest request) {
+        /* 일자수, 주차수, 월수가 1 넘어가면 안됨 ex) 08-01만, 08.1만, 08만 가능 -> 그걸 검사해야함 */
+        DateRangeDto changedDateRangeDto = getFirstAndLastDate(date, dateRangeDto);
+        FindDataDto findDataDto = FindDataDto.builder()
+                .table("user")
+                .dateType(date)
+                .startAt(changedDateRangeDto.getFormattedStartAt())
+                .endAt(changedDateRangeDto.getFormattedEndAt())
+                .build();
+        List<TableMapper> labelsAndData = statisticService.findDataByCreatedAt(findDataDto);
+
+        List<String> labels = labelsAndData.stream().map(TableMapper::getLabels).collect(Collectors.toList());
+        List<Integer> data = labelsAndData.stream().map(TableMapper::getData).collect(Collectors.toList());
+
+        List<DataSet> dataSets = new ArrayList<>();
+        dataSets.add(DataSet.builder()
+                .label("rank" + changedDateRangeDto.getStartat())
+                .data(data)
+                .build());
+
+        StatisticResponseDto responseDto = StatisticResponseDto.builder()
+                .labels(labels)
+                .datasets(dataSets)
+                .build();
+        return responseDto;
+    }
+
+
+
+    @GetMapping(value = "/match/{date}/types/rank/section/{section}")
+    public StatisticResponseDto matchByRank(@PathVariable DateType date, @PathVariable Integer section, @RequestParam DateRangeDto dateRangeDto, HttpServletRequest request) {
+        DateRangeDto changedDateRangeDto = getFirstAndLastDate(date, dateRangeDto);
+        FindDataDto findDataDto = FindDataDto.builder()
+                .table("user")
+                .dateType(date)
+                .startAt(changedDateRangeDto.getFormattedStartAt())
+                .endAt(changedDateRangeDto.getFormattedEndAt())
+                .build();
+        List<TableMapper> labelsAndDataAllCnt = statisticService.findDataByCreatedAt(findDataDto);
+        List<TableMapper> labelsAndDataPureCnt = statisticService.findDataByCreatedAt(findDataDto);
+
+        List<String> labels = labelsAndDataAllCnt.stream().map(TableMapper::getLabels).collect(Collectors.toList());
+        List<Integer> dataAllCnt = labelsAndDataAllCnt.stream().map(TableMapper::getData).collect(Collectors.toList());
+        List<Integer> dataPureCnt = labelsAndDataPureCnt.stream().map(TableMapper::getData).collect(Collectors.toList());
+
+        List<DataSet> dataSets = new ArrayList<>();
+        dataSets.add(DataSet.builder()
+                .label("AllCount")
+                .data(dataAllCnt)
+                .build());
+        dataSets.add(DataSet.builder()
+                .label("PureCount")
+                .data(dataPureCnt)
+                .build());
+
+        StatisticResponseDto responseDto = StatisticResponseDto.builder()
+                .labels(labels)
+                .datasets(dataSets)
+                .build();
+        return responseDto;
+    }
+
     DateRangeDto getFirstAndLastDate(DateType dateType, DateRangeDto dateRangeDto) {
         Date startDate = dateRangeDto.getStartat();
         Date endDate = dateRangeDto.getEndat();
@@ -172,9 +200,11 @@ public class StatisticControllerImpl implements StatisticController {
                 break;
         }
 
-        dateRangeDto.setEndat(startCal.getTime());
-        dateRangeDto.setStartat(endCal.getTime());
-        return dateRangeDto;
+        DateRangeDto result = DateRangeDto.builder()
+                .startat(startCal.getTime())
+                .endat(endCal.getTime())
+                .build();
+        return result;
     }
 
     private static void getLastDateOfMonth(Calendar endCal) {

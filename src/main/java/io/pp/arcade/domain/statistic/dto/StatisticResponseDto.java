@@ -9,5 +9,5 @@ import java.util.List;
 @Builder
 public class StatisticResponseDto {
     private List<String> labels;
-    private List<DataSet> dataSets;
+    private List<DataSet> datasets;
 }
