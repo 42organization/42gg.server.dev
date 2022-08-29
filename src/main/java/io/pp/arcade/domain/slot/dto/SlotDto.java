@@ -4,6 +4,7 @@ package io.pp.arcade.domain.slot.dto;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.Mode;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,6 +19,7 @@ public class SlotDto {
     private Integer gamePpp;
     private Integer headCount;
     private GameType type;
+    private Mode mode;
 
     //entity를 dto로 바꿔주는 메서드
     public static SlotDto from(Slot slot) {
@@ -28,6 +30,7 @@ public class SlotDto {
                 .gamePpp(slot.getGamePpp())
                 .headCount(slot.getHeadCount())
                 .type(slot.getType())
+                .mode(slot.getMode())
                 .build();
     }
 
@@ -40,6 +43,7 @@ public class SlotDto {
                 ", gamePpp=" + gamePpp +
                 ", headCount=" + headCount +
                 ", type=" + type +
+                ", mode=" + mode.getCode() +
                 '}';
     }
 }

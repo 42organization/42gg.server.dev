@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.user.dto;
 
+import io.pp.arcade.global.type.Mode;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,6 +9,7 @@ import lombok.Getter;
 public class UserResponseDto {
     private String intraId;
     private String userImageUri;
+    private Mode mode;
     private Boolean isAdmin;
 
     @Override
@@ -15,6 +17,8 @@ public class UserResponseDto {
         return "UserResponseDto{" +
                 "intraId='" + intraId + '\'' +
                 ", userImageUri='" + userImageUri + '\'' +
+                ", mode=" + mode +
+                ", isAdmin=" + isAdmin +
                 '}';
     }
 }
