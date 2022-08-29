@@ -80,13 +80,28 @@ public class GameService {
     @Transactional
     public GameResultPageDto findGamesAfterId(GameFindDto findDto) {
         Page<Game> games;
+        //gameRepository.findGameListOrderByIdDesc(findDto.getSeasonId(), findDto.getId(), findDto.getMode(), findDto.getStatus(), findDto.getPageable());
         if (findDto.getStatus() != null) {
-            games = gameRepository.findByIdLessThanAndStatusOrderByIdDesc(findDto.getId(), findDto.getStatus(), findDto.getPageable());
+            games = gameRepository.findByIdLessThanAndStatusAndModeOrderByIdDesc(findDto.getId(), findDto.getStatus(), findDto.getMode(), findDto.getPageable());
         } else {
-            games = gameRepository.findByIdLessThanOrderByIdDesc(findDto.getId(), findDto.getPageable());
+            games = gameRepository.findByIdLessThanAndModeOrderByIdDesc(findDto.getId(), findDto.getMode(), findDto.getPageable());
         }
         List<GameDto> gameDtoList = games.stream().map(GameDto::from).collect(Collectors.toList());
 
+        GameResultPageDto resultPageDto = GameResultPageDto.builder()
+                .gameList(gameDtoList)
+                .totalPage(games.getTotalPages())
+                .currentPage(games.getNumber())
+                .build();
+        return resultPageDto;
+    }
+
+    @Transactional
+    public GameResultPageDto v1_findGamesAfterId(GameFindDto findDto) {
+        Integer mode = (findDto.getMode() == null) ? null : findDto.getMode().getValue();
+        Integer status = (findDto.getStatus() == null) ? null : findDto.getStatus().getValue();
+        Page<Game> games = gameRepository.findGameListOrderByIdDesc(findDto.getSeasonId(), findDto.getId(), mode, status, findDto.getPageable());
+        List<GameDto> gameDtoList = games.stream().map(GameDto::from).collect(Collectors.toList());
         GameResultPageDto resultPageDto = GameResultPageDto.builder()
                 .gameList(gameDtoList)
                 .totalPage(games.getTotalPages())

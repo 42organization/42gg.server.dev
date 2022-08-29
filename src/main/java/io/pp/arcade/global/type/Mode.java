@@ -10,10 +10,11 @@ import java.util.Locale;
 @Getter
 @RequiredArgsConstructor
 public enum Mode implements Constant{
-    ALL("all"), NORMAL("normal"), RANK("rank");
+    BOTH(0,"BOTH"), NORMAL(1,"normal"), RANK(2,"rank");
     // 모드는 3가지가 있음.
     // type 형태이기 때문에 global 안에 type 도메인 안에 넣었음
 
+    private final Integer value;
     private final String code;
 
     @JsonCreator
