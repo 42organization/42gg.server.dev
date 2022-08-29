@@ -10,6 +10,10 @@ import io.pp.arcade.domain.event.dto.FindEventDto;
 import io.pp.arcade.domain.event.dto.SaveEventUserDto;
 import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.game.dto.*;
+import io.pp.arcade.domain.game.Manager.GameResponseManager;
+import io.pp.arcade.domain.game.Manager.data.GamePlayer;
+import io.pp.arcade.domain.game.Manager.data.GamePlayerRank;
+import io.pp.arcade.domain.game.Manager.data.GameTeamRank;
 import io.pp.arcade.domain.noti.NotiService;
 import io.pp.arcade.domain.noti.dto.NotiAddDto;
 import io.pp.arcade.domain.pchange.PChangeService;
@@ -21,6 +25,8 @@ import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.rank.dto.RankFindDto;
 import io.pp.arcade.domain.rank.dto.RankUpdateDto;
 import io.pp.arcade.domain.rank.dto.RankUserDto;
+import io.pp.arcade.domain.season.SeasonService;
+import io.pp.arcade.domain.season.dto.SeasonDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.slotteamuser.SlotTeamUserService;
@@ -35,6 +41,7 @@ import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserFindDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.type.Mode;
 import io.pp.arcade.global.type.NotiType;
 import io.pp.arcade.global.type.StatusType;
 import io.pp.arcade.global.util.EloRating;
@@ -48,9 +55,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -65,9 +70,10 @@ public class GameControllerImpl implements GameController {
     private final CurrentMatchService currentMatchService;
     private final RankRedisService rankRedisService;
     private final TokenService tokenService;
+    private final SeasonService seasonService;
     private final EventService eventService;
     private final NotiService notiService;
-
+    private final GameResponseManager gameResponseManager;
     @Override
     @GetMapping(value = "/games/result")
     public GameUserInfoResponseDto gameUserInfo(HttpServletRequest request) {
@@ -175,7 +181,7 @@ public class GameControllerImpl implements GameController {
         }
         UserDto user = userService.findByIntraId(UserFindDto.builder().intraId(intraId).build());
 
-        putResultInGames(gameResultList, gameLists, user);
+        gameResponseManager.putResultInGames(gameResultList, gameLists, user);
 
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
@@ -270,6 +276,7 @@ public class GameControllerImpl implements GameController {
         });
     }
 
+
     private void putResultInGames(List<GameResultDto> gameResultList, List<GameDto> gameLists, UserDto curUser) {
         SlotDto slot;
         List<SlotTeamUserDto> slotTeamUserDtos;
@@ -280,10 +287,10 @@ public class GameControllerImpl implements GameController {
         * */
         for (GameDto game : gameLists) {
             slot = game.getSlot();
-            GameTeamDto gameTeamDto1;
-            GameTeamDto gameTeamDto2;
-            List<GamePlayerDto> myTeamPlayerDtos = new ArrayList<>();
-            List<GamePlayerDto> enemyTeamPlayerDtos = new ArrayList<>();
+            GameTeamRank gameTeamRankDto1;
+            GameTeamRank gameTeamRankDto2;
+            List<GamePlayer> myTeamPlayerDtos = new ArrayList<>();
+            List<GamePlayer> enemyTeamPlayerDtos = new ArrayList<>();
             Integer team1Score = 0;
             Integer team2Score = 0;
             Boolean isWin = null;
@@ -315,7 +322,7 @@ public class GameControllerImpl implements GameController {
                     isWin = slotTeamUser.getTeam().getWin();
                     team1Score = slotTeamUser.getTeam().getScore();
 
-                    myTeamPlayerDtos.add(GamePlayerDto.builder()
+                    myTeamPlayerDtos.add(GamePlayerRank.builder()
                             .intraId(slotTeamUser.getUser().getIntraId())
                             .userImageUri(slotTeamUser.getUser().getImageUri())
                             .wins(rankUserDto.getWins())
@@ -328,7 +335,7 @@ public class GameControllerImpl implements GameController {
                     isWin = !slotTeamUser.getTeam().getWin();
                     team2Score = slotTeamUser.getTeam().getScore();
 
-                    enemyTeamPlayerDtos.add(GamePlayerDto.builder()
+                    enemyTeamPlayerDtos.add(GamePlayerRank.builder()
                             .intraId(slotTeamUser.getUser().getIntraId())
                             .userImageUri(slotTeamUser.getUser().getImageUri())
                             .wins(rankUserDto.getWins())
@@ -338,12 +345,11 @@ public class GameControllerImpl implements GameController {
                             .build());
                 }
             }
-            gameTeamDto1 = GameTeamDto.builder()
+            gameTeamRankDto1 = GameTeamRank.builder()
                     .isWin(isWin)
-                    .players(myTeamPlayerDtos)
                     .score(team1Score)
                     .build();
-            gameTeamDto2 = GameTeamDto.builder()
+            gameTeamRankDto2 = GameTeamRank.builder()
                     .isWin(!isWin)
                     .players(enemyTeamPlayerDtos)
                     .score(team2Score)
@@ -351,8 +357,8 @@ public class GameControllerImpl implements GameController {
 
             gameResultList.add(GameResultDto.builder()
                     .gameId(game.getId())
-                    .team1(gameTeamDto1)
-                    .team2(gameTeamDto2)
+                    .team1(gameTeamRankDto1)
+                    .team2(gameTeamRankDto2)
                     .type(game.getSlot().getType())
                     .status(game.getStatus())
                     .time(game.getSlot().getTime())

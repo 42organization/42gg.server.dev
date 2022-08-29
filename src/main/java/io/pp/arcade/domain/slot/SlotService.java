@@ -15,6 +15,7 @@ import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.Mode;
 import io.pp.arcade.global.type.SlotStatusType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -44,6 +45,7 @@ public class SlotService {
                 .tableId(addDto.getTableId())
                 .time(addDto.getTime())
                 .headCount(0)
+                .mode(Mode.BOTH)
                 .build());
 
         teamRepository.save(Team.builder()
@@ -85,6 +87,9 @@ public class SlotService {
             slot.setGamePpp((addUserDto.getJoinUserPpp() + slot.getGamePpp() * slot.getHeadCount()) / headCountResult);
         }
         slot.setHeadCount(headCountResult);
+        if (slot.getMode() == Mode.BOTH) {
+            slot.setMode(addUserDto.getMode());
+        }
     }
 
     @Transactional
@@ -94,6 +99,7 @@ public class SlotService {
         if (headCountResult == 0) {
             slot.setType(null);
             slot.setGamePpp(null);
+            slot.setMode(Mode.BOTH);
         } else {
             slot.setGamePpp((slot.getGamePpp() * slot.getHeadCount() - removeUserDto.getExitUserPpp()) / headCountResult);
         }
@@ -140,6 +146,7 @@ public class SlotService {
                     .slotId(slot.getId())
                     .headCount(slot.getHeadCount())
                     .time(slot.getTime())
+                    .mode(slot.getMode())
                     .status(getStatus(filterDto))
                     .build()
             );
