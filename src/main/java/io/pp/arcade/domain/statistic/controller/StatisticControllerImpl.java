@@ -60,28 +60,6 @@ public class StatisticControllerImpl implements StatisticController {
         return responseDto;
     }
 
-    /*
-    @GetMapping(value = "/match/cancel/{date}")
-    StatisticResponseDto matchCancel() {
-
-    }
-
-    @GetMapping(value = "/match/{date}/types/generation/{generation}")
-    StatisticResponseDto matchByGeneration() {
-
-    }
-
-    @GetMapping(value = "/slotin/{date}")
-    StatisticResponseDto matchBySlotinTime() {
-
-    }
-
-    @GetMapping(value = "/slottime/{date}")
-    StatisticResponseDto matchBySlotTime() {
-
-    }
-    */
-
     @GetMapping(value = "/match/{date}")
     public StatisticResponseDto match(@PathVariable DateType date, @RequestParam DateRangeDto dateRangeDto, HttpServletRequest request) {
         DateRangeDto changedDateRangeDto = getFirstAndLastDate(date, dateRangeDto);
@@ -116,68 +94,9 @@ public class StatisticControllerImpl implements StatisticController {
         return responseDto;
     }
 
-    @GetMapping(value = "/visit/{date}/types/rank/section/{section}")
-    public StatisticResponseDto visitByRank(@PathVariable DateType date, @PathVariable Integer section, @RequestParam DateRangeDto dateRangeDto, HttpServletRequest request) {
-        /* 일자수, 주차수, 월수가 1 넘어가면 안됨 ex) 08-01만, 08.1만, 08만 가능 -> 그걸 검사해야함 */
-        DateRangeDto changedDateRangeDto = getFirstAndLastDate(date, dateRangeDto);
-        FindDataDto findDataDto = FindDataDto.builder()
-                .table("user")
-                .dateType(date)
-                .startAt(changedDateRangeDto.getFormattedStartAt())
-                .endAt(changedDateRangeDto.getFormattedEndAt())
-                .build();
-        List<TableMapper> labelsAndData = statisticService.findDataByCreatedAt(findDataDto);
+    /* */
 
-        List<String> labels = labelsAndData.stream().map(TableMapper::getLabels).collect(Collectors.toList());
-        List<Integer> data = labelsAndData.stream().map(TableMapper::getData).collect(Collectors.toList());
-
-        List<DataSet> dataSets = new ArrayList<>();
-        dataSets.add(DataSet.builder()
-                .label("rank" + changedDateRangeDto.getStartat())
-                .data(data)
-                .build());
-
-        StatisticResponseDto responseDto = StatisticResponseDto.builder()
-                .labels(labels)
-                .datasets(dataSets)
-                .build();
-        return responseDto;
-    }
-
-
-
-    @GetMapping(value = "/match/{date}/types/rank/section/{section}")
-    public StatisticResponseDto matchByRank(@PathVariable DateType date, @PathVariable Integer section, @RequestParam DateRangeDto dateRangeDto, HttpServletRequest request) {
-        DateRangeDto changedDateRangeDto = getFirstAndLastDate(date, dateRangeDto);
-        FindDataDto findDataDto = FindDataDto.builder()
-                .table("user")
-                .dateType(date)
-                .startAt(changedDateRangeDto.getFormattedStartAt())
-                .endAt(changedDateRangeDto.getFormattedEndAt())
-                .build();
-        List<TableMapper> labelsAndDataAllCnt = statisticService.findDataByCreatedAt(findDataDto);
-        List<TableMapper> labelsAndDataPureCnt = statisticService.findDataByCreatedAt(findDataDto);
-
-        List<String> labels = labelsAndDataAllCnt.stream().map(TableMapper::getLabels).collect(Collectors.toList());
-        List<Integer> dataAllCnt = labelsAndDataAllCnt.stream().map(TableMapper::getData).collect(Collectors.toList());
-        List<Integer> dataPureCnt = labelsAndDataPureCnt.stream().map(TableMapper::getData).collect(Collectors.toList());
-
-        List<DataSet> dataSets = new ArrayList<>();
-        dataSets.add(DataSet.builder()
-                .label("AllCount")
-                .data(dataAllCnt)
-                .build());
-        dataSets.add(DataSet.builder()
-                .label("PureCount")
-                .data(dataPureCnt)
-                .build());
-
-        StatisticResponseDto responseDto = StatisticResponseDto.builder()
-                .labels(labels)
-                .datasets(dataSets)
-                .build();
-        return responseDto;
-    }
+    /* */
 
     DateRangeDto getFirstAndLastDate(DateType dateType, DateRangeDto dateRangeDto) {
         Date startDate = dateRangeDto.getStartat();

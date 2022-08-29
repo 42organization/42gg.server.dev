@@ -10,6 +10,7 @@ public class FindDataDto {
     String startAt;
     String endAt;
     String table;
+    String query;
     DateType dateType;
 
     @Override
@@ -18,6 +19,7 @@ public class FindDataDto {
                 "startAt='" + startAt + '\'' +
                 ", endAt='" + endAt + '\'' +
                 ", table='" + table + '\'' +
+                ", query='" + query + '\'' +
                 ", dateType=" + dateType +
                 '}';
     }
