@@ -1,5 +1,6 @@
 package io.pp.arcade.domain.game.dto;
 
+import io.pp.arcade.global.type.Mode;
 import io.pp.arcade.global.type.StatusType;
 import lombok.Getter;
 import lombok.Setter;
@@ -9,7 +10,9 @@ import lombok.Setter;
 public class GameResultPageRequestDto {
     private Integer gameId = Integer.MAX_VALUE;
     private Integer count = 20;
-    private StatusType status;
+    private StatusType status = StatusType.END;
+    private Mode mode;
+    private Integer season;
 
     public Integer getGameId() {
         return gameId < 1 ? Integer.MAX_VALUE : gameId;
@@ -21,6 +24,18 @@ public class GameResultPageRequestDto {
         else if (count < 1)
             count = 20;
         return count;
+    }
+
+    public StatusType getStatus() {
+        if (status == StatusType.LIVE)
+            status = null;
+        return status;
+    }
+
+    public Integer getSeason() {
+        if (season != null && season < 1)
+            season = null;
+        return season;
     }
 
     @Override
