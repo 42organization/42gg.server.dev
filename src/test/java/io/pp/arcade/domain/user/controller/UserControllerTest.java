@@ -267,7 +267,7 @@ class UserControllerTest {
          * */
 
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-        String gameDate = userGame.getTime().toString();
+        String gameDate = userGame.getSlot().getTime().toString();
         //String subDate = gameDate.substring(0, gameDate.length());
 //        LocalDateTime formatDateTime = LocalDateTime.parse(gameDate, formatter);
         mockMvc.perform(get("/pingpong/users/" + user.getIntraId() +"/historics").contentType(MediaType.APPLICATION_JSON)

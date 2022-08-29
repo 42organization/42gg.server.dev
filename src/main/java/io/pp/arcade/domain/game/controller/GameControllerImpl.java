@@ -8,7 +8,6 @@ import io.pp.arcade.domain.event.EventService;
 import io.pp.arcade.domain.event.dto.EventUserDto;
 import io.pp.arcade.domain.event.dto.FindEventDto;
 import io.pp.arcade.domain.event.dto.SaveEventUserDto;
-import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.game.dto.*;
 import io.pp.arcade.domain.noti.NotiService;
@@ -18,30 +17,24 @@ import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
-import io.pp.arcade.domain.rank.RankRedis;
 import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.rank.dto.RankFindDto;
 import io.pp.arcade.domain.rank.dto.RankUpdateDto;
 import io.pp.arcade.domain.rank.dto.RankUserDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
-import io.pp.arcade.domain.slot.Slot;
-import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
-import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
-import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.slotteamuser.SlotTeamUserService;
 import io.pp.arcade.domain.slotteamuser.dto.SlotTeamUserDto;
-import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.team.dto.TeamModifyGameResultDto;
 import io.pp.arcade.domain.team.dto.TeamPosDto;
+import io.pp.arcade.domain.team.dto.TeamsUserListDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserFindDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import io.pp.arcade.global.exception.BusinessException;
-import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.type.NotiType;
 import io.pp.arcade.global.type.StatusType;
 import io.pp.arcade.global.util.EloRating;
@@ -88,7 +81,7 @@ public class GameControllerImpl implements GameController {
         //figuring out team number for myteam and enemyteam, and put each team's user infos in the right team
 
         //make Dto to return
-        TeamPosDto teamPosDto = teamService.findUsersByTeamPos(slot, user);
+        TeamsUserListDto teamPosDto = teamService.findUserListInTeams(slot, user);
         GameUserInfoResponseDto gameUserInfoResponseDto = GameUserInfoResponseDto.builder()
                 .myTeam(teamPosDto.getMyTeam())
                 .enemyTeam(teamPosDto.getEnemyTeam())
@@ -225,7 +218,7 @@ public class GameControllerImpl implements GameController {
             Boolean isWin;
             TeamPosDto teamPosDto = teamService.findUsersByTeamPos(slotTeamUser.getSlot(), slotTeamUser.getUser());
 
-            if (teamPosDto.getMyTeam().contains(slotTeamUser.getUser().getIntraId())) {
+            if (teamPosDto.getMyTeam().equals(slotTeamUser.getTeam())) {
                 enemyPpp = (gamePpp * 2 - slotTeamUser.getTeam().getTeamPpp());
                 team = slotTeamUser.getTeam();
                 isWin = requestDto.getMyTeamScore() > requestDto.getEnemyTeamScore();
@@ -280,7 +273,7 @@ public class GameControllerImpl implements GameController {
     private void putResultInGames(List<GameResultDto> gameResultList, List<GameDto> gameLists, UserDto curUser) {
         SlotDto slot;
         List<SlotTeamUserDto> slotTeamUserDtos;
-        UserDto leftUser;
+        SlotTeamUserDto leftUser;
 
         /*
         * GameResultDto -> GameTeamDto -> GamePlayerDto
@@ -299,12 +292,15 @@ public class GameControllerImpl implements GameController {
             slotTeamUserDtos = slotTeamUserService.findAllBySlotId(slot.getId());
 
             if (curUser == null) {
-                leftUser = slotTeamUserDtos.get(0).getUser();
+                leftUser = slotTeamUserDtos.get(0);
             } else {
-                leftUser = curUser;
+                leftUser = slotTeamUserDtos.stream()
+                        .filter(slotTeamUser -> slotTeamUser.getUser().getIntraId().equals(curUser.getIntraId()))
+                        .findFirst()
+                        .orElseThrow(() -> new BusinessException("E0001"));
             }
 
-            teamPosDto = teamService.findUsersByTeamPos(slot, leftUser);
+            teamPosDto = teamService.findUsersByTeamPos(slot, leftUser.getUser());
             for (SlotTeamUserDto slotTeamUser : slotTeamUserDtos) {
                 RankUserDto rankUserDto = rankRedisService.findRankById(RankFindDto.builder()
                         .gameType(slot.getType())
@@ -314,7 +310,7 @@ public class GameControllerImpl implements GameController {
                         .userId(slotTeamUser.getUser().getIntraId()).build());
 
                 /* 왼 쪽 정 렬 */
-                if (teamPosDto.getMyTeam().contains(leftUser.getIntraId())) {
+                if (teamPosDto.getMyTeam().getId().equals(slotTeamUser.getTeam().getId())) {
                     //왼쪽에 넣는다.
                     isWin = slotTeamUser.getTeam().getWin();
                     team1Score = slotTeamUser.getTeam().getScore();

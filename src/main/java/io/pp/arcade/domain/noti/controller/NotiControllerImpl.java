@@ -4,7 +4,7 @@ import io.pp.arcade.domain.noti.NotiService;
 import io.pp.arcade.domain.noti.dto.*;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.team.TeamService;
-import io.pp.arcade.domain.team.dto.TeamPosDto;
+import io.pp.arcade.domain.team.dto.TeamsUserListDto;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.type.NotiType;
 import io.pp.arcade.global.util.HeaderUtil;
@@ -52,11 +52,11 @@ public class NotiControllerImpl implements NotiController {
                         .createdAt(noti.getCreatdDate())
                         .build());
             } else if (noti.getType().equals(NotiType.IMMINENT)) {
-                TeamPosDto teamPosDto = teamService.findUsersByTeamPos(noti.getSlot(), user);
+                TeamsUserListDto teamsUserListDto = teamService.findUserListInTeams(noti.getSlot(), user);
                 List<String> myTeam = new ArrayList<>();
                 List<String> enemyTeam = new ArrayList<>();
-                teamPosDto.getMyTeam().forEach(userDto -> myTeam.add(userDto.getIntraId()));
-                teamPosDto.getEnemyTeam().forEach(userDto -> enemyTeam.add(userDto.getIntraId()));
+                teamsUserListDto.getMyTeam().forEach(userDto -> myTeam.add(userDto.getIntraId()));
+                teamsUserListDto.getEnemyTeam().forEach(userDto -> enemyTeam.add(userDto.getIntraId()));
                 notiDtos.add(NotiImminentMatchDto.builder()
                         .id(noti.getId())
                         .type(noti.getType())

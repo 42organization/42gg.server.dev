@@ -49,8 +49,8 @@ public class GameService {
         Slot slot = slotRepository.findById(slotDto.getId()).orElseThrow(() -> new BusinessException("E0001"));
         gameRepository.save(Game.builder()
                 .slot(slot)
-                .type(slotDto.getType())
-                .time(slotDto.getTime())
+//                .type(slotDto.getType())
+//                .time(slotDto.getTime())
                 .status(StatusType.LIVE)
                 .season(season == null ? 1 : season.getId()) //season 추가
                 .build()
@@ -100,10 +100,10 @@ public class GameService {
         Slot slot = slotRepository.findById(createDto.getSlotId()).orElseThrow(null);
         Game game = Game.builder()
                 .slot(slot)
-                .time(slot.getTime())
+//                .time(slot.getTime())
                 .season(createDto.getSeasonId())
-                .time(slot.getTime())
-                .type(slot.getType())
+//                .time(slot.getTime())
+//                .type(slot.getType())
                 .status(createDto.getStatus()).build();
         gameRepository.save(game);
     }
@@ -123,8 +123,9 @@ public class GameService {
 
     @Transactional
     public List<GameDto> findGameByTypeByAdmin(Pageable pageable, GameType type) {
-        Page<Game> games = gameRepository.findAllByTypeOrderByIdDesc(pageable, type);
-        List<GameDto> gameDtos = games.stream().map(GameDto::from).collect(Collectors.toList());
-        return gameDtos;
+//        Page<Game> games = gameRepository.findAllByTypeOrderByIdDesc(pageable, type);
+//        List<GameDto> gameDtos = games.stream().map(GameDto::from).collect(Collectors.toList());
+//        return gameDtos;
+        return null;
     }
 }

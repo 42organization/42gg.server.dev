@@ -1,5 +1,7 @@
 package io.pp.arcade.domain.slotteamuser;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -11,4 +13,6 @@ public interface SlotTeamUserRepository extends JpaRepository<SlotTeamUser, Inte
     List<SlotTeamUser> findAllBySlotId(Integer slotId);
     Optional<SlotTeamUser> findSlotTeamUserBySlotIdAndUserId(Integer slotId, Integer userId);
     Optional<SlotTeamUser> findByTeamIdAndUserId(Integer teamId, Integer userId);
+
+    Page<SlotTeamUser> findAllByOrderByTeamUserId(Pageable pageable);
 }

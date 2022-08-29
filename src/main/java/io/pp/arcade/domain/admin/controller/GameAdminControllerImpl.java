@@ -14,11 +14,14 @@ import io.pp.arcade.domain.rank.dto.RankModifyDto;
 import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUserService;
+import io.pp.arcade.domain.slotteamuser.dto.SlotTeamUserDto;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.team.dto.TeamModifyGameResultDto;
+import io.pp.arcade.domain.team.dto.TeamPosDto;
+import io.pp.arcade.domain.team.dto.TeamsUserListDto;
 import io.pp.arcade.domain.user.UserService;
-import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import io.pp.arcade.global.type.GameType;
 import io.pp.arcade.global.util.EloRating;
@@ -34,6 +37,7 @@ import java.util.List;
 @RequestMapping(value = "/admin")
 public class GameAdminControllerImpl implements GameAdminController {
     private final GameService gameService;
+    private final SlotTeamUserService slotTeamUserService;
     private final TeamService teamService;
     private final PChangeService pChangeService;
     private final UserService userService;
@@ -61,8 +65,19 @@ public class GameAdminControllerImpl implements GameAdminController {
         Integer team1Score = updateRequestDto.getTeam1Score();
         Integer team2Score = updateRequestDto.getTeam2Score();
         GameDto game = gameService.findById(updateRequestDto.getGameId());
-        TeamDto team1 = game.getTeam1();
-        TeamDto team2 = game.getTeam2();
+        List<SlotTeamUserDto> slotTeamUsers = slotTeamUserService.findAllBySlotId(game.getSlot().getId());
+
+        TeamPosDto teamPostDto = teamService.findUsersByTeamPos(game.getSlot(), null);
+
+        TeamDto team1 = null;
+        TeamDto team2 = null;
+        for (SlotTeamUserDto slotTeamUser : slotTeamUsers) {
+            if (teamPostDto.getEnemyTeam().equals(slotTeamUser.getTeam())) {
+                team1 = slotTeamUser.getTeam();
+            } else{
+                team2 = slotTeamUser.getTeam();
+            }
+        }
 
         TeamModifyGameResultDto modifyTeam1GameResultDto = TeamModifyGameResultDto.builder()
                 .teamId(team1.getId())
@@ -78,7 +93,7 @@ public class GameAdminControllerImpl implements GameAdminController {
         teamService.modifyGameResultInTeam(modifyTeam1GameResultDto);
         teamService.modifyGameResultInTeam(modifyTeam2GameResultDto);
         /* 게임 결과가 수정된 팀 유저들의 ppp 수정 */
-        modifyUsersInfo(game);
+        modifyUsersInfo(game, team1, team2);
     }
 
     /* 유저 찾기
@@ -87,23 +102,18 @@ public class GameAdminControllerImpl implements GameAdminController {
     -> pChange까지 수정
     -> rank 수정
      */
-    private void modifyUsersInfo(GameDto gameDto) {
-        TeamDto updatedTeam1 = teamService.findById(gameDto.getTeam1().getId());
-        TeamDto updatedTeam2 = teamService.findById(gameDto.getTeam2().getId());
+    private void modifyUsersInfo(GameDto gameDto, TeamDto updatedTeam1, TeamDto updatedTeam2) {
         Boolean isOneSide = Math.abs(updatedTeam1.getScore() - updatedTeam2.getScore()) == 2;
-        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam1.getUser1(), gameDto.getTeam2(), updatedTeam2, isOneSide);
-        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam2.getUser2(), gameDto.getTeam2(), updatedTeam2, isOneSide);
-        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam1.getUser2(), gameDto.getTeam1(), updatedTeam1, isOneSide);
-        modifyUserPPPAndPChangeAndRank(gameDto, updatedTeam2.getUser1(), gameDto.getTeam1(), updatedTeam1, isOneSide);
+        List<SlotTeamUserDto> slotTeamUsers = slotTeamUserService.findAllBySlotId(gameDto.getSlot().getId());
+        for (SlotTeamUserDto slotTeamUser : slotTeamUsers) {
+            modifyUserPPPAndPChangeAndRank(gameDto, slotTeamUser, updatedTeam1, updatedTeam2, isOneSide);
+        }
     }
 
-    private void modifyUserPPPAndPChangeAndRank(GameDto game, UserDto userDto, TeamDto beforeEnemyTeamDto, TeamDto enemyTeamDto, Boolean isOneSide) {
-        if (userDto == null) {
-            return;
-        }
+    private void modifyUserPPPAndPChangeAndRank(GameDto game, SlotTeamUserDto slotTeamUser, TeamDto beforeEnemyTeamDto, TeamDto enemyTeamDto, Boolean isOneSide) {
         PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder()
                 .gameId(game.getId())
-                .userId(userDto.getIntraId())
+                .userId(slotTeamUser.getUser().getIntraId())
                 .build());
         Integer userPreviousPpp = pChangeDto.getPppResult() - pChangeDto.getPppChange();
 
@@ -111,18 +121,18 @@ public class GameAdminControllerImpl implements GameAdminController {
         Integer tmpPpp = userPreviousPpp + newPppChange;
         Integer userFinalPpp = tmpPpp > 0 ? tmpPpp : 0;
         UserModifyPppDto modifyPppDto = UserModifyPppDto.builder()
-                .userId(userDto.getId())
+                .userId(slotTeamUser.getUser().getId())
                 .ppp(userFinalPpp)
                 .build();
         userService.modifyUserPpp(modifyPppDto);
 
         Integer pChangeId = pChangeService.findPChangeIdByUserAndGame(PChangeFindDto.builder()
                 .gameId(game.getId())
-                .userId(userDto.getIntraId())
+                .userId(slotTeamUser.getUser().getIntraId())
                 .build());
         pChangeService.updatePChangeByAdmin(pChangeId, PChangeUpdateDto.builder()
                 .gameId(game.getId())
-                .userId(userDto.getIntraId())
+                .userId(slotTeamUser.getUser().getIntraId())
                 .pppChange(userFinalPpp - userPreviousPpp)
                 .pppResult(userFinalPpp)
                 .build());
@@ -130,7 +140,7 @@ public class GameAdminControllerImpl implements GameAdminController {
         RankModifyDto rankModifyDto =  RankModifyDto.builder()
                 .gameType(gameType)
                 .Ppp(userFinalPpp)
-                .intraId(userDto.getIntraId())
+                .intraId(slotTeamUser.getUser().getIntraId())
                 .modifyStatus(beforeEnemyTeamDto.getWin() == enemyTeamDto.getWin() ? -1 : booleanToInt(enemyTeamDto.getWin()))
                 .build();
         rankRedisService.modifyUserPpp(rankModifyDto);

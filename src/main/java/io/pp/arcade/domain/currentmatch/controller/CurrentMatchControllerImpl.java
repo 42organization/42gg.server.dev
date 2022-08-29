@@ -7,8 +7,7 @@ import io.pp.arcade.domain.game.dto.GameUserInfoDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
 import io.pp.arcade.domain.team.TeamService;
-import io.pp.arcade.domain.team.dto.TeamDto;
-import io.pp.arcade.domain.team.dto.TeamPosDto;
+import io.pp.arcade.domain.team.dto.TeamsUserListDto;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
@@ -61,9 +60,9 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
             isMatch = currentMatch.getIsMatched();
             // 경기는 5분전이고 매치가 성사되었는가?
             if (currentMatch.getMatchImminent() && isMatch){
-                TeamPosDto teamPosDto = teamService.findUsersByTeamPos(slot, curUser);
-                myTeam = getTeamUsersIntraIdList(teamPosDto.getMyTeam());
-                enemyTeam = getTeamUsersIntraIdList(teamPosDto.getEnemyTeam());
+                TeamsUserListDto teamsUserListDto = teamService.findUserListInTeams(slot, curUser);
+                myTeam = getTeamUsersIntraIdList(teamsUserListDto.getMyTeam());
+                enemyTeam = getTeamUsersIntraIdList(teamsUserListDto.getEnemyTeam());
             }
         }
         CurrentMatchResponseDto responseDto = CurrentMatchResponseDto.builder()
