@@ -45,7 +45,7 @@ public class SlotService {
                 .tableId(addDto.getTableId())
                 .time(addDto.getTime())
                 .headCount(0)
-                .mode(Mode.ALL)
+                .mode(Mode.BOTH)
                 .build());
 
         teamRepository.save(Team.builder()
@@ -87,7 +87,7 @@ public class SlotService {
             slot.setGamePpp((addUserDto.getJoinUserPpp() + slot.getGamePpp() * slot.getHeadCount()) / headCountResult);
         }
         slot.setHeadCount(headCountResult);
-        if (slot.getMode() == Mode.ALL) {
+        if (slot.getMode() == Mode.BOTH) {
             slot.setMode(addUserDto.getMode());
         }
     }
@@ -99,7 +99,7 @@ public class SlotService {
         if (headCountResult == 0) {
             slot.setType(null);
             slot.setGamePpp(null);
-            slot.setMode(Mode.ALL);
+            slot.setMode(Mode.BOTH);
         } else {
             slot.setGamePpp((slot.getGamePpp() * slot.getHeadCount() - removeUserDto.getExitUserPpp()) / headCountResult);
         }

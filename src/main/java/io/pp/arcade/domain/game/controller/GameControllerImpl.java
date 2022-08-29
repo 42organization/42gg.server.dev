@@ -10,6 +10,10 @@ import io.pp.arcade.domain.event.dto.FindEventDto;
 import io.pp.arcade.domain.event.dto.SaveEventUserDto;
 import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.game.dto.*;
+import io.pp.arcade.domain.game.Manager.GameResponseManager;
+import io.pp.arcade.domain.game.Manager.data.GamePlayer;
+import io.pp.arcade.domain.game.Manager.data.GamePlayerRank;
+import io.pp.arcade.domain.game.Manager.data.GameTeamRank;
 import io.pp.arcade.domain.noti.NotiService;
 import io.pp.arcade.domain.noti.dto.NotiAddDto;
 import io.pp.arcade.domain.pchange.PChangeService;
@@ -25,7 +29,6 @@ import io.pp.arcade.domain.season.SeasonService;
 import io.pp.arcade.domain.season.dto.SeasonDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
-import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
 import io.pp.arcade.domain.slotteamuser.SlotTeamUserService;
 import io.pp.arcade.domain.slotteamuser.dto.SlotTeamUserDto;
 import io.pp.arcade.domain.team.TeamService;
@@ -51,9 +54,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
@@ -71,7 +72,7 @@ public class GameControllerImpl implements GameController {
     private final SeasonService seasonService;
     private final EventService eventService;
     private final NotiService notiService;
-
+    private final GameResponseManager gameResponseManager;
     @Override
     @GetMapping(value = "/games/result")
     public GameUserInfoResponseDto gameUserInfo(HttpServletRequest request) {
@@ -128,7 +129,7 @@ public class GameControllerImpl implements GameController {
 
     @Override
     @GetMapping(value = "/games")
-    public GameResultResponseDto gameResultByGameIdAndCount(GameResultPageRequestDto requestDto, HttpServletRequest request)
+    public GameResultResponseDto gameResultByGameIdAndCount(GameResultPageRequestDto requestDto, HttpServletRequest request) {
         tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         Pageable pageable = PageRequest.of(0, requestDto.getCount());
         GameResultPageDto resultPageDto = gameService.findGamesAfterId(GameFindDto.builder().id(requestDto.getGameId()).status(requestDto.getStatus()).pageable(pageable).build());
@@ -149,63 +150,6 @@ public class GameControllerImpl implements GameController {
                 .currentPage(resultPageDto.getCurrentPage() + 1)
                 .build();
         return gameResultResponse;
-    }
-
-    @Override
-    @GetMapping(value = "/games/{mode}")
-    public GameResultResponseDto gameResultByGameIdAndCount(@PathVariable Mode mode, GameResultPageRequestDto requestDto, HttpServletRequest request) {
-        // 유저 유효성 검사
-        tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        Pageable pageable = PageRequest.of(0, requestDto.getCount());
-        // 현재 시즌 정보 가져오기
-        GameFindDto gameFindDto = getGameFindDto(requestDto, mode);
-        GameResultPageDto resultPageDto = gameService.findGamesAfterId(gameFindDto);
-        List<GameResultDto> gameResultList = new ArrayList<>();
-        List<GameDto> gameLists = resultPageDto.getGameList();
-
-
-        // GameResultResponseDto - lastGameId 처리
-        Integer lastGameId;
-        if (gameLists.size() == 0) {
-            lastGameId = 0;
-        } else {
-            lastGameId = gameLists.get(gameLists.size() - 1).getId();
-        }
-
-        // GameResultResponseDto - GameResultDto 처리
-        // All, Rank, Normal(처리중) 분리
-        sortingAndPutResultInGames(mode, gameResultList, gameLists);
-
-
-        GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
-                .games(gameResultList)
-                .lastGameId(lastGameId)
-                .totalPage(resultPageDto.getTotalPage())
-                .currentPage(resultPageDto.getCurrentPage() + 1)
-                .build();
-        return gameResultResponse;
-    }
-
-    private GameFindDto getGameFindDto(GameResultPageRequestDto requestDto, Mode mode) {\
-        GameFindDto gameFindDto;
-
-        /* 시즌별 조회 정보 */
-        Integer seasonId = 0;
-        if (requestDto.getSeason() == null) {
-            if (seasonService.findCurrentSeason() == ㅜㅕ
-            gameFindDto = GameFindDto.builder().id(requestDto.getGameId()).status(requestDto.getStatus()).mode(mode).seasonId(currentSeason).pageable(pageable).build();
-        } else {
-            gameFindDto = GameFindDto
-        }
-    }
-
-    private void sortingAndPutResultInGames(Mode mode, List<GameResultDto> gameResultList, List<GameDto> gameLists) {
-        if (mode == Mode.RANK)
-            putResultInGames(gameResultList, gameLists, null);
-        else if (mode == Mode.NORMAL)
-            putResultInNormalGames(gameResultList, gameLists, null);
-        else if (mode == Mode.ALL)
-            putResultInGames(gameResultList, gameLists, null);
     }
 
     @Override
@@ -236,7 +180,7 @@ public class GameControllerImpl implements GameController {
         }
         UserDto user = userService.findByIntraId(UserFindDto.builder().intraId(intraId).build());
 
-        putResultInGames(gameResultList, gameLists, user);
+        gameResponseManager.putResultInGames(gameResultList, gameLists, user);
 
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
@@ -330,52 +274,9 @@ public class GameControllerImpl implements GameController {
             currentMatchService.removeCurrentMatch(removeDto);
         });
     }
-    private void putResultInNormalGames(List<GameResultDto> gameResultList, List<GameDto> gameLists){
-
-    }
-
-    private void putResultInNormalGames(List<GameResultDto> gameResultList, List<GameDto> gameLists, UserDto curUser) {
 
 
-        /* gameResultDto -> GameResultList에 추가 */
-        /* game -> gameResultDto */
-        TeamDto leftTeam;
-        if(curUser == null){
-            putResultInNormalGames(gameResultList,gameLists);
-        }else{
-            for (GameDto game : gameLists) {
-                List<SlotTeamUserDto> slotTeamUserDtos = slotTeamUserService.findAllBySlotId(game.getSlot().getId());
-                if (curUser == null) {
-                    leftTeam = slotTeamUserDtos.get(0).getTeam();
-                } else {
-                    //프로필 페이지 조회
-                    leftTeam = slotTeamUserDtos.get(0).getTeam();
-                }
-                // team1
-                // GamePlayerNormalDto (여기는 나)
-                List<GamePlayerNormalDto> myTeamPlayers = new ArrayList<>();
-                List<GamePlayerNormalDto> enemyTeamPlayers = new ArrayList<>();
-
-                for (SlotTeamUserDto slotTeamUserDto : slotTeamUserDtos) {
-                        myTeamPlayers.add(GamePlayerNormalDto.builder().intraId(leftUser.getIntraId()).userImageUri(leftUser.getImageUri()).level(0).build());
-                    GameTeamNormalDto gameTeamNormalDto1 = GameTeamNormalDto.builder().players(myTeamPlayers).build();
-                }
-
-                gameResultList.add(GameResultDto.builder()
-                        .gameId(game.getId()game)
-                        .type(game.getSlot().getType())
-                        .status(game.getStatus())
-                        .time(game.getSlot().getTime())
-                        .team1(gameTeamNormalDto1)
-                        .team2(gameTeamNormalDto2)
-                        .build());
-            }
-        }
-
-    }
     private void putResultInGames(List<GameResultDto> gameResultList, List<GameDto> gameLists, UserDto curUser) {
-
-
         SlotDto slot;
         List<SlotTeamUserDto> slotTeamUserDtos;
         UserDto leftUser;
@@ -385,10 +286,10 @@ public class GameControllerImpl implements GameController {
         * */
         for (GameDto game : gameLists) {
             slot = game.getSlot();
-            GameTeamRankDto gameTeamRankDto1;
-            GameTeamRankDto gameTeamRankDto2;
-            List<GamePlayerRankDto> myTeamPlayerDtos = new ArrayList<>();
-            List<GamePlayerRankDto> enemyTeamPlayerDtos = new ArrayList<>();
+            GameTeamRank gameTeamRankDto1;
+            GameTeamRank gameTeamRankDto2;
+            List<GamePlayer> myTeamPlayerDtos = new ArrayList<>();
+            List<GamePlayer> enemyTeamPlayerDtos = new ArrayList<>();
             Integer team1Score = 0;
             Integer team2Score = 0;
             Boolean isWin = null;
@@ -417,7 +318,7 @@ public class GameControllerImpl implements GameController {
                     isWin = slotTeamUser.getTeam().getWin();
                     team1Score = slotTeamUser.getTeam().getScore();
 
-                    myTeamPlayerDtos.add(GamePlayerRankDto.builder()
+                    myTeamPlayerDtos.add(GamePlayerRank.builder()
                             .intraId(slotTeamUser.getUser().getIntraId())
                             .userImageUri(slotTeamUser.getUser().getImageUri())
                             .wins(rankUserDto.getWins())
@@ -430,7 +331,7 @@ public class GameControllerImpl implements GameController {
                     isWin = !slotTeamUser.getTeam().getWin();
                     team2Score = slotTeamUser.getTeam().getScore();
 
-                    enemyTeamPlayerDtos.add(GamePlayerRankDto.builder()
+                    enemyTeamPlayerDtos.add(GamePlayerRank.builder()
                             .intraId(slotTeamUser.getUser().getIntraId())
                             .userImageUri(slotTeamUser.getUser().getImageUri())
                             .wins(rankUserDto.getWins())
@@ -440,12 +341,11 @@ public class GameControllerImpl implements GameController {
                             .build());
                 }
             }
-            gameTeamRankDto1 = GameTeamRankDto.builder()
+            gameTeamRankDto1 = GameTeamRank.builder()
                     .isWin(isWin)
-                    .players(myTeamPlayerDtos)
                     .score(team1Score)
                     .build();
-            gameTeamRankDto2 = GameTeamRankDto.builder()
+            gameTeamRankDto2 = GameTeamRank.builder()
                     .isWin(!isWin)
                     .players(enemyTeamPlayerDtos)
                     .score(team2Score)
