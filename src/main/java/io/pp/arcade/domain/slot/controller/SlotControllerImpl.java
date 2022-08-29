@@ -108,7 +108,7 @@ public class SlotControllerImpl implements SlotController {
     }
 
     private void checkIfModeMatches(SlotAddUserRequestDto addReqDto, SlotDto slot) {
-        if (slot.getMode() != Mode.ALL || slot.getMode() != addReqDto.getMode()) {
+        if (slot.getMode() != Mode.BOTH || slot.getMode() != addReqDto.getMode()) {
             throw new BusinessException("SC004");
         }
     }

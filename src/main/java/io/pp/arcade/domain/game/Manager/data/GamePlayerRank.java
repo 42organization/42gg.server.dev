@@ -1,21 +1,27 @@
-package io.pp.arcade.domain.game.dto;
+package io.pp.arcade.domain.game.Manager.data;
 
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
-public class GamePlayerRankDto {
-    private String intraId;
-    private String userImageUri;
+public class GamePlayerRank extends GamePlayer {
     private Integer wins;
     private Integer losses;
     private Double winRate;
     private Integer pppChange;
 
+    @Builder
+    public GamePlayerRank(String intraId, String userImageUri, Integer wins, Integer losses, Double winRate, Integer pppChange) {
+        super(intraId, userImageUri);
+        this.wins = wins;
+        this.losses = losses;
+        this.winRate = winRate;
+        this.pppChange = pppChange;
+    }
+
     @Override
     public String toString() {
-        return "GamePlayerDto{" +
+        return "GamePlayerRankDto{" +
                 "intraId='" + intraId + '\'' +
                 ", userImageUri='" + userImageUri + '\'' +
                 ", wins=" + wins +
