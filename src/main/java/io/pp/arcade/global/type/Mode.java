@@ -8,23 +8,24 @@ import java.util.Locale;
 
 @Getter
 @RequiredArgsConstructor
-public enum StatusType implements Constant{
-    LIVE(0, "live"),
-    WAIT(1, "wait"),
-    END(2, "end");
+public enum Mode implements Constant{
+    BOTH(0,"BOTH"), NORMAL(1,"normal"), RANK(2,"rank");
+    // 모드는 3가지가 있음.
+    // type 형태이기 때문에 global 안에 type 도메인 안에 넣었음
 
     private final Integer value;
     private final String code;
+
     @JsonCreator
-    public static StatusType getEnumFromValue(String value) {
-        for(StatusType e : values()) {
+    public static Mode getEnumValue(String value) {
+        for(Mode e : values()) {
             if(e.name().equals(value)) {
                 return e;
             }
-            else if (e.code.toUpperCase(Locale.ROOT).equals(value.toUpperCase(Locale.ROOT))) {
+            else if (e.code.toUpperCase(Locale.ROOT).equals(value.toUpperCase(Locale.ROOT)))
                 return e;
-            }
         }
-        return null;
+    return null;
     }
+
 }

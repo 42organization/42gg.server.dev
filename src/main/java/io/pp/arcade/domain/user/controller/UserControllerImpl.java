@@ -10,17 +10,23 @@ import io.pp.arcade.domain.pchange.PChangeService;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
+import io.pp.arcade.domain.rank.dto.RankDto;
 import io.pp.arcade.domain.rank.dto.RankFindDto;
 import io.pp.arcade.domain.rank.dto.RankModifyStatusMessageDto;
 import io.pp.arcade.domain.rank.dto.RankUserDto;
 import io.pp.arcade.domain.rank.service.RankRedisService;
+import io.pp.arcade.domain.rank.service.RankService;
+import io.pp.arcade.domain.season.SeasonService;
+import io.pp.arcade.domain.season.dto.SeasonDto;
 import io.pp.arcade.domain.security.jwt.TokenService;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.*;
 import io.pp.arcade.global.scheduler.CurrentMatchUpdater;
 import io.pp.arcade.global.scheduler.GameGenerator;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.Mode;
 import io.pp.arcade.global.type.RoleType;
+import io.pp.arcade.global.util.ExpLevelCalculator;
 import io.pp.arcade.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +36,6 @@ import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,8 +49,11 @@ public class UserControllerImpl implements UserController {
     private final CurrentMatchService currentMatchService;
     private final TokenService tokenService;
     private final RankRedisService rankRedisService;
+    private final RankService rankService;
+    private final SeasonService seasonService;
     private final GameGenerator gameGenerator;
     private final CurrentMatchUpdater currentMatchUpdater;
+    private final Mode seasonMode = Mode.NORMAL;
     /*
      * [메인 페이지]
      * - 유저 정보 조회
@@ -57,6 +65,7 @@ public class UserControllerImpl implements UserController {
         UserResponseDto responseDto = UserResponseDto.builder()
                 .intraId(user.getIntraId())
                 .userImageUri(user.getImageUri())
+                .mode(seasonMode)
                 .isAdmin(user.getRoleType() == RoleType.ADMIN)
                 .build();
         return responseDto;
@@ -72,7 +81,6 @@ public class UserControllerImpl implements UserController {
         UserDto curUser = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         UserDto targetUser = userService.findByIntraId(UserFindDto.builder().intraId(targetUserId).build());
         // 일단 게임타입은 SINGLE로 구현
-        RankUserDto rankDto = rankRedisService.findRankById(RankFindDto.builder().intraId(targetUserId).gameType(GameType.SINGLE).build());
         UserRivalRecordDto rivalRecord = UserRivalRecordDto.builder().curUserWin(0).targetUserWin(0).build();
         if (!targetUserId.equals(curUser.getIntraId())) {
             rivalRecord = getRivalRecord(curUser, targetUser);
@@ -81,15 +89,63 @@ public class UserControllerImpl implements UserController {
                 .intraId(targetUser.getIntraId())
                 .userImageUri(targetUser.getImageUri())
                 .racketType(targetUser.getRacketType())
-                .ppp(targetUser.getPpp())
                 .statusMessage(targetUser.getStatusMessage())
-                .wins(rankDto.getWins())
-                .losses(rankDto.getLosses())
-                .winRate(rankDto.getWinRate())
-                .rank(rankDto.getRank())
+                .level(ExpLevelCalculator.getLevel(targetUser.getTotalExp()))
+                .currentExp(ExpLevelCalculator.getCurrentLevelMyExp(targetUser.getTotalExp()))
+                .maxExp(ExpLevelCalculator.getLevelMaxExp(targetUser.getTotalExp()))
                 .rivalRecord(rivalRecord)
                 .build();
         return responseDto;
+    }
+
+    /*
+     * [랭크 프로필 페이지]
+     * - 시즌별 유저 랭크 프로필 조회
+     * */
+    @Override
+    @GetMapping(value = "/users/{targetUserId}/rank/{season}")
+    public UserRankResponseDto userFindRank(String targetUserId, Integer season, HttpServletRequest request) {
+        UserDto curUser = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        UserDto targetUser = userService.findByIntraId(UserFindDto.builder().intraId(targetUserId).build());
+        RankUserDto rankDto;
+        // 일단 게임타입은 SINGLE로 구현
+        if (season.equals(seasonService.findCurrentSeason().getId()))  {
+            rankDto = rankRedisService.findRankById(RankFindDto.builder().intraId(targetUserId).gameType(GameType.SINGLE).build());
+        } else {
+            rankDto = getRankUserDtoFromSeasonAndTargetUser(season, targetUser);
+        }
+        UserRankResponseDto responseDto = UserRankResponseDto.builder()
+                .rank(rankDto.getRank())
+                .ppp(rankDto.getPpp())
+                .wins(rankDto.getWins())
+                .losses(rankDto.getLosses())
+                .winRate(rankDto.getWinRate())
+                .build();
+        return responseDto;
+    }
+
+    private RankUserDto getRankUserDtoFromSeasonAndTargetUser(Integer season, UserDto targetUser) {
+        RankUserDto rankDto;
+        SeasonDto seasonDto = seasonService.findSeasonById(season);
+        if (seasonDto != null) {
+            RankDto temp = rankService.findBySeasonIdAndUserId(seasonDto.getId(), targetUser.getId());
+            if (temp != null) {
+                rankDto = RankUserDto.builder()
+                        .intraId(targetUser.getIntraId())
+                        .rank(temp.getRanking())
+                        .wins(temp.getWins())
+                        .losses(temp.getLosses())
+                        .winRate((temp.getWins() + temp.getLosses()) == 0 ? 0 : ((double)temp.getWins() / (double)(temp.getLosses() + temp.getWins()) * 100))
+                        .ppp(temp.getPpp())
+                        .statusMessage(targetUser.getStatusMessage())
+                        .build();
+            } else {
+                rankDto = null;
+            }
+        } else {
+            rankDto = null;
+        }
+        return rankDto;
     }
 
     /*
@@ -155,6 +211,8 @@ public class UserControllerImpl implements UserController {
         NotiCountDto notiCount = notiService.countAllNByUser(NotiFindDto.builder().user(user).build());
         UserLiveInfoResponseDto userLiveInfoResponse = UserLiveInfoResponseDto.builder()
                 .notiCount(notiCount.getNotiCount())
+                .currentMatchMode(currentMatch == null ? null : currentMatch.getSlot().getMode()) // is it right to find mode in slot?
+                .seasonMode(seasonMode)
                 .event(event)
                 .build();
         return userLiveInfoResponse;
