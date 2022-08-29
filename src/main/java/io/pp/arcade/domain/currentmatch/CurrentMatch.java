@@ -43,6 +43,11 @@ public class CurrentMatch extends BaseTimeEntity {
     @Column(name = "is_matched")
     private Boolean isMatched;
 
+    @NotNull
+    @Setter
+    @Column(name = "is_del")
+    private Boolean isDel;
+
     @Builder
     public CurrentMatch(User user, Slot slot, Game game, Boolean matchImminent, Boolean isMatched) {
         this.user = user;
@@ -50,5 +55,6 @@ public class CurrentMatch extends BaseTimeEntity {
         this.game = game;
         this.matchImminent = matchImminent;
         this.isMatched = isMatched;
+        this.isDel = false;
     }
 }
