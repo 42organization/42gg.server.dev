@@ -28,8 +28,9 @@ public class StatisticService {
 
     /* */
     @Transactional
-    public List<TableMapper> findMatchByCreatedAt() {
-        return statisticRepository.findTest();
+    public List<TableMapper> findMatchSuccessByCreatedAt() {
+        //return statisticRepository.findDataByCreatedAtAndQuery(dto, );
+        return null;
     }
 
     @Transactional
@@ -37,11 +38,37 @@ public class StatisticService {
     }
 
 
-
-
     @Transactional
     public List<TableMapper> findMatch(DateRangeDto dateRangeDto) {
         return null;
     }
 
+    private String queryByDate(String table, DateType dateType, String startAt, String endAt){
+        String query = null;
+        switch (dateType){
+            case DAILY:
+                query = "select date_format(created_at, '%m-%d') as labels," +
+                        " count(*) as data" +
+                        " from " + table +
+                        " where created_at between " + startAt + " and " + endAt +
+                        " group by labels order by labels ASC";
+                break;
+            case WEEKLY:
+                query = "select concat(date_format(created_at, '%m'), '.' ," +
+                        " yearweek(created_at, 1) - yearweek(date_sub(created_at, INTERVAL DAYOFMONTH(created_at) - 1 DAY), 1)) as labels," +
+                        " count(*) as data" +
+                        " from (select date_sub(created_at, interval WEEKDAY(created_at) DAY) as created_at from " + table +
+                        " where created_at between " + startAt + " and " + endAt + ") stat " +
+                        " group by labels order by labels ASC";
+                break;
+            case MONTHLY:
+                query = "select date_format(created_at, '%m') as labels," +
+                        " count(*) as data" +
+                        " from " + table +
+                        " where created_at between " + startAt + " and " + endAt  +
+                        " group by labels order by labels ASC";
+                break;
+        }
+        return query;
+    }
 }
