@@ -16,6 +16,9 @@ import io.pp.arcade.domain.season.SeasonService;
 import io.pp.arcade.domain.season.dto.SeasonDto;
 import io.pp.arcade.domain.slot.SlotService;
 import io.pp.arcade.domain.slot.dto.SlotDto;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUserService;
+import io.pp.arcade.domain.slotteamuser.dto.SlotTeamUserDto;
 import io.pp.arcade.domain.team.TeamService;
 import io.pp.arcade.domain.team.dto.TeamDto;
 import io.pp.arcade.domain.user.UserService;
@@ -44,6 +47,7 @@ public class ManagementController {
     private final UserService userService;
     private final TeamService teamService;
     private final SlotService slotService;
+    private final SlotTeamUserService slotTeamUserService;
     private final GameService gameService;
     private final SeasonService seasonService;
     private final CurrentMatchService currentMatchService;
@@ -139,7 +143,7 @@ public class ManagementController {
 
     @GetMapping("/admin/slot")
     public String slotPage(Model model, HttpServletRequest request) {
-        List<SlotDto> slotList = slotService.findSlotByAdmin(Pageable.ofSize(200));
+        List<SlotTeamUserDto> slotList = slotTeamUserService.findAllByAdmin(Pageable.ofSize(200));
         model.addAttribute("slotStartTime", slotGenerator.getStartTime());
         model.addAttribute("slotInterval", slotGenerator.getInterval());
         model.addAttribute("slotNum", slotGenerator.getSlotNum());
