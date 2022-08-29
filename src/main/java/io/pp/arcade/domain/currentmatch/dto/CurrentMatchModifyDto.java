@@ -10,6 +10,7 @@ public class CurrentMatchModifyDto {
     private Integer slotId;
     private Boolean isMatched;
     private Boolean matchImminent;
+    private Boolean isDel;
     private GameDto gameDto;
 
     @Override
@@ -18,6 +19,7 @@ public class CurrentMatchModifyDto {
                 "slotId=" + slotId +
                 ", isMatched=" + isMatched +
                 ", matchImminent=" + matchImminent +
+                ", isDel=" + isDel +
                 ", gameDto=" + gameDto +
                 '}';
     }

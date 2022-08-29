@@ -54,7 +54,7 @@ public class ControllerExceptionAdvice {
      * 주로 @RequestParam enum으로 binding 못했을 경우 발생
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    protected ResponseEntity<ExceptionResponse> methodㅂArgumentTypeMismatchExceptionHandle(MethodArgumentTypeMismatchException ex) {
+    protected ResponseEntity<ExceptionResponse> methodArgumentTypeMismatchExceptionHandle(MethodArgumentTypeMismatchException ex) {
         log.error("MethodArgumentTypeMismatchException", ex);
         ExceptionResponse response = ExceptionResponse.from("E0001", "잘못된 요청입니다");
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
