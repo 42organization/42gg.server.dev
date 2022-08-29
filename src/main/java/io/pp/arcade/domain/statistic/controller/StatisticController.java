@@ -10,5 +10,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 
 public interface StatisticController {
-    StatisticResponseDto visit(@PathVariable DateType date, @RequestParam DateRangeDto dateRangeDto, HttpServletRequest request);
+    StatisticResponseDto visit(@PathVariable DateType date, DateRangeDto dateRangeDto);
 }

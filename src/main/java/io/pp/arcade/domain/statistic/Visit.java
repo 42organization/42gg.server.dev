@@ -19,6 +19,6 @@ public class Visit extends BaseTimeEntity {
     @Column(name = "intra_id")
     private String intraId;
 
-    @Column(name = "rank")
-    private Integer rank;
+    @Column(name = "ranking")
+    private Integer ranking;
 }
