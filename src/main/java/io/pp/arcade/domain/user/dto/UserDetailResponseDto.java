@@ -10,27 +10,22 @@ import lombok.Getter;
 public class UserDetailResponseDto {
     private String intraId;
     private String userImageUri;
-    private Integer rank;
-    private Integer ppp;
-    private Integer wins;
-    private Integer losses;
-    @JsonSerialize(using = DtoSerialize.CustomDoubleSerializer.class)
-    private Double winRate;
     private String racketType;
     private String statusMessage;
+    private Integer level;
+    private Integer currentExp;
+    private Integer maxExp;
     private UserRivalRecordDto rivalRecord;
 
     @Builder
-    public UserDetailResponseDto(String intraId, String userImageUri, Integer rank, Integer ppp, Integer wins, Integer losses, Double winRate, RacketType racketType, String statusMessage, UserRivalRecordDto rivalRecord) {
+    public UserDetailResponseDto(String intraId, String userImageUri, Integer level, Integer currentExp, Integer maxExp, RacketType racketType, String statusMessage, UserRivalRecordDto rivalRecord) {
         this.intraId = intraId;
         this.userImageUri = userImageUri;
-        this.rank = rank;
-        this.ppp = ppp;
-        this.wins = wins;
-        this.losses = losses;
-        this.winRate = winRate;
         this.racketType = racketType.getCode();
         this.statusMessage = statusMessage;
+        this.level = level;
+        this.currentExp = currentExp;
+        this.maxExp = maxExp;
         this.rivalRecord = rivalRecord;
     }
 
@@ -39,13 +34,11 @@ public class UserDetailResponseDto {
         return "UserDetailResponseDto{" +
                 "intraId='" + intraId + '\'' +
                 ", userImageUri='" + userImageUri + '\'' +
-                ", rank=" + rank +
-                ", ppp=" + ppp +
-                ", wins=" + wins +
-                ", losses=" + losses +
-                ", winRate=" + winRate +
                 ", racketType='" + racketType + '\'' +
                 ", statusMessage='" + statusMessage + '\'' +
+                ", level=" + level +
+                ", currentExp=" + currentExp +
+                ", maxExp=" + maxExp +
                 ", rivalRecord=" + rivalRecord +
                 '}';
     }

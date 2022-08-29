@@ -7,6 +7,10 @@ import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.slotteamuser.dto.SlotTeamUserDto;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
+import io.pp.arcade.domain.slot.dto.SlotDto;
+import io.pp.arcade.domain.slotteamuser.dto.SlotTeamUserDto;
+import io.pp.arcade.domain.team.dto.TeamPosDto;
+import io.pp.arcade.domain.user.dto.UserDto;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -46,5 +50,9 @@ public class SlotTeamUserService {
         Page<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllByOrderByTeamUserId(pageable);
         List<SlotTeamUserDto> slotTeamUserDtos = slotTeamUsers.stream().map(SlotTeamUserDto::from).collect(Collectors.toList());
         return slotTeamUserDtos;
+    }
+
+    public SlotTeamUserDto findTeamBySlotAndUser(Integer slotId, Integer userId) {
+        return slotTeamUserRepository.findSlotTeamUserBySlotIdAndUserId(slotId, userId).map(SlotTeamUserDto::from).orElse(null);
     }
 }

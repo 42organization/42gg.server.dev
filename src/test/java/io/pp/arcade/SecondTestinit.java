@@ -21,8 +21,10 @@ import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.Mode;
 import io.pp.arcade.global.type.RacketType;
 import io.pp.arcade.global.type.RoleType;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -33,7 +35,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class TestInitiator {
+public class SecondTestinit {
+
     @Autowired
     CurrentMatchRepository currentMatchRepository;
     @Autowired
@@ -65,8 +68,9 @@ public class TestInitiator {
     public Team[] teams;
     public Slot[] slots;
     public SlotTeamUser[] slotTeamUser;
+
     public RankRedis[] ranks;
-    public void letsgo() {
+    public void letInit() {
         users = new User[12];
         users[0] = userRepository.save(User.builder().intraId("hakim").eMail("hihihoho").imageUri("hakim.jpg").statusMessage("kikikaka").ppp(1040).roleType(RoleType.ADMIN).racketType(RacketType.SHAKEHAND).totalExp(1000).build());
         users[1] = userRepository.save(User.builder().intraId("nheo").eMail("hihihoho").imageUri("neho.jpg").statusMessage("kikikaka").ppp(1030).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(900).build());
@@ -101,12 +105,12 @@ public class TestInitiator {
             redisTemplate.opsForZSet().add(getRankKey(GameType.DOUBLE), getUserRankKey(user.getIntraId(), GameType.DOUBLE), user.getPpp());
         }
 
-        slots = new Slot[18];
+        slots = new Slot[12];
         LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
-        for (int i = 0; i < 18; i++) {
+        for (int i = 0; i < 12; i++) {
             LocalDateTime time = LocalDateTime.of(tomorrow.getYear(), tomorrow.getMonth(), tomorrow.getDayOfMonth(),
-                    15 + i / 6, (i * 10) % 60, 0); // 3시부터 10분 간격으로 18개 슬롯 생성
-            slots[i] = slotRepository.save(Slot.builder().tableId(1).headCount(0).time(time).build());
+                    15 + i / 6, (i * 15) % 60, 0); // 3시부터 10분 간격으로 18개 슬롯 생성 // 3시부터 15분 간격 12개 슬롯 생성
+            slots[i] = slotRepository.save(Slot.builder().tableId(1).headCount(0).time(time).mode(Mode.ALL).build());
         }
 
         teams = new Team[36];
@@ -134,20 +138,30 @@ public class TestInitiator {
         teams[21] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[10]).headCount(0).score(0).build());
         teams[22] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[11]).headCount(0).score(0).build());
         teams[23] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[11]).headCount(0).score(0).build());
-        teams[24] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[12]).headCount(0).score(0).build());
-        teams[25] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[12]).headCount(0).score(0).build());
-        teams[26] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[13]).headCount(0).score(0).build());
-        teams[27] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[13]).headCount(0).score(0).build());
-        teams[28] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[14]).headCount(0).score(0).build());
-        teams[29] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[14]).headCount(0).score(0).build());
-        teams[30] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[15]).headCount(0).score(0).build());
-        teams[31] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[15]).headCount(0).score(0).build());
-        teams[32] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[16]).headCount(0).score(0).build());
-        teams[33] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[16]).headCount(0).score(0).build());
-        teams[34] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[17]).headCount(0).score(0).build());
-        teams[35] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[17]).headCount(0).score(0).build());
+//        teams[24] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[12]).headCount(0).score(0).build());
+//        teams[25] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[12]).headCount(0).score(0).build());
+//        teams[26] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[13]).headCount(0).score(0).build());
+//        teams[27] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[13]).headCount(0).score(0).build());
+//        teams[28] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[14]).headCount(0).score(0).build());
+//        teams[29] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[14]).headCount(0).score(0).build());
+//        teams[30] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[15]).headCount(0).score(0).build());
+//        teams[31] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[15]).headCount(0).score(0).build());
+//        teams[32] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[16]).headCount(0).score(0).build());
+//        teams[33] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[16]).headCount(0).score(0).build());
+//        teams[34] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[17]).headCount(0).score(0).build());
+//        teams[35] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[17]).headCount(0).score(0).build());
 
         Season testSeason = seasonRepository.save(Season.builder().seasonName("Test").startTime(LocalDateTime.now().minusYears(1)).endTime(LocalDateTime.now().plusYears(1)).startPpp(1000).pppGap(150).build());
+        slotTeamUser = new SlotTeamUser[24];
+//        slotTeamUser[0] = slotTeamUserRepository.save(SlotTeamUser.builder().team(teams[0]).slot(slots[0]).user(users[0]).build());
+//        slotTeamUser[1] = slotTeamUserRepository.save(SlotTeamUser.builder().team(teams[1]).slot(slots[0]).user(users[1]).build());
+
+        int i = 0;
+        for(Slot s : slots){
+            slotTeamUser[i] = slotTeamUserRepository.save(SlotTeamUser.builder().team(teams[i]).slot(s).user(users[i % users.length]).build());
+            slotTeamUser[i + 1] = slotTeamUserRepository.save(SlotTeamUser.builder().team(teams[i + 1]).slot(s).user(users[(i + 1) % users.length]).build());
+            i += 2;
+        }
     }
 
     private String getUserKey(String intraId, GameType gameType) {
