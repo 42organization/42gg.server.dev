@@ -22,8 +22,8 @@ public class VipUserDto {
                 .intraId(user.getIntraId())
                 .rank(rank)
                 .statusMessage(user.getStatusMessage())
-                .level(ExpLevelCalculator.getLevel(user.getTotalExp()))
-                .exp(ExpLevelCalculator.getCurrentLevelMyExp(user.getTotalExp()))
+                .level(ExpLevelCalculator.getLevel(user.getTotalExp() == null ? 0 : user.getTotalExp()))
+                .exp(ExpLevelCalculator.getCurrentLevelMyExp(user.getTotalExp() == null ? 0 : user.getTotalExp()))
                 .build();
         return dto;
     }

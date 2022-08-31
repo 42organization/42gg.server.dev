@@ -8,10 +8,11 @@ import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
 import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
+import io.pp.arcade.global.type.Mode;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
@@ -27,24 +28,25 @@ public class DbUpdateService {
 //        slotTeamUserRepository.deleteAll();
         List<Slot> slots = slotRepository.findAll();
         for (Slot slot : slots) {
-//            if (slot.getTeam1() != null) {
-//                if (slot.getTeam1().getUser1() != null) {
-//                    SlotTeamUser slotTeamUser = SlotTeamUser.builder()
-//                            .slot(slot)
-//                            .team(slot.getTeam1())
-//                            .user(slot.getTeam1().getUser1())
-//                            .build();
-//                    slotTeamUserRepository.save(slotTeamUser);
-//                }
-//                if (slot.getTeam2().getUser1() != null) {
-//                    SlotTeamUser slotTeamUser = SlotTeamUser.builder()
-//                            .slot(slot)
-//                            .team(slot.getTeam2())
-//                            .user(slot.getTeam2().getUser1())
-//                            .build();
-//                    slotTeamUserRepository.save(slotTeamUser);
-//                }
-//            }
+            slot.setMode(Mode.RANK);
+            if (slot.getTeam1() != null) {
+                if (slot.getTeam1().getUser1() != null) {
+                    SlotTeamUser slotTeamUser = SlotTeamUser.builder()
+                            .slot(slot)
+                            .team(slot.getTeam1())
+                            .user(slot.getTeam1().getUser1())
+                            .build();
+                    slotTeamUserRepository.save(slotTeamUser);
+                }
+                if (slot.getTeam2().getUser1() != null) {
+                    SlotTeamUser slotTeamUser = SlotTeamUser.builder()
+                            .slot(slot)
+                            .team(slot.getTeam2())
+                            .user(slot.getTeam2().getUser1())
+                            .build();
+                    slotTeamUserRepository.save(slotTeamUser);
+                }
+            }
         }
     }
 
@@ -66,32 +68,32 @@ public class DbUpdateService {
     @Transactional
     public void deleteTeamInSlot() {
         List<Team> teams = teamRepository.findAll();
-//        for (Team team : teams) {
-//            team.setUser1(null);
-//            team.setUser2(null);
-//        }
-//        List<Slot> slt = slotRepository.findAll();
-//        for (Slot slot : slt) {
-//            if (slot.getTeam1() != null) {;
-//                slot.getTeam1().setUser1(null);
-//                slot.setTeam1(null);
-//            }
-//            if (slot.getTeam2() != null) {
-//                slot.getTeam2().setUser1(null);
-//                slot.setTeam2(null);
-//            }
-//        }
+        for (Team team : teams) {
+            team.setUser1(null);
+            team.setUser2(null);
+        }
+        List<Slot> slt = slotRepository.findAll();
+        for (Slot slot : slt) {
+            if (slot.getTeam1() != null) {;
+                slot.getTeam1().setUser1(null);
+                slot.setTeam1(null);
+            }
+            if (slot.getTeam2() != null) {
+                slot.getTeam2().setUser1(null);
+                slot.setTeam2(null);
+            }
+        }
     }
 
     @Transactional
     public void deleteTeamInGame() {
         List<Game> games = gameRepository.findAll();
-//        for (Game game : games) {
-//            game.setTeam1(null);
-//            game.setTeam2(null);
-//            game.setType(null);
-//            game.setTime(null);
-//        }
+        for (Game game : games) {
+            game.setTeam1(null);
+            game.setTeam2(null);
+            game.setType(null);
+            game.setTime(null);
+        }
     }
 
 }

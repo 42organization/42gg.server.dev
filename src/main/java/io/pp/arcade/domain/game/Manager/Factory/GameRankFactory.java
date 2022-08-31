@@ -32,7 +32,7 @@ public class GameRankFactory implements GameFactory{
         GamePlayer gamePlayerDto;
 
         RankUserDto rankUserDto = rankRedisService.findRankById(RankFindDto.builder()
-                .gameType(gameDto.getType())
+                .gameType(gameDto.getSlot().getType())
                 .intraId(slotTeamUser.getUser().getIntraId()).build());
         PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder()
                 .gameId(gameDto.getId())

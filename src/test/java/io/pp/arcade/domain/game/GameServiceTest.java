@@ -23,9 +23,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+import java.util.List;
 
 @SpringBootTest
 class GameServiceTest {
@@ -79,8 +80,8 @@ class GameServiceTest {
         gameService.addGame(addDto);
 
         //then
-        Assertions.assertThat(gameRepository.findAll().get(0).getSlot()).isEqualTo(slot);
-        Assertions.assertThat(gameRepository.findAll().get(0).getTime()).isEqualTo(slot.getTime());
+        List<Game> games = gameRepository.findAll();
+        Assertions.assertThat(games.get(games.size() - 1).getSlot()).isEqualTo(slot);
     }
 
     @Test
@@ -91,7 +92,6 @@ class GameServiceTest {
 
         Game game = gameRepository.save(Game.builder()
                 .slot(slot)
-                .type(slot.getType())
                 .status(StatusType.LIVE)
                 .season(1) //season 추가
                 .build());
@@ -115,16 +115,12 @@ class GameServiceTest {
 
         Game game = gameRepository.save(Game.builder()
                 .slot(slot)
-                .type(slot.getType())
-                .time(slot.getTime())
                 .status(StatusType.END)
                 .season(1) //season 추가
                 .build());
 
         Game game2 = gameRepository.save(Game.builder()
                 .slot(slot)
-                .type(slot.getType())
-                .time(slot.getTime())
                 .status(StatusType.END)
                 .season(1) //season 추가
                 .build());

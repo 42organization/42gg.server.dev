@@ -20,16 +20,6 @@ public class CurrentMatch extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "intra_id")
-    private User user;
-
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "slot_id")
-    private Slot slot;
-
     @Setter
     @ManyToOne
     @JoinColumn(name = "game_id")
@@ -43,18 +33,27 @@ public class CurrentMatch extends BaseTimeEntity {
     @Column(name = "is_matched")
     private Boolean isMatched;
 
-    @NotNull
     @Setter
     @Column(name = "is_del")
     private Boolean isDel;
 
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "intra_id")
+    private User user;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "slot_id")
+    private Slot slot;
+
     @Builder
-    public CurrentMatch(User user, Slot slot, Game game, Boolean matchImminent, Boolean isMatched) {
+    public CurrentMatch(User user, Slot slot, Game game, Boolean matchImminent, Boolean isMatched, Boolean isDel) {
         this.user = user;
         this.slot = slot;
         this.game = game;
         this.matchImminent = matchImminent;
         this.isMatched = isMatched;
-        this.isDel = false;
+        this.isDel = isDel;
     }
 }

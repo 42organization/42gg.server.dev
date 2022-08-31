@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     Page<User> findByIntraIdContains(@Param("partial") String partial, Pageable pageable);
     List<User> findAllByRoleType(RoleType roleType);
     User getUserByIntraId(String IntraId);
-    Page<User> findAllByOrderByTotalExpAsc(Pageable pageable);
+    Page<User> findAllByOrderByTotalExpDesc(Pageable pageable);
 
 //    @Query("SELECT u.intraId, u.totalExp, rank() OVER (order by totalExp desc) as MyRank FROM User as u")
 // 이렇게 하려고 했으나 레디스에서 totalExp로 순위를 매기고 반환되는 값으로 가져오기,

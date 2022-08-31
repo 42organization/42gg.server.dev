@@ -28,7 +28,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.concurrent.TimeUnit;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -78,20 +78,18 @@ class RankControllerNormalTest {
 //                .andDo(document("vip-List"));
 
         /* 유저가 존재할 경우 */
-        mockMvc.perform((get("/pingpong/vip").contentType(MediaType.APPLICATION_JSON)
-                        .param("page","1"))
-                        .header("Authorization", "Bearer " + 0)) // header 해줘야함
-                .andExpect(jsonPath("$.myRank").value(1)) //
-                .andExpect(jsonPath("$.currentPage").value(1)) //
-                .andExpect(jsonPath("$.totalPage").value(1)) //
-                .andExpect(jsonPath("$.rankList[0].userId").value("hakim")) //
-                .andExpect(jsonPath("$.rankList[0].statusMessage").value("kikikaka")) //
-                .andExpect(jsonPath("$.rankList[0].level").value(10)) //
-                .andExpect(jsonPath("$.rankList[0].exp").value(0)) //
-                .andExpect(jsonPath("$.rankList[11].userId").value("jujeon")) //
-                .andExpect(jsonPath("$.rankList[11].statusMessage").value("kiki")) //
-                .andExpect(jsonPath("$.rankList[11].level").value(1)) //
-                .andExpect(jsonPath("$.rankList[11].exp").value(0)) //
+        mockMvc.perform((get("/pingpong/vip").contentType(MediaType.APPLICATION_JSON))
+//                        .param("page","1"))
+                        .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken())) // header 해줘야함
+//                .andExpect(jsonPath("$.myRank").value(1)) //
+                .andExpect(jsonPath("$.vipList[0].intraId").value("hhakim")) //
+                .andExpect(jsonPath("$.vipList[0].statusMessage").value("kikikaka")) //
+                .andExpect(jsonPath("$.vipList[0].level").value(7)) //
+                .andExpect(jsonPath("$.vipList[0].exp").value(100)) //
+                .andExpect(jsonPath("$.vipList[11].intraId").value("hjujeon")) //
+                .andExpect(jsonPath("$.vipList[11].statusMessage").value("kiki")) //
+                .andExpect(jsonPath("$.vipList[11].level").value(1)) //
+                .andExpect(jsonPath("$.vipList[11].exp").value(0)) //
                 .andExpect(status().isOk())
                 .andDo(document("vip-List"));
 

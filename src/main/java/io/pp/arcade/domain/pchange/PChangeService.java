@@ -20,7 +20,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,6 +77,20 @@ public class PChangeService {
         Integer gameId = findDto.getGameId() == null ? Integer.MAX_VALUE : findDto.getGameId();
 
         Page<PChange> pChangePage = pChangeRepository.findAllByUserAndGameIdLessThanOrderByIdDesc(user, gameId, findDto.getPageable());
+        PChangePageDto dto = PChangePageDto.builder()
+                .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()))
+                .totalPage(pChangePage.getTotalPages())
+                .currentPage(pChangePage.getPageable().getPageNumber())
+                .build();
+        return dto;
+    }
+
+    @Transactional
+    public PChangePageDto findPChangeByUserIdAfterGameIdAndGameMode(PChangeFindDto findDto){
+//        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        Integer gameId = findDto.getGameId() == null ? Integer.MAX_VALUE : findDto.getGameId();
+
+        Page<PChange> pChangePage = pChangeRepository.findPChangeByGameMode(findDto.getUserId(), findDto.getMode().getValue(), gameId, findDto.getPageable());
         PChangePageDto dto = PChangePageDto.builder()
                 .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()))
                 .totalPage(pChangePage.getTotalPages())
