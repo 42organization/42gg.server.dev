@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 
@@ -67,13 +67,9 @@ class CurrentMatchServiceTest {
         team2 = slot.getTeam2();
 
         game = gameRepository.save(Game.builder()
-                .team1(team1)
-                .team2(team2)
                 .slot(slot)
                 .season(1)
                 .status(StatusType.LIVE)
-                .time(slot.getTime())
-                .type(GameType.SINGLE)
                 .build());
     }
 
@@ -85,9 +81,11 @@ class CurrentMatchServiceTest {
                 .userId(user1.getId())
                 .build();
         currentMatchService.addCurrentMatch(addDto);
-        CurrentMatch match = currentMatchRepository.findByUser(user1).orElseThrow(() -> new BusinessException("E0001"));
+        CurrentMatch match = currentMatchRepository.findByUserAndIsDel(user1, false).orElseThrow(() -> new BusinessException("E0001"));
+        CurrentMatch match1 = currentMatchRepository.findByUserIdAndIsDel(user1.getId(), false).orElseThrow(() -> new BusinessException("E0001"));
 
         Assertions.assertThat(match.getUser()).isEqualTo(user1);
+        Assertions.assertThat(match1.getUser()).isEqualTo(user1);
     }
 
     @Test
@@ -117,6 +115,9 @@ class CurrentMatchServiceTest {
         CurrentMatch currentMatch = currentMatchRepository.save(CurrentMatch.builder()
                 .slot(slot)
                 .user(user1)
+                .isDel(false)
+                .isMatched(false)
+                .matchImminent(false)
                 .build());
         CurrentMatchSaveGameDto saveGameDto = CurrentMatchSaveGameDto.builder()
                 .gameId(game.getId())
@@ -134,6 +135,9 @@ class CurrentMatchServiceTest {
         CurrentMatch currentMatch = currentMatchRepository.save(CurrentMatch.builder()
                 .slot(slot)
                 .user(user1)
+                .matchImminent(false)
+                .isMatched(false)
+                .isDel(false)
                 .build());
 
         CurrentMatchDto dto1 = currentMatchService.findCurrentMatchByUser(UserDto.from(user1));
@@ -156,6 +160,6 @@ class CurrentMatchServiceTest {
 
         Assertions.assertThat(currentMatchRepository.findAll()).isNotEqualTo(Collections.EMPTY_LIST);
         currentMatchService.removeCurrentMatch(removeDto);
-        Assertions.assertThat(currentMatchRepository.findAll()).isEqualTo(Collections.EMPTY_LIST);
+        Assertions.assertThat(currentMatchRepository.findAllByIsDel(false)).isEqualTo(Collections.EMPTY_LIST);
     }
 }

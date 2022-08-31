@@ -24,7 +24,7 @@ public class GameResultDto {
         this.gameId = gameId;
         this.type = type.getCode();
         this.status = status.getCode();
-        this.mode = mode.getCode();
+        this.mode = (mode != null ? mode.getCode() : null);
         this.time = time;
         this.team1 = team1;
         this.team2 = team2;
@@ -36,6 +36,7 @@ public class GameResultDto {
                 "gameId=" + gameId +
                 ", type='" + type + '\'' +
                 ", status='" + status + '\'' +
+                ", mode='" + mode + '\'' +
                 ", time=" + time +
                 ", team1=" + team1 +
                 ", team2=" + team2 +

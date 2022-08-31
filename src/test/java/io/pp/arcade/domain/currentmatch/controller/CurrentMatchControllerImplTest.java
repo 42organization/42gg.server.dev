@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -203,7 +203,7 @@ class CurrentMatchControllerImplTest {
         saveTeam(team2);
         slot = Slot.builder().tableId(1).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
         slot = saveSlot(slot);
-        Game game = Game.builder().type(GameType.DOUBLE).season(1).slot(slot).time(slot.getTime()).status(StatusType.LIVE).build();
+        Game game = Game.builder().season(1).slot(slot).status(StatusType.LIVE).build();
         game = saveGame(game);
         saveSlotTeamUser(slot, team1, user4);
         saveSlotTeamUser(slot, team2, user5);
@@ -224,7 +224,7 @@ class CurrentMatchControllerImplTest {
         saveTeam(team2);
         slot = Slot.builder().tableId(1).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
         slot = saveSlot(slot);
-        Game game1 = Game.builder().type(GameType.DOUBLE).season(1).slot(slot).time(slot.getTime()).status(StatusType.LIVE).build();
+        Game game1 = Game.builder().season(1).slot(slot).status(StatusType.LIVE).build();
         game = saveGame(game1);
         currentMatchSave(game1, slot, user4, true, true);
         mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON))

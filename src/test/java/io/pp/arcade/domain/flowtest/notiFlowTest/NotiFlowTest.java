@@ -15,6 +15,7 @@ import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.Mode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -89,7 +90,7 @@ public class NotiFlowTest {
         Token userToken1 = testInitiator.tokens[0];
         Token userToken2 = testInitiator.tokens[1];
         HttpRequestBody.put("slotId", slot.getId().toString());
-
+        HttpRequestBody.put("mode", Mode.RANK.toString());
 
         // 슬롯에 유저 추가
         mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
@@ -238,6 +239,7 @@ public class NotiFlowTest {
         Token userToken1 = testInitiator.tokens[0];
         Token userToken2 = testInitiator.tokens[1];
         HttpRequestBody.put("slotId", slot.getId().toString());
+        HttpRequestBody.put("mode", Mode.RANK.toString());
 
         flushAll();
 

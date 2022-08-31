@@ -62,6 +62,7 @@ public class GameResponseManager {
                     .team1(myTeamDto)
                     .team2(enemyTeamDto)
                     .type(game.getSlot().getType())
+                    .mode(game.getMode())
                     .status(game.getStatus())
                     .time(game.getSlot().getTime())
                     .build());

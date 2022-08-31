@@ -13,6 +13,8 @@ import io.pp.arcade.domain.game.Game;
 import io.pp.arcade.domain.game.GameRepository;
 import io.pp.arcade.domain.noti.Noti;
 import io.pp.arcade.domain.noti.NotiRepository;
+import io.pp.arcade.domain.security.jwt.Token;
+import io.pp.arcade.domain.security.jwt.TokenRepository;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
@@ -20,6 +22,7 @@ import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
+import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.global.type.*;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
@@ -33,7 +36,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -62,6 +65,10 @@ class SlotControllerTest {
     @Autowired
     private GameRepository gameRepository;
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private TokenRepository tokenRepository;
+    @Autowired
     private SlotRepository slotRepository;
 
     @Autowired
@@ -89,10 +96,6 @@ class SlotControllerTest {
 
     @BeforeEach
     void init() {
-        testInitiator.letsgo();
-        teams = testInitiator.teams;
-        users = testInitiator.users;
-        slots = testInitiator.slots;
     }
 
     @Transactional
@@ -124,7 +127,7 @@ class SlotControllerTest {
 
     @Transactional
     void saveCurrentMatchGame(CurrentMatch match, Slot slot) {
-        match.setGame(gameRepository.save(Game.builder().team1(slot.getTeam1()).team2(slot.getTeam2()).slot(slot).time(slot.getTime()).season(1).status(StatusType.LIVE).type(slot.getType()).build()));
+        match.setGame(gameRepository.save(Game.builder().slot(slot).season(1).status(StatusType.LIVE).mode(slot.getMode()).build()));
     }
 
     @Transactional
@@ -136,12 +139,16 @@ class SlotControllerTest {
     @Transactional
     @DisplayName("슬롯 조회 - 빈 슬롯")
     void noSlots() throws Exception {
-        slotTeamUserRepository.deleteAll();
-        teamRepository.deleteAll();
-        slotRepository.deleteAll();
+//        slotTeamUserRepository.deleteAllInBatch();
+//        teamRepository.deleteAll();
+//        gameRepository.deleteAll();
+//        slotRepository.deleteAllInBatch();
+        User user = userRepository.save(User.builder().intraId("user1").eMail("user1").imageUri("user1").racketType(RacketType.DUAL).statusMessage("user1").roleType(RoleType.USER).ppp(1000).totalExp(0).build());
+        tokenRepository.save(new Token(user, "10", "10"));
+
         mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.SINGLE).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 10"))
-                //.andExpect(jsonPath("$.matchBoards").isEmpty())
+                .andExpect(jsonPath("$.matchBoards").isEmpty())
                 .andExpect(status().isOk())
                 .andDo(document("no-slots"));
     }
@@ -150,6 +157,10 @@ class SlotControllerTest {
     @Transactional
     @DisplayName("슬롯 조회 - /match/tables/1/single")
     void slotStatusListSingle() throws Exception {
+        testInitiator.letsgo();
+        teams = testInitiator.teams;
+        users = testInitiator.users;
+        slots = testInitiator.slots;
         /*
          * 단식 - 유저 2명 (풀방)
          * status : close
@@ -203,7 +214,7 @@ class SlotControllerTest {
          * */
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime passed = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 1);
-        passedSlot = Slot.builder().tableId(1).team1(teams[0]).team2(teams[1]).time(passed).headCount(0).gamePpp(null).type(GameType.SINGLE).build();
+        passedSlot = Slot.builder().tableId(1).time(passed).headCount(0).gamePpp(null).type(GameType.SINGLE).build();
         saveSlot(passedSlot);
         mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
@@ -266,6 +277,11 @@ class SlotControllerTest {
     @Transactional
     @DisplayName("슬롯 등록 예외 - /match/tables/1/single")
     void slotAddUserException() throws Exception {
+        testInitiator.letsgo();
+        teams = testInitiator.teams;
+        users = testInitiator.users;
+        slots = testInitiator.slots;
+
         Map<String, String> body = new HashMap<>();
         Slot slot;
 
@@ -354,7 +370,7 @@ class SlotControllerTest {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime passed = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 1);
         passed.minusDays(1);
-        passedSlot = Slot.builder().tableId(1).team1(teams[0]).team2(teams[1]).time(passed).headCount(0).gamePpp(null).type(GameType.SINGLE).build();
+        passedSlot = Slot.builder().tableId(1).time(passed).headCount(0).gamePpp(null).type(GameType.SINGLE).build();
         passedSlot = saveSlot(passedSlot);
         body.put("slotId", passedSlot.getId().toString());
         mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
@@ -368,6 +384,11 @@ class SlotControllerTest {
     @Transactional
     @DisplayName("슬롯 등록 - /match/tables/1/single")
     void slotAddUserSingle() throws Exception {
+        testInitiator.letsgo();
+        teams = testInitiator.teams;
+        users = testInitiator.users;
+        slots = testInitiator.slots;
+
         Map<String, String> body = new HashMap<>();
         Slot slot;
         User user;
@@ -379,6 +400,7 @@ class SlotControllerTest {
             passedTeam1 = slots[0].getTeam1();
             user = users[0];
             body.put("slotId", passedSlot.getId().toString());
+            body.put("mode", Mode.RANK.toString());
 
             mockMvc.perform(get("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
@@ -411,7 +433,7 @@ class SlotControllerTest {
             Assertions.assertThat(slotTeamUser.getUser().getIntraId()).isEqualTo(user.getIntraId());
             Assertions.assertThat(slotTeamUser.getTeam().getTeamPpp()).isEqualTo(user.getPpp());
             Assertions.assertThat(team1.getHeadCount()).isEqualTo(1);
-            CurrentMatch user1CurrentMatch = currentMatchRepository.findByUser(user).orElse(null);
+            CurrentMatch user1CurrentMatch = currentMatchRepository.findByUserAndIsDel(user, false).orElse(null);
             Assertions.assertThat(user1CurrentMatch.getSlot().getId()).isEqualTo(slot.getId());
             Assertions.assertThat(user1CurrentMatch.getIsMatched()).isEqualTo(false);
         }
@@ -461,8 +483,8 @@ class SlotControllerTest {
             Assertions.assertThat(team2.getTeamPpp()).isEqualTo(user.getPpp());
             Assertions.assertThat(team2.getHeadCount()).isEqualTo(1);
 
-            CurrentMatch user1CurrentMatch = currentMatchRepository.findByUser(slotTeamUser.get(0).getUser()).orElse(null);
-            CurrentMatch user2CurrentMatch = currentMatchRepository.findByUser(user).orElse(null);
+            CurrentMatch user1CurrentMatch = currentMatchRepository.findByUserAndIsDel(slotTeamUser.get(0).getUser(), false).orElse(null);
+            CurrentMatch user2CurrentMatch = currentMatchRepository.findByUserAndIsDel(user, false).orElse(null);
             Assertions.assertThat(user2CurrentMatch.getSlot().getId()).isEqualTo(slot.getId());
             Assertions.assertThat(user1CurrentMatch.getIsMatched()).isEqualTo(true);
             Assertions.assertThat(user2CurrentMatch.getIsMatched()).isEqualTo(true);
@@ -658,8 +680,13 @@ class SlotControllerTest {
 
     @Test
     @Transactional
-    @DisplayName("슬롯 등록 단식 && 에러 - /match")
+    @DisplayName("슬롯 해제 단식 && 에러 - /match")
     void slotRemoveUserSingle() throws Exception {
+        testInitiator.letsgo();
+        teams = testInitiator.teams;
+        users = testInitiator.users;
+        slots = testInitiator.slots;
+
         HashMap<String, String> body = new HashMap<String, String>();
        /*
         * 인원이 빈 슬롯에 취소를 요청할 경우
@@ -679,6 +706,8 @@ class SlotControllerTest {
             Slot slot = slots[0];
             User team1User = users[0];
             body.put("slotId", slot.getId().toString());
+            body.put("mode", Mode.RANK.toString());
+
             /* slot - user1 등록 */
             mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(body))
@@ -692,8 +721,8 @@ class SlotControllerTest {
                     .andExpect(status().isOk());
 
             /* match - Imminent 등록 */
-            CurrentMatch currentMatch = currentMatchRepository.findByUser(team1User).orElse(null);
-            Assertions.assertThat(currentMatch).isNotNull();
+            CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(team1User, false).orElse(null);
+            Assertions.assertThat(currentMatch).isNotEqualTo(null);
             saveCurrentMatchImminent(currentMatch, true);
 
             /* slot - user1 등록 취소 */
@@ -726,8 +755,8 @@ class SlotControllerTest {
                     .andExpect(status().isOk());
 
             /* match - Imminent 등록 */
-            CurrentMatch currentMatch = currentMatchRepository.findByUser(team1User).orElse(null);
-            CurrentMatch currentMatch2 = currentMatchRepository.findByUser(team2User).orElse(null);
+            CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(team1User, false).orElse(null);
+            CurrentMatch currentMatch2 = currentMatchRepository.findByUserAndIsDel(team2User, false).orElse(null);
             Assertions.assertThat(currentMatch).isNotNull();
             Assertions.assertThat(currentMatch2).isNotNull();
             saveCurrentMatchImminent(currentMatch, true);
@@ -775,7 +804,7 @@ class SlotControllerTest {
                     .andExpect(status().isOk())
                     .andDo(document("(single1)slot-after-user1st-cancel-when-status-1(2)-check-is-myTable-or-not"));
             /* User1 매치테이블 조회 */
-            CurrentMatch user1CurrentMatch = currentMatchRepository.findByUser(team1User).orElse(null);
+            CurrentMatch user1CurrentMatch = currentMatchRepository.findByUserAndIsDel(team1User, false).orElse(null);
 
             Assertions.assertThat(user1CurrentMatch).isEqualTo(null);
             Assertions.assertThat(slot.getGamePpp()).isEqualTo(null);
@@ -820,8 +849,8 @@ class SlotControllerTest {
                     .andDo(document("(single2)slot-after-user1st-cancel-when-status-2(2)-check-is-myTable-or-not"));
 
 
-            CurrentMatch user1CurrentMatch = currentMatchRepository.findByUser(team1User).orElse(null);
-            CurrentMatch user2CurrentMatch = currentMatchRepository.findByUser(team2User).orElse(null);
+            CurrentMatch user1CurrentMatch = currentMatchRepository.findByUserAndIsDel(team1User, false).orElse(null);
+            CurrentMatch user2CurrentMatch = currentMatchRepository.findByUserAndIsDel(team2User, false).orElse(null);
             Noti user1Noti = notiRepository.findAllByUser(team1User).get(0); // matched(0), canceled(1)
             Noti user2Noti = notiRepository.findAllByUser(team2User).get(1); // matched(0), canceled(1)
 
@@ -872,8 +901,8 @@ class SlotControllerTest {
                             .header("Authorization", "Bearer " + testInitiator.tokens[6].getAccessToken()))
                     .andExpect(status().isOk())
                     .andDo(document("(single3)slot-after-user2nd-cancel-when-status-2(2)-check-is-myTable-or-not"));
-            CurrentMatch user1CurrentMatch = currentMatchRepository.findByUser(team1User).orElse(null);
-            CurrentMatch user2CurrentMatch = currentMatchRepository.findByUser(team2User).orElse(null);
+            CurrentMatch user1CurrentMatch = currentMatchRepository.findByUserAndIsDel(team1User, false).orElse(null);
+            CurrentMatch user2CurrentMatch = currentMatchRepository.findByUserAndIsDel(team2User, false).orElse(null);
             Noti user1Noti = notiRepository.findAllByUser(team1User).get(1);
             Noti user2Noti = notiRepository.findAllByUser(team2User).get(0);
 

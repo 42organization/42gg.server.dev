@@ -92,7 +92,7 @@ public class UserControllerImpl implements UserController {
                 .statusMessage(targetUser.getStatusMessage())
                 .level(ExpLevelCalculator.getLevel(targetUser.getTotalExp()))
                 .currentExp(ExpLevelCalculator.getCurrentLevelMyExp(targetUser.getTotalExp()))
-                .maxExp(ExpLevelCalculator.getLevelMaxExp(targetUser.getTotalExp()))
+                .maxExp(ExpLevelCalculator.getLevelMaxExp(ExpLevelCalculator.getLevel(targetUser.getTotalExp())))
                 .rivalRecord(rivalRecord)
                 .build();
         return responseDto;

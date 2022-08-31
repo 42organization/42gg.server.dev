@@ -16,11 +16,11 @@ public class ExpLevelCalculator {
             1000, 2800
     };
     public static int getLevel(int total_exp) {
-        int i = 0;
+        int i = 1;
         while (total_exp > accumulatedExpForEachLevel[i]) {
             ++i;
         }
-        return ++i;
+        return i;
     }
 
     public static int getCurrentLevelMyExp(int total_exp) {

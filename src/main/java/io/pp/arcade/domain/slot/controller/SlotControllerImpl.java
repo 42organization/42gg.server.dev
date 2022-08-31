@@ -106,7 +106,7 @@ public class SlotControllerImpl implements SlotController {
     }
 
     private void checkIfModeMatches(SlotAddUserRequestDto addReqDto, SlotDto slot) {
-        if (slot.getMode() != Mode.BOTH || slot.getMode() != addReqDto.getMode()) {
+        if (slot.getMode() != Mode.BOTH && slot.getMode() != addReqDto.getMode()) {
             throw new BusinessException("SC004");
         }
     }
@@ -198,6 +198,7 @@ public class SlotControllerImpl implements SlotController {
                 .slotId(slot.getId())
                 .isMatched(isMatched)
                 .matchImminent(isImminent)
+                .isDel(false)
                 .build();
         currentMatchService.modifyCurrentMatch(matchModifyDto);
     }
