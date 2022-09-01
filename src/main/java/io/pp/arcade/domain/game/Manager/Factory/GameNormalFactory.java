@@ -7,6 +7,7 @@ import io.pp.arcade.domain.game.Manager.data.GameTeam;
 import io.pp.arcade.domain.game.Manager.data.GameTeamNormal;
 import io.pp.arcade.domain.slotteamuser.dto.SlotTeamUserDto;
 import io.pp.arcade.domain.team.dto.TeamDto;
+import io.pp.arcade.global.util.ExpLevelCalculator;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class GameNormalFactory implements GameFactory {
         return  GamePlayerNormal.builder()
                 .intraId(slotTeamUser.getUser().getIntraId())
                 .userImageUri(slotTeamUser.getUser().getImageUri())
-                .level(0)
+                .level(ExpLevelCalculator.getLevel(slotTeamUser.getUser().getTotalExp()))
                 .build();
     }
 

@@ -3,6 +3,8 @@ package io.pp.arcade.domain.currentmatch.dto;
 import io.pp.arcade.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.domain.game.dto.GameDto;
 import io.pp.arcade.domain.slot.dto.SlotDto;
+import io.pp.arcade.domain.user.User;
+import io.pp.arcade.domain.user.dto.UserDto;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -10,7 +12,7 @@ import lombok.Getter;
 @Builder
 public class CurrentMatchDto {
     private Integer id;
-    private Integer userId;
+    private UserDto user;
     private SlotDto slot;
     private Boolean matchImminent;
     private GameDto game;
@@ -23,7 +25,7 @@ public class CurrentMatchDto {
         }
         return CurrentMatchDto.builder()
                 .id(currentMatch.getId())
-                .userId(currentMatch.getUser().getId())
+                .user(UserDto.from(currentMatch.getUser()))
                 .slot(SlotDto.from(currentMatch.getSlot()))
                 .game(currentMatch.getGame() == null ? null : GameDto.from(currentMatch.getGame()))
                 .matchImminent(currentMatch.getMatchImminent())
@@ -35,7 +37,7 @@ public class CurrentMatchDto {
     public String toString() {
         return "CurrentMatchDto{" +
                 "id=" + id +
-                ", userId=" + userId +
+                ", user=" + user +
                 ", slot=" + slot +
                 ", matchImminent=" + matchImminent +
                 ", game=" + game +

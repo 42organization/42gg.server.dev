@@ -48,7 +48,7 @@ public class GameResponseManager {
                     myTeamDto.getPlayers().add(gameFactory.getGamePlayer(game, slotTeamUserDto));
                 } else {
                     enemyTeam = slotTeamUserDto.getTeam();
-                    enemyTeamDto.getPlayers().add(gameFactory.getGamePlayer( game, slotTeamUserDto));
+                    enemyTeamDto.getPlayers().add(gameFactory.getGamePlayer(game, slotTeamUserDto));
                 }
             }
 
@@ -62,6 +62,7 @@ public class GameResponseManager {
                     .team1(myTeamDto)
                     .team2(enemyTeamDto)
                     .type(game.getSlot().getType())
+                    .mode(game.getMode())
                     .status(game.getStatus())
                     .time(game.getSlot().getTime())
                     .build());

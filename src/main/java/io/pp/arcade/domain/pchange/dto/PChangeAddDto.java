@@ -10,6 +10,8 @@ public class PChangeAddDto {
     private Integer userId;
     private Integer pppChange;
     private Integer pppResult;
+    private Integer expChange;
+    private Integer expResult;
 
     @Override
     public String toString() {
@@ -18,6 +20,8 @@ public class PChangeAddDto {
                 ", userId=" + userId +
                 ", pppChange=" + pppChange +
                 ", pppResult=" + pppResult +
+                ", expChange=" + expChange +
+                ", expResult=" + expResult +
                 '}';
     }
 }

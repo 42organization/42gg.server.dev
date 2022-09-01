@@ -13,6 +13,7 @@ import io.pp.arcade.domain.rank.dto.RankUserDto;
 import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.slotteamuser.dto.SlotTeamUserDto;
 import io.pp.arcade.domain.team.dto.TeamDto;
+import io.pp.arcade.global.util.ExpLevelCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +33,7 @@ public class GameRankFactory implements GameFactory{
         GamePlayer gamePlayerDto;
 
         RankUserDto rankUserDto = rankRedisService.findRankById(RankFindDto.builder()
-                .gameType(gameDto.getType())
+                .gameType(gameDto.getSlot().getType())
                 .intraId(slotTeamUser.getUser().getIntraId()).build());
         PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder()
                 .gameId(gameDto.getId())
