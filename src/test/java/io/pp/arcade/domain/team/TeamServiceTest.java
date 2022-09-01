@@ -54,8 +54,8 @@ class TeamServiceTest {
     @BeforeEach
     void init() {
         testInitiator.letsgo();
-        user1 = userRepository.findByIntraId("hakim").orElse(null);
-        user2 = userRepository.findByIntraId("daekim").orElse(null);
+        user1 = testInitiator.users[0];
+        user2 = testInitiator.users[1];
 
         Slot slot1 = slotRepository.save(Slot.builder()
                 .gamePpp(0)
