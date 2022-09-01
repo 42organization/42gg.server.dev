@@ -91,11 +91,11 @@ public class RankRedisService implements RankNTService {
     @Transactional
     public void modifyRankStatusMessage(RankModifyStatusMessageDto modifyDto) {
         RankRedis singleRank = getUserRank(modifyDto.getIntraId(), SINGLE);
-        RankRedis doubleRank = getUserRank(modifyDto.getIntraId(), DOUBLE);
+//        RankRedis doubleRank = getUserRank(modifyDto.getIntraId(), DOUBLE);
         singleRank.updateStatusMessage(modifyDto.getStatusMessage());
-        doubleRank.updateStatusMessage(modifyDto.getStatusMessage());
+//        doubleRank.updateStatusMessage(modifyDto.getStatusMessage());
         saveUserRank(singleRank);
-        saveUserRank(doubleRank);
+//        saveUserRank(doubleRank);
     }
 
     @Transactional
