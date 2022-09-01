@@ -31,23 +31,23 @@ class UserServiceTest {
     @Transactional
     void findByIntraId() {
         //when
-        UserDto userDto = userService.findByIntraId(UserFindDto.builder().intraId("jiyun").build());
+        UserDto userDto = userService.findByIntraId(UserFindDto.builder().intraId(testInitiator.users[0].getIntraId()).build());
 
         //then
-        Assertions.assertThat(userDto.getIntraId()).isEqualTo("jiyun");
+        Assertions.assertThat(userDto.getIntraId()).isEqualTo(testInitiator.users[0].getIntraId());
     }
 
     @Test
     @Transactional
     void findById() {
         //given
-        User user = userRepository.findByIntraId("jiyun").orElseThrow(() -> new BusinessException("E0001"));
+        User user = userRepository.findByIntraId(testInitiator.users[0].getIntraId()).orElseThrow(() -> new BusinessException("E0001"));
 
         //when
         UserDto userDto = userService.findById(UserFindDto.builder().userId(user.getId()).build());
 
         //then
-        Assertions.assertThat(userDto.getIntraId()).isEqualTo(userDto.getIntraId());
+        Assertions.assertThat(user.getIntraId()).isEqualTo(userDto.getIntraId());
     }
 
     @Test
@@ -66,7 +66,7 @@ class UserServiceTest {
     void modifyUserPpp() {
         //given
 
-        UserDto userDto = userService.findByIntraId(UserFindDto.builder().intraId("jiyun").build());
+        UserDto userDto = userService.findByIntraId(UserFindDto.builder().intraId(testInitiator.users[0].getIntraId()).build());
         UserModifyPppDto dto = UserModifyPppDto.builder()
                 .userId(userDto.getId())
                 .ppp(50)
@@ -74,7 +74,7 @@ class UserServiceTest {
 
         //when
         userService.modifyUserPpp(dto);
-        UserDto userDto2 = userService.findByIntraId(UserFindDto.builder().intraId("jiyun").build());
+        UserDto userDto2 = userService.findByIntraId(UserFindDto.builder().intraId(testInitiator.users[0].getIntraId()).build());
 
         //then
         Assertions.assertThat(userDto2.getPpp()).isEqualTo(50);
@@ -84,7 +84,7 @@ class UserServiceTest {
     @Transactional
     void modifyUserProfile() {
         //given
-        UserDto userDto = userService.findByIntraId(UserFindDto.builder().intraId("jiyun").build());
+        UserDto userDto = userService.findByIntraId(UserFindDto.builder().intraId(testInitiator.users[0].getIntraId()).build());
         UserModifyProfileDto dto = UserModifyProfileDto.builder()
                 .userId(userDto.getId())
                 .userImageUri("image")
@@ -92,7 +92,7 @@ class UserServiceTest {
                 .statusMessage("선출 아님").build();
         //when
         userService.modifyUserProfile(dto);
-        User user = userRepository.findByIntraId("jiyun").orElseThrow(() -> new BusinessException("E0001"));
+        User user = userRepository.findByIntraId(testInitiator.users[0].getIntraId()).orElseThrow(() -> new BusinessException("E0001"));
 
         //then
 //        Assertions.assertThat(user.getImageUri()).isEqualTo("image");
