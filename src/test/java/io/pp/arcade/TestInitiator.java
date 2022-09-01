@@ -21,6 +21,7 @@ import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.type.GameType;
+import io.pp.arcade.global.type.Mode;
 import io.pp.arcade.global.type.RacketType;
 import io.pp.arcade.global.type.RoleType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,21 +66,22 @@ public class TestInitiator {
     public Team[] teams;
     public Slot[] slots;
     public SlotTeamUser[] slotTeamUser;
+    public Season testSeason;
     public RankRedis[] ranks;
     public void letsgo() {
         users = new User[12];
-        users[0] = userRepository.save(User.builder().intraId("hakim").eMail("hihihoho").imageUri("hakim.jpg").statusMessage("kikikaka").ppp(1040).roleType(RoleType.ADMIN).racketType(RacketType.SHAKEHAND).totalExp(1000).build());
-        users[1] = userRepository.save(User.builder().intraId("nheo").eMail("hihihoho").imageUri("neho.jpg").statusMessage("kikikaka").ppp(1030).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(900).build());
-        users[2] = userRepository.save(User.builder().intraId("donghyuk").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1020).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(800).build());
-        users[3] = userRepository.save(User.builder().intraId("jiyun").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1010).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(700).build());
-        users[4] = userRepository.save(User.builder().intraId("jekim").eMail("hihihoho").imageUri("jekim.jpg").statusMessage("kikikaka").ppp(990).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(600).build());
-        users[5] = userRepository.save(User.builder().intraId("wochae").eMail("hihihoho").imageUri("wochae.jpg").statusMessage("kikikaka").ppp(980).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(500).build());
-        users[6] = userRepository.save(User.builder().intraId("jabae").eMail("hihihoho").imageUri("jabae.jpg").statusMessage("kikikaka").ppp(1000).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(400).build());
-        users[7] = userRepository.save(User.builder().intraId("jihyukim").eMail("hihihoho").imageUri("jihyukim.jpg").statusMessage("kikikaka").ppp(992).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(300).build());
-        users[8] = userRepository.save(User.builder().intraId("daekim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(996).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(200).build());
-        users[9] = userRepository.save(User.builder().intraId("sujpark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(994).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(100).build());
-        users[10] = userRepository.save(User.builder().intraId("kipark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(100).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(1).build());
-        users[11] = userRepository.save(User.builder().intraId("jujeon").eMail("hihi").imageUri("null").statusMessage("kiki").ppp(1000).roleType(RoleType.ADMIN).racketType(RacketType.DUAL).totalExp(0).build());
+        users[0] = userRepository.save(User.builder().intraId("hhakim").eMail("hihihoho").imageUri("hakim.jpg").statusMessage("kikikaka").ppp(1040).roleType(RoleType.ADMIN).racketType(RacketType.SHAKEHAND).totalExp(1000).build());
+        users[1] = userRepository.save(User.builder().intraId("hnheo").eMail("hihihoho").imageUri("neho.jpg").statusMessage("kikikaka").ppp(1030).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(900).build());
+        users[2] = userRepository.save(User.builder().intraId("hdonghyuk").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1020).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(800).build());
+        users[3] = userRepository.save(User.builder().intraId("hjiyun").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1010).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(700).build());
+        users[4] = userRepository.save(User.builder().intraId("hjekim").eMail("hihihoho").imageUri("jekim.jpg").statusMessage("kikikaka").ppp(990).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(600).build());
+        users[5] = userRepository.save(User.builder().intraId("hwochae").eMail("hihihoho").imageUri("wochae.jpg").statusMessage("kikikaka").ppp(980).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(500).build());
+        users[6] = userRepository.save(User.builder().intraId("hjabae").eMail("hihihoho").imageUri("jabae.jpg").statusMessage("kikikaka").ppp(1000).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(400).build());
+        users[7] = userRepository.save(User.builder().intraId("hjihyukim").eMail("hihihoho").imageUri("jihyukim.jpg").statusMessage("kikikaka").ppp(992).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(300).build());
+        users[8] = userRepository.save(User.builder().intraId("hdaekim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(996).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(200).build());
+        users[9] = userRepository.save(User.builder().intraId("hsujpark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(994).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(100).build());
+        users[10] = userRepository.save(User.builder().intraId("hkipark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(100).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(1).build());
+        users[11] = userRepository.save(User.builder().intraId("hjujeon").eMail("hihi").imageUri("null").statusMessage("kiki").ppp(1000).roleType(RoleType.ADMIN).racketType(RacketType.DUAL).totalExp(0).build());
         tokens = new Token[12];
         for (Integer i = 0; i < 12; i++) {
             tokens[i] = tokenRepository.save(new Token(users[i], i.toString(), i.toString()));
@@ -106,7 +108,7 @@ public class TestInitiator {
         for (int i = 0; i < 18; i++) {
             LocalDateTime time = LocalDateTime.of(tomorrow.getYear(), tomorrow.getMonth(), tomorrow.getDayOfMonth(),
                     15 + i / 6, (i * 10) % 60, 0); // 3시부터 10분 간격으로 18개 슬롯 생성
-            slots[i] = slotRepository.save(Slot.builder().tableId(1).headCount(0).time(time).build());
+            slots[i] = slotRepository.save(Slot.builder().tableId(1).headCount(0).mode(Mode.BOTH).time(time).build());
         }
 
         teams = new Team[36];
@@ -147,7 +149,7 @@ public class TestInitiator {
         teams[34] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[17]).headCount(0).score(0).build());
         teams[35] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[17]).headCount(0).score(0).build());
 
-        Season testSeason = seasonRepository.save(Season.builder().seasonName("Test").startTime(LocalDateTime.now().minusYears(1)).endTime(LocalDateTime.now().plusYears(1)).startPpp(1000).pppGap(150).build());
+        testSeason = seasonRepository.save(Season.builder().seasonName("Test").startTime(LocalDateTime.now().minusYears(1)).endTime(LocalDateTime.now().plusYears(1)).startPpp(1000).pppGap(150).build());
     }
 
     private String getUserKey(String intraId, GameType gameType) {

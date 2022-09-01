@@ -5,7 +5,6 @@ import io.pp.arcade.domain.admin.dto.create.RankCreateRequestDto;
 import io.pp.arcade.domain.admin.dto.delete.RankDeleteDto;
 import io.pp.arcade.domain.admin.dto.update.RankUpdateRequestDto;
 import io.pp.arcade.domain.rank.Rank;
-import io.pp.arcade.domain.rank.RankRedis;
 import io.pp.arcade.domain.rank.RankRepository;
 import io.pp.arcade.domain.rank.dto.*;
 import io.pp.arcade.domain.user.User;
@@ -17,7 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,8 +37,9 @@ public class RankService {
     }
     
     @Transactional
-    public VipListResponseDto vipList(Pageable pageable) {
-        Page<User> userPage = userRepository.findAllByOrderByTotalExpAsc(pageable);
+    public VipListResponseDto vipList(UserDto curUser, Pageable pageable) {
+        Page<User> userPage = userRepository.findAllByOrderByTotalExpDesc(pageable);
+        Integer myRank = userRepository.findExpRankingByIntraId(curUser.getIntraId());
         List<VipUserDto> vipUserList = new ArrayList<>();
         Integer index = (pageable.getPageSize() - 1) * pageable.getPageNumber();
         for (User user : userPage) {
@@ -47,7 +47,7 @@ public class RankService {
         }
         return VipListResponseDto.builder()
                 .vipList(vipUserList)
-                .myRank(-1)
+                .myRank(myRank)
                 .totalPage(userPage.getTotalPages())
                 .currentPage(userPage.getNumber())
                 .build();

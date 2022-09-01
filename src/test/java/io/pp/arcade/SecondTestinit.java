@@ -110,7 +110,7 @@ public class SecondTestinit {
         for (int i = 0; i < 12; i++) {
             LocalDateTime time = LocalDateTime.of(tomorrow.getYear(), tomorrow.getMonth(), tomorrow.getDayOfMonth(),
                     15 + i / 6, (i * 15) % 60, 0); // 3시부터 10분 간격으로 18개 슬롯 생성 // 3시부터 15분 간격 12개 슬롯 생성
-            slots[i] = slotRepository.save(Slot.builder().tableId(1).headCount(0).time(time).mode(Mode.ALL).build());
+            slots[i] = slotRepository.save(Slot.builder().tableId(1).headCount(0).time(time).mode(Mode.BOTH).build());
         }
 
         teams = new Team[36];

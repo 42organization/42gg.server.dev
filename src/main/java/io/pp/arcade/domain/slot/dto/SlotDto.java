@@ -43,7 +43,7 @@ public class SlotDto {
                 ", gamePpp=" + gamePpp +
                 ", headCount=" + headCount +
                 ", type=" + type +
-                ", mode=" + mode.getCode() +
+                ", mode=" + (mode != null ? mode.getCode() : null) +
                 '}';
     }
 }

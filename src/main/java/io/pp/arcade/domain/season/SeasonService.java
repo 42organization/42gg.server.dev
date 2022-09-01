@@ -2,7 +2,6 @@ package io.pp.arcade.domain.season;
 
 import io.pp.arcade.domain.admin.dto.create.SeasonCreateRequestDto;
 import io.pp.arcade.domain.admin.dto.update.SeasonUpdateDto;
-import io.pp.arcade.domain.season.dto.SeasonAddDto;
 import io.pp.arcade.domain.season.dto.SeasonDeleteDto;
 import io.pp.arcade.domain.season.dto.SeasonDto;
 import io.pp.arcade.global.exception.BusinessException;
@@ -11,7 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,7 +47,7 @@ public class SeasonService {
 //      Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElseThrow(() -> new BusinessException("E0001"));
         Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElse(null);
         if (season == null)
-            return null;
+            return SeasonDto.builder().seasonName("1").id(1).build();
         return SeasonDto.from(season);
     }
 
@@ -58,6 +57,11 @@ public class SeasonService {
         if (season == null)
             return null;
         return SeasonDto.from(season);
+    }
+
+    @Transactional
+    public List<SeasonDto> findAllSeason() {
+        return seasonRepository.findAll().stream().map(SeasonDto::from).collect(Collectors.toList());
     }
 
     @Transactional

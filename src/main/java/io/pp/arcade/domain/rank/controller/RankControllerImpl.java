@@ -45,7 +45,7 @@ public class RankControllerImpl implements RankController {
     @GetMapping(value = "/vip")
     public VipListResponseDto vipList(Pageable pageable, HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        VipListResponseDto vipListResponseDto = rankService.vipList(pageable);
+        VipListResponseDto vipListResponseDto = rankService.vipList(user, pageable);
         //vipListResponseDto.setMyRank(123);
         return vipListResponseDto;
     }
