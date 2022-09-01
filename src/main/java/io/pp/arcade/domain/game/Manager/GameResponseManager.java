@@ -48,7 +48,7 @@ public class GameResponseManager {
                     myTeamDto.getPlayers().add(gameFactory.getGamePlayer(game, slotTeamUserDto));
                 } else {
                     enemyTeam = slotTeamUserDto.getTeam();
-                    enemyTeamDto.getPlayers().add(gameFactory.getGamePlayer( game, slotTeamUserDto));
+                    enemyTeamDto.getPlayers().add(gameFactory.getGamePlayer(game, slotTeamUserDto));
                 }
             }
 

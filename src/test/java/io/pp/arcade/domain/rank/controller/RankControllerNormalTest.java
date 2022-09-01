@@ -81,7 +81,7 @@ class RankControllerNormalTest {
         mockMvc.perform((get("/pingpong/vip").contentType(MediaType.APPLICATION_JSON))
 //                        .param("page","1"))
                         .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken())) // header 해줘야함
-//                .andExpect(jsonPath("$.myRank").value(1)) //
+                .andExpect(jsonPath("$.myRank").value(1)) //
                 .andExpect(jsonPath("$.vipList[0].intraId").value("hhakim")) //
                 .andExpect(jsonPath("$.vipList[0].statusMessage").value("kikikaka")) //
                 .andExpect(jsonPath("$.vipList[0].level").value(7)) //

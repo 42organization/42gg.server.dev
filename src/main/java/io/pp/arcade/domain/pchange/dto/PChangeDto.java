@@ -14,6 +14,8 @@ public class PChangeDto {
     private UserDto user;
     private Integer pppChange;
     private Integer pppResult;
+    private Integer expChange;
+    private Integer expResult;
 
     public static PChangeDto from(PChange pChange){
         return PChangeDto.builder()
@@ -22,6 +24,8 @@ public class PChangeDto {
                 .user(UserDto.from(pChange.getUser()))
                 .pppChange(pChange.getPppChange())
                 .pppResult(pChange.getPppResult())
+                .expChange(pChange.getExpChange())
+                .expResult(pChange.getExpResult())
                 .build();
     }
 
@@ -33,6 +37,8 @@ public class PChangeDto {
                 ", user=" + user +
                 ", pppChange=" + pppChange +
                 ", pppResult=" + pppResult +
+                ", expChange=" + expChange +
+                ", expResult=" + expResult +
                 '}';
     }
 }

@@ -34,17 +34,22 @@ import io.pp.arcade.domain.team.dto.TeamModifyGameResultDto;
 import io.pp.arcade.domain.team.dto.TeamPosDto;
 import io.pp.arcade.domain.user.UserService;
 import io.pp.arcade.domain.user.dto.UserDto;
+import io.pp.arcade.domain.user.dto.UserModifyExpDto;
 import io.pp.arcade.domain.user.dto.UserModifyPppDto;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.redis.Key;
 import io.pp.arcade.global.type.StatusType;
 import io.pp.arcade.global.util.EloRating;
+import io.pp.arcade.global.util.ExpLevelCalculator;
 import lombok.AllArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @AllArgsConstructor
@@ -56,6 +61,7 @@ public class GameManager {
     private final PChangeService pChangeService;
     private final CurrentMatchService currentMatchService;
     private final RankRedisService rankRedisService;
+    private final RedisTemplate<String, Integer> redisTemplate;
 
 
     public void checkIfUserHavePlayingGame(CurrentMatchDto currentMatch) {
@@ -140,7 +146,6 @@ public class GameManager {
             currentMatchService.removeCurrentMatch(removeDto);
         });
     }
-
 
     public void putResultInGames(List<GameResultDto> gameResultList, List<GameDto> gameLists, UserDto curUser) {
         SlotDto slot;
@@ -230,6 +235,22 @@ public class GameManager {
                     .time(game.getSlot().getTime())
                     .build());
         }
+    }
+
+    public void modifyUserExp(UserDto user, GameDto game) {
+        Integer gamePerDay = redisTemplate.opsForValue().get(Key.GAME_PER_DAY + user.getIntraId());
+        gamePerDay = gamePerDay != null ? gamePerDay : 0;
+
+        if (gamePerDay == 0) {
+            redisTemplate.opsForValue().set(Key.GAME_PER_DAY + user.getIntraId(), 1, 3, TimeUnit.HOURS);
+        } else {
+            redisTemplate.opsForValue().increment(Key.GAME_PER_DAY + user.getIntraId());
+        }
+
+        Integer expChange = ExpLevelCalculator.getExpPerGame() + ExpLevelCalculator.getExpBonus() * gamePerDay;
+
+        pChangeService.addPChange(PChangeAddDto.builder().gameId(game.getId()).userId(user.getId()).expChange(expChange).expResult(user.getTotalExp() + expChange).build());
+        userService.modifyUserExp(UserModifyExpDto.builder().userId(user.getId()).exp(expChange).build());
     }
 
     public CurrentMatchDto checkIfCurrentMatchExist(UserDto user) {

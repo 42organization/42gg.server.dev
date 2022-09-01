@@ -9,6 +9,7 @@ import io.pp.arcade.domain.rank.RankRepository;
 import io.pp.arcade.domain.rank.dto.*;
 import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -36,8 +37,9 @@ public class RankService {
     }
     
     @Transactional
-    public VipListResponseDto vipList(Pageable pageable) {
+    public VipListResponseDto vipList(UserDto curUser, Pageable pageable) {
         Page<User> userPage = userRepository.findAllByOrderByTotalExpDesc(pageable);
+        Integer myRank = userRepository.findExpRankingByIntraId(curUser.getIntraId());
         List<VipUserDto> vipUserList = new ArrayList<>();
         Integer index = (pageable.getPageSize() - 1) * pageable.getPageNumber();
         for (User user : userPage) {
@@ -45,7 +47,7 @@ public class RankService {
         }
         return VipListResponseDto.builder()
                 .vipList(vipUserList)
-                .myRank(-1)
+                .myRank(myRank)
                 .totalPage(userPage.getTotalPages())
                 .currentPage(userPage.getNumber())
                 .build();

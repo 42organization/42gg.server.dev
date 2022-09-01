@@ -116,6 +116,7 @@ public class GameControllerImpl implements GameController {
         slotTeamUsers = slotTeamUserService.findAllBySlotId(currentMatch.getSlot().getId());
         // figuring out team number for myteam and enemyteam
         // modify users with game result
+        gameManager.modifyUserExp(user, game);
         gameManager.endGameStatus(game);
         // checkEvent(game);
         // modify users' ranks with game result

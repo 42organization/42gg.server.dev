@@ -2,12 +2,14 @@ package io.pp.arcade.domain.game.v1;
 
 import io.pp.arcade.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.domain.currentmatch.dto.CurrentMatchDto;
+import io.pp.arcade.domain.currentmatch.dto.CurrentMatchRemoveDto;
 import io.pp.arcade.domain.game.GameService;
 import io.pp.arcade.domain.game.Manager.GameManager;
 import io.pp.arcade.domain.game.Manager.GameResponseManager;
 import io.pp.arcade.domain.game.controller.GameControllerImpl;
 import io.pp.arcade.domain.game.dto.*;
 import io.pp.arcade.domain.pchange.PChangeService;
+import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
 import io.pp.arcade.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.domain.pchange.dto.PChangePageDto;
@@ -24,6 +26,7 @@ import io.pp.arcade.domain.user.dto.UserFindDto;
 import io.pp.arcade.global.exception.BusinessException;
 import io.pp.arcade.global.type.Mode;
 import io.pp.arcade.global.type.StatusType;
+import io.pp.arcade.global.util.ExpLevelCalculator;
 import io.pp.arcade.global.util.HeaderUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -222,13 +225,33 @@ public class GameControllerImplV1 {
         if (game == null) {
             throw new BusinessException("E0001");
         }
-        List<SlotTeamUserDto> slotTeamUsers = slotTeamUserService.findAllBySlotId(currentMatch.getSlot().getId());
-        gameManager.removeCurrentMatch(game);
 
+        currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder().userId(user.getId()).game(game).build());
+        gameManager.modifyUserExp(user, game);
         gameService.modifyGameStatus(GameModifyStatusDto.builder().gameId(game.getId()).status(StatusType.END).build());
 
-        throw new ResponseStatusException(HttpStatus.ACCEPTED, "");
+        throw new ResponseStatusException(HttpStatus.CREATED, "");
     }
+
+    @GetMapping(value = "/games/{gameId}/result")
+    public GameExpResultResponseDto gameExpResult(@PathVariable Integer gameId, HttpServletRequest request) {
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+
+        PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().userId(user.getIntraId()).gameId(gameId).build());
+
+        Integer currentExp = pChangeDto.getExpResult() - pChangeDto.getExpChange();
+        Integer changedExp = pChangeDto.getExpResult();
+        GameExpResultResponseDto responseDto = GameExpResultResponseDto.builder()
+                .currentExp(ExpLevelCalculator.getCurrentLevelMyExp(currentExp))
+                .increasedExp(ExpLevelCalculator.getCurrentLevelMyExp(changedExp))
+                .maxExp(ExpLevelCalculator.getLevelMaxExp(ExpLevelCalculator.getLevel(user.getTotalExp())))
+                .currentLevel(ExpLevelCalculator.getLevel(currentExp))
+                .increasedLevel(ExpLevelCalculator.getLevel(changedExp))
+                .build();
+
+        return responseDto;
+    }
+
 
     private GameFindDto getGameFindDto(GameResultPageRequestDto requestDto, Mode mode) {
         /* 시즌 조회 */

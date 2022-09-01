@@ -66,7 +66,7 @@ class GameControllerNormalTest {
     @Autowired
     private TeamRepository teamRepository;
 
-    private final int GAMESIZE = 200;
+    private final int GAMESIZE = 250;
     @Autowired
     private PChangeRepository pChangeRepository;
 
@@ -547,7 +547,7 @@ class GameControllerNormalTest {
         mockMvc.perform(get("/v1/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
                         .params(params8)
                         .header("Authorization", "Bearer 0"))
-//                .andExpect(jsonPath("$.games.length()").value(20))
+                .andExpect(jsonPath("$.games.length()").value(20))
 //                .andExpect(jsonPath().value())
                 .andExpect(status().isOk())
                 .andDo(document("v1-game-find-rank-results-find-id-1000"));
@@ -603,7 +603,7 @@ class GameControllerNormalTest {
                         .params(params3)
                         .header("Authorization", "Bearer 0"))
 //                .andExpect(jsonPath().value())
-//                .andExpect(jsonPath("$.games.length()").value(20))
+                .andExpect(jsonPath("$.games.length()").value(20))
                 .andExpect(status().isOk())
                 .andDo(document("v1-game-find-normal-result-gameId-is-null"));
 
@@ -667,7 +667,7 @@ class GameControllerNormalTest {
         mockMvc.perform(get("/v1/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
                         .params(params5)
                         .header("Authorization", "Bearer 0"))
-//                .andExpect(jsonPath("$.games.length()").value(100))
+                .andExpect(jsonPath("$.games.length()").value(100))
 //                .andExpect(jsonPath().value())
                 .andExpect(status().isOk())
                 .andDo(document("v1-game-find-normal-results-count-is-bigger-than-100"));
@@ -684,7 +684,7 @@ class GameControllerNormalTest {
         mockMvc.perform(get("/v1/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
                         .params(params6)
                         .header("Authorization", "Bearer 0"))
-//                .andExpect(jsonPath("$.games.length()").value(20))
+                .andExpect(jsonPath("$.games.length()").value(20))
 //                .andExpect(jsonPath().value())
 //                .andExpect(jsonPath().value())
                 .andExpect(status().isOk())
@@ -701,7 +701,7 @@ class GameControllerNormalTest {
         mockMvc.perform(get("/v1/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
                         .params(params7)
                         .header("Authorization", "Bearer 0"))
-//                .andExpect(jsonPath("$.games.length()").value(20))
+                .andExpect(jsonPath("$.games.length()").value(20))
 //                .andExpect(jsonPath().value())
 //                .andExpect(jsonPath().value())
                 .andExpect(status().isOk())
@@ -720,7 +720,7 @@ class GameControllerNormalTest {
         mockMvc.perform(get("/v1/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
                         .params(params8)
                         .header("Authorization", "Bearer 0"))
-//                .andExpect(jsonPath("$.games.length()").value(20))
+                .andExpect(jsonPath("$.games.length()").value(20))
 //                .andExpect(jsonPath().value())
                 .andExpect(status().isOk())
                 .andDo(document("v1-game-find-normal-results-find-id-1000"));
@@ -875,5 +875,4 @@ class GameControllerNormalTest {
                 .andExpect(status().isOk())
                 .andDo(document("v1-user-normal-game-find-normal-results"));
     }
-
 }
