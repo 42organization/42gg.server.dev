@@ -56,6 +56,12 @@ public class UserService {
         user.setPpp(modifyDto.getPpp());
     }
 
+    @Transactional
+    public void modifyUserExp(UserModifyExpDto modifyDto) {
+        User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        user.setTotalExp(user.getTotalExp() + modifyDto.getExp());
+    }
+
     /* 유저 정보 업데이트 */
     @Transactional
     public void modifyUserProfile(UserModifyProfileDto modifyDto) {

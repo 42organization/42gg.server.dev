@@ -15,14 +15,18 @@ import io.pp.arcade.domain.user.User;
 import io.pp.arcade.domain.user.UserRepository;
 import io.pp.arcade.domain.user.dto.UserDto;
 import io.pp.arcade.global.exception.BusinessException;
+import io.pp.arcade.global.redis.Key;
+import io.pp.arcade.global.util.ExpLevelCalculator;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,11 +40,14 @@ public class PChangeService {
     public void addPChange(PChangeAddDto addDto) {
         Game game = gameRepository.findById(addDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
         User user = userRepository.findById(addDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+
         pChangeRepository.save(PChange.builder()
                 .game(game)
                 .user(user)
-                .pppChange(addDto.getPppChange())
-                .pppResult(addDto.getPppResult())
+                .pppChange(addDto.getPppChange() != null ? addDto.getPppChange() : 0)
+                .pppResult(addDto.getPppResult() != null ? addDto.getPppResult() : 0)
+                .expChange(addDto.getExpChange())
+                .expResult(addDto.getExpResult())
                 .build()
         );
     }
@@ -51,7 +58,6 @@ public class PChangeService {
         List<PChange> pChangeList = pChangeRepository.findAllByGame(game).orElseThrow(() -> new BusinessException("E0001"));
         return pChangeList.stream().map(PChangeDto::from).collect(Collectors.toList());
     }
-
 
     @Transactional
     public List<PChangeDto> findPChangeByUserIdNotPage(PChangeFindDto findDto){

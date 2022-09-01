@@ -60,6 +60,11 @@ public class SeasonService {
     }
 
     @Transactional
+    public List<SeasonDto> findAllSeason() {
+        return seasonRepository.findAll().stream().map(SeasonDto::from).collect(Collectors.toList());
+    }
+
+    @Transactional
     public List<SeasonDto> findSeasonsByAdmin(Pageable pageable) {
         Page<Season> seasons = seasonRepository.findAllByOrderByIdDesc(pageable);
         List<SeasonDto> seasonDtos = seasons.stream().map(SeasonDto::from).collect(Collectors.toList());

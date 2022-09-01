@@ -8,6 +8,8 @@ import io.pp.arcade.domain.game.dto.GameDto;
 import io.pp.arcade.domain.slot.Slot;
 import io.pp.arcade.domain.slot.SlotRepository;
 import io.pp.arcade.domain.slot.dto.SlotDto;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
+import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.domain.team.Team;
 import io.pp.arcade.domain.team.TeamRepository;
 import io.pp.arcade.domain.user.User;
@@ -32,6 +34,8 @@ class CurrentMatchServiceTest {
     CurrentMatchRepository currentMatchRepository;
     @Autowired
     CurrentMatchService currentMatchService;
+    @Autowired
+    SlotTeamUserRepository slotTeamUserRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -121,8 +125,8 @@ class CurrentMatchServiceTest {
                 .build());
         CurrentMatchSaveGameDto saveGameDto = CurrentMatchSaveGameDto.builder()
                 .gameId(game.getId())
-                .userId(user1.getId())
                 .build();
+        slotTeamUserRepository.save(SlotTeamUser.builder().slot(slot).team(team1).user(user1).build());
 
         currentMatchService.saveGameInCurrentMatch(saveGameDto);
         currentMatch = currentMatchRepository.findById(currentMatch.getId()).orElseThrow(() -> new BusinessException("E0001"));

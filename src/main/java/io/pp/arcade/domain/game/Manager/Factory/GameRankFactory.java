@@ -13,6 +13,7 @@ import io.pp.arcade.domain.rank.dto.RankUserDto;
 import io.pp.arcade.domain.rank.service.RankRedisService;
 import io.pp.arcade.domain.slotteamuser.dto.SlotTeamUserDto;
 import io.pp.arcade.domain.team.dto.TeamDto;
+import io.pp.arcade.global.util.ExpLevelCalculator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
