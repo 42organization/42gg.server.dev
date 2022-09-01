@@ -241,12 +241,15 @@ public class GameControllerImplV1 {
 
         Integer currentExp = pChangeDto.getExpResult() - pChangeDto.getExpChange();
         Integer changedExp = pChangeDto.getExpResult();
+        Integer maxExp = ExpLevelCalculator.getLevelMaxExp(ExpLevelCalculator.getLevel(user.getTotalExp()));
+        Integer expRate = (currentExp / maxExp) * 100;
         GameExpResultResponseDto responseDto = GameExpResultResponseDto.builder()
                 .currentExp(ExpLevelCalculator.getCurrentLevelMyExp(currentExp))
                 .increasedExp(ExpLevelCalculator.getCurrentLevelMyExp(changedExp))
-                .maxExp(ExpLevelCalculator.getLevelMaxExp(ExpLevelCalculator.getLevel(user.getTotalExp())))
+                .maxExp(maxExp)
                 .currentLevel(ExpLevelCalculator.getLevel(currentExp))
                 .increasedLevel(ExpLevelCalculator.getLevel(changedExp))
+                .ExpRate(expRate)
                 .build();
 
         return responseDto;
