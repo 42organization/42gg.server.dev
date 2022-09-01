@@ -868,9 +868,9 @@ class GameControllerNormalTest {
         params4.add("gameId", "1234");
         params4.add("count", "20");
         params4.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/users/{intraId}/games/normal", users[0].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/v1/pingpong/users/{intraId}/games/normal", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                 .params(params4)
-                .header("Authorization", "Bearer 0"))
+                .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
 //                .andExpect(jsonPath().value())
                 .andExpect(status().isOk())
                 .andDo(document("v1-user-normal-game-find-normal-results"));
