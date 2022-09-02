@@ -114,7 +114,7 @@ public class GameControllerImpl implements GameController {
     }
 
     @Override
-    @GetMapping(value = "/games")
+//    @GetMapping(value = "/games")
     public GameResultResponseDto gameResultByGameIdAndCount(GameResultPageRequestDto requestDto, HttpServletRequest request) {
         tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         Pageable pageable = PageRequest.of(0, requestDto.getCount());

@@ -17,8 +17,8 @@ spring:
     properties:
       hibernate:
         show_sql: true
-        format_sql: true
-        use_sql_comments: true
+        format_sql: false
+        use_sql_comments: false
 
   security:
     oauth2.client:
@@ -50,5 +50,5 @@ logging:
   level:
     org:
       hibernate:
-        sql: trace
-        type: trace
+#        sql: trace
+        type: debug
