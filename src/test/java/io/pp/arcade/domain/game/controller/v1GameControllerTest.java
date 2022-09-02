@@ -3,22 +3,21 @@ package io.pp.arcade.domain.game.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.TestInitiator;
-import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
-import io.pp.arcade.domain.currentmatch.CurrentMatchService;
-import io.pp.arcade.domain.currentmatch.dto.CurrentMatchSaveGameDto;
-import io.pp.arcade.domain.game.GameRepository;
-import io.pp.arcade.domain.game.GameService;
-import io.pp.arcade.domain.game.dto.GameAddDto;
-import io.pp.arcade.domain.game.dto.GameDto;
-import io.pp.arcade.domain.slot.Slot;
-import io.pp.arcade.domain.slot.SlotRepository;
-import io.pp.arcade.domain.slot.dto.SlotDto;
-import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
-import io.pp.arcade.domain.user.User;
-import io.pp.arcade.global.scheduler.GameGenerator;
-import io.pp.arcade.global.type.GameType;
-import io.pp.arcade.global.type.Mode;
-import io.pp.arcade.global.util.ExpLevelCalculator;
+import io.pp.arcade.v1.domain.currentmatch.CurrentMatchRepository;
+import io.pp.arcade.v1.domain.currentmatch.CurrentMatchService;
+import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchSaveGameDto;
+import io.pp.arcade.v1.domain.game.GameRepository;
+import io.pp.arcade.v1.domain.game.GameService;
+import io.pp.arcade.v1.domain.game.dto.GameAddDto;
+import io.pp.arcade.v1.domain.game.dto.GameDto;
+import io.pp.arcade.v1.domain.slot.Slot;
+import io.pp.arcade.v1.domain.slot.SlotRepository;
+import io.pp.arcade.v1.domain.slot.dto.SlotDto;
+import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUserRepository;
+import io.pp.arcade.v1.domain.user.User;
+import io.pp.arcade.v1.global.type.GameType;
+import io.pp.arcade.v1.global.type.Mode;
+import io.pp.arcade.v1.global.util.ExpLevelCalculator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +27,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -127,8 +125,7 @@ public class v1GameControllerTest {
 
             mockMvc.perform(post("/v1/pingpong/games/result/normal").contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                    .andExpect(status().isCreated())
-                    .andDo(document("v1-user-game-result-normal"));
+                    .andExpect(status().isCreated());
 
             mockMvc.perform(get("/v1/pingpong/games/{gameId}/result", game.getId()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))

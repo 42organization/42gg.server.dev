@@ -1,17 +1,19 @@
 package io.pp.arcade.domain.slot;
 
 import io.pp.arcade.TestInitiator;
-import io.pp.arcade.domain.slot.dto.*;
-import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
-import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
-import io.pp.arcade.domain.team.Team;
-import io.pp.arcade.domain.team.TeamRepository;
-import io.pp.arcade.domain.user.User;
-import io.pp.arcade.domain.user.UserRepository;
+import io.pp.arcade.v1.domain.slot.Slot;
+import io.pp.arcade.v1.domain.slot.SlotRepository;
+import io.pp.arcade.v1.domain.slot.SlotService;
+import io.pp.arcade.v1.domain.slot.dto.*;
+import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUserRepository;
+import io.pp.arcade.v1.domain.team.Team;
+import io.pp.arcade.v1.domain.team.TeamRepository;
+import io.pp.arcade.v1.domain.user.User;
+import io.pp.arcade.v1.domain.user.UserRepository;
 
-import io.pp.arcade.global.exception.BusinessException;
-import io.pp.arcade.global.type.GameType;
-import io.pp.arcade.global.type.SlotStatusType;
+import io.pp.arcade.v1.global.exception.BusinessException;
+import io.pp.arcade.v1.global.type.GameType;
+import io.pp.arcade.v1.global.type.SlotStatusType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
