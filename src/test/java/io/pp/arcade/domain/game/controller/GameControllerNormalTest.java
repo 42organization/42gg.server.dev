@@ -251,7 +251,7 @@ class GameControllerNormalTest {
         params.add("count", "20");
         params.add("status", StatusType.END.getCode());
 
-        mockMvc.perform(get("/v1/pingpong/games").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isBadRequest())
@@ -267,7 +267,7 @@ class GameControllerNormalTest {
         params2.add("count", "20");
         params2.add("season", "1");
         params2.add("status", StatusType.END.getCode());
-        mockMvc.perform(get("/v1/pingpong/games").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params2)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
 //                .andExpect(jsonPath().value()) // have to check gameId, mode, ...
@@ -283,7 +283,7 @@ class GameControllerNormalTest {
         params3.add("count", "20");
         params3.add("status", StatusType.END.getCode());
         params3.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params3)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
 //                .andExpect(jsonPath().value())
@@ -300,7 +300,7 @@ class GameControllerNormalTest {
         params11.add("count", "string");
         params11.add("status", StatusType.END.getCode());
         params11.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params11)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isBadRequest())
@@ -315,10 +315,10 @@ class GameControllerNormalTest {
         params12.add("count", "-1");
         params12.add("status", StatusType.END.getCode());
         params12.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params12)
                         .header("Authorization", "Bearer 0"))
-                .andExpect(jsonPath("$.games.length()").value(20))
+                .andExpect(jsonPath("$.games.length()").value(10))
 //                .andExpect(jsonPath().value())
                 .andExpect(status().isOk())
                 .andDo(document("v1-game-find-all-results-count-is-negative"));
@@ -332,10 +332,10 @@ class GameControllerNormalTest {
         params4.add("gameId", "12345678");
         params4.add("status", StatusType.END.getCode());
         params4.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params4)
                         .header("Authorization", "Bearer 0"))
-//                .andExpect(jsonPath("$.games.length()").value(20))
+                .andExpect(jsonPath("$.games.length()").value(10))
 //                .andExpect(jsonPath().value())
                 .andExpect(status().isOk())
                 .andDo(document("v1-game-find-all-results-count-is-null"));
@@ -348,7 +348,7 @@ class GameControllerNormalTest {
         params5.add("count", "12345678");
         params5.add("status", StatusType.END.getCode());
         params5.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params5)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(jsonPath("$.games.length()").value(100))
@@ -365,7 +365,7 @@ class GameControllerNormalTest {
         params6.add("count", "20");
         params6.add("status", "NOTHING");
         params6.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params6)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(jsonPath("$.games.length()").value(20))
@@ -382,7 +382,7 @@ class GameControllerNormalTest {
         MultiValueMap<String,String> params7 = new LinkedMultiValueMap<>();
         params7.add("count", "20");
         params7.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params7)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(jsonPath("$.games.length()").value(20))
@@ -401,7 +401,7 @@ class GameControllerNormalTest {
         params8.add("count", "20");
         params8.add("season", "1");
         params8.add("status", StatusType.END.getCode());
-        mockMvc.perform(get("/v1/pingpong/games").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params8)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(jsonPath("$.games.length()").value(20))
@@ -424,7 +424,7 @@ class GameControllerNormalTest {
         params.add("count", "20");
         params.add("season", "1");
         params.add("status", StatusType.END.getCode());
-        mockMvc.perform(get("/v1/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
                         .params(params)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(status().isBadRequest())
@@ -440,7 +440,7 @@ class GameControllerNormalTest {
         params2.add("season", "1");
         params2.add("count", "20");
         params2.add("status", StatusType.END.getCode());
-        mockMvc.perform(get("/v1/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
                         .params(params2)
                         .header("Authorization", "Bearer 0"))
 //                .andExpect(jsonPath().value()) // have to check gameId, mode, ...
@@ -456,7 +456,7 @@ class GameControllerNormalTest {
         params3.add("count", "20");
         params3.add("status", StatusType.END.getCode());
         params3.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
                         .params(params3)
                         .header("Authorization", "Bearer 0"))
 //                .andExpect(jsonPath().value())
@@ -473,7 +473,7 @@ class GameControllerNormalTest {
         params11.add("count", "string");
         params11.add("status", StatusType.END.getCode());
         params11.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
                         .params(params11)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(status().isBadRequest())
@@ -487,10 +487,11 @@ class GameControllerNormalTest {
         MultiValueMap<String,String> params12 = new LinkedMultiValueMap<>();
         params12.add("count", "-1");
         params12.add("status", StatusType.END.getCode());
-        mockMvc.perform(get("/v1/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
+        params12.add("season", "1");
+        mockMvc.perform(get("/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
                         .params(params12)
                         .header("Authorization", "Bearer 0"))
-//                .andExpect(jsonPath("$.games.length()").value(20))
+                .andExpect(jsonPath("$.games.length()").value(10))
 //                .andExpect(jsonPath().value())
                 .andExpect(status().isOk())
                 .andDo(document("v1-game-find-rank-results-count-is-negative"));
@@ -504,10 +505,10 @@ class GameControllerNormalTest {
         params4.add("gameId", "12345678");
         params4.add("status", StatusType.END.getCode());
         params4.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
                         .params(params4)
                         .header("Authorization", "Bearer 0"))
-//                .andExpect(jsonPath("$.games.length()").value(20))
+                .andExpect(jsonPath("$.games.length()").value(10))
 //                .andExpect(jsonPath().value())
                 .andExpect(status().isOk())
                 .andDo(document("v1-game-find-rank-results-count-is-null"));
@@ -520,7 +521,7 @@ class GameControllerNormalTest {
         params5.add("count", "12345678");
         params5.add("status", StatusType.END.getCode());
         params5.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
                         .params(params5)
                         .header("Authorization", "Bearer 0"))
 //                .andExpect(jsonPath("$.games.length()").value(100))
@@ -537,7 +538,7 @@ class GameControllerNormalTest {
         params6.add("count", "20");
         params6.add("status", "NOTHING");
         params6.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
                         .params(params6)
                         .header("Authorization", "Bearer 0"))
 //                .andExpect(jsonPath("$.games.length()").value(20))
@@ -554,7 +555,7 @@ class GameControllerNormalTest {
         MultiValueMap<String,String> params7 = new LinkedMultiValueMap<>();
         params7.add("count", "20");
         params7.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
                         .params(params7)
                         .header("Authorization", "Bearer 0"))
 //                .andExpect(jsonPath("$.games.length()").value(20))
@@ -574,7 +575,7 @@ class GameControllerNormalTest {
         params8.add("count", "20");
         params8.add("status", StatusType.END.getCode());
         params8.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/rank").contentType(MediaType.APPLICATION_JSON)
                         .params(params8)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(jsonPath("$.games.length()").value(20))
@@ -597,7 +598,7 @@ class GameControllerNormalTest {
         params.add("count", "20");
         params.add("status", StatusType.END.getCode());
         params.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
                         .params(params)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(status().isBadRequest())
@@ -613,7 +614,7 @@ class GameControllerNormalTest {
         params2.add("count", "20");
         params2.add("status", StatusType.END.getCode());
         params2.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
                         .params(params2)
                         .header("Authorization", "Bearer 0"))
 //                .andExpect(jsonPath().value()) // have to check gameId, mode, ...
@@ -629,7 +630,7 @@ class GameControllerNormalTest {
         params3.add("count", "20");
         params3.add("status", StatusType.END.getCode());
         params3.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
                         .params(params3)
                         .header("Authorization", "Bearer 0"))
 //                .andExpect(jsonPath().value())
@@ -646,7 +647,7 @@ class GameControllerNormalTest {
         params11.add("count", "string");
         params11.add("status", StatusType.END.getCode());
         params11.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
                         .params(params11)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(status().isBadRequest())
@@ -661,10 +662,10 @@ class GameControllerNormalTest {
         params12.add("count", "-1");
         params12.add("status", StatusType.END.getCode());
         params12.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
                         .params(params12)
                         .header("Authorization", "Bearer 0"))
-                .andExpect(jsonPath("$.games.length()").value(20))
+                .andExpect(jsonPath("$.games.length()").value(10))
 //                .andExpect(jsonPath().value())
                 .andExpect(status().isOk())
                 .andDo(document("v1-game-find-normal-results-count-is-negative"));
@@ -678,10 +679,10 @@ class GameControllerNormalTest {
         params4.add("gameId", "12345678");
         params4.add("status", StatusType.END.getCode());
         params4.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
                         .params(params4)
                         .header("Authorization", "Bearer 0"))
-                .andExpect(jsonPath("$.games.length()").value(20))
+                .andExpect(jsonPath("$.games.length()").value(10))
 //                .andExpect(jsonPath().value())
                 .andExpect(status().isOk())
                 .andDo(document("v1-game-find-normal-results-count-is-null"));
@@ -694,7 +695,7 @@ class GameControllerNormalTest {
         params5.add("count", "12345678");
         params5.add("status", StatusType.END.getCode());
         params5.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
                         .params(params5)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(jsonPath("$.games.length()").value(100))
@@ -711,7 +712,7 @@ class GameControllerNormalTest {
         params6.add("count", "20");
         params6.add("status", "NOTHING");
         params6.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
                         .params(params6)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(jsonPath("$.games.length()").value(20))
@@ -728,7 +729,7 @@ class GameControllerNormalTest {
         MultiValueMap<String,String> params7 = new LinkedMultiValueMap<>();
         params7.add("count", "20");
         params7.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
                         .params(params7)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(jsonPath("$.games.length()").value(20))
@@ -747,7 +748,7 @@ class GameControllerNormalTest {
         params8.add("count", "20");
         params8.add("status", StatusType.END.getCode());
         params8.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/normal").contentType(MediaType.APPLICATION_JSON)
                         .params(params8)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(jsonPath("$.games.length()").value(20))
@@ -808,7 +809,7 @@ class GameControllerNormalTest {
 
     @Test
     @Transactional
-    @DisplayName("개인 최근 게임 기록 - 랭크 (/v1/pingpong/users/{intraId}/games/rank)")
+    @DisplayName("개인 최근 게임 기록 - 랭크 (/pingpong/users/{intraId}/games/rank)")
     void gameResultByUserIdAndIndexAndCountRankOnly() throws Exception {
         /*
          * IntraId 찾을 수 없는 경우
@@ -818,7 +819,7 @@ class GameControllerNormalTest {
         params2.add("gameId", "1234");
         params2.add("count", "20");
         params2.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/users/{intraId}/games/rank","NOTFOUND").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/users/{intraId}/games/rank","NOTFOUND").contentType(MediaType.APPLICATION_JSON)
                         .params(params2)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(status().isBadRequest())
@@ -832,7 +833,7 @@ class GameControllerNormalTest {
         params3.add("gameId", "1234");
         params3.add("count", "20");
         params3.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/users/{intraId}/games/rank", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/users/{intraId}/games/rank", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                 .params(params3)
                 .header("Authorization", "Bearer 0"))
                 .andExpect(jsonPath("$.games").isEmpty())
@@ -848,7 +849,7 @@ class GameControllerNormalTest {
         params4.add("gameId", "12345");
         params4.add("count", "20");
         params4.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/users/{intraId}/games/rank", users[0].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/users/{intraId}/games/rank", users[0].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                 .params(params4)
                 .header("Authorization", "Bearer 0"))
 //                .andExpect(jsonPath().value())
@@ -858,7 +859,7 @@ class GameControllerNormalTest {
 
     @Test
     @Transactional
-    @DisplayName("개인 최근 게임 기록 - 노말 (/v1/pingpong/users/{intraId}/games/normal)")
+    @DisplayName("개인 최근 게임 기록 - 노말 (/pingpong/users/{intraId}/games/normal)")
     void gameResultByUserIdAndIndexAndCountNormalOnly() throws Exception {
         /*
          * IntraId 찾을 수 없는 경우
@@ -868,7 +869,7 @@ class GameControllerNormalTest {
         params2.add("gameId", "1234");
         params2.add("count", "20");
         params2.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/users/{intraId}/games/normal","notfound").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/users/{intraId}/games/normal","notfound").contentType(MediaType.APPLICATION_JSON)
                         .params(params2)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(status().isBadRequest())
@@ -882,7 +883,7 @@ class GameControllerNormalTest {
         params3.add("gameId", "1234");
         params3.add("count", "20");
         params3.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/users/{intraId}/games/normal", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/users/{intraId}/games/normal", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                 .params(params3)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(jsonPath("$.games").isEmpty())
@@ -897,7 +898,7 @@ class GameControllerNormalTest {
         LinkedMultiValueMap<String, String> params4 = new LinkedMultiValueMap<>();
         params4.add("gameId", "12345");
         params4.add("count", "20");
-        mockMvc.perform(get("/v1/pingpong/users/{intraId}/games/normal", users[0].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/users/{intraId}/games/normal", users[0].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                 .params(params4)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
 //                .andExpect(jsonPath().value())

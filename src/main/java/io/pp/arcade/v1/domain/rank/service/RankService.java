@@ -47,7 +47,7 @@ public class RankService {
             vipUserList.add(VipUserDto.from(user, ++index));
         }
         return VipListResponseDto.builder()
-                .vipList(vipUserList)
+                .rankList(vipUserList)
                 .myRank(myRank)
                 .totalPage(userPage.getTotalPages())
                 .currentPage(userPage.getNumber())

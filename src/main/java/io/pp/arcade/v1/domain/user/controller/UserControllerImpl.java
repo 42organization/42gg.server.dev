@@ -97,7 +97,6 @@ public class UserControllerImpl implements UserController {
                 .currentExp(currentExp)
                 .maxExp(maxExp)
                 .rivalRecord(rivalRecord)
-                .expRate(expRate)
                 .build();
         return responseDto;
     }
@@ -107,12 +106,17 @@ public class UserControllerImpl implements UserController {
      * - 시즌별 유저 랭크 프로필 조회
      * */
     @Override
-    @GetMapping(value = "/users/{targetUserId}/rank/{season}")
+    @GetMapping(value = "/users/{targetUserId}/rank")
     public UserRankResponseDto userFindRank(String targetUserId, Integer season, HttpServletRequest request) {
         UserDto curUser = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         UserDto targetUser = userService.findByIntraId(UserFindDto.builder().intraId(targetUserId).build());
         RankUserDto rankDto;
         // 일단 게임타입은 SINGLE로 구현
+
+        if (season == null) {
+            season = seasonService.findCurrentSeason().getId();
+        }
+
         if (season.equals(seasonService.findCurrentSeason().getId()))  {
             rankDto = rankRedisService.findRankById(RankFindDto.builder().intraId(targetUserId).gameType(GameType.SINGLE).build());
         } else {

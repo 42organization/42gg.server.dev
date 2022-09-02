@@ -123,11 +123,11 @@ public class v1GameControllerTest {
 
            GameDto game = addGame(SlotDto.from(slot));
 
-            mockMvc.perform(post("/v1/pingpong/games/result/normal").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(post("/pingpong/games/result/normal").contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                     .andExpect(status().isCreated());
 
-            mockMvc.perform(get("/v1/pingpong/games/{gameId}/result", game.getId()).contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(get("/pingpong/games/{gameId}/result", game.getId()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.currentLevel").value(currentLevel))

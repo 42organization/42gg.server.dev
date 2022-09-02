@@ -344,12 +344,13 @@ class GameControllerTest {
         MultiValueMap<String,String> params2 = new LinkedMultiValueMap<>();
         params2.add("gameId", "-1");
         params2.add("count", "20");
+        params2.add("season", "1");
         params2.add("status", StatusType.END.getCode());
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                 .params(params2)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
 //                .andExpect(jsonPath("$.games[0].gameId").value(endGames[endGames.length - 1].getId()))
-//                .andExpect(jsonPath("$.games.length()").value(20))
+                .andExpect(jsonPath("$.games.length()").value(20))
                 .andExpect(status().isOk())
                 .andDo(document("game-find-results-gameId-is-negative"));
 
@@ -360,6 +361,7 @@ class GameControllerTest {
          * */
         MultiValueMap<String,String> params3 = new LinkedMultiValueMap<>();
         params3.add("count", "20");
+        params3.add("season", "1");
         params3.add("status", StatusType.END.getCode());
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                 .params(params3)
@@ -377,6 +379,8 @@ class GameControllerTest {
         MultiValueMap<String,String> params11 = new LinkedMultiValueMap<>();
         params11.add("count", "string");
         params11.add("status", StatusType.END.getCode());
+        params11.add("season", "1");
+
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params11)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
@@ -391,11 +395,12 @@ class GameControllerTest {
         MultiValueMap<String,String> params12 = new LinkedMultiValueMap<>();
         params12.add("count", "-1");
         params12.add("status", StatusType.END.getCode());
+        params12.add("season", "1");
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params12)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
 //                .andExpect(jsonPath("$.games[0].gameId").value(endGames[endGames.length - 1].getId()))
-//                .andExpect(jsonPath("$.games.length()").value(20))
+                .andExpect(jsonPath("$.games.length()").value(10))
                 .andExpect(status().isOk())
                 .andDo(document("game-find-results-count-is-negative"));
 
@@ -407,11 +412,12 @@ class GameControllerTest {
         MultiValueMap<String,String> params4 = new LinkedMultiValueMap<>();
         params4.add("gameId", "12345678");
         params4.add("status", StatusType.END.getCode());
+        params4.add("season", "1");
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                 .params(params4)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
 //                .andExpect(jsonPath("$.games[0].gameId").value(endGames[endGames.length - 1].getId()))
-//                .andExpect(jsonPath("$.games.length()").value(20))
+                .andExpect(jsonPath("$.games.length()").value(10))
                 .andExpect(status().isOk())
                 .andDo(document("game-find-results-count-is-null"));
         /*
@@ -422,6 +428,7 @@ class GameControllerTest {
         MultiValueMap<String,String> params5 = new LinkedMultiValueMap<>();
         params5.add("count", "12345678");
         params5.add("status", StatusType.END.getCode());
+        params5.add("season", "1");
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                 .params(params5)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))

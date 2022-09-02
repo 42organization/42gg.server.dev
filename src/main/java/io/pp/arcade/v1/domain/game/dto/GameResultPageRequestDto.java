@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 public class GameResultPageRequestDto {
     private Integer gameId = Integer.MAX_VALUE;
-    private Integer count = 20;
+    private Integer count = 10;
     private StatusType status = StatusType.END;
     private Mode mode;
     private Integer season;
@@ -22,7 +22,7 @@ public class GameResultPageRequestDto {
         if (count > 100)
             count = 100;
         else if (count < 1)
-            count = 20;
+            count = 10;
         return count;
     }
 
