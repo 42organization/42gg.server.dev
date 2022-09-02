@@ -67,7 +67,7 @@ public class SeasonService {
         List<SeasonNameDto> dtoList = new ArrayList<>();
 
         for (Season season : seasons) {
-            SeasonNameDto dto = SeasonNameDto.builder().seasonId(season.getId()).seasonName(season.getSeasonName()).build();
+            SeasonNameDto dto = SeasonNameDto.builder().id(season.getId()).name(season.getSeasonName()).build();
             dtoList.add(dto);
         }
         return dtoList;

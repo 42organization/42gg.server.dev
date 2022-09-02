@@ -13,6 +13,7 @@ public class UserDetailResponseDto {
     private Integer level;
     private Integer currentExp;
     private Integer maxExp;
+    private Double expRate;
     private UserRivalRecordDto rivalRecord;
 
     @Builder
@@ -24,6 +25,7 @@ public class UserDetailResponseDto {
         this.level = level;
         this.currentExp = currentExp;
         this.maxExp = maxExp;
+        this.expRate = (double) (currentExp / maxExp * 100);
         this.rivalRecord = rivalRecord;
     }
 

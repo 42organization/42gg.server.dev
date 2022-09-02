@@ -70,14 +70,14 @@ class RankControllerNormalTest {
 //                        .param("page","1"))
                         .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken())) // header 해줘야함
                 .andExpect(jsonPath("$.myRank").value(1)) //
-                .andExpect(jsonPath("$.vipList[0].intraId").value("hhakim")) //
-                .andExpect(jsonPath("$.vipList[0].statusMessage").value("kikikaka")) //
-                .andExpect(jsonPath("$.vipList[0].level").value(7)) //
-                .andExpect(jsonPath("$.vipList[0].exp").value(100)) //
-                .andExpect(jsonPath("$.vipList[11].intraId").value("hjujeon")) //
-                .andExpect(jsonPath("$.vipList[11].statusMessage").value("kiki")) //
-                .andExpect(jsonPath("$.vipList[11].level").value(1)) //
-                .andExpect(jsonPath("$.vipList[11].exp").value(0)) //
+                .andExpect(jsonPath("$.rankList[0].intraId").value("hhakim")) //
+                .andExpect(jsonPath("$.rankList[0].statusMessage").value("kikikaka")) //
+                .andExpect(jsonPath("$.rankList[0].level").value(7)) //
+                .andExpect(jsonPath("$.rankList[0].exp").value(100)) //
+                .andExpect(jsonPath("$.rankList[11].intraId").value("hjujeon")) //
+                .andExpect(jsonPath("$.rankList[11].statusMessage").value("kiki")) //
+                .andExpect(jsonPath("$.rankList[11].level").value(1)) //
+                .andExpect(jsonPath("$.rankList[11].exp").value(0)) //
                 .andExpect(status().isOk())
                 .andDo(document("vip-List"));
 

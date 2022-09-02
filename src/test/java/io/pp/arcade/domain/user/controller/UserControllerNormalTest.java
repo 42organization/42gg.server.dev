@@ -64,19 +64,33 @@ class UserControllerNormalTest {
 
     @Test
     @Transactional
-    @DisplayName("유저 정보 조회 - 상세히, 랭크 (/pingpong/users/{targetIntraId}/rank/{season})")
+    @DisplayName("유저 정보 조회 - 상세히, 랭크 (/pingpong/users/{targetIntraId}/rank)")
     void findDetailUserRank() throws Exception {
         User user = initiator.users[0];
         RankUserDto rank = rankRedisService.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(GameType.SINGLE).build());
-        mockMvc.perform(get("/pingpong/users/{targetIntraId}/rank/{season}", user.getIntraId(), initiator.testSeason.getId()).contentType(MediaType.APPLICATION_JSON) // intra id, season 값 넣어야함
-                .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken())) // "Authorization", "Bearer " + initiator.tokens[0].getAccessToken())
+
+        mockMvc.perform(get("/pingpong/users/{targetIntraId}/rank", user.getIntraId()).contentType(MediaType.APPLICATION_JSON) // intra id, season 값 넣어야함
+//                .param("seasonId", initiator.testSeason.getId().toString()) // "Authorization", "Bearer " + initiator.tokens[0].getAccessToken())
+                .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.rank").value(rank.getRank())) // 등수
                 .andExpect(jsonPath("$.ppp").value(rank.getPpp())) // 탁구력
                 .andExpect(jsonPath("$.wins").value(rank.getWins())) // 승리
                 .andExpect(jsonPath("$.losses").value(rank.getLosses())) // 패배
                 .andExpect(jsonPath("$.winRate").value(rank.getWinRate())) // 승률
-                .andDo(document("user-profile-rank"));
+                .andDo(document("user-profile-rank-without-seasonId"));
+
+        mockMvc.perform(get("/pingpong/users/{targetIntraId}/rank", user.getIntraId()).contentType(MediaType.APPLICATION_JSON) // intra id, season 값 넣어야함
+                .param("seasonId", initiator.testSeason.getId().toString()) // "Authorization", "Bearer " + initiator.tokens[0].getAccessToken())
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.rank").value(rank.getRank())) // 등수
+                .andExpect(jsonPath("$.ppp").value(rank.getPpp())) // 탁구력
+                .andExpect(jsonPath("$.wins").value(rank.getWins())) // 승리
+                .andExpect(jsonPath("$.losses").value(rank.getLosses())) // 패배
+                .andExpect(jsonPath("$.winRate").value(rank.getWinRate())) // 승률
+                .andDo(document("user-profile-rank-with-seasonId"));
+
     }
 
     @Test
