@@ -3,22 +3,22 @@ package io.pp.arcade.domain.game.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.TestInitiator;
-import io.pp.arcade.domain.currentmatch.CurrentMatch;
-import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
-import io.pp.arcade.domain.game.Game;
-import io.pp.arcade.domain.game.GameRepository;
-import io.pp.arcade.domain.pchange.PChange;
-import io.pp.arcade.domain.pchange.PChangeRepository;
-import io.pp.arcade.domain.slot.Slot;
-import io.pp.arcade.domain.slot.SlotRepository;
-import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
-import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
-import io.pp.arcade.domain.team.Team;
-import io.pp.arcade.domain.team.TeamRepository;
-import io.pp.arcade.domain.user.User;
-import io.pp.arcade.global.type.GameType;
-import io.pp.arcade.global.type.Mode;
-import io.pp.arcade.global.type.StatusType;
+import io.pp.arcade.v1.domain.currentmatch.CurrentMatch;
+import io.pp.arcade.v1.domain.currentmatch.CurrentMatchRepository;
+import io.pp.arcade.v1.domain.game.Game;
+import io.pp.arcade.v1.domain.game.GameRepository;
+import io.pp.arcade.v1.domain.pchange.PChange;
+import io.pp.arcade.v1.domain.pchange.PChangeRepository;
+import io.pp.arcade.v1.domain.slot.Slot;
+import io.pp.arcade.v1.domain.slot.SlotRepository;
+import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUser;
+import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUserRepository;
+import io.pp.arcade.v1.domain.team.Team;
+import io.pp.arcade.v1.domain.team.TeamRepository;
+import io.pp.arcade.v1.domain.user.User;
+import io.pp.arcade.v1.global.type.GameType;
+import io.pp.arcade.v1.global.type.Mode;
+import io.pp.arcade.v1.global.type.StatusType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -105,7 +105,7 @@ class GameControllerTest {
                         .slot(slotList[i])
                         .score(j + 1)
                         .headCount(1)
-                        .win(j == 0)
+                        .win(j != 0)
                         .teamPpp(1000)
                         .build());
                 slotTeamUserRepository.save(SlotTeamUser.builder()
@@ -133,7 +133,7 @@ class GameControllerTest {
                     .slot(slotList[GAMESIZE - 2])
                     .score(j + 1)
                     .headCount(2)
-                    .win(j == 0)
+                    .win(j != 0)
                     .teamPpp(1000)
                     .build());
             slotTeamUserRepository.save(SlotTeamUser.builder()
@@ -160,7 +160,7 @@ class GameControllerTest {
                     .slot(slotList[GAMESIZE - 1])
                     .score(i + 1)
                     .headCount(1)
-                    .win(i == 0)
+                    .win(i != 0)
                     .teamPpp(1000)
                     .build());
             slotTeamUserRepository.save(SlotTeamUser.builder()
@@ -509,7 +509,7 @@ class GameControllerTest {
         LinkedMultiValueMap<String, String> params3 = new LinkedMultiValueMap<>();
         params3.add("gameId", "1234");
         params3.add("count", "20");
-        mockMvc.perform(get("/pingpong/users/{intraId}/games", users[2].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/users/{intraId}/games", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                         .params(params3)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(jsonPath("$.games").isEmpty())

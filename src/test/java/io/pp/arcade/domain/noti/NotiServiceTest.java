@@ -1,19 +1,20 @@
 package io.pp.arcade.domain.noti;
 
 import io.pp.arcade.TestInitiator;
-import io.pp.arcade.domain.game.GameRepository;
-import io.pp.arcade.domain.noti.dto.*;
-import io.pp.arcade.domain.slot.Slot;
-import io.pp.arcade.domain.slot.SlotRepository;
-import io.pp.arcade.domain.team.Team;
-import io.pp.arcade.domain.team.TeamRepository;
-import io.pp.arcade.domain.user.User;
-import io.pp.arcade.domain.user.UserRepository;
-import io.pp.arcade.domain.user.dto.UserDto;
-import io.pp.arcade.global.type.GameType;
-import io.pp.arcade.global.type.NotiType;
+import io.pp.arcade.v1.domain.game.GameRepository;
+import io.pp.arcade.v1.domain.noti.Noti;
+import io.pp.arcade.v1.domain.noti.NotiRepository;
+import io.pp.arcade.v1.domain.noti.NotiService;
+import io.pp.arcade.v1.domain.noti.dto.*;
+import io.pp.arcade.v1.domain.slot.Slot;
+import io.pp.arcade.v1.domain.slot.SlotRepository;
+import io.pp.arcade.v1.domain.team.Team;
+import io.pp.arcade.v1.domain.team.TeamRepository;
+import io.pp.arcade.v1.domain.user.User;
+import io.pp.arcade.v1.domain.user.UserRepository;
+import io.pp.arcade.v1.domain.user.dto.UserDto;
+import io.pp.arcade.v1.global.type.NotiType;
 import org.assertj.core.api.Assertions;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.mail.MessagingException;
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDateTime;
+
 import java.util.Collections;
 import java.util.List;
 
