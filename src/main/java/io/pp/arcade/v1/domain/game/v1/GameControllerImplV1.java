@@ -15,7 +15,6 @@ import io.pp.arcade.v1.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.v1.domain.season.SeasonService;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.domain.security.jwt.TokenService;
-import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUserService;
 import io.pp.arcade.v1.domain.user.UserService;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.domain.user.dto.UserFindDto;
