@@ -12,4 +12,5 @@ public class GameExpResultResponseDto {
     private Integer currentLevel;
     private Integer increasedExp;
     private Integer increasedLevel;
+    private Integer expRate;
 }
