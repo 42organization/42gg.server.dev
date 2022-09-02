@@ -1,34 +1,12 @@
 package io.pp.arcade.domain.user.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.TestInitiator;
-import io.pp.arcade.domain.currentmatch.CurrentMatch;
-import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
-import io.pp.arcade.domain.game.Game;
-import io.pp.arcade.domain.game.GameRepository;
-import io.pp.arcade.domain.pchange.PChange;
-import io.pp.arcade.domain.pchange.PChangeRepository;
-import io.pp.arcade.domain.rank.RankRedis;
-import io.pp.arcade.domain.rank.RankRedisRepository;
-import io.pp.arcade.domain.rank.RankRepository;
-import io.pp.arcade.domain.rank.dto.RankFindDto;
-import io.pp.arcade.domain.rank.dto.RankRedisDto;
-import io.pp.arcade.domain.rank.dto.RankUserDto;
-import io.pp.arcade.domain.rank.service.RankRedisService;
-import io.pp.arcade.domain.rank.service.RankService;
-import io.pp.arcade.domain.security.jwt.TokenRepository;
-import io.pp.arcade.domain.slot.Slot;
-import io.pp.arcade.domain.slot.SlotRepository;
-import io.pp.arcade.domain.team.Team;
-import io.pp.arcade.domain.team.TeamRepository;
-import io.pp.arcade.domain.user.User;
-import io.pp.arcade.domain.user.UserRepository;
-import io.pp.arcade.global.type.GameType;
-import io.pp.arcade.global.type.Mode;
-import io.pp.arcade.global.type.RacketType;
-import io.pp.arcade.global.type.StatusType;
-import org.assertj.core.api.Assertions;
+import io.pp.arcade.v1.domain.rank.dto.RankFindDto;
+import io.pp.arcade.v1.domain.rank.dto.RankUserDto;
+import io.pp.arcade.v1.domain.rank.service.RankRedisService;
+import io.pp.arcade.v1.domain.user.User;
+import io.pp.arcade.v1.global.type.GameType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,14 +15,10 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

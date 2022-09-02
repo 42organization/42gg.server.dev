@@ -1,30 +1,31 @@
 package io.pp.arcade.domain.pchange;
 
 import io.pp.arcade.TestInitiator;
-import io.pp.arcade.domain.game.Game;
-import io.pp.arcade.domain.game.GameRepository;
-import io.pp.arcade.domain.pchange.dto.PChangeAddDto;
-import io.pp.arcade.domain.pchange.dto.PChangeDto;
-import io.pp.arcade.domain.pchange.dto.PChangeFindDto;
-import io.pp.arcade.domain.pchange.dto.PChangePageDto;
-import io.pp.arcade.domain.slot.Slot;
-import io.pp.arcade.domain.slot.SlotRepository;
-import io.pp.arcade.domain.team.Team;
-import io.pp.arcade.domain.team.TeamRepository;
-import io.pp.arcade.domain.user.User;
-import io.pp.arcade.domain.user.UserRepository;
-import io.pp.arcade.global.type.GameType;
-import io.pp.arcade.global.type.StatusType;
+import io.pp.arcade.v1.domain.game.Game;
+import io.pp.arcade.v1.domain.game.GameRepository;
+import io.pp.arcade.v1.domain.pchange.PChange;
+import io.pp.arcade.v1.domain.pchange.PChangeRepository;
+import io.pp.arcade.v1.domain.pchange.PChangeService;
+import io.pp.arcade.v1.domain.pchange.dto.PChangeAddDto;
+import io.pp.arcade.v1.domain.pchange.dto.PChangeFindDto;
+import io.pp.arcade.v1.domain.pchange.dto.PChangePageDto;
+import io.pp.arcade.v1.domain.slot.Slot;
+import io.pp.arcade.v1.domain.slot.SlotRepository;
+import io.pp.arcade.v1.domain.team.Team;
+import io.pp.arcade.v1.domain.team.TeamRepository;
+import io.pp.arcade.v1.domain.user.User;
+import io.pp.arcade.v1.domain.user.UserRepository;
+import io.pp.arcade.v1.global.type.Mode;
+import io.pp.arcade.v1.global.type.StatusType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.transaction.annotation.Transactional;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @SpringBootTest
 class PChangeServiceTest {
@@ -61,7 +62,7 @@ class PChangeServiceTest {
         user4 = initiator.users[3];
 
         slot = initiator.slots[0];
-
+        slot.setMode(Mode.RANK);
         team1 = slot.getTeam1();
         team2 = slot.getTeam2();
 
@@ -98,22 +99,51 @@ class PChangeServiceTest {
     @Test
     @Transactional
     void findPChange() {
-        pChangeRepository.save(PChange.builder()
-                .game(game)
-                .user(user1)
-                .pppChange(333)
-                .pppResult(user1.getPpp() + 333)
-                .build());
+        for (int i = 0; i < 100; i++) {
+            pChangeRepository.save(PChange.builder()
+                    .game(game)
+                    .user(user1)
+                    .pppChange(333)
+                    .pppResult(user1.getPpp() + 333)
+                    .expChange(0)
+                    .expResult(user1.getTotalExp())
+                    .build());
+            pChangeRepository.save(PChange.builder()
+                    .game(game)
+                    .user(user1)
+                    .pppChange(333)
+                    .pppResult(user2.getPpp() + 333)
+                    .expChange(0)
+                    .expResult(user1.getTotalExp())
+                    .build());
+            pChangeRepository.save(PChange.builder()
+                    .game(game)
+                    .user(user1)
+                    .pppChange(333)
+                    .pppResult(user3.getPpp() + 333)
+                    .expChange(0)
+                    .expResult(user1.getTotalExp())
+                    .build());
+            pChangeRepository.save(PChange.builder()
+                    .game(game)
+                    .user(user1)
+                    .pppChange(333)
+                    .pppResult(user4.getPpp() + 333)
+                    .expChange(0)
+                    .expResult(user1.getTotalExp())
+                    .build());
+        }
 
         PChangeFindDto findDto = PChangeFindDto.builder()
                 .gameId(game.getId() + 1)
                 .userId(user1.getIntraId())
                 .mode(game.getMode())
-                .pageable(Pageable.ofSize(20))
+                .pageable(PageRequest.of(0, 20))
                 .build();
 
         PChangePageDto pChangeDto =  pChangeService.findPChangeByUserIdAfterGameIdAndGameMode(findDto);
-        Assertions.assertThat(pChangeDto.getPChangeList().size()).isEqualTo(1);
+        Assertions.assertThat(pChangeDto.getPChangeList().size()).isEqualTo(20);
+        System.out.println(pChangeDto);
         Assertions.assertThat(pChangeDto.getPChangeList().get(0).getPppChange()).isEqualTo(333);
     }
 }

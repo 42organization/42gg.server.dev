@@ -1,6 +1,5 @@
 package io.pp.arcade.domain.flowtest.notiFlowTest;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.lettuce.core.LettuceFutures;
 import io.lettuce.core.RedisClient;
@@ -8,14 +7,13 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.TestInitiator;
-import io.pp.arcade.domain.security.jwt.Token;
-import io.pp.arcade.domain.slot.Slot;
-import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
-import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
-import io.pp.arcade.domain.team.Team;
-import io.pp.arcade.domain.user.User;
-import io.pp.arcade.global.type.GameType;
-import io.pp.arcade.global.type.Mode;
+import io.pp.arcade.v1.domain.security.jwt.Token;
+import io.pp.arcade.v1.domain.slot.Slot;
+import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUserRepository;
+import io.pp.arcade.v1.domain.team.Team;
+import io.pp.arcade.v1.domain.user.User;
+import io.pp.arcade.v1.global.type.GameType;
+import io.pp.arcade.v1.global.type.Mode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +27,6 @@ import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
