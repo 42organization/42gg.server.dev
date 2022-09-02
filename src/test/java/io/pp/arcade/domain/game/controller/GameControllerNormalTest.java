@@ -1,24 +1,23 @@
 package io.pp.arcade.domain.game.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.TestInitiator;
-import io.pp.arcade.domain.currentmatch.CurrentMatch;
-import io.pp.arcade.domain.currentmatch.CurrentMatchRepository;
-import io.pp.arcade.domain.game.Game;
-import io.pp.arcade.domain.game.GameRepository;
-import io.pp.arcade.domain.pchange.PChange;
-import io.pp.arcade.domain.pchange.PChangeRepository;
-import io.pp.arcade.domain.slot.Slot;
-import io.pp.arcade.domain.slot.SlotRepository;
-import io.pp.arcade.domain.slotteamuser.SlotTeamUser;
-import io.pp.arcade.domain.slotteamuser.SlotTeamUserRepository;
-import io.pp.arcade.domain.team.Team;
-import io.pp.arcade.domain.team.TeamRepository;
-import io.pp.arcade.domain.user.User;
-import io.pp.arcade.global.type.GameType;
-import io.pp.arcade.global.type.Mode;
-import io.pp.arcade.global.type.StatusType;
+import io.pp.arcade.v1.domain.currentmatch.CurrentMatch;
+import io.pp.arcade.v1.domain.currentmatch.CurrentMatchRepository;
+import io.pp.arcade.v1.domain.game.Game;
+import io.pp.arcade.v1.domain.game.GameRepository;
+import io.pp.arcade.v1.domain.pchange.PChange;
+import io.pp.arcade.v1.domain.pchange.PChangeRepository;
+import io.pp.arcade.v1.domain.slot.Slot;
+import io.pp.arcade.v1.domain.slot.SlotRepository;
+import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUser;
+import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUserRepository;
+import io.pp.arcade.v1.domain.team.Team;
+import io.pp.arcade.v1.domain.team.TeamRepository;
+import io.pp.arcade.v1.domain.user.User;
+import io.pp.arcade.v1.global.type.GameType;
+import io.pp.arcade.v1.global.type.Mode;
+import io.pp.arcade.v1.global.type.StatusType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,7 +37,6 @@ import java.util.List;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -93,7 +91,7 @@ class GameControllerNormalTest {
             if (i % 2 == 0)
                 mode = Mode.NORMAL;
             slotList[i] = slotRepository.save(Slot.builder()
-                    .time(LocalDateTime.now().plusMinutes(i))
+                    .time(LocalDateTime.now().plusHours(i))
                     .headCount(2)
                     .tableId(1)
                     .gamePpp(1000)
@@ -105,7 +103,7 @@ class GameControllerNormalTest {
                         .slot(slotList[i])
                         .score(j + 1)
                         .headCount(1)
-                        .win(j == 0)
+                        .win(j != 0)
                         .teamPpp(1000)
                         .build());
                 slotTeamUserRepository.save(SlotTeamUser.builder()
@@ -115,6 +113,7 @@ class GameControllerNormalTest {
                         .build());
             }
         }
+
         /*
          * endGames : user0, user1
          * doubleGames : user2, 3, 4, 5
@@ -122,7 +121,7 @@ class GameControllerNormalTest {
          * waitGame : user6, 7
          * */
         slotList[GAMESIZE - 2] = slotRepository.save(Slot.builder()
-                .time(LocalDateTime.now().plusMinutes(GAMESIZE - 2))
+                .time(LocalDateTime.now().plusHours(GAMESIZE - 2))
                 .headCount(4)
                 .tableId(1)
                 .gamePpp(1000)
@@ -133,7 +132,7 @@ class GameControllerNormalTest {
                     .slot(slotList[GAMESIZE - 2])
                     .score(j + 1)
                     .headCount(2)
-                    .win(j == 0)
+                    .win(j != 0)
                     .teamPpp(1000)
                     .build());
             slotTeamUserRepository.save(SlotTeamUser.builder()
@@ -149,7 +148,7 @@ class GameControllerNormalTest {
         }
 
         slotList[GAMESIZE - 1] = slotRepository.save(Slot.builder()
-                .time(LocalDateTime.now().plusMinutes(GAMESIZE - 1))
+                .time(LocalDateTime.now().plusHours(GAMESIZE - 1))
                 .headCount(2)
                 .tableId(1)
                 .gamePpp(1000)
@@ -160,7 +159,7 @@ class GameControllerNormalTest {
                     .slot(slotList[GAMESIZE - 1])
                     .score(i + 1)
                     .headCount(1)
-                    .win(i == 0)
+                    .win(i != 0)
                     .teamPpp(1000)
                     .build());
             slotTeamUserRepository.save(SlotTeamUser.builder()
@@ -171,18 +170,48 @@ class GameControllerNormalTest {
         }
 
         for (int i = 0; i < GAMESIZE - 3; i++){
-            endGames[i] = gameRepository.save(Game.builder().slot(slotList[i]).mode(slotList[i].getMode()).season(1).status(StatusType.END).build());
+            endGames[i] = gameRepository.save(Game.builder()
+                    .slot(slotList[i])
+                    .mode(slotList[i].getMode())
+                    .season(1)
+                    .status(StatusType.END)
+                    .build());
         }
 
         // double, wait, live 순으로
-        waitGame = gameRepository.save(Game.builder().slot(slotList[GAMESIZE - 3]).season(1).status(StatusType.WAIT).mode(slotList[GAMESIZE - 3].getMode()).build());
-        doubleGame = gameRepository.save(Game.builder().slot(slotList[GAMESIZE - 2]).season(1).status(StatusType.END).mode(slotList[GAMESIZE - 2].getMode()).build());
-        liveGame = gameRepository.save(Game.builder().slot(slotList[GAMESIZE - 1]).season(1).status(StatusType.LIVE).mode(slotList[GAMESIZE - 1].getMode()).build());
+        waitGame = gameRepository.save(Game.builder()
+                .slot(slotList[GAMESIZE - 3])
+                .mode(slotList[GAMESIZE - 3].getMode())
+                .season(1)
+                .status(StatusType.WAIT)
+                .build());
+        doubleGame = gameRepository.save(Game.builder()
+                .slot(slotList[GAMESIZE - 2])
+                .mode(slotList[GAMESIZE - 2].getMode())
+                .season(1)
+                .status(StatusType.END)
+                .build());
+        liveGame = gameRepository.save(Game.builder()
+                .slot(slotList[GAMESIZE - 1])
+                .mode(slotList[GAMESIZE - 1].getMode())
+                .season(1)
+                .status(StatusType.LIVE)
+                .build());
 
         /* pChange 생성 */
         for (int i = 0; i < GAMESIZE - 3; i++){
-            pChangeRepository.save(PChange.builder().game(endGames[i]).user(users[0]).pppChange(20).pppResult(1000).build());
-            pChangeRepository.save(PChange.builder().game(endGames[i]).user(users[1]).pppChange(20).pppResult(1000).build());
+            pChangeRepository.save(PChange.builder()
+                    .game(endGames[i])
+                    .user(users[0])
+                    .pppChange(20)
+                    .pppResult(1000)
+                    .build());
+            pChangeRepository.save(PChange.builder()
+                    .game(endGames[i])
+                    .user(users[1])
+                    .pppChange(20)
+                    .pppResult(1000)
+                    .build());
         }
         pChangeRepository.save(PChange.builder().game(doubleGame).user(users[2]).pppChange(20).pppResult(1000).build());
         pChangeRepository.save(PChange.builder().game(doubleGame).user(users[3]).pppChange(20).pppResult(1000).build());
@@ -236,6 +265,7 @@ class GameControllerNormalTest {
         MultiValueMap<String,String> params2 = new LinkedMultiValueMap<>();
         params2.add("gameId", "-1");
         params2.add("count", "20");
+        params2.add("season", "1");
         params2.add("status", StatusType.END.getCode());
         mockMvc.perform(get("/v1/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                         .params(params2)
@@ -728,7 +758,7 @@ class GameControllerNormalTest {
 
     @Test
     @Transactional
-    @DisplayName("개인 최근 게임 기록 - 전체 (/users/{intraId}/games)")
+    @DisplayName("개인 최근 게임 기록 - 전체 (/pingpong/users/{intraId}/games)")
     void gameResultByUserIdAndIndexAndCountAll() throws Exception {
         /*
          * IntraId 찾을 수 없는 경우
@@ -752,7 +782,7 @@ class GameControllerNormalTest {
         params3.add("gameId", "1234");
         params3.add("count", "20");
         params3.add("season", "1");
-        mockMvc.perform(get("/pingpong/users/{intraId}/games", users[2].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/users/{intraId}/games", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                         .params(params3)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(jsonPath("$.games").isEmpty())
@@ -765,7 +795,7 @@ class GameControllerNormalTest {
          * -> 200
          * */
         LinkedMultiValueMap<String, String> params4 = new LinkedMultiValueMap<>();
-        params4.add("gameId", "1234");
+        params4.add("gameId", "12345");
         params4.add("count", "20");
         params4.add("season", "1");
         mockMvc.perform(get("/pingpong/users/{intraId}/games", users[0].getIntraId()).contentType(MediaType.APPLICATION_JSON)
@@ -778,7 +808,7 @@ class GameControllerNormalTest {
 
     @Test
     @Transactional
-    @DisplayName("개인 최근 게임 기록 - 랭크 (/games/rank)")
+    @DisplayName("개인 최근 게임 기록 - 랭크 (/v1/pingpong/users/{intraId}/games/rank)")
     void gameResultByUserIdAndIndexAndCountRankOnly() throws Exception {
         /*
          * IntraId 찾을 수 없는 경우
@@ -802,7 +832,7 @@ class GameControllerNormalTest {
         params3.add("gameId", "1234");
         params3.add("count", "20");
         params3.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/users/{intraId}/games/rank", users[2].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/v1/pingpong/users/{intraId}/games/rank", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                 .params(params3)
                 .header("Authorization", "Bearer 0"))
                 .andExpect(jsonPath("$.games").isEmpty())
@@ -815,7 +845,7 @@ class GameControllerNormalTest {
          * -> 200
          * */
         LinkedMultiValueMap<String, String> params4 = new LinkedMultiValueMap<>();
-        params4.add("gameId", "1234");
+        params4.add("gameId", "12345");
         params4.add("count", "20");
         params4.add("season", "1");
         mockMvc.perform(get("/v1/pingpong/users/{intraId}/games/rank", users[0].getIntraId()).contentType(MediaType.APPLICATION_JSON)
@@ -828,7 +858,7 @@ class GameControllerNormalTest {
 
     @Test
     @Transactional
-    @DisplayName("개인 최근 게임 기록 - 노말 (/games/normal)")
+    @DisplayName("개인 최근 게임 기록 - 노말 (/v1/pingpong/users/{intraId}/games/normal)")
     void gameResultByUserIdAndIndexAndCountNormalOnly() throws Exception {
         /*
          * IntraId 찾을 수 없는 경우
@@ -852,23 +882,22 @@ class GameControllerNormalTest {
         params3.add("gameId", "1234");
         params3.add("count", "20");
         params3.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/users/{intraId}/games/normal", users[2].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/v1/pingpong/users/{intraId}/games/normal", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                 .params(params3)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-//                .andExpect(jsonPath("$.games").isEmpty())
+                .andExpect(jsonPath("$.games").isEmpty())
 //                .andExpect(jsonPath("$.lastGameId").value(0))
                 .andExpect(status().isOk())
-                .andDo(document("user-normal-game-find-all-results-theres-no-game-record"));
+                .andDo(document("v1-user-normal-game-find-all-results-theres-no-game-record"));
 
         /*
          * 사용자 - 노말만 잘 나오는지
          * -> 200
          * */
         LinkedMultiValueMap<String, String> params4 = new LinkedMultiValueMap<>();
-        params4.add("gameId", "1234");
+        params4.add("gameId", "12345");
         params4.add("count", "20");
-        params4.add("season", "1");
-        mockMvc.perform(get("/v1/pingpong/users/{intraId}/games/normal", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/v1/pingpong/users/{intraId}/games/normal", users[0].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                 .params(params4)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
 //                .andExpect(jsonPath().value())

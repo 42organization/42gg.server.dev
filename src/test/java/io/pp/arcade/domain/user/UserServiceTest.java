@@ -1,10 +1,12 @@
 package io.pp.arcade.domain.user;
 
 import io.pp.arcade.TestInitiator;
-import io.pp.arcade.domain.user.dto.*;
-import io.pp.arcade.global.exception.BusinessException;
-import io.pp.arcade.global.type.RacketType;
-import io.pp.arcade.global.type.RoleType;
+import io.pp.arcade.v1.domain.user.User;
+import io.pp.arcade.v1.domain.user.UserRepository;
+import io.pp.arcade.v1.domain.user.UserService;
+import io.pp.arcade.v1.domain.user.dto.*;
+import io.pp.arcade.v1.global.exception.BusinessException;
+import io.pp.arcade.v1.global.type.RacketType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
