@@ -85,6 +85,9 @@ public class UserControllerImpl implements UserController {
     public UserDetailResponseDto userFindDetail(String targetUserId, HttpServletRequest request) {
         UserDto curUser = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         UserDto targetUser = userService.findByIntraId(UserFindDto.builder().intraId(targetUserId).build());
+        Integer currentExp = ExpLevelCalculator.getCurrentLevelMyExp(targetUser.getTotalExp());
+        Integer maxExp = ExpLevelCalculator.getLevelMaxExp(ExpLevelCalculator.getLevel(targetUser.getTotalExp()));
+        Integer expRate = (currentExp / maxExp) * 100;
         // 일단 게임타입은 SINGLE로 구현
         UserRivalRecordDto rivalRecord = UserRivalRecordDto.builder().curUserWin(0).targetUserWin(0).build();
         if (!targetUserId.equals(curUser.getIntraId())) {
@@ -96,9 +99,10 @@ public class UserControllerImpl implements UserController {
                 .racketType(targetUser.getRacketType())
                 .statusMessage(targetUser.getStatusMessage())
                 .level(ExpLevelCalculator.getLevel(targetUser.getTotalExp()))
-                .currentExp(ExpLevelCalculator.getCurrentLevelMyExp(targetUser.getTotalExp()))
-                .maxExp(ExpLevelCalculator.getLevelMaxExp(ExpLevelCalculator.getLevel(targetUser.getTotalExp())))
+                .currentExp(currentExp)
+                .maxExp(maxExp)
                 .rivalRecord(rivalRecord)
+                .expRate(expRate)
                 .build();
         return responseDto;
     }
