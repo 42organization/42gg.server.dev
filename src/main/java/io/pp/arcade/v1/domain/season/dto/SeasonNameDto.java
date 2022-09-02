@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class SeasonNameDto {
-    Integer seasonId;
-    String seasonName;
+    Integer id;
+    String name;
 }

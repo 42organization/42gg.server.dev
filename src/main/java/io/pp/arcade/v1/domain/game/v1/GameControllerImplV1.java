@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(value = "/v1/pingpong")
+@RequestMapping(value = "/pingpong")
 public class GameControllerImplV1 {
     private final TokenService tokenService;
     private final GameService gameService;
