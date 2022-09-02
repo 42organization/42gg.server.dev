@@ -243,7 +243,7 @@ public class GameControllerImplV1 {
                 .maxExp(maxExp)
                 .currentLevel(ExpLevelCalculator.getLevel(currentExp))
                 .increasedLevel(ExpLevelCalculator.getLevel(changedExp))
-                .ExpRate(expRate)
+                .expRate(expRate)
                 .build();
 
         return responseDto;
