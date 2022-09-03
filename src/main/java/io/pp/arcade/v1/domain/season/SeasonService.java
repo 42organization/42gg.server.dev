@@ -55,7 +55,7 @@ public class SeasonService {
 
     @Transactional
     public SeasonDto findSeasonById(Integer seasonId) {
-        Season season = seasonRepository.findById(seasonId).orElse(null);
+        Season season = seasonRepository.findById(seasonId).orElseThrow(() -> new BusinessException("E0001"));
         if (season == null)
             return null;
         return SeasonDto.from(season);

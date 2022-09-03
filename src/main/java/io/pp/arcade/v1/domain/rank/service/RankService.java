@@ -39,8 +39,9 @@ public class RankService {
     }
     
     @Transactional
-    public VipListResponseDto vipList(UserDto curUser, Pageable pageable) {
-        pageable = PageRequest.of(pageable.getPageNumber() - 1, pageable.getPageSize());
+    public VipListResponseDto vipList(UserDto curUser, Integer count, Pageable pageable) {
+        Integer pageNum = pageable.getPageNumber() < 1 ? 1 : pageable.getPageNumber() - 1;
+        pageable = PageRequest.of(pageNum, count);
 
         Page<User> userPage = userRepository.findAllByOrderByTotalExpDesc(pageable);
         Integer myRank = userRepository.findExpRankingByIntraId(curUser.getIntraId());

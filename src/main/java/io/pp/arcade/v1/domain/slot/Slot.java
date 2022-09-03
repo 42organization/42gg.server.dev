@@ -53,6 +53,7 @@ public class Slot extends BaseTimeEntity {
     private GameType type;
 
     @Setter
+//    @NotNull
     @Column(name = "mode")
     private Mode mode;
 

@@ -17,7 +17,7 @@ public class SlotAddUserRequestDto {
     public String toString() {
         return "SlotAddUserRequestDto{" +
                 "slotId=" + slotId +
-                "mode=" + (mode != null ? mode.getCode() : null) +
+                "mode=" + mode +
                 '}';
     }
 }

@@ -44,6 +44,7 @@ public class GameResultPageRequestDto {
                 "gameId=" + gameId +
                 ", count=" + count +
                 ", status=" + status +
+                ", mode=" + mode +
                 '}';
     }
 }

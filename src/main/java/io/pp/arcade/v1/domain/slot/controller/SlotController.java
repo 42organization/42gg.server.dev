@@ -8,9 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 public interface SlotController {
     SlotStatusResponseDto slotStatusList(@PathVariable Integer tableId, @PathVariable GameType type, HttpServletRequest request);
-    void slotAddUser(@PathVariable Integer tableId, @PathVariable GameType type, @RequestBody SlotAddUserRequestDto addReqDto, HttpServletRequest request) throws MessagingException;
+    void slotAddUser(@PathVariable Integer tableId, @PathVariable GameType type, @RequestBody @Valid SlotAddUserRequestDto addReqDto, HttpServletRequest request) throws MessagingException;
     void slotRemoveUser(@PathVariable Integer slotId, HttpServletRequest request) throws MessagingException;
 }

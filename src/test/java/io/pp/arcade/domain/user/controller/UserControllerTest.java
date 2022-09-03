@@ -237,9 +237,10 @@ class UserControllerTest {
          * -> 400
          * */
         mockMvc.perform(get("/pingpong/users/{intraId}/historics", "notFound").contentType(MediaType.APPLICATION_JSON)
+                        .param("season","1")
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(status().is4xxClientError())
-                .andDo(document("user-find-historic-4xxError-cause-couldn't-find-intraId"));
+                .andExpect(status().isOk())
+                .andDo(document("user-find-historic-can't-find-intraId"));
 
         /*
          * chartType NULL (향후 수정)
@@ -247,6 +248,7 @@ class UserControllerTest {
          * */
         User user = users[0];
         mockMvc.perform(get("/pingpong/users/" + user.getIntraId() +"/historics").contentType(MediaType.APPLICATION_JSON)
+                        .param("season","1")
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk());
 
@@ -255,7 +257,7 @@ class UserControllerTest {
          * -> 200
          * */
         mockMvc.perform(get("/pingpong/users/" + user.getIntraId() +"/historics").contentType(MediaType.APPLICATION_JSON)
-                        .param("chartType","")
+                        .param("season","1")
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isOk());
 
@@ -270,7 +272,7 @@ class UserControllerTest {
         //String subDate = gameDate.substring(0, gameDate.length());
 //        LocalDateTime formatDateTime = LocalDateTime.parse(gameDate, formatter);
         mockMvc.perform(get("/pingpong/users/" + user.getIntraId() +"/historics").contentType(MediaType.APPLICATION_JSON)
-                        .param("chartType","rank")
+                        .param("season","1")
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
 //                .andExpect(jsonPath("$.historics[0]..ppp").value(userPchange.getPppResult()))
 //                .andExpect(jsonPath("$.historics[0]..date").value(gameDate))

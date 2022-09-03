@@ -47,12 +47,13 @@ public class User extends BaseTimeEntity implements Serializable {
     @Column(name = "ppp")
     private Integer ppp;
 
-    @NotNull
     @Setter
+    @NotNull
     @Column(name = "role_type")
     private RoleType roleType;
 
     @Setter
+    //    @NotNull
     @Column(name = "total_exp")
     private Integer totalExp;
 
