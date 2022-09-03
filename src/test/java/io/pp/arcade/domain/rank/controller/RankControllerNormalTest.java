@@ -67,7 +67,7 @@ class RankControllerNormalTest {
 
         /* 유저가 존재할 경우 */
         mockMvc.perform((get("/pingpong/vip").contentType(MediaType.APPLICATION_JSON))
-//                        .param("page","1"))
+                        .param("page","1")
                         .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken())) // header 해줘야함
                 .andExpect(jsonPath("$.myRank").value(1)) //
                 .andExpect(jsonPath("$.rankList[0].intraId").value("hhakim")) //
