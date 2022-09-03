@@ -73,11 +73,11 @@ class RankControllerNormalTest {
                 .andExpect(jsonPath("$.rankList[0].intraId").value("hhakim")) //
                 .andExpect(jsonPath("$.rankList[0].statusMessage").value("kikikaka")) //
                 .andExpect(jsonPath("$.rankList[0].level").value(7)) //
-                .andExpect(jsonPath("$.rankList[0].exp").value(100)) //
+                .andExpect(jsonPath("$.rankList[0].exp").value(users[0].getTotalExp())) //
                 .andExpect(jsonPath("$.rankList[11].intraId").value("hjujeon")) //
                 .andExpect(jsonPath("$.rankList[11].statusMessage").value("kiki")) //
                 .andExpect(jsonPath("$.rankList[11].level").value(1)) //
-                .andExpect(jsonPath("$.rankList[11].exp").value(0)) //
+                .andExpect(jsonPath("$.rankList[11].exp").value(users[11].getTotalExp())) //
                 .andExpect(status().isOk())
                 .andDo(document("vip-List"));
 

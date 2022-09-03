@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 public class PChangeFindDto {
     private Integer gameId;
     private String userId;
+    private Integer season;
     private Mode mode;
     private Pageable pageable;
 
@@ -18,6 +19,8 @@ public class PChangeFindDto {
         return "PChangeFindDto{" +
                 "gameId=" + gameId +
                 ", userId='" + userId + '\'' +
+                ", season='" + season + '\'' +
+                ", mode=" + mode +
                 ", pageable=" + pageable +
                 '}';
     }

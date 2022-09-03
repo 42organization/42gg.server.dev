@@ -127,6 +127,7 @@ class GameControllerTest {
                 .tableId(1)
                 .gamePpp(1000)
                 .type(GameType.DOUBLE)
+                .mode(Mode.RANK)
                 .build());
         for (int j = 0; j < 2; j++) {
             Team team = teamRepository.save(Team.builder()
@@ -154,6 +155,7 @@ class GameControllerTest {
                 .tableId(1)
                 .gamePpp(1000)
                 .type(GameType.SINGLE)
+                .mode(Mode.RANK)
                 .build());
         for (int i = 0; i < 2; i++) {
             Team team = teamRepository.save(Team.builder()
@@ -176,7 +178,7 @@ class GameControllerTest {
 
         // wait, double, live 순으로
         waitGame = gameRepository.save(Game.builder().slot(slotList[GAMESIZE - 3]).season(1).status(StatusType.WAIT).mode(Mode.RANK).build());
-        doubleGame = gameRepository.save(Game.builder().slot(slotList[GAMESIZE - 2]).season(1).status(StatusType.END).mode(Mode.RANK).build());
+        doubleGame = gameRepository.save(Game.builder().slot(slotList[GAMESIZE - 2]).season(1).status(StatusType.WAIT).mode(Mode.RANK).build());
         liveGame = gameRepository.save(Game.builder().slot(slotList[GAMESIZE - 1]).season(1).status(StatusType.LIVE).mode(Mode.RANK).build());
 
         /* pChange 생성 */
@@ -468,8 +470,8 @@ class GameControllerTest {
         mockMvc.perform(get("/pingpong/games").contentType(MediaType.APPLICATION_JSON)
                 .params(params7)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(jsonPath("$.games[0].gameId").value(doubleGame.getId()))
-                .andExpect(jsonPath("$.games[1].gameId").value(endGames[endGames.length - 1].getId()))
+                .andExpect(jsonPath("$.games[0].gameId").value(endGames[endGames.length - 1].getId()))
+                .andExpect(jsonPath("$.games[1].gameId").value(endGames[endGames.length - 2].getId()))
                 .andExpect(jsonPath("$.games.length()").value(20))
                 .andExpect(status().isOk())
                 .andDo(document("game-user-info-status-is-null"));

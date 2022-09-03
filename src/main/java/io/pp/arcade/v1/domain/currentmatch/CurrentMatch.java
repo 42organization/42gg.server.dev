@@ -34,6 +34,7 @@ public class CurrentMatch extends BaseTimeEntity {
     private Boolean isMatched;
 
     @Setter
+//    @NotNull
     @Column(name = "is_del")
     private Boolean isDel;
 

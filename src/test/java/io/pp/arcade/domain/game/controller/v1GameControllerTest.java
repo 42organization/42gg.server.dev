@@ -106,8 +106,7 @@ public class v1GameControllerTest {
             Integer currentExp = ExpLevelCalculator.getCurrentLevelMyExp(user.getTotalExp());
             Integer currentLevel = ExpLevelCalculator.getLevel(user.getTotalExp());
             body.put("slotId", slot.getId().toString());
-            body.put("mode", Mode.NORMAL.toString());
-
+            body.put("mode", Mode.NORMAL.getCode());
 
             mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(body))
@@ -122,6 +121,16 @@ public class v1GameControllerTest {
                     .andDo(document("v1-slot-normal-add-user-in-0(2)"));
 
            GameDto game = addGame(SlotDto.from(slot));
+
+            mockMvc.perform(get("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
+                    .andExpect(jsonPath("$.matchTeamsInfo.myTeam[0].intraId").value(users[0].getIntraId()))
+                    .andExpect(jsonPath("$.matchTeamsInfo.myTeam[0].userImageUri").value(users[0].getImageUri()))
+                    .andExpect(jsonPath("$.matchTeamsInfo.enemyTeam[0].intraId").value(users[1].getIntraId()))
+                    .andExpect(jsonPath("$.matchTeamsInfo.enemyTeam[0].userImageUri").value(users[1].getImageUri()))
+                    .andExpect(status().isOk())
+                    .andDo(document("v1-normal-game-find-results-single"));
+
 
             mockMvc.perform(post("/pingpong/games/result/normal").contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))

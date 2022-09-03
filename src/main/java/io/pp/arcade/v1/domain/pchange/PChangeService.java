@@ -12,6 +12,7 @@ import io.pp.arcade.v1.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.domain.user.UserRepository;
 import io.pp.arcade.v1.global.exception.BusinessException;
+import io.pp.arcade.v1.global.type.Mode;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,9 +60,9 @@ public class PChangeService {
     }
 
     @Transactional
-    public PChangePageDto findPChangeByUserId(PChangeFindDto findDto){
-        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
-        Page<PChange> pChangePage = pChangeRepository.findAllByUserOrderByIdDesc(user, findDto.getPageable());
+    public PChangePageDto findRankPChangeByUserId(PChangeFindDto findDto){
+//        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        Page<PChange> pChangePage = pChangeRepository.findPChangeHistory(findDto.getUserId(), findDto.getSeason(), Mode.RANK.getValue(), findDto.getPageable());
         PChangePageDto dto = PChangePageDto.builder()
                 .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()).stream().sorted(Comparator.comparing(PChangeDto::getId)).collect(Collectors.toList()))
 //                .totalPage(pChangePage.getTotalPages())
@@ -88,7 +89,7 @@ public class PChangeService {
     public PChangePageDto findPChangeByUserIdAfterGameIdAndGameMode(PChangeFindDto findDto){
 //        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         Integer gameId = findDto.getGameId() == null ? Integer.MAX_VALUE : findDto.getGameId();
-        Integer mode = findDto.getMode().getValue();
+        Integer mode = findDto.getMode() == null ? null : findDto.getMode().getValue();
 
         Page<PChange> pChangePage = pChangeRepository.findPChangesByGameModeAndUser(mode, findDto.getUserId(), gameId, findDto.getPageable());
         PChangePageDto dto = PChangePageDto.builder()

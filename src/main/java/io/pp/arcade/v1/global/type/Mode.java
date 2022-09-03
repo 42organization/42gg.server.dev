@@ -16,16 +16,16 @@ public enum Mode implements Constant{
     private final Integer value;
     private final String code;
 
-    @JsonCreator
+    @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
     public static Mode getEnumValue(String value) {
         for(Mode e : values()) {
-            if(e.name().equals(value)) {
+            if(e.code.equals(value)) {
                 return e;
             }
             else if (e.code.toUpperCase(Locale.ROOT).equals(value.toUpperCase(Locale.ROOT)))
                 return e;
         }
-    return null;
+        return null;
     }
 
 }
