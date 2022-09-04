@@ -9,7 +9,9 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class GameUserInfoResponseDto {
-    Mode mode;
+    String mode;
+
+    Integer gameId;
 
     LocalDateTime startTime;
 
@@ -19,6 +21,7 @@ public class GameUserInfoResponseDto {
     public String toString() {
         return "GameUserInfoResponseDto{" +
                 "mode=" + mode +
+                ", gameId=" + gameId +
                 ", startTime=" + startTime +
                 ", myTeam=" + matchTeamsInfo.getMyTeam() +
                 ", enemyTeam=" + matchTeamsInfo.getEnemyTeam() +

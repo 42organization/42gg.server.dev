@@ -40,10 +40,12 @@ public class PChange extends BaseTimeEntity {
     private  Integer pppResult;
 
     @Setter
+//    @NotNull
     @Column(name = "exp_change")
     private Integer expChange;
 
     @Setter
+//    @NotNull
     @Column(name = "exp_result")
     private Integer expResult;
 

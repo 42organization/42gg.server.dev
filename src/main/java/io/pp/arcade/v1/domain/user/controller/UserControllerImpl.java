@@ -65,7 +65,7 @@ public class UserControllerImpl implements UserController {
         UserResponseDto responseDto = UserResponseDto.builder()
                 .intraId(user.getIntraId())
                 .userImageUri(user.getImageUri())
-                .mode(seasonMode)
+                .seasonMode(seasonMode.getCode())
                 .isAdmin(user.getRoleType() == RoleType.ADMIN)
                 .build();
         return responseDto;
@@ -113,7 +113,7 @@ public class UserControllerImpl implements UserController {
         RankUserDto rankDto;
         // 일단 게임타입은 SINGLE로 구현
 
-        if (season == null) {
+        if (season == 0) {
             season = seasonService.findCurrentSeason().getId();
         }
 
@@ -162,9 +162,10 @@ public class UserControllerImpl implements UserController {
      * */
     @Override
     @GetMapping(value = "/users/{userId}/historics")
-    public UserHistoricResponseDto userFindHistorics(String userId, Pageable pageable) {
-        PChangePageDto pChangePage = pChangeService.findPChangeByUserId(PChangeFindDto.builder()
+    public UserHistoricResponseDto userFindHistorics(String userId, Integer season, Pageable pageable) {
+        PChangePageDto pChangePage = pChangeService.findRankPChangeByUserId(PChangeFindDto.builder()
                 .userId(userId)
+                .season(season)
                 .pageable(pageable)
                 .build());
         List<PChangeDto> pChangeList = pChangePage.getPChangeList();
@@ -172,7 +173,7 @@ public class UserControllerImpl implements UserController {
         for (PChangeDto dto : pChangeList) {
             historicDtos.add(UserHistoricDto.builder()
                     .ppp(dto.getPppResult())
-                    .date(dto.getGame().getTime())
+                    .date(dto.getGame().getSlot().getTime())
                     .build());
         }
         UserHistoricResponseDto responseDto = UserHistoricResponseDto.builder()
@@ -219,8 +220,8 @@ public class UserControllerImpl implements UserController {
         NotiCountDto notiCount = notiService.countAllNByUser(NotiFindDto.builder().user(user).build());
         UserLiveInfoResponseDto userLiveInfoResponse = UserLiveInfoResponseDto.builder()
                 .notiCount(notiCount.getNotiCount())
-                .currentMatchMode(currentMatch == null ? null : currentMatch.getSlot().getMode()) // is it right to find mode in slot?
-                .seasonMode(seasonMode)
+                .currentMatchMode(currentMatch == null ? null : currentMatch.getSlot().getMode().getCode()) // is it right to find mode in slot?
+                .seasonMode(seasonMode.getCode())
                 .event(event)
                 .build();
         return userLiveInfoResponse;

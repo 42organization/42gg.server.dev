@@ -20,7 +20,7 @@ public class VipUserDto {
                 .rank(rank)
                 .statusMessage(user.getStatusMessage())
                 .level(ExpLevelCalculator.getLevel(user.getTotalExp() == null ? 0 : user.getTotalExp()))
-                .exp(ExpLevelCalculator.getCurrentLevelMyExp(user.getTotalExp() == null ? 0 : user.getTotalExp()))
+                .exp(user.getTotalExp() == null ? 0 : user.getTotalExp())
                 .build();
         return dto;
     }

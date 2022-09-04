@@ -9,8 +9,8 @@ import lombok.Getter;
 public class UserLiveInfoResponseDto { 
     Integer notiCount;
     String event;
-    Mode currentMatchMode;
-    Mode seasonMode;
+    String currentMatchMode;
+    String seasonMode;
 
     @Override
     public String toString() {
