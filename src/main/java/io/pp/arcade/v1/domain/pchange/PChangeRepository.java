@@ -33,7 +33,8 @@ public interface PChangeRepository extends JpaRepository<PChange, Integer> {
 
     Page<PChange> findAllByUser_IntraIdAndGame_ModeAndGameIdLessThanOrderByIdDesc(String intraId, Mode mode, Integer gameId, Pageable pageable);
 
-    Optional<PChange> findByUserAndGame(User user, Game game);
+//    @Query(nativeQuery = true, value = "SELECT * FROM pchange where game_id = :gameId AND user_id = :intraId")
+    Optional<PChange> findByUser_IntraIdAndGame_Id(@Param("intraId") String intraId, @Param("gameId")Integer gameId);
 
     Page<PChange> findAllByOrderByIdDesc(Pageable pageable);
 }
