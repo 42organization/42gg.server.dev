@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 public class GameResultUserPageRequestDto {
     private Integer gameId = Integer.MAX_VALUE;
-    private Integer count = 20;
+    private Integer count = 10;
     private Mode mode;
 
     public Integer getGameId() {
@@ -19,7 +19,7 @@ public class GameResultUserPageRequestDto {
         if (count > 100)
             count = 100;
         else if (count < 1)
-            count = 20;
+            count = 10;
         return count;
     }
 
