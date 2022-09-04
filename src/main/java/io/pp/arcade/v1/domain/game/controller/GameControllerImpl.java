@@ -77,7 +77,8 @@ public class GameControllerImpl implements GameController {
         GameUserInfoResponseDto gameUserInfoResponseDto = GameUserInfoResponseDto.builder()
                 .matchTeamsInfo(MatchTeamsInfoDto.builder().myTeam(matchUsers.getMyTeam())
                         .enemyTeam(matchUsers.getEnemyTeam()).build())
-                .mode(slot.getMode())
+                .mode(slot.getMode().getCode())
+                .gameId(currentMatch.getGame().getId())
                 .startTime(slot.getTime())
                 .build();
         return gameUserInfoResponseDto;
@@ -152,9 +153,10 @@ public class GameControllerImpl implements GameController {
         PChangeFindDto findDto = PChangeFindDto.builder()
                 .userId(intraId)
                 .gameId(requestDto.getGameId())
+                .mode(requestDto.getMode())
                 .pageable(pageable)
                 .build();
-        PChangePageDto pChangePageDto = pChangeService.findPChangeByUserIdAfterGameId(findDto);
+        PChangePageDto pChangePageDto = pChangeService.findPChangeByUserIdAfterGameIdAndGameMode(findDto);
         List<PChangeDto> pChangeLists = pChangePageDto.getPChangeList();
         List<GameDto> gameLists = pChangeLists.stream().map(PChangeDto::getGame).collect(Collectors.toList());;
         List<GameResultDto> gameResultList = new ArrayList<>();

@@ -38,6 +38,7 @@ public class Game {
     private StatusType status;
 
     @Setter
+//    @NotNull
     @Column(name = "mode")
     private Mode mode;
 

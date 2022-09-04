@@ -15,6 +15,7 @@ public enum StatusType implements Constant{
 
     private final Integer value;
     private final String code;
+
     @JsonCreator
     public static StatusType getEnumFromValue(String value) {
         for(StatusType e : values()) {

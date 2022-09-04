@@ -19,6 +19,7 @@ spring:
         show_sql: true
         format_sql: false
         use_sql_comments: false
+    open-in-view: false
 
   security:
     oauth2.client:

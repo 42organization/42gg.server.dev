@@ -14,6 +14,8 @@ import io.pp.arcade.v1.domain.team.Team;
 import io.pp.arcade.v1.domain.team.TeamRepository;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.domain.user.UserRepository;
+import io.pp.arcade.v1.global.type.GameType;
+import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.type.StatusType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,7 @@ import java.time.LocalDateTime;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -95,6 +98,7 @@ class CurrentMatchControllerImplTest {
                 .game(game)
                 .matchImminent(m)
                 .isMatched(ism)
+                .isDel(false)
                 .build());
     }
 
@@ -158,18 +162,21 @@ class CurrentMatchControllerImplTest {
         mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[1].getAccessToken()))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isMatched").value(false))
+                .andExpect(jsonPath("$.slotId").isNotEmpty())
                 .andDo(document("current-match-info-standby-not-Imminent"));
 
         // 해당 유저가 예약된 경기가 있으며 5분전일 때, 매치가 성사되지 않을 경우
         // 유저 : user2
         // 슬롯 : slotList.get(1)
         team1 = Team.builder().teamPpp(100).headCount(1).score(0).build();
-        team2 = Team.builder().teamPpp(100).headCount(0).score(0).build();
+        team2 = Team.builder().teamPpp(100).headCount(1).score(0).build();
         saveTeam(team1);
         saveTeam(team2);
-        slot = Slot.builder().tableId(1).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
+        slot = Slot.builder().tableId(1).headCount(2).time(LocalDateTime.now().plusDays(1)).build();
         slot = saveSlot(slot);
         currentMatchSave(null, slot, user2, true, false);
+
         mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
                 .andExpect(status().isOk())
@@ -178,11 +185,11 @@ class CurrentMatchControllerImplTest {
         // 해당 유저가 예약된 경기가 있으며 5분전일 때, 매치가 성사된 경우
         // 유저 : user3
         // 슬롯 : slot
-        team1 = Team.builder().teamPpp(100).headCount(2).score(0).build();
-        team2 = Team.builder().teamPpp(100).headCount(2).score(0).build();
+        team1 = Team.builder().teamPpp(100).headCount(1).score(0).build();
+        team2 = Team.builder().teamPpp(100).headCount(1).score(0).build();
         saveTeam(team1);
         saveTeam(team2);
-        slot = Slot.builder().tableId(1).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
+        slot = Slot.builder().tableId(1).headCount(2).time(LocalDateTime.now().plusDays(1)).mode(Mode.RANK).type(GameType.SINGLE).build();
         slotTeamUserRepository.save(SlotTeamUser.builder().slot(slot).team(team1).user(user3).build());
         slotTeamUserRepository.save(SlotTeamUser.builder().slot(slot).team(team2).user(user4).build());
         slot = saveSlot(slot);
@@ -200,7 +207,7 @@ class CurrentMatchControllerImplTest {
         team2 = Team.builder().teamPpp(100).headCount(2).score(0).build();
         saveTeam(team1);
         saveTeam(team2);
-        slot = Slot.builder().tableId(1).headCount(4).time(LocalDateTime.now().plusDays(1)).build();
+        slot = Slot.builder().tableId(1).headCount(4).time(LocalDateTime.now().plusDays(1)).mode(Mode.NORMAL).type(GameType.DOUBLE).build();
         slot = saveSlot(slot);
         Game game = Game.builder().season(1).slot(slot).status(StatusType.LIVE).build();
         game = saveGame(game);
@@ -209,6 +216,9 @@ class CurrentMatchControllerImplTest {
         saveSlotTeamUser(slot, team1, user6);
         saveSlotTeamUser(slot, team2, user7);
         currentMatchSave(game, slot, user4, true, true);
+        currentMatchSave(game, slot, user5, true, true);
+        currentMatchSave(game, slot, user6, true, true);
+        currentMatchSave(game, slot, user7, true, true);
         mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[4].getAccessToken()))
                 .andExpect(status().isOk())

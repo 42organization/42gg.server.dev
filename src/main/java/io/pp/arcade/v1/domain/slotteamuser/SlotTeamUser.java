@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -18,14 +19,17 @@ public class SlotTeamUser extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer teamUserId;
 
+//    @NotNull
     @ManyToOne
     @JoinColumn(name = "team_id")
     private Team team;
 
+    //    @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
+    //    @NotNull
     @ManyToOne
     @JoinColumn(name = "slot_id")
     private Slot slot;
