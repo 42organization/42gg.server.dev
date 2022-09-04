@@ -1,5 +1,6 @@
 package io.pp.arcade.v1.domain.admin.dto.create;
 
+import io.pp.arcade.v1.global.type.Mode;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -10,4 +11,5 @@ public class SeasonCreateRequestDto {
     private LocalDateTime startTime;
     private Integer startPpp;
     private Integer pppGap;
+    private Mode seasonMode;
 }
