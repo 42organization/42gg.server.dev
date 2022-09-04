@@ -53,7 +53,6 @@ public class UserControllerImpl implements UserController {
     private final SeasonService seasonService;
     private final GameGenerator gameGenerator;
     private final CurrentMatchUpdater currentMatchUpdater;
-    private final Mode seasonMode = Mode.NORMAL;
     /*
      * [메인 페이지]
      * - 유저 정보 조회
@@ -62,10 +61,11 @@ public class UserControllerImpl implements UserController {
     @GetMapping(value = "/users")
     public UserResponseDto userFind(HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        SeasonDto season = seasonService.findCurrentSeason();
         UserResponseDto responseDto = UserResponseDto.builder()
                 .intraId(user.getIntraId())
                 .userImageUri(user.getImageUri())
-                .seasonMode(seasonMode.getCode())
+                .seasonMode(season.getSeasonMode().getCode())
                 .isAdmin(user.getRoleType() == RoleType.ADMIN)
                 .build();
         return responseDto;
@@ -165,7 +165,7 @@ public class UserControllerImpl implements UserController {
     public UserHistoricResponseDto userFindHistorics(String userId, Integer season, Pageable pageable) {
         PChangePageDto pChangePage = pChangeService.findRankPChangeByUserId(PChangeFindDto.builder()
                 .userId(userId)
-                .season(season)
+                .season(season == 0 ? seasonService.findLatestRankSeason().getId() : season)
                 .pageable(pageable)
                 .build());
         List<PChangeDto> pChangeList = pChangePage.getPChangeList();
@@ -212,6 +212,7 @@ public class UserControllerImpl implements UserController {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByIntraId(user.getIntraId());
         GameDto currentMatchGame = currentMatch == null ? null : currentMatch.getGame();
+        SeasonDto season = seasonService.findCurrentSeason();
         String event = currentMatch == null ? null : "match";
         doubleCheckForSchedulers(currentMatch);
         if ("match".equals(event) && currentMatch.getGame() != null) {
@@ -221,7 +222,7 @@ public class UserControllerImpl implements UserController {
         UserLiveInfoResponseDto userLiveInfoResponse = UserLiveInfoResponseDto.builder()
                 .notiCount(notiCount.getNotiCount())
                 .currentMatchMode(currentMatch == null ? null : currentMatch.getSlot().getMode().getCode()) // is it right to find mode in slot?
-                .seasonMode(seasonMode.getCode())
+                .seasonMode(season.getSeasonMode().getCode())
                 .event(event)
                 .build();
         return userLiveInfoResponse;

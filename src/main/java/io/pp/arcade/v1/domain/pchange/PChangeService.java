@@ -91,7 +91,7 @@ public class PChangeService {
         Integer gameId = findDto.getGameId() == null ? Integer.MAX_VALUE : findDto.getGameId();
         Integer mode = findDto.getMode() == null ? null : findDto.getMode().getValue();
 
-        Page<PChange> pChangePage = pChangeRepository.findPChangesByGameModeAndUser(mode, findDto.getUserId(), gameId, findDto.getPageable());
+        Page<PChange> pChangePage = pChangeRepository.findPChangesByGameModeAndUser(findDto.getSeason(), mode, findDto.getUserId(), gameId, findDto.getPageable());
         PChangePageDto dto = PChangePageDto.builder()
                 .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()))
                 .totalPage(pChangePage.getTotalPages())

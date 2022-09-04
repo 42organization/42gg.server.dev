@@ -106,7 +106,8 @@ function js_request_season_post(form) {
         "seasonName": season_name,
         "startTime": start_time,
         "startPpp": start_ppp,
-        "pppGap": ppp_gap
+        "pppGap": ppp_gap,
+        "seasonMode": season_mode
     };
     $.ajax({
         url: `${url}`,

@@ -149,7 +149,7 @@ public class TestInitiator {
         teams[34] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[17]).headCount(0).score(0).build());
         teams[35] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[17]).headCount(0).score(0).build());
 
-        testSeason = seasonRepository.save(Season.builder().seasonName("Test").startTime(LocalDateTime.now().minusYears(1)).endTime(LocalDateTime.now().plusYears(1)).startPpp(1000).pppGap(150).build());
+        testSeason = seasonRepository.save(Season.builder().seasonName("Test").startTime(LocalDateTime.now().minusYears(1)).endTime(LocalDateTime.now().plusYears(1)).startPpp(1000).pppGap(150).seasonMode(Mode.NORMAL).build());
     }
 
     private String getUserKey(String intraId, GameType gameType) {

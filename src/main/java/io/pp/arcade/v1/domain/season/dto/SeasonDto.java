@@ -1,6 +1,7 @@
 package io.pp.arcade.v1.domain.season.dto;
 
 import io.pp.arcade.v1.domain.season.Season;
+import io.pp.arcade.v1.global.type.Mode;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,6 +16,7 @@ public class SeasonDto {
     private LocalDateTime endTime;
     private Integer startPpp;
     private Integer pppGap;
+    private Mode seasonMode;
 
     public static SeasonDto from(Season season) {
         return SeasonDto.builder()
@@ -24,6 +26,7 @@ public class SeasonDto {
                 .endTime(season.getEndTime())
                 .startPpp(season.getStartPpp())
                 .pppGap(season.getPppGap())
+                .seasonMode(season.getSeasonMode())
                 .build();
     }
 
@@ -36,6 +39,7 @@ public class SeasonDto {
                 ", endTime=" + endTime +
                 ", startPpp=" + startPpp +
                 ", pppGap=" + pppGap +
+                ", seasonMode=" + seasonMode +
                 '}';
     }
 }
