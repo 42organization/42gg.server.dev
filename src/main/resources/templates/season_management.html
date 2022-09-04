@@ -13,7 +13,7 @@
                     <div class="">
                         <div class="page-title">
                             <div class="title_left">
-                                <h3>댓글 관리</h3>
+                                <h3>시즌 관리</h3>
                             </div>
                             <div class="title_right">
                                 <div class="col-md-5 col-sm-5   form-group pull-right top_search">
@@ -53,6 +53,7 @@
                                                     <th class="column-title">시즌 끝</th>
                                                     <th class="column-title">탁구력 초기값</th>
                                                     <th class="column-title">탁구력 격차</th>
+                                                    <th class="column-title">모드</th>
                                                     <th class="column-title"></th>
                                                     </th>
                                                 </tr>
@@ -75,6 +76,9 @@
                                                         </td>
                                                         <td class=" ">
                                                             <input type="text" name="pppGap" id="ppp_gap">
+                                                        </td>
+                                                        <td class=" ">
+                                                            <input type="text" name="seasonMode" id="season_mode">
                                                         </td>
                                                         <td>
                                                             <input type="submit" value="생성"
@@ -111,6 +115,7 @@
                                                     <th class="column-title">시즌 끝</th>
                                                     <th class="column-title">탁구력 초기값</th>
                                                     <th class="column-title">탁구력 격차</th>
+                                                    <th class="column-title">모드</th>
                                                     <th class="column-title"></th>
                                                     <th class="column-title"></th>
                                                     </th>
@@ -135,6 +140,7 @@
                                                             <input type="text" name="pppGap" id="ppp_gap"
                                                                    th:value="${season.getPppGap()}">
                                                         </td>
+                                                        <td class=" " th:text="${season.getSeasonMode()}"></td>
                                                         <td>
                                                             <input type="submit" value="수정"
                                                                    th:onclick='js_request_season_put(this.form)'>

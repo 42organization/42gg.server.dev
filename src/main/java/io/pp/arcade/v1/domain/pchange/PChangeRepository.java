@@ -25,9 +25,9 @@ public interface PChangeRepository extends JpaRepository<PChange, Integer> {
 
     Page<PChange> findAllByUserAndGameIdLessThanOrderByIdDesc(User user, Integer gameId, Pageable pageable);
 
-    @Query(nativeQuery = true, value = "SELECT * FROM pchange where game_id in (SELECT id FROM game where id < :gameId AND mode like if(:mode is NULL, '%', :mode)) AND user_id = :intraId ORDER BY id Desc"
+    @Query(nativeQuery = true, value = "SELECT * FROM pchange where game_id in (SELECT id FROM game where season like if(:season is NULL, '%', :season) and id < :gameId AND mode like if(:mode is NULL, '%', :mode)) AND user_id = :intraId ORDER BY id Desc"
     ,countQuery = "SELECT count(*) FROM pchange")
-    Page<PChange> findPChangesByGameModeAndUser(@Param("mode") Integer mode, @Param("intraId") String intraId, @Param("gameId") Integer gameId, Pageable pageable);
+    Page<PChange> findPChangesByGameModeAndUser(@Param("season") Integer season, @Param("mode") Integer mode, @Param("intraId") String intraId, @Param("gameId") Integer gameId, Pageable pageable);
 
     Page<PChange> findPChangesByGame_ModeAndUser_IntraIdAndGameIdLessThanOrderByIdDesc(Mode mode, String intraId, Integer gameId, Pageable pageable);
 

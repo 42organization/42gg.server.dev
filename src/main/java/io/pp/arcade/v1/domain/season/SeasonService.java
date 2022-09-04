@@ -6,6 +6,7 @@ import io.pp.arcade.v1.domain.season.dto.SeasonDeleteDto;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.domain.season.dto.SeasonNameDto;
 import io.pp.arcade.v1.global.exception.BusinessException;
+import io.pp.arcade.v1.global.type.Mode;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +34,8 @@ public class SeasonService {
                 .startTime(createDto.getStartTime())
                 .endTime(LocalDateTime.of(9999, 12, 31, 23, 59, 59))
                 .startPpp(createDto.getStartPpp())
-                .pppGap(createDto.getPppGap()).build();
+                .pppGap(createDto.getPppGap())
+                .seasonMode(createDto.getSeasonMode()).build();
         seasonRepository.save(season);
     }
 
@@ -50,6 +52,12 @@ public class SeasonService {
         Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElse(null);
         if (season == null)
             return SeasonDto.builder().seasonName("1").id(1).build();
+        return SeasonDto.from(season);
+    }
+
+    @Transactional
+    public SeasonDto findLatestRankSeason() {
+        Season season = seasonRepository.findFirstBySeasonModeOrderByIdDesc(Mode.RANK).orElseThrow(() -> new BusinessException("E0001"));
         return SeasonDto.from(season);
     }
 
@@ -72,6 +80,19 @@ public class SeasonService {
         }
         return dtoList;
     }
+
+    @Transactional
+    public List<SeasonNameDto> findAllRankSeason() {
+        List<Season> seasons =  seasonRepository.findAllBySeasonMode(Mode.RANK);
+        List<SeasonNameDto> dtoList = new ArrayList<>();
+
+        for (Season season : seasons) {
+            SeasonNameDto dto = SeasonNameDto.builder().id(season.getId()).name(season.getSeasonName()).build();
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
+
 
     @Transactional
     public List<SeasonDto> findSeasonsByAdmin(Pageable pageable) {

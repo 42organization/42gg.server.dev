@@ -19,8 +19,8 @@ public class SeasonController {
     private final SeasonService seasonService;
 
     @GetMapping(value = "/seasonlist")
-    public SeasonListResponseDto getSeasonList(HttpServletRequest request) {
-        List<SeasonNameDto> seasons = seasonService.findAllSeason();
+    public SeasonListResponseDto getRankSeasonList(HttpServletRequest request) {
+        List<SeasonNameDto> seasons = seasonService.findAllRankSeason();
 
         SeasonListResponseDto responseDto = SeasonListResponseDto.builder().seasonList(seasons).build();
         return responseDto;

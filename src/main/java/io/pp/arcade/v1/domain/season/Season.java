@@ -1,5 +1,6 @@
 package io.pp.arcade.v1.domain.season;
 
+import io.pp.arcade.v1.global.type.Mode;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,12 +41,18 @@ public class Season {
     @Column(name = "ppp_gap")
     private Integer pppGap;
 
+//    @NotNull
+    @Setter
+    @Column(name = "season_mode")
+    private Mode seasonMode;
+
     @Builder
-    public Season(String seasonName, LocalDateTime startTime, LocalDateTime endTime, Integer startPpp, Integer pppGap) {
+    public Season(String seasonName, LocalDateTime startTime, LocalDateTime endTime, Integer startPpp, Integer pppGap, Mode seasonMode) {
         this.seasonName = seasonName;
         this.startTime = startTime;
         this.endTime = endTime;
         this.startPpp = startPpp;
         this.pppGap = pppGap;
+        this.seasonMode = seasonMode;
     }
 }
