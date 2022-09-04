@@ -120,7 +120,7 @@ class UserControllerTest {
                 .tableId(1)
                 .time(LocalDateTime.now().plusDays(1))
                 .gamePpp(50)
-                .mode(Mode.NORMAL)
+                .mode(Mode.RANK)
                 .build());
         Team team1 = teamRepository.save(Team.builder().teamPpp(0)
                 .headCount(1).score(0).slot(slot).build());
@@ -165,10 +165,10 @@ class UserControllerTest {
                 .tableId(1)
                 .time(LocalDateTime.now().plusDays(1))
                 .gamePpp(50)
-                .mode(Mode.NORMAL)
+                .mode(Mode.RANK)
                 .build());
-        slotTeamUserRepository.save(SlotTeamUser.builder().slot(slot2).team(team3).user(users[1]).build());
-        slotTeamUserRepository.save(SlotTeamUser.builder().slot(slot2).team(team4).user(users[2]).build());
+        slotTeamUserRepository.save(SlotTeamUser.builder().slot(slot2).team(team3).user(users[0]).build());
+        slotTeamUserRepository.save(SlotTeamUser.builder().slot(slot2).team(team4).user(users[1]).build());
         gameRepository.save(Game.builder().slot(slot2).season(1).status(StatusType.END).mode(slot2.getMode()).build());
         gameRepository.save(Game.builder().slot(slot2).season(1).status(StatusType.LIVE).mode(slot2.getMode()).build());
 
@@ -177,6 +177,8 @@ class UserControllerTest {
                 .user(users[0])
                 .pppChange(4)
                 .pppResult(6 + users[0].getPpp())
+                .expChange(0)
+                .expResult(0)
                 .build());
     }
 
@@ -274,8 +276,8 @@ class UserControllerTest {
         mockMvc.perform(get("/pingpong/users/" + user.getIntraId() +"/historics").contentType(MediaType.APPLICATION_JSON)
                         .param("season","1")
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-//                .andExpect(jsonPath("$.historics[0]..ppp").value(userPchange.getPppResult()))
-//                .andExpect(jsonPath("$.historics[0]..date").value(gameDate))
+                .andExpect(jsonPath("$.historics[0].ppp").value(userPchange.getPppResult()))
+                .andExpect(jsonPath("$.historics[0].date").value(gameDate))
                 .andExpect(status().isOk())
                 .andDo(document("user-find-historics"));
     }

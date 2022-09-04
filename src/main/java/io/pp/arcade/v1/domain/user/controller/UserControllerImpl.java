@@ -173,7 +173,7 @@ public class UserControllerImpl implements UserController {
         for (PChangeDto dto : pChangeList) {
             historicDtos.add(UserHistoricDto.builder()
                     .ppp(dto.getPppResult())
-                    .date(dto.getGame().getTime())
+                    .date(dto.getGame().getSlot().getTime())
                     .build());
         }
         UserHistoricResponseDto responseDto = UserHistoricResponseDto.builder()
