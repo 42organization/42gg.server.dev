@@ -12,6 +12,7 @@ import java.util.Optional;
 public interface SeasonRepository extends JpaRepository <Season, Integer> {
     Optional<Season> findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(LocalDateTime startTime, LocalDateTime endTime);
     Optional<Season> findFirstByOrderByIdDesc();
+    Optional<Season> findFirstBySeasonModeOrderByIdDesc(Mode seasonMode);
     List<Season> findAllBySeasonMode(Mode mode);
     Page<Season> findAllByOrderByIdDesc(Pageable pageable);
 }

@@ -165,7 +165,7 @@ public class UserControllerImpl implements UserController {
     public UserHistoricResponseDto userFindHistorics(String userId, Integer season, Pageable pageable) {
         PChangePageDto pChangePage = pChangeService.findRankPChangeByUserId(PChangeFindDto.builder()
                 .userId(userId)
-                .season(season)
+                .season(season == 0 ? seasonService.findLatestRankSeason().getId() : season)
                 .pageable(pageable)
                 .build());
         List<PChangeDto> pChangeList = pChangePage.getPChangeList();

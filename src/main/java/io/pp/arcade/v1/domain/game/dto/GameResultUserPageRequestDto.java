@@ -9,6 +9,7 @@ import lombok.Setter;
 public class GameResultUserPageRequestDto {
     private Integer gameId = Integer.MAX_VALUE;
     private Integer count = 10;
+    private Integer season;
     private Mode mode;
 
     public Integer getGameId() {
@@ -23,11 +24,18 @@ public class GameResultUserPageRequestDto {
         return count;
     }
 
+    public Integer getSeason() {
+        if (season != null && season < 0)
+            return 0;
+        return season;
+    }
+
     @Override
     public String toString() {
         return "GameResultUserPageRequestDto{" +
                 "gameId=" + gameId +
                 ", count=" + count +
+                ", season=" + season +
                 ", mode=" + mode +
                 '}';
     }

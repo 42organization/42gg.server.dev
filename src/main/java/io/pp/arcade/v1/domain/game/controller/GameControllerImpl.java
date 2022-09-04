@@ -18,6 +18,7 @@ import io.pp.arcade.v1.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.v1.domain.rank.service.RankRedisService;
 import io.pp.arcade.v1.domain.season.SeasonService;
+import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.domain.security.jwt.TokenService;
 import io.pp.arcade.v1.domain.slot.dto.SlotDto;
 import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUserService;
@@ -150,9 +151,17 @@ public class GameControllerImpl implements GameController {
          */
         tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         Pageable pageable = PageRequest.of(0, requestDto.getCount());
+        SeasonDto season;
+        if (requestDto.getSeason() != null) {
+            season = requestDto.getSeason() == 0 ? seasonService.findLatestRankSeason() : seasonService.findSeasonById(requestDto.getSeason());
+        } else {
+            season = null;
+        }
+
         PChangeFindDto findDto = PChangeFindDto.builder()
                 .userId(intraId)
                 .gameId(requestDto.getGameId())
+                .season(season == null ? null : season.getId())
                 .mode(requestDto.getMode())
                 .pageable(pageable)
                 .build();
