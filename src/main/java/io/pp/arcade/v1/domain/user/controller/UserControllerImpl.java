@@ -163,8 +163,9 @@ public class UserControllerImpl implements UserController {
     @Override
     @GetMapping(value = "/users/{userId}/historics")
     public UserHistoricResponseDto userFindHistorics(String userId, Integer season, Pageable pageable) {
+        UserDto user = userService.findByIntraId(UserFindDto.builder().intraId(userId).build());
         PChangePageDto pChangePage = pChangeService.findRankPChangeByUserId(PChangeFindDto.builder()
-                .userId(userId)
+                .user(user)
                 .season(season == 0 ? seasonService.findLatestRankSeason().getId() : season)
                 .pageable(pageable)
                 .build());
@@ -262,8 +263,8 @@ public class UserControllerImpl implements UserController {
     }
 
     private UserRivalRecordDto getRivalRecord(UserDto curUser, UserDto targetUser) {
-        List<PChangeDto> curUserPChanges = pChangeService.findPChangeByUserIdNotPage(PChangeFindDto.builder().userId(curUser.getIntraId()).build());
-        List<PChangeDto> targetUserPChanges = pChangeService.findPChangeByUserIdNotPage(PChangeFindDto.builder().userId(targetUser.getIntraId()).build());
+        List<PChangeDto> curUserPChanges = pChangeService.findPChangeByUserIdNotPage(PChangeFindDto.builder().user(curUser).build());
+        List<PChangeDto> targetUserPChanges = pChangeService.findPChangeByUserIdNotPage(PChangeFindDto.builder().user(targetUser).build());
         Integer curUserWin = 0;
         Integer tarGetUserWin = 0;
         for (PChangeDto curUsers : curUserPChanges) {
