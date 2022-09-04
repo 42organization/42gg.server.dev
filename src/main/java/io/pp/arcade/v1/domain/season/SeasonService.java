@@ -56,6 +56,12 @@ public class SeasonService {
     }
 
     @Transactional
+    public SeasonDto findLatestRankSeason() {
+        Season season = seasonRepository.findFirstBySeasonModeOrderByIdDesc(Mode.RANK).orElseThrow(() -> new BusinessException("E0001"));
+        return SeasonDto.from(season);
+    }
+
+    @Transactional
     public SeasonDto findSeasonById(Integer seasonId) {
         Season season = seasonRepository.findById(seasonId).orElseThrow(() -> new BusinessException("E0001"));
         if (season == null)
