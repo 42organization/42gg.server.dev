@@ -139,10 +139,13 @@ public class GameControllerImplV1 {
         GameDto game = currentMatch.getGame();
         if (game == null) {
             throw new BusinessException("E0001");
+        } else if (game.getStatus() == StatusType.END) {
+            currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder().userId(user.getId()).game(game).build());
+            throw new ResponseStatusException(HttpStatus.CREATED, "");
         }
 
         currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder().userId(user.getId()).game(game).build());
-        gameManager.modifyUserExp(user, game);
+        gameManager.modifyUserExp(game);
         gameService.modifyGameStatus(GameModifyStatusDto.builder().gameId(game.getId()).status(StatusType.END).build());
 
         throw new ResponseStatusException(HttpStatus.CREATED, "");
