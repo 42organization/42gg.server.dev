@@ -133,20 +133,25 @@ public class GameManager {
         });
     }
 
-    public void modifyUserExp(UserDto user, GameDto game) {
-        Integer gamePerDay = redisTemplate.opsForValue().get(Key.GAME_PER_DAY + user.getIntraId());
-        gamePerDay = gamePerDay != null ? gamePerDay : 0;
+    public void modifyUserExp(GameDto game) {
+        List<SlotTeamUserDto> slotTeamUsers = slotTeamUserService.findAllBySlotId(game.getSlot().getId());
 
-        if (gamePerDay == 0) {
-            redisTemplate.opsForValue().set(Key.GAME_PER_DAY + user.getIntraId(), 1, 3, TimeUnit.HOURS);
-        } else {
-            redisTemplate.opsForValue().increment(Key.GAME_PER_DAY + user.getIntraId());
+        for (SlotTeamUserDto slotTeamUser : slotTeamUsers) {
+            UserDto user = slotTeamUser.getUser();
+            Integer gamePerDay = redisTemplate.opsForValue().get(Key.GAME_PER_DAY + user.getIntraId());
+            gamePerDay = gamePerDay != null ? gamePerDay : 0;
+
+            if (gamePerDay == 0) {
+                redisTemplate.opsForValue().set(Key.GAME_PER_DAY + user.getIntraId(), 1, 3, TimeUnit.HOURS);
+            } else {
+                redisTemplate.opsForValue().increment(Key.GAME_PER_DAY + user.getIntraId());
+            }
+
+            Integer expChange = ExpLevelCalculator.getExpPerGame() + ExpLevelCalculator.getExpBonus() * gamePerDay;
+
+            pChangeService.addPChange(PChangeAddDto.builder().gameId(game.getId()).userId(user.getId()).expChange(expChange).expResult(user.getTotalExp() + expChange).build());
+            userService.modifyUserExp(UserModifyExpDto.builder().userId(user.getId()).exp(expChange).build());
         }
-
-        Integer expChange = ExpLevelCalculator.getExpPerGame() + ExpLevelCalculator.getExpBonus() * gamePerDay;
-
-        pChangeService.addPChange(PChangeAddDto.builder().gameId(game.getId()).userId(user.getId()).expChange(expChange).expResult(user.getTotalExp() + expChange).build());
-        userService.modifyUserExp(UserModifyExpDto.builder().userId(user.getId()).exp(expChange).build());
     }
 
     public CurrentMatchDto checkIfCurrentMatchExist(UserDto user) {
