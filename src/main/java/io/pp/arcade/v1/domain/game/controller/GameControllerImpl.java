@@ -15,6 +15,7 @@ import io.pp.arcade.v1.domain.noti.dto.NotiAddDto;
 import io.pp.arcade.v1.domain.pchange.PChangeService;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeFindDto;
+import io.pp.arcade.v1.domain.pchange.dto.PChangeListFindDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.v1.domain.rank.service.RankRedisService;
 import io.pp.arcade.v1.domain.season.SeasonService;
@@ -103,7 +104,7 @@ public class GameControllerImpl implements GameController {
         slotTeamUsers = slotTeamUserService.findAllBySlotId(currentMatch.getSlot().getId());
         // figuring out team number for myteam and enemyteam
         // modify users with game result
-        gameManager.modifyUserExp(user, game);
+        gameManager.modifyUserExp(game);
         gameManager.endGameStatus(game);
         // checkEvent(game);
         // modify users' ranks with game result
@@ -149,21 +150,18 @@ public class GameControllerImpl implements GameController {
          * 2. 얘네를 바탕으로 게임을 다 긁어온다.
          * 3. 얘네를 DTO로 만들어준다
          */
-        tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        Pageable pageable = PageRequest.of(0, requestDto.getCount());
-        SeasonDto season;
-        if (requestDto.getSeason() != null) {
-            season = requestDto.getSeason() == 0 ? seasonService.findLatestRankSeason() : seasonService.findSeasonById(requestDto.getSeason());
-        } else {
-            season = null;
+        Integer season = requestDto.getSeason();
+        if (season != null && season == 0) {
+            season = seasonService.findLatestRankSeason().getId();
         }
 
-        PChangeFindDto findDto = PChangeFindDto.builder()
-                .userId(intraId)
+        Pageable pageable = PageRequest.of(0, requestDto.getCount());
+        PChangeListFindDto findDto = PChangeListFindDto.builder()
+                .intraId(intraId)
                 .gameId(requestDto.getGameId())
-                .season(season == null ? null : season.getId())
+                .season(season)
                 .mode(requestDto.getMode())
-                .pageable(pageable)
+                .count(requestDto.getCount())
                 .build();
         PChangePageDto pChangePageDto = pChangeService.findPChangeByUserIdAfterGameIdAndGameMode(findDto);
         List<PChangeDto> pChangeLists = pChangePageDto.getPChangeList();
@@ -182,8 +180,8 @@ public class GameControllerImpl implements GameController {
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
                 .lastGameId(lastGameId)
-                .totalPage(pChangePageDto.getTotalPage())
-                .currentPage(pChangePageDto.getCurrentPage() + 1)
+//                .totalPage(pChangePageDto.getTotalPage())
+//                .currentPage(pChangePageDto.getCurrentPage() + 1)
                 .build();
         return gameResultResponse;
     }

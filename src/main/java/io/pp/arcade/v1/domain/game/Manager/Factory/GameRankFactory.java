@@ -14,6 +14,7 @@ import io.pp.arcade.v1.domain.rank.dto.RankUserDto;
 import io.pp.arcade.v1.domain.rank.service.RankRedisService;
 import io.pp.arcade.v1.domain.slotteamuser.dto.SlotTeamUserDto;
 import io.pp.arcade.v1.domain.team.dto.TeamDto;
+import io.pp.arcade.v1.global.type.StatusType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -35,9 +36,9 @@ public class GameRankFactory implements GameFactory{
         RankUserDto rankUserDto = rankRedisService.findRankById(RankFindDto.builder()
                 .gameType(gameDto.getSlot().getType())
                 .intraId(slotTeamUser.getUser().getIntraId()).build());
-        PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder()
-                .gameId(gameDto.getId())
-                .userId(slotTeamUser.getUser().getIntraId()).build());
+        PChangeDto pChangeDto = gameDto.getStatus() == StatusType.END ?
+                pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().game(gameDto).user(slotTeamUser.getUser()).build())
+                : PChangeDto.builder().user(slotTeamUser.getUser()).game(gameDto).pppChange(0).pppResult(0).expChange(0).expResult(0).build();
         gamePlayerDto = GamePlayerRank.builder()
                 .intraId(slotTeamUser.getUser().getIntraId())
                 .userImageUri(slotTeamUser.getUser().getImageUri())

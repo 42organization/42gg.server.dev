@@ -7,10 +7,10 @@ import lombok.Getter;
 @Getter
 @Builder
 public class GameExpResultResponseDto {
-    private Integer currentExp;
-    private Integer maxExp;
-    private Integer currentLevel;
+    private Integer beforeExp;
+    private Integer beforeMaxExp;
+    private Integer beforeLevel;
     private Integer increasedExp;
     private Integer increasedLevel;
-    private Integer expRate;
+    private Integer afterMaxExp;
 }
