@@ -82,7 +82,7 @@ public class GameService {
     public GameResultListDto v1_findGamesAfterId(GameFindDto findDto) {
         Integer mode = (findDto.getMode() == null) ? null : findDto.getMode().getValue();
         Integer status = (findDto.getStatus() == null) ? null : findDto.getStatus().getValue();
-        ArrayList<Game> games = new ArrayList<>(gameRepository.findGameListOrderByIdDesc(findDto.getSeasonId(), findDto.getId(), mode, status, findDto.getCount() + 1));
+        List<Game> games = gameRepository.findGameListOrderByIdDesc(findDto.getSeasonId(), findDto.getId(), mode, status, findDto.getCount() + 1);
         if (games.size() == findDto.getCount() + 1)
             games.remove(games.size() - 1);
         List<GameDto> gameDtoList = games.stream().map(GameDto::from).collect(Collectors.toList());
