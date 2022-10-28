@@ -18,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,25 +60,9 @@ public class PChangeService {
     @Transactional
     public PChangePageDto findRankPChangeByUserId(PChangeFindDto findDto){
 //        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
-        Page<PChange> pChangePage = pChangeRepository.findPChangeHistory(findDto.getUser().getIntraId(), findDto.getSeason(), Mode.RANK.getValue(), findDto.getPageable());
-        PChangePageDto dto = PChangePageDto.builder()
-                .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()).stream().sorted(Comparator.comparing(PChangeDto::getId)).collect(Collectors.toList()))
-//                .totalPage(pChangePage.getTotalPages())
-//                .currentPage(pChangePage.getPageable().getPageNumber())
-                .build();
-        return dto;
-    }
-
-    @Transactional
-    public PChangePageDto findPChangeByUserIdAfterGameId(PChangeFindDto findDto){
-        User user = userRepository.findByIntraId(findDto.getUser().getIntraId()).orElseThrow(() -> new BusinessException("E0001"));
-        Integer gameId = findDto.getGame() == null ? Integer.MAX_VALUE : findDto.getGame().getId();
-
-        Page<PChange> pChangePage = pChangeRepository.findAllByUserAndGameIdLessThanOrderByIdDesc(user, gameId, findDto.getPageable());
+        List<PChange> pChangePage = pChangeRepository.findPChangeHistory(findDto.getUser().getIntraId(), findDto.getSeason(), Mode.RANK.getValue(), findDto.getCount());
         PChangePageDto dto = PChangePageDto.builder()
                 .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()))
-                .totalPage(pChangePage.getTotalPages())
-                .currentPage(pChangePage.getPageable().getPageNumber())
                 .build();
         return dto;
     }
@@ -99,8 +82,6 @@ public class PChangeService {
 
     @Transactional
     public PChangeDto findPChangeByUserAndGame(PChangeFindDto findDto) {
-//        Game game = gameRepository.findById(findDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
-//        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         PChange pChange = pChangeRepository.findByUser_IntraIdAndGame_Id(findDto.getUser().getIntraId(), findDto.getGame().getId()).orElseThrow(() -> new BusinessException("E0001"));
 
         PChangeDto pChangeDto = PChangeDto.from(pChange);

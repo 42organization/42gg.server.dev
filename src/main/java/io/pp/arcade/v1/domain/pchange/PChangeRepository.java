@@ -19,15 +19,12 @@ public interface PChangeRepository extends JpaRepository<PChange, Integer> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM pchange " +
             "where game_id in (SELECT id FROM game where season = :season and mode = :mode) " +
-            "AND user_id = :intraId ORDER BY id Desc"
-            ,countQuery = "SELECT count(*) FROM pchange")
-    Page<PChange> findPChangeHistory(@Param("intraId") String intraId,
+            "AND user_id = :intraId ORDER BY id Desc limit :limit")
+    List<PChange> findPChangeHistory(@Param("intraId") String intraId,
                                      @Param("season") Integer season,
-                                     @Param("mode") Integer mode, Pageable pageable);
+                                     @Param("mode") Integer mode, @Param("limit") Integer limit);
     /* status가 Entitiy에 없어요 ㅠㅠ */
     //     Page<PChange> findAllByUserAndStatusAndGameIdLessThanOrderByIdDesc(User user, String status, Integer gameId, Pageable pageable);
-
-    Page<PChange> findAllByUserAndGameIdLessThanOrderByIdDesc(User user, Integer gameId, Pageable pageable);
 
     @Query(nativeQuery = true, value = "SELECT * FROM pchange " +
             "where game_id in " +
