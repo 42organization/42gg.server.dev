@@ -7,17 +7,14 @@ import java.util.List;
 
 @Getter
 @Builder
-public class GameResultPageDto {
+public class GameResultListDto {
     List<GameDto> gameList;
-    Integer currentPage;
-    Integer totalPage;
-
+    Boolean isLast;
     @Override
     public String toString() {
-        return "GameResultPageDto{" +
+        return "GameResultListDto{" +
                 "gameList=" + gameList +
-                ", currentPage=" + currentPage +
-                ", totalPage=" + totalPage +
+                ", isLast=" + isLast +
                 '}';
     }
 }
