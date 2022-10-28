@@ -167,7 +167,7 @@ public class UserControllerImpl implements UserController {
         PChangePageDto pChangePage = pChangeService.findRankPChangeByUserId(PChangeFindDto.builder()
                 .user(user)
                 .season(season == 0 ? seasonService.findLatestRankSeason().getId() : season)
-                .pageable(pageable)
+                .count(10)
                 .build());
         List<PChangeDto> pChangeList = pChangePage.getPChangeList();
         List<UserHistoricDto> historicDtos = new ArrayList<UserHistoricDto>();
