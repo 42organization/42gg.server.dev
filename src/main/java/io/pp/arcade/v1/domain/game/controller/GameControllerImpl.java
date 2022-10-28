@@ -161,7 +161,7 @@ public class GameControllerImpl implements GameController {
                 .gameId(requestDto.getGameId())
                 .season(season)
                 .mode(requestDto.getMode())
-                .pageable(pageable)
+                .count(requestDto.getCount())
                 .build();
         PChangePageDto pChangePageDto = pChangeService.findPChangeByUserIdAfterGameIdAndGameMode(findDto);
         List<PChangeDto> pChangeLists = pChangePageDto.getPChangeList();
@@ -180,8 +180,8 @@ public class GameControllerImpl implements GameController {
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
                 .lastGameId(lastGameId)
-                .totalPage(pChangePageDto.getTotalPage())
-                .currentPage(pChangePageDto.getCurrentPage() + 1)
+//                .totalPage(pChangePageDto.getTotalPage())
+//                .currentPage(pChangePageDto.getCurrentPage() + 1)
                 .build();
         return gameResultResponse;
     }

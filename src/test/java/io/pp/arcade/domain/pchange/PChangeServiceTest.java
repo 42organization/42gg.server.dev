@@ -141,7 +141,8 @@ class PChangeServiceTest {
                 .gameId(game.getId() + 1)
                 .intraId(user1.getIntraId())
                 .mode(game.getMode())
-                .pageable(PageRequest.of(0, 20))
+                .count(20)
+                .season(1)
                 .build();
 
         PChangePageDto pChangeDto =  pChangeService.findPChangeByUserIdAfterGameIdAndGameMode(findDto);

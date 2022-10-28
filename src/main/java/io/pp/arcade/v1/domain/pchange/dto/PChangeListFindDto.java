@@ -12,5 +12,5 @@ public class PChangeListFindDto {
     private Integer season;
     private Integer gameId;
     private Mode mode;
-    private Pageable pageable;
+    private Integer count;
 }
