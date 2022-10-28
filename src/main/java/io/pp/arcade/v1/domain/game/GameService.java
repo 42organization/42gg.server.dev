@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,34 +79,16 @@ public class GameService {
     }
 
     @Transactional
-    public GameResultPageDto findGamesAfterId(GameFindDto findDto) {
-        Page<Game> games;
-        //gameRepository.findGameListOrderByIdDesc(findDto.getSeasonId(), findDto.getId(), findDto.getMode(), findDto.getStatus(), findDto.getPageable());
-        if (findDto.getStatus() != null) {
-            games = gameRepository.findByIdLessThanAndStatusAndModeOrderByIdDesc(findDto.getId(), findDto.getStatus(), findDto.getMode(), findDto.getPageable());
-        } else {
-            games = gameRepository.findByIdLessThanAndModeOrderByIdDesc(findDto.getId(), findDto.getMode(), findDto.getPageable());
-        }
-        List<GameDto> gameDtoList = games.stream().map(GameDto::from).collect(Collectors.toList());
-
-        GameResultPageDto resultPageDto = GameResultPageDto.builder()
-                .gameList(gameDtoList)
-                .totalPage(games.getTotalPages())
-                .currentPage(games.getNumber())
-                .build();
-        return resultPageDto;
-    }
-
-    @Transactional
-    public GameResultPageDto v1_findGamesAfterId(GameFindDto findDto) {
+    public GameResultListDto v1_findGamesAfterId(GameFindDto findDto) {
         Integer mode = (findDto.getMode() == null) ? null : findDto.getMode().getValue();
         Integer status = (findDto.getStatus() == null) ? null : findDto.getStatus().getValue();
-        Page<Game> games = gameRepository.findGameListOrderByIdDesc(findDto.getSeasonId(), findDto.getId(), mode, status, findDto.getPageable());
+        ArrayList<Game> games = new ArrayList<>(gameRepository.findGameListOrderByIdDesc(findDto.getSeasonId(), findDto.getId(), mode, status, findDto.getCount() + 1));
+        if (games.size() == findDto.getCount() + 1)
+            games.remove(games.size() - 1);
         List<GameDto> gameDtoList = games.stream().map(GameDto::from).collect(Collectors.toList());
-        GameResultPageDto resultPageDto = GameResultPageDto.builder()
+        GameResultListDto resultPageDto = GameResultListDto.builder()
                 .gameList(gameDtoList)
-                .totalPage(games.getTotalPages())
-                .currentPage(games.getNumber())
+                .isLast(games.size() < findDto.getCount())
                 .build();
         return resultPageDto;
     }
