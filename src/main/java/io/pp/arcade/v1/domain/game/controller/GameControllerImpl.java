@@ -14,12 +14,10 @@ import io.pp.arcade.v1.domain.noti.NotiService;
 import io.pp.arcade.v1.domain.noti.dto.NotiAddDto;
 import io.pp.arcade.v1.domain.pchange.PChangeService;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeDto;
-import io.pp.arcade.v1.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeListFindDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.v1.domain.rank.service.RankRedisService;
 import io.pp.arcade.v1.domain.season.SeasonService;
-import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.domain.security.jwt.TokenService;
 import io.pp.arcade.v1.domain.slot.dto.SlotDto;
 import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUserService;
@@ -54,7 +52,6 @@ public class GameControllerImpl implements GameController {
     private final UserService userService;
     private final PChangeService pChangeService;
     private final CurrentMatchService currentMatchService;
-    private final RankRedisService rankRedisService;
     private final TokenService tokenService;
     private final SeasonService seasonService;
     private final EventService eventService;
@@ -100,6 +97,7 @@ public class GameControllerImpl implements GameController {
         List<SlotTeamUserDto> slotTeamUsers = slotTeamUserService.findAllBySlotId(currentMatch.getSlot().getId());
         gameManager.removeCurrentMatch(game);
         // modify team with game result
+
         gameManager.modifyTeams(game, requestDto, slotTeamUsers);
         slotTeamUsers = slotTeamUserService.findAllBySlotId(currentMatch.getSlot().getId());
         // figuring out team number for myteam and enemyteam
@@ -114,31 +112,6 @@ public class GameControllerImpl implements GameController {
     private void validateInput(GameResultRequestDto requestDto) {
         requestDto.getMyTeamScore();
         requestDto.getEnemyTeamScore();
-    }
-
-    @Override
-//    @GetMapping(value = "/games")
-    public GameResultResponseDto gameResultByGameIdAndCount(GameResultPageRequestDto requestDto, HttpServletRequest request) {
-        tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        Pageable pageable = PageRequest.of(0, requestDto.getCount());
-        GameResultPageDto resultPageDto = gameService.v1_findGamesAfterId(GameFindDto.builder().id(requestDto.getGameId()).status(requestDto.getStatus()).pageable(pageable).build());
-        List<GameResultDto> gameResultList = new ArrayList<>();
-        List<GameDto> gameLists = resultPageDto.getGameList();
-        Integer lastGameId;
-        if (gameLists.size() == 0) {
-            lastGameId = 0;
-        } else {
-            lastGameId = gameLists.get(gameLists.size() - 1).getId();
-        }
-        gameResponseManager.putResultInGames(gameResultList, gameLists, null);
-
-        GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
-                .games(gameResultList)
-                .lastGameId(lastGameId)
-                .totalPage(resultPageDto.getTotalPage())
-                .currentPage(resultPageDto.getCurrentPage() + 1)
-                .build();
-        return gameResultResponse;
     }
 
     @Override
