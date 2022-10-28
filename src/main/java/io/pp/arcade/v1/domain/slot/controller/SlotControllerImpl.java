@@ -52,8 +52,8 @@ public class SlotControllerImpl implements SlotController {
     private final SlotGenerator slotGenerator;
 
     @Override
-    @GetMapping(value = "/match/tables/{tableId}/{type}")
-    public SlotStatusResponseDto slotStatusList(Integer tableId, GameType type, HttpServletRequest request) {
+    @GetMapping(value = "/match/tables/{tableId}/{mode}/{type}")
+    public SlotStatusResponseDto slotStatusList(Integer tableId, Mode mode, GameType type, HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         List<SlotStatusDto> slots;
         List<List<SlotStatusDto>> matchBoards;
@@ -61,6 +61,7 @@ public class SlotControllerImpl implements SlotController {
                 .userId(user.getId())
                 .type(type)
                 .currentTime(LocalDateTime.now())
+                .userMode(mode)
                 .build();
         slots = slotService.findSlotsStatus(findDto);
         matchBoards = groupingSlots(slots);
@@ -168,19 +169,19 @@ public class SlotControllerImpl implements SlotController {
                 .build());
     }
 
-    private List<List<SlotStatusDto>> groupingSlots(List<SlotStatusDto> slots) {
+    private List<List<SlotStatusDto>> groupingSlots(List<SlotStatusDto> slotStatusDtos) {
         List<List<SlotStatusDto>> slotGroups = new ArrayList<>();
-        if (!slots.isEmpty()) {
+        if (!slotStatusDtos.isEmpty()) {
             List<SlotStatusDto> oneGroup = new ArrayList<>();
-            int groupTime = slots.get(0).getTime().getHour();
+            int groupTime = slotStatusDtos.get(0).getSlot().getTime().getHour();
 
-            for(SlotStatusDto slot: slots) {
-                if (slot.getTime().getHour() == groupTime) {
+            for(SlotStatusDto slot: slotStatusDtos) {
+                if (slot.getSlot().getTime().getHour() == groupTime) {
                     oneGroup.add(slot);
                 } else {
                     slotGroups.add(oneGroup);
                     oneGroup = new ArrayList<>(); //다음 그루핑을 위한 그룹 생성
-                    groupTime = slot.getTime().getHour(); //시간 갱신
+                    groupTime = slot.getSlot().getTime().getHour(); //시간 갱신
                     oneGroup.add(slot);
                 }
             }
@@ -227,14 +228,10 @@ public class SlotControllerImpl implements SlotController {
         Integer pppGap = getPppGapFromSeason();
 
         SlotFilterDto slotFilterDto = SlotFilterDto.builder()
-                .slotId(slot.getId())
-                .slotTime(slot.getTime())
-                .slotType(slot.getType())
+                .slot(slot)
                 .gameType(gameType)
                 .userPpp(user.getPpp())
-                .gamePpp(slot.getGamePpp())
                 .pppGap(pppGap)
-                .headCount(slot.getHeadCount())
                 .build();
         if (SlotStatusType.CLOSE.equals(slotService.getStatus(slotFilterDto))) {
             throw new BusinessException("SC001");
