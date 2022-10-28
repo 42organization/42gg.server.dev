@@ -99,20 +99,32 @@ class SlotControllerTest {
     }
 
     @Transactional
+    void saveSlot(Slot slot, Integer headCount, GameType type, Integer gamePpp, User user, Mode mode) {
+        slot.setHeadCount(headCount);
+        slot.setType(type);
+        slot.setGamePpp(gamePpp);
+        slot.setMode(mode);
+        if (user != null) {
+            currentMatchRepository.save(CurrentMatch.builder().slot(slot).game(null).user(user).matchImminent(false).isMatched(false).isDel(false).build());
+        }
+    }
+
+    @Transactional
     void saveSlot(Slot slot, Integer headCount, GameType type, Integer gamePpp, User user) {
         slot.setHeadCount(headCount);
         slot.setType(type);
         slot.setGamePpp(gamePpp);
         if (user != null) {
-            currentMatchRepository.save(CurrentMatch.builder().slot(slot).game(null).user(user).matchImminent(false).isMatched(false).build());
+            currentMatchRepository.save(CurrentMatch.builder().slot(slot).game(null).user(user).matchImminent(false).isMatched(false).isDel(false).build());
         }
     }
 
     @Transactional
-    void saveSlot(Slot slot, Integer headCount, GameType type ,Integer gamePpp) {
+    void saveSlot(Slot slot, Integer headCount, GameType type ,Integer gamePpp, Mode mode) {
         slot.setHeadCount(headCount);
         slot.setType(type);
         slot.setGamePpp(gamePpp);
+        slot.setMode(mode);
     }
 
     @Transactional
@@ -157,13 +169,19 @@ class SlotControllerTest {
     @Transactional
     @DisplayName("슬롯 조회 - 모드가 다른 슬롯")
     void differentModeSlots() throws Exception {
-        User user = userRepository.save(User.builder().intraId("user1").eMail("user1").imageUri("user1").racketType(RacketType.DUAL).statusMessage("user1").roleType(RoleType.USER).ppp(1000).totalExp(0).build());
-        tokenRepository.save(new Token(user, "10", "10"));
-
-        mockMvc.perform(get("/pingpong/match/tables/1/normal/{type}", GameType.SINGLE).contentType(MediaType.APPLICATION_JSON)
+        testInitiator.letsgo();
+        teams = testInitiator.teams;
+        users = testInitiator.users;
+        slots = testInitiator.slots;
+        /*
+         * 단식 - 유저 2명 (풀방)
+         * status : close
+         * */
+        Slot slot = slots[1];
+        saveSlot(slot, 2, GameType.SINGLE, 950, null, Mode.NORMAL);
+        mockMvc.perform(get("/pingpong/match/tables/1/rank/{type}", GameType.SINGLE).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer 10"))
-                .andExpect(jsonPath("$.matchBoards").isEmpty())
-                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.matchBoards[0][1].status").value(SlotStatusType.CLOSE.getCode()))
                 .andDo(document("different-mode-slots"));
     }
 
@@ -180,10 +198,10 @@ class SlotControllerTest {
          * status : close
          * */
         Slot slot = slots[1];
-        saveSlot(slot, 2, GameType.SINGLE, 950, null);
+        saveSlot(slot, 2, GameType.SINGLE, 950, (User) null);
         mockMvc.perform(get("/pingpong/match/tables/1/rank/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
-//                .andExpect(jsonPath("$.matchBoards[0][1].status").value(SlotStatusType.CLOSE.toString()))
+                .andExpect(jsonPath("$.matchBoards[0][1].status").value(SlotStatusType.CLOSE.getCode()))
                 .andDo(document("slot-status-list-when-singleSlot-is-full"));
 
         /*
@@ -191,11 +209,11 @@ class SlotControllerTest {
          * status : close
          * */
         slot = slots[2];
-        saveSlot(slot, 1, GameType.SINGLE, 900, null);
+        saveSlot(slot, 1, GameType.SINGLE, 900, (User) null);
         saveUserPpp(users[10], 100);
         mockMvc.perform(get("/pingpong/match/tables/1/rank/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
-//                .andExpect(jsonPath("$.matchBoards[0].slots[2].status").value(SlotStatusType.CLOSE.toString()))
+                .andExpect(jsonPath("$.matchBoards[0][2].status").value(SlotStatusType.CLOSE.getCode()))
                 .andDo(document("slot-status-list-after-enter-100p-in-900p"));
 
         /*
@@ -203,10 +221,10 @@ class SlotControllerTest {
          * status : myTable
          * */
         slot = slots[5];
-        saveSlot(slot, 1, GameType.DOUBLE, 100, users[10]);
+        saveSlot(slot, 1, GameType.DOUBLE, 100, users[10], Mode.RANK);
         mockMvc.perform(get("/pingpong/match/tables/1/rank/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
-//                .andExpect(jsonPath("$.matchBoards[0].slots[5].status").value(SlotStatusType.MYTABLE.toString()))
+                .andExpect(jsonPath("$.matchBoards[0][5].status").value(SlotStatusType.MYTABLE.getCode()))
                 .andExpect(status().isOk())
                 .andDo(document("slot-status-list-when-i-have-a-slot"));
 
@@ -215,10 +233,10 @@ class SlotControllerTest {
          * status : close
          * */
         slot = slots[6];
-        saveSlot(slot, 1, GameType.DOUBLE, 1000, null);
+        saveSlot(slot, 1, GameType.DOUBLE, 1000, (User) null);
         mockMvc.perform(get("/pingpong/match/tables/1/rank/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
-//                .andExpect(jsonPath("$.matchBoards[1].slots[0].status").value(SlotStatusType.CLOSE.toString()))
+                .andExpect(jsonPath("$.matchBoards[1][0].status").value(SlotStatusType.CLOSE.getCode()))
                 .andExpect(status().isOk())
                 .andDo(document("slot-status-list-choose-single-look-double"));
 
@@ -232,7 +250,7 @@ class SlotControllerTest {
         saveSlot(passedSlot);
         mockMvc.perform(get("/pingpong/match/tables/1/rank/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
-//                .andExpect(jsonPath("$.matchBoards[0].slots[0].status").value(SlotStatusType.CLOSE.toString()))
+                .andExpect(jsonPath("$.matchBoards[0][0].status").value(SlotStatusType.CLOSE.getCode()))
                 .andExpect(status().isOk())
                 .andDo(document("slot-status-list-times-past"));
     }
@@ -337,7 +355,7 @@ class SlotControllerTest {
          * -> 400
          * */
         slot = slots[0];
-        saveSlot(slot, 1, GameType.SINGLE, 1000);
+        saveSlot(slot, 1, GameType.SINGLE, 1000, Mode.RANK);
         saveUserPpp(users[0], 840);
         body.put("slotId", slot.getId().toString());
         mockMvc.perform(post("/pingpong/match/tables/1/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
@@ -351,7 +369,7 @@ class SlotControllerTest {
          * -> 400
          * */
         slot = slots[1];
-        saveSlot(slot, 1, GameType.DOUBLE, 1000);
+        saveSlot(slot, 1, GameType.DOUBLE, 1000, Mode.RANK);
         body = new HashMap<>();
         body.put("slotId", slot.getId().toString());
         saveUserPpp(users[1], 1000);
@@ -366,7 +384,7 @@ class SlotControllerTest {
          * -> 400
          * */
         slot = slots[2];
-        saveSlot(slot, 2, GameType.SINGLE, 1000);
+        saveSlot(slot, 2, GameType.SINGLE, 1000, Mode.RANK);
         saveUserPpp(users[2], 1000);
         body = new HashMap<>();
         body.put("slotId", slot.getId().toString());
