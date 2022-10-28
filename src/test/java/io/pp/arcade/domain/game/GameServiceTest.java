@@ -7,7 +7,7 @@ import io.pp.arcade.v1.domain.game.GameService;
 import io.pp.arcade.v1.domain.game.dto.GameAddDto;
 import io.pp.arcade.v1.domain.game.dto.GameFindDto;
 import io.pp.arcade.v1.domain.game.dto.GameModifyStatusDto;
-import io.pp.arcade.v1.domain.game.dto.GameResultPageDto;
+import io.pp.arcade.v1.domain.game.dto.GameResultListDto;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.slot.SlotRepository;
 import io.pp.arcade.v1.domain.slot.dto.SlotDto;
@@ -17,6 +17,7 @@ import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.domain.user.UserRepository;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.type.GameType;
+import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.type.StatusType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -119,26 +120,26 @@ class GameServiceTest {
         Game game = gameRepository.save(Game.builder()
                 .slot(slot)
                 .status(StatusType.END)
+                .mode(Mode.NORMAL)
                 .season(1) //season 추가
                 .build());
 
         Game game2 = gameRepository.save(Game.builder()
                 .slot(slot)
                 .status(StatusType.END)
+                .mode(Mode.RANK)
                 .season(1) //season 추가
                 .build());
-
-        Pageable pageable = PageRequest.of(0, 100);
 
         GameFindDto findDto = GameFindDto.builder()
                 .id(game2.getId())
                 .status(StatusType.END)
-                .pageable(pageable)
+                .count(10)
                 .build();
 
         //when
-        GameResultPageDto pageDto = gameService.findGamesAfterId(findDto);
-
+        GameResultListDto pageDto = gameService.v1_findGamesAfterId(findDto);
+        System.out.println(pageDto);
         //then
         Assertions.assertThat(pageDto.getGameList()).isNotEqualTo(Collections.EMPTY_LIST);
     }
