@@ -14,7 +14,7 @@ public class PChangeFindDto {
     private UserDto user;
     private Integer season;
     private Mode mode;
-    private Pageable pageable;
+    private Integer count;
 
     @Override
     public String toString() {
@@ -23,7 +23,7 @@ public class PChangeFindDto {
                 ", user='" + user + '\'' +
                 ", season='" + season + '\'' +
                 ", mode=" + mode +
-                ", pageable=" + pageable +
+                ", count=" + count +
                 '}';
     }
 }

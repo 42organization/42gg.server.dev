@@ -9,19 +9,15 @@ import io.pp.arcade.v1.domain.game.Manager.GameResponseManager;
 
 import io.pp.arcade.v1.domain.game.dto.*;
 import io.pp.arcade.v1.domain.pchange.PChangeService;
-import io.pp.arcade.v1.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeFindDto;
-import io.pp.arcade.v1.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.v1.domain.season.SeasonService;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.domain.security.jwt.TokenService;
 import io.pp.arcade.v1.domain.user.UserService;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
-import io.pp.arcade.v1.domain.user.dto.UserFindDto;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.type.StatusType;
-import io.pp.arcade.v1.global.util.ExpLevelCalculator;
 import io.pp.arcade.v1.global.util.HeaderUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -34,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -55,7 +50,7 @@ public class GameControllerImplV1 {
         tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
 
         GameFindDto gameFindDto = getGameFindDto(requestDto, requestDto.getMode());
-        GameResultPageDto resultPageDto = gameService.v1_findGamesAfterId(gameFindDto);
+        GameResultListDto resultPageDto = gameService.v1_findGamesAfterId(gameFindDto);
 
         List<GameResultDto> gameResultList = new ArrayList<>();
         List<GameDto> gameLists = resultPageDto.getGameList();
@@ -71,8 +66,7 @@ public class GameControllerImplV1 {
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
                 .lastGameId(lastGameId)
-                .totalPage(resultPageDto.getTotalPage())
-                .currentPage(resultPageDto.getCurrentPage() + 1)
+                .isLast(resultPageDto.getIsLast())
                 .build();
         return gameResultResponse;
     }
@@ -82,7 +76,7 @@ public class GameControllerImplV1 {
         tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
 
         GameFindDto gameFindDto = getGameFindDto(requestDto, Mode.NORMAL);
-        GameResultPageDto resultPageDto = gameService.v1_findGamesAfterId(gameFindDto);
+        GameResultListDto resultPageDto = gameService.v1_findGamesAfterId(gameFindDto);
 
         List<GameResultDto> gameResultList = new ArrayList<>();
         List<GameDto> gameLists = resultPageDto.getGameList();
@@ -98,8 +92,7 @@ public class GameControllerImplV1 {
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
                 .lastGameId(lastGameId)
-                .totalPage(resultPageDto.getTotalPage())
-                .currentPage(resultPageDto.getCurrentPage() + 1)
+                .isLast(resultPageDto.getIsLast())
                 .build();
         return gameResultResponse;
     }
@@ -109,7 +102,7 @@ public class GameControllerImplV1 {
         tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
 
         GameFindDto gameFindDto = getGameFindDto(requestDto, Mode.RANK);
-        GameResultPageDto resultPageDto = gameService.v1_findGamesAfterId(gameFindDto);
+        GameResultListDto resultPageDto = gameService.v1_findGamesAfterId(gameFindDto);
 
         List<GameResultDto> gameResultList = new ArrayList<>();
         List<GameDto> gameLists = resultPageDto.getGameList();
@@ -125,8 +118,7 @@ public class GameControllerImplV1 {
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
                 .lastGameId(lastGameId)
-                .totalPage(resultPageDto.getTotalPage())
-                .currentPage(resultPageDto.getCurrentPage() + 1)
+                .isLast(resultPageDto.getIsLast())
                 .build();
         return gameResultResponse;
     }
@@ -171,12 +163,11 @@ public class GameControllerImplV1 {
                 seasonId = seasonService.findLatestRankSeason().getId();
             }
         }
-        Pageable pageable = PageRequest.of(0, requestDto.getCount());
         return GameFindDto.builder()
                 .id(requestDto.getGameId())
                 .status(requestDto.getStatus())
                 .mode(mode)
                 .seasonId(seasonId)
-                .pageable(pageable).build();
+                .count(requestDto.getCount()).build();
     }
 }

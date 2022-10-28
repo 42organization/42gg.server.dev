@@ -9,7 +9,6 @@ import io.pp.arcade.v1.domain.game.GameRepository;
 import io.pp.arcade.v1.domain.pchange.PChange;
 import io.pp.arcade.v1.domain.pchange.PChangeRepository;
 import io.pp.arcade.v1.domain.rank.RankRedis;
-import io.pp.arcade.v1.domain.security.jwt.TokenRepository;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.slot.SlotRepository;
 import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUser;
@@ -43,7 +42,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -85,14 +83,10 @@ class UserControllerTest {
     private SlotTeamUserRepository slotTeamUserRepository;
 
     @Autowired
-    private TokenRepository tokenRepository;
-
-    @Autowired
     private RedisTemplate<String, RankRedis> redisRank;
 
     @Autowired
     TestInitiator initiator;
-
 
     CurrentMatch currentMatch;
     CurrentMatch currentMatch2;
@@ -102,6 +96,8 @@ class UserControllerTest {
 
     RankRedis userRank;
     PChange userPchange;
+    PChange pChange2;
+
     Game userGame;
 
     Game game;
@@ -154,7 +150,6 @@ class UserControllerTest {
                 .isMatched(true)
                 .isDel(false)
                 .build());
-        PChange pChange2;
         Team team3 = teamRepository.save(Team.builder().teamPpp(0)
                 .headCount(1).score(0).build());
         Team team4 = teamRepository.save(Team.builder().teamPpp(0)
@@ -172,7 +167,7 @@ class UserControllerTest {
         gameRepository.save(Game.builder().slot(slot2).season(1).status(StatusType.END).mode(slot2.getMode()).build());
         gameRepository.save(Game.builder().slot(slot2).season(1).status(StatusType.LIVE).mode(slot2.getMode()).build());
 
-        pChangeRepository.save(PChange.builder()
+        pChange2 = pChangeRepository.save(PChange.builder()
                 .game(userGame)
                 .user(users[0])
                 .pppChange(4)
@@ -269,14 +264,11 @@ class UserControllerTest {
          * -> date
          * */
 
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
         String gameDate = userGame.getSlot().getTime().toString();
-        //String subDate = gameDate.substring(0, gameDate.length());
-//        LocalDateTime formatDateTime = LocalDateTime.parse(gameDate, formatter);
         mockMvc.perform(get("/pingpong/users/" + user.getIntraId() +"/historics").contentType(MediaType.APPLICATION_JSON)
                         .param("season","1")
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(jsonPath("$.historics[0].ppp").value(userPchange.getPppResult()))
+                .andExpect(jsonPath("$.historics[0].ppp").value(pChange2.getPppResult()))
                 .andExpect(jsonPath("$.historics[0].date").value(gameDate))
                 .andExpect(status().isOk())
                 .andDo(document("user-find-historics"));

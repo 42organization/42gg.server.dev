@@ -12,8 +12,6 @@ public interface GameController {
     GameUserInfoResponseDto gameUserInfo(HttpServletRequest request);
     //게임 결과 입력 - POST /pingpong/games/result
     void gameResultSave(@RequestBody @Valid GameResultRequestDto getterDto, HttpServletRequest request) throws MessagingException;
-    GameResultResponseDto gameResultByGameIdAndCount(@ModelAttribute @Valid GameResultPageRequestDto requestDto, HttpServletRequest request);
 
     GameResultResponseDto gameResultByUserIdAndByGameIdAndCount(@PathVariable String intraId, @ModelAttribute @Valid GameResultUserPageRequestDto requestDto, HttpServletRequest request);
-
 }
