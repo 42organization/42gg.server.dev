@@ -12,7 +12,7 @@ public class GameFindDto {
     Integer id;
     Integer seasonId;
     StatusType status;
-    Pageable pageable;
+    Integer count;
     Mode mode;
 
     @Override
@@ -21,7 +21,7 @@ public class GameFindDto {
                 "id=" + id +
                 ", seasonId=" + seasonId +
                 ", status=" + status +
-                ", pageable=" + pageable +
+                ", count=" + count +
                 ", mode=" + mode +
                 '}';
     }
