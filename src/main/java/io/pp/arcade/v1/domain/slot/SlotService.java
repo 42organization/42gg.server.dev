@@ -174,6 +174,7 @@ public class SlotService {
         Integer userPpp = dto.getUserPpp();
         Integer headCount = dto.getSlot().getHeadCount();
         Integer pppGap = dto.getPppGap();
+        Mode slotMode = dto.getSlot().getMode();
         LocalDateTime currentTime = LocalDateTime.now();
         Integer maxCount = 2;
         if (slotType != null && slotType.equals(GameType.DOUBLE)) {
@@ -186,7 +187,7 @@ public class SlotService {
             status = SlotStatusType.MYTABLE;
         } else if (slotType != null && !gameType.equals(slotType)) {
             status = SlotStatusType.CLOSE;
-        } else if (gamePpp != null && Math.abs(userPpp - gamePpp) > pppGap) {
+        } else if (slotMode == Mode.RANK && gamePpp != null && Math.abs(userPpp - gamePpp) > pppGap) {
             status = SlotStatusType.CLOSE;
         } else if (headCount.equals(maxCount)) {
             status = SlotStatusType.CLOSE;
