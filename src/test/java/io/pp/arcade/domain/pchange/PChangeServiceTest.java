@@ -3,11 +3,13 @@ package io.pp.arcade.domain.pchange;
 import io.pp.arcade.TestInitiator;
 import io.pp.arcade.v1.domain.game.Game;
 import io.pp.arcade.v1.domain.game.GameRepository;
+import io.pp.arcade.v1.domain.game.dto.GameDto;
 import io.pp.arcade.v1.domain.pchange.PChange;
 import io.pp.arcade.v1.domain.pchange.PChangeRepository;
 import io.pp.arcade.v1.domain.pchange.PChangeService;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeAddDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeFindDto;
+import io.pp.arcade.v1.domain.pchange.dto.PChangeListFindDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangePageDto;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.slot.SlotRepository;
@@ -15,6 +17,7 @@ import io.pp.arcade.v1.domain.team.Team;
 import io.pp.arcade.v1.domain.team.TeamRepository;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.domain.user.UserRepository;
+import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.type.StatusType;
 import org.assertj.core.api.Assertions;
@@ -134,11 +137,12 @@ class PChangeServiceTest {
                     .build());
         }
 
-        PChangeFindDto findDto = PChangeFindDto.builder()
+        PChangeListFindDto findDto = PChangeListFindDto.builder()
                 .gameId(game.getId() + 1)
-                .userId(user1.getIntraId())
+                .intraId(user1.getIntraId())
                 .mode(game.getMode())
-                .pageable(PageRequest.of(0, 20))
+                .count(20)
+                .season(1)
                 .build();
 
         PChangePageDto pChangeDto =  pChangeService.findPChangeByUserIdAfterGameIdAndGameMode(findDto);
