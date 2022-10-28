@@ -241,7 +241,7 @@ class UserControllerTest {
         mockMvc.perform(get("/pingpong/users/{intraId}/historics", "notFound").contentType(MediaType.APPLICATION_JSON)
                         .param("season","1")
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(status().isOk())
+                .andExpect(status().isBadRequest())
                 .andDo(document("user-find-historic-can't-find-intraId"));
 
         /*

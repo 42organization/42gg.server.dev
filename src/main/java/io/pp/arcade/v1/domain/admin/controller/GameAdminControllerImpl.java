@@ -111,8 +111,8 @@ public class GameAdminControllerImpl implements GameAdminController {
 
     private void modifyUserPPPAndPChangeAndRank(GameDto game, SlotTeamUserDto slotTeamUser, TeamDto beforeEnemyTeamDto, TeamDto enemyTeamDto, Boolean isOneSide) {
         PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder()
-                .gameId(game.getId())
-                .userId(slotTeamUser.getUser().getIntraId())
+                .game(game)
+                .user(slotTeamUser.getUser())
                 .build());
         Integer userPreviousPpp = pChangeDto.getPppResult() - pChangeDto.getPppChange();
 
@@ -126,8 +126,8 @@ public class GameAdminControllerImpl implements GameAdminController {
         userService.modifyUserPpp(modifyPppDto);
 
         Integer pChangeId = pChangeService.findPChangeIdByUserAndGame(PChangeFindDto.builder()
-                .gameId(game.getId())
-                .userId(slotTeamUser.getUser().getIntraId())
+                .game(game)
+                .user(slotTeamUser.getUser())
                 .build());
         pChangeService.updatePChangeByAdmin(pChangeId, PChangeUpdateDto.builder()
                 .gameId(game.getId())

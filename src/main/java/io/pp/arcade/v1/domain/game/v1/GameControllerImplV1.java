@@ -131,85 +131,6 @@ public class GameControllerImplV1 {
         return gameResultResponse;
     }
 
-    @GetMapping(value = "/users/{intraId}/games/normal")
-    public GameResultResponseDto gameNormalResultByUserIdAndByGameIdAndCount(@PathVariable String intraId, @ModelAttribute @Valid GameResultUserPageRequestDto requestDto, HttpServletRequest request) {
-        //Pageable
-        /*
-         * 1. PChange에서 유저별 게임 목록을 가져온다
-         * 2. 얘네를 바탕으로 게임을 다 긁어온다.
-         * 3. 얘네를 DTO로 만들어준다
-         */
-        tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        Pageable pageable = PageRequest.of(0, requestDto.getCount());
-        PChangeFindDto findDto = PChangeFindDto.builder()
-                .userId(intraId)
-                .gameId(requestDto.getGameId())
-                .mode(Mode.NORMAL)
-                .pageable(pageable)
-                .build();
-        PChangePageDto pChangePageDto = pChangeService.findPChangeByUserIdAfterGameIdAndGameMode(findDto);
-        List<PChangeDto> pChangeLists = pChangePageDto.getPChangeList();
-        List<GameDto> gameLists = pChangeLists.stream().map(PChangeDto::getGame).collect(Collectors.toList());;
-        List<GameResultDto> gameResultList = new ArrayList<>();
-        Integer lastGameId;
-        if (gameLists.size() == 0) {
-            lastGameId = 0;
-        } else {
-            lastGameId = gameLists.get(gameLists.size() - 1).getId();
-        }
-        UserDto user = userService.findByIntraId(UserFindDto.builder().intraId(intraId).build());
-
-        gameResponseManager.putResultInGames(gameResultList, gameLists, user);
-
-        GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
-                .games(gameResultList)
-                .lastGameId(lastGameId)
-                .totalPage(pChangePageDto.getTotalPage())
-                .currentPage(pChangePageDto.getCurrentPage() + 1)
-                .build();
-        return gameResultResponse;
-    }
-
-    @GetMapping(value = "/users/{intraId}/games/rank")
-    public GameResultResponseDto gameRankResultByUserIdAndByGameIdAndCount(@PathVariable String intraId, @ModelAttribute @Valid GameResultUserPageRequestDto requestDto, HttpServletRequest request) {
-        //Pageable
-        /*
-         * 1. PChange에서 유저별 게임 목록을 가져온다
-         * 2. 얘네를 바탕으로 게임을 다 긁어온다.
-         * 3. 얘네를 DTO로 만들어준다
-         */
-        tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        Pageable pageable = PageRequest.of(0, requestDto.getCount());
-        PChangeFindDto findDto = PChangeFindDto.builder()
-                .userId(intraId)
-                .gameId(requestDto.getGameId())
-                .mode(Mode.RANK)
-                .pageable(pageable)
-                .build();
-        PChangePageDto pChangePageDto = pChangeService.findPChangeByUserIdAfterGameIdAndGameMode(findDto);
-        List<PChangeDto> pChangeLists = pChangePageDto.getPChangeList();
-        List<GameDto> gameLists = pChangeLists.stream().map(PChangeDto::getGame).collect(Collectors.toList());;
-        List<GameResultDto> gameResultList = new ArrayList<>();
-        Integer lastGameId;
-        if (gameLists.size() == 0) {
-            lastGameId = 0;
-        } else {
-            lastGameId = gameLists.get(gameLists.size() - 1).getId();
-        }
-        UserDto user = userService.findByIntraId(UserFindDto.builder().intraId(intraId).build());
-
-        gameResponseManager.putResultInGames(gameResultList, gameLists, user);
-
-        GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
-                .games(gameResultList)
-                .lastGameId(lastGameId)
-                .totalPage(pChangePageDto.getTotalPage())
-                .currentPage(pChangePageDto.getCurrentPage() + 1)
-                .build();
-        return gameResultResponse;
-    }
-
-
     @PostMapping(value = "/games/result/normal")
     public void gameNormalSave(HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
@@ -218,10 +139,13 @@ public class GameControllerImplV1 {
         GameDto game = currentMatch.getGame();
         if (game == null) {
             throw new BusinessException("E0001");
+        } else if (game.getStatus() == StatusType.END) {
+            currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder().userId(user.getId()).game(game).build());
+            throw new ResponseStatusException(HttpStatus.CREATED, "");
         }
 
         currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder().userId(user.getId()).game(game).build());
-        gameManager.modifyUserExp(user, game);
+        gameManager.modifyUserExp(game);
         gameService.modifyGameStatus(GameModifyStatusDto.builder().gameId(game.getId()).status(StatusType.END).build());
 
         throw new ResponseStatusException(HttpStatus.CREATED, "");
@@ -230,21 +154,9 @@ public class GameControllerImplV1 {
     @GetMapping(value = "/games/{gameId}/result")
     public GameExpResultResponseDto gameExpResult(@PathVariable Integer gameId, HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        GameDto game = gameService.findById(gameId);
 
-        PChangeDto pChangeDto = pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().userId(user.getIntraId()).gameId(gameId).build());
-
-        Integer currentExp = pChangeDto.getExpResult() - pChangeDto.getExpChange();
-        Integer changedExp = pChangeDto.getExpResult();
-        Integer maxExp = ExpLevelCalculator.getLevelMaxExp(ExpLevelCalculator.getLevel(user.getTotalExp()));
-        Integer expRate = (currentExp / maxExp) * 100;
-        GameExpResultResponseDto responseDto = GameExpResultResponseDto.builder()
-                .currentExp(ExpLevelCalculator.getCurrentLevelMyExp(currentExp))
-                .increasedExp(ExpLevelCalculator.getCurrentLevelMyExp(changedExp))
-                .maxExp(maxExp)
-                .currentLevel(ExpLevelCalculator.getLevel(currentExp))
-                .increasedLevel(ExpLevelCalculator.getLevel(changedExp))
-                .expRate(expRate)
-                .build();
+        GameExpResultResponseDto responseDto = pChangeService.findPChangeExpByUserAndGame(PChangeFindDto.builder().user(user).game(game).build());
 
         return responseDto;
     }
@@ -256,10 +168,15 @@ public class GameControllerImplV1 {
         if (requestDto.getSeason() == null) {
             SeasonDto currentSeason = seasonService.findCurrentSeason();
             if (currentSeason != null) {
-                seasonId = seasonService.findCurrentSeason().getId();
+                seasonId = seasonService.findLatestRankSeason().getId();
             }
         }
         Pageable pageable = PageRequest.of(0, requestDto.getCount());
-        return GameFindDto.builder().id(requestDto.getGameId()).status(requestDto.getStatus()).mode(mode).seasonId(seasonId).pageable(pageable).build();
+        return GameFindDto.builder()
+                .id(requestDto.getGameId())
+                .status(requestDto.getStatus())
+                .mode(mode)
+                .seasonId(seasonId)
+                .pageable(pageable).build();
     }
 }
