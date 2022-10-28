@@ -1,36 +1,29 @@
 package io.pp.arcade.v1.domain.slot.dto;
 
 import io.pp.arcade.v1.global.type.GameType;
+import io.pp.arcade.v1.global.type.Mode;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @Builder
 public class SlotFilterDto {
-    private Integer slotId;
+    private SlotDto slot;
     private Integer userSlotId;
-    private LocalDateTime slotTime;
-    private GameType slotType;
-    private GameType gameType;
     private Integer userPpp;
-    private Integer gamePpp;
-    private Integer headCount;
+    private GameType gameType;
     private Integer pppGap;
+    private Mode userMode;
 
     @Override
     public String toString() {
         return "SlotFilterDto{" +
-                "slotId=" + slotId +
+                "slot=" + slot.toString() +
                 ", userSlotId=" + userSlotId +
-                ", slotTime=" + slotTime +
-                ", slotType=" + slotType +
                 ", gameType=" + gameType +
                 ", userPpp=" + userPpp +
-                ", gamePpp=" + gamePpp +
-                ", headCount=" + headCount +
                 ", pppGap=" + pppGap +
+                ", mode=" + userMode +
                 '}';
     }
 }

@@ -129,29 +129,24 @@ public class SlotService {
         CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(user, false).orElse(null);
         Integer userSlotId = currentMatch == null ? null : currentMatch.getSlot().getId();
 
-        List<SlotStatusDto> slotDtos = new ArrayList<>();
+        List<SlotStatusDto> slotStatusDtos = new ArrayList<>();
         for (Slot slot : slots) {
             SlotFilterDto filterDto = SlotFilterDto.builder()
-                    .slotId(slot.getId())
+                    .slot(SlotDto.from(slot))
                     .userSlotId(userSlotId)
-                    .slotTime(slot.getTime())
-                    .slotType(slot.getType())
                     .gameType(findDto.getType())
                     .userPpp(user.getPpp())
-                    .gamePpp(slot.getGamePpp())
-                    .headCount(slot.getHeadCount())
                     .pppGap(pppGap)
+                    .userMode(findDto.getUserMode())
                     .build();
-            slotDtos.add(SlotStatusDto.builder()
-                    .slotId(slot.getId())
-                    .headCount(slot.getHeadCount())
-                    .time(slot.getTime())
-                    .mode(slot.getMode())
-                    .status(getStatus(filterDto))
+            SlotStatusType status = getStatus(filterDto);
+            slotStatusDtos.add(SlotStatusDto.builder()
+                    .slot(SlotDto.from(slot))
+                    .status(status)
                     .build()
             );
         }
-        return slotDtos;
+        return slotStatusDtos;
     }
 
     public SlotDto findByTime(LocalDateTime time) {
@@ -170,15 +165,16 @@ public class SlotService {
            else if slotType == "double" and headCount == MAXCOUNT
             then status == close
          */
-        Integer slotId = dto.getSlotId();
+        Integer slotId = dto.getSlot().getId();
         Integer userSlotId = dto.getUserSlotId();
-        GameType slotType = dto.getSlotType();
-        LocalDateTime slotTime = dto.getSlotTime();
+        GameType slotType = dto.getSlot().getType();
+        LocalDateTime slotTime = dto.getSlot().getTime();
         GameType gameType = dto.getGameType();
-        Integer gamePpp = dto.getGamePpp();
+        Integer gamePpp = dto.getSlot().getGamePpp();
         Integer userPpp = dto.getUserPpp();
-        Integer headCount = dto.getHeadCount();
+        Integer headCount = dto.getSlot().getHeadCount();
         Integer pppGap = dto.getPppGap();
+        Mode slotMode = dto.getSlot().getMode();
         LocalDateTime currentTime = LocalDateTime.now();
         Integer maxCount = 2;
         if (slotType != null && slotType.equals(GameType.DOUBLE)) {
@@ -191,10 +187,11 @@ public class SlotService {
             status = SlotStatusType.MYTABLE;
         } else if (slotType != null && !gameType.equals(slotType)) {
             status = SlotStatusType.CLOSE;
-        } else if (gamePpp != null && Math.abs(userPpp - gamePpp) > pppGap) {
-//        } else if (gamePpp != null && Math.abs(userPpp - gamePpp) > 100) {
+        } else if (slotMode == Mode.RANK && gamePpp != null && Math.abs(userPpp - gamePpp) > pppGap) {
             status = SlotStatusType.CLOSE;
         } else if (headCount.equals(maxCount)) {
+            status = SlotStatusType.CLOSE;
+        } else if (dto.getUserMode() != null && !dto.getUserMode().equals(dto.getSlot().getMode())) {
             status = SlotStatusType.CLOSE;
         }
         return status;
