@@ -3,6 +3,7 @@ package io.pp.arcade.domain.pchange;
 import io.pp.arcade.TestInitiator;
 import io.pp.arcade.v1.domain.game.Game;
 import io.pp.arcade.v1.domain.game.GameRepository;
+import io.pp.arcade.v1.domain.game.dto.GameDto;
 import io.pp.arcade.v1.domain.pchange.PChange;
 import io.pp.arcade.v1.domain.pchange.PChangeRepository;
 import io.pp.arcade.v1.domain.pchange.PChangeService;
@@ -15,6 +16,7 @@ import io.pp.arcade.v1.domain.team.Team;
 import io.pp.arcade.v1.domain.team.TeamRepository;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.domain.user.UserRepository;
+import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.type.StatusType;
 import org.assertj.core.api.Assertions;
@@ -77,8 +79,8 @@ class PChangeServiceTest {
     void addPChange() {
         //given
         PChangeAddDto addDto = PChangeAddDto.builder()
-                .gameId(game.getId())
-                .userId(user1.getId())
+                .game(GameDto.from(game))
+                .user(UserDto.from(user1))
                 .pppChange(333)
                 .pppResult(user1.getPpp() + 333)
                 .build();
