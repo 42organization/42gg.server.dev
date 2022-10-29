@@ -59,7 +59,7 @@ public class CurrentMatchService {
 
     @Transactional
     public void saveGameInCurrentMatch(CurrentMatchSaveGameDto saveDto) {
-        Game game = gameRepository.findById(saveDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
+        Game game = gameRepository.findById(saveDto.getGame().getId()).orElseThrow(() -> new BusinessException("E0001"));
         List<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllBySlotId(game.getSlot().getId());
         slotTeamUsers.forEach(slotTeamUser -> {
             CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(slotTeamUser.getUser(), false).orElse(null);
