@@ -132,13 +132,13 @@ public class GameControllerImplV1 {
         if (game == null) {
             throw new BusinessException("E0001");
         } else if (game.getStatus() == StatusType.END) {
-            currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder().userId(user.getId()).game(game).build());
+            currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder().user(user).game(game).build());
             throw new ResponseStatusException(HttpStatus.CREATED, "");
         }
 
-        currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder().userId(user.getId()).game(game).build());
+        currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder().user(user).game(game).build());
         gameManager.modifyUserExp(game);
-        gameService.modifyGameStatus(GameModifyStatusDto.builder().gameId(game.getId()).status(StatusType.END).build());
+        gameService.modifyGameStatus(GameModifyStatusDto.builder().game(game).status(StatusType.END).build());
 
         throw new ResponseStatusException(HttpStatus.CREATED, "");
     }

@@ -6,8 +6,6 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class CurrentMatchFindDto {
+public class CurrentMatchFindByGameDto {
     private GameDto game;
-    private Integer userId;
-    private String intraId;
 }

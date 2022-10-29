@@ -45,7 +45,7 @@ public class CurrentMatchUpdater extends AbstractScheduler {
         Integer maxHeadCount = GameType.SINGLE.equals(slot.getType()) ? 2 : 4;
         if (maxHeadCount.equals(slot.getHeadCount())) {
             CurrentMatchModifyDto modifyDto = CurrentMatchModifyDto.builder()
-                    .slotId(slot.getId())
+                    .slot(slot)
                     .isMatched(true)
                     .matchImminent(true)
                     .build();

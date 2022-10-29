@@ -24,7 +24,7 @@ public class FeedbackService {
 
     @Transactional
     public void addFeedback(FeedbackAddDto addDto) {
-        User user = userRepository.findById(addDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        User user = userRepository.findById(addDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
         Feedback feedback = Feedback.builder()
                 .user(user)
                 .category(addDto.getCategory())

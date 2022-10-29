@@ -60,7 +60,7 @@ public class GameService {
 
     @Transactional
     public void modifyGameStatus(GameModifyStatusDto modifyStatusDto) {
-        Game game = gameRepository.findById(modifyStatusDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
+        Game game = gameRepository.findById(modifyStatusDto.getGame().getId()).orElseThrow(() -> new BusinessException("E0001"));
         game.setStatus(modifyStatusDto.getStatus());
     }
 
@@ -83,12 +83,13 @@ public class GameService {
         Integer mode = (findDto.getMode() == null) ? null : findDto.getMode().getValue();
         Integer status = (findDto.getStatus() == null) ? null : findDto.getStatus().getValue();
         List<Game> games = gameRepository.findGameListOrderByIdDesc(findDto.getSeasonId(), findDto.getId(), mode, status, findDto.getCount() + 1);
-        if (games.size() == findDto.getCount() + 1)
-            games.remove(games.size() - 1);
+        Integer count = games.size();
+        if (count == findDto.getCount() + 1)
+            games.remove(count - 1);
         List<GameDto> gameDtoList = games.stream().map(GameDto::from).collect(Collectors.toList());
         GameResultListDto resultPageDto = GameResultListDto.builder()
                 .gameList(gameDtoList)
-                .isLast(games.size() < findDto.getCount())
+                .isLast(count < findDto.getCount() + 1)
                 .build();
         return resultPageDto;
     }
