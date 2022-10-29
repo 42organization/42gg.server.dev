@@ -103,8 +103,8 @@ public class GameManager {
                     .ppp(slotTeamUser.getUser().getPpp() + pppChange)
                     .build();
             PChangeAddDto pChangeAddDto = PChangeAddDto.builder()
-                    .gameId(game.getId())
-                    .userId(slotTeamUser.getUser().getId())
+                    .game(game)
+                    .user(slotTeamUser.getUser())
                     .pppChange(pppChange)
                     .pppResult(slotTeamUser.getUser().getPpp() + pppChange)
                     .build();
@@ -149,7 +149,7 @@ public class GameManager {
 
             Integer expChange = ExpLevelCalculator.getExpPerGame() + ExpLevelCalculator.getExpBonus() * gamePerDay;
 
-            pChangeService.addPChange(PChangeAddDto.builder().gameId(game.getId()).userId(user.getId()).expChange(expChange).expResult(user.getTotalExp() + expChange).build());
+            pChangeService.addPChange(PChangeAddDto.builder().game(game).user(user).expChange(expChange).expResult(user.getTotalExp() + expChange).build());
             userService.modifyUserExp(UserModifyExpDto.builder().userId(user.getId()).exp(expChange).build());
         }
     }
