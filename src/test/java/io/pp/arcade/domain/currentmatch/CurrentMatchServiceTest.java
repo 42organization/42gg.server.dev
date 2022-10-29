@@ -84,7 +84,7 @@ class CurrentMatchServiceTest {
     void addCurrentMatch() {
         CurrentMatchAddDto addDto = CurrentMatchAddDto.builder()
                 .slot(SlotDto.from(slot))
-                .userId(user1.getId())
+                .user(UserDto.from(user1))
                 .build();
         currentMatchService.addCurrentMatch(addDto);
         CurrentMatch match = currentMatchRepository.findByUserAndIsDel(user1, false).orElseThrow(() -> new BusinessException("E0001"));

@@ -74,7 +74,6 @@ public class SlotControllerImpl implements SlotController {
     public void slotAddUser(Integer tableId, GameType type, SlotAddUserRequestDto addReqDto, HttpServletRequest request) throws MessagingException {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         doubleNotSupportedYet(type);
-        Integer userId = user.getId();
         SlotDto slot = slotService.findSlotById(addReqDto.getSlotId());
 
         checkIfUserHaveCurrentMatch(user);
@@ -88,7 +87,7 @@ public class SlotControllerImpl implements SlotController {
         //유저가 슬롯에 입장하면 currentMatch에 등록된다.
         CurrentMatchAddDto matchAddDto = CurrentMatchAddDto.builder()
                 .slot(slot)
-                .userId(userId)
+                .user(user)
                 .build();
         currentMatchService.addCurrentMatch(matchAddDto);
 
