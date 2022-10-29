@@ -2,7 +2,7 @@ package io.pp.arcade.v1.domain.game.Manager;
 
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchDto;
-import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchFindDto;
+import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchFindByGameDto;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchRemoveDto;
 import io.pp.arcade.v1.domain.game.GameService;
 import io.pp.arcade.v1.domain.game.dto.GameDto;
@@ -122,7 +122,7 @@ public class GameManager {
     }
 
     public void removeCurrentMatch(GameDto game) {
-        CurrentMatchFindDto findDto = CurrentMatchFindDto.builder()
+        CurrentMatchFindByGameDto findDto = CurrentMatchFindByGameDto.builder()
                 .game(game)
                 .build();
         List<CurrentMatchDto> currentMatchDtos = currentMatchService.findCurrentMatchByGame(findDto);
