@@ -9,15 +9,11 @@ import java.util.List;
 @Builder
 public class PChangePageDto {
     List<PChangeDto> pChangeList;
-    Integer currentPage;
-    Integer totalPage;
 
     @Override
     public String toString() {
         return "PChangePageDto{" +
                 "pChangeList=" + pChangeList +
-                ", currentPage=" + currentPage +
-                ", totalPage=" + totalPage +
                 '}';
     }
 }
