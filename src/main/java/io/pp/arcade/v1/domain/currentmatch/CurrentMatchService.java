@@ -112,7 +112,7 @@ public class CurrentMatchService {
 
     @Transactional
     public void removeCurrentMatch(CurrentMatchRemoveDto removeDto) {
-        if (removeDto.getSlot().getId() == null) {
+        if (removeDto.getSlot() == null) {
             User user = userRepository.findById(removeDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
             CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(user, false).orElse(null);
             if (currentMatch != null) {
