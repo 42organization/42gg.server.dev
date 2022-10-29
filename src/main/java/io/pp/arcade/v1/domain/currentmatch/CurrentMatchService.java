@@ -49,7 +49,7 @@ public class CurrentMatchService {
 
     @Transactional
     public void modifyCurrentMatch(CurrentMatchModifyDto modifyDto){
-        List<CurrentMatch> currentMatchList = currentMatchRepository.findAllBySlotId(modifyDto.getSlotId());
+        List<CurrentMatch> currentMatchList = currentMatchRepository.findAllBySlotId(modifyDto.getSlot().getId());
         currentMatchList.forEach(currentMatch -> {
             currentMatch.setMatchImminent(modifyDto.getMatchImminent());
             currentMatch.setIsMatched(modifyDto.getIsMatched());

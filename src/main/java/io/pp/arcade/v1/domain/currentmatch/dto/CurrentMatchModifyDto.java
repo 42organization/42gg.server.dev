@@ -1,26 +1,23 @@
 package io.pp.arcade.v1.domain.currentmatch.dto;
-
-import io.pp.arcade.v1.domain.game.dto.GameDto;
+import io.pp.arcade.v1.domain.slot.dto.SlotDto;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
 public class CurrentMatchModifyDto {
-    private Integer slotId;
+    private SlotDto slot;
     private Boolean isMatched;
     private Boolean matchImminent;
     private Boolean isDel;
-    private GameDto gameDto;
 
     @Override
     public String toString() {
         return "CurrentMatchModifyDto{" +
-                "slotId=" + slotId +
+                "slot=" + slot.toString() +
                 ", isMatched=" + isMatched +
                 ", matchImminent=" + matchImminent +
                 ", isDel=" + isDel +
-                ", gameDto=" + gameDto +
                 '}';
     }
 }

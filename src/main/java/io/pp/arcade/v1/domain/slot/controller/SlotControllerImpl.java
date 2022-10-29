@@ -162,7 +162,7 @@ public class SlotControllerImpl implements SlotController {
         List<UserDto> users = new ArrayList<>();
 
         currentMatchService.modifyCurrentMatch(CurrentMatchModifyDto.builder()
-                .slotId(slot.getId())
+                .slot(slot)
                 .isMatched(false)
                 .matchImminent(false)
                 .build());
@@ -196,7 +196,7 @@ public class SlotControllerImpl implements SlotController {
         Boolean isMatched = (slot.getHeadCount()).equals(maxSlotHeadCount);
         Boolean isImminent = slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5));
         CurrentMatchModifyDto matchModifyDto = CurrentMatchModifyDto.builder()
-                .slotId(slot.getId())
+                .slot(slot)
                 .isMatched(isMatched)
                 .matchImminent(isImminent)
                 .isDel(false)
