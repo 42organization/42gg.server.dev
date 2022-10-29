@@ -8,9 +8,8 @@ import io.pp.arcade.v1.domain.pchange.PChange;
 import io.pp.arcade.v1.domain.pchange.PChangeRepository;
 import io.pp.arcade.v1.domain.pchange.PChangeService;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeAddDto;
-import io.pp.arcade.v1.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeListFindDto;
-import io.pp.arcade.v1.domain.pchange.dto.PChangePageDto;
+import io.pp.arcade.v1.domain.pchange.dto.PChangeListDto;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.slot.SlotRepository;
 import io.pp.arcade.v1.domain.team.Team;
@@ -25,8 +24,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -82,8 +79,8 @@ class PChangeServiceTest {
     void addPChange() {
         //given
         PChangeAddDto addDto = PChangeAddDto.builder()
-                .gameId(game.getId())
-                .userId(user1.getId())
+                .game(GameDto.from(game))
+                .user(UserDto.from(user1))
                 .pppChange(333)
                 .pppResult(user1.getPpp() + 333)
                 .build();
@@ -145,7 +142,7 @@ class PChangeServiceTest {
                 .season(1)
                 .build();
 
-        PChangePageDto pChangeDto =  pChangeService.findPChangeByUserIdAfterGameIdAndGameMode(findDto);
+        PChangeListDto pChangeDto =  pChangeService.findPChangeByUserIdAfterGameIdAndGameMode(findDto);
         Assertions.assertThat(pChangeDto.getPChangeList().size()).isEqualTo(20);
         System.out.println(pChangeDto);
         Assertions.assertThat(pChangeDto.getPChangeList().get(0).getPppChange()).isEqualTo(333);

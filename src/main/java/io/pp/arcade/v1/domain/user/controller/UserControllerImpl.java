@@ -9,7 +9,7 @@ import io.pp.arcade.v1.domain.noti.dto.NotiFindDto;
 import io.pp.arcade.v1.domain.pchange.PChangeService;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeFindDto;
-import io.pp.arcade.v1.domain.pchange.dto.PChangePageDto;
+import io.pp.arcade.v1.domain.pchange.dto.PChangeListDto;
 import io.pp.arcade.v1.domain.rank.dto.RankDto;
 import io.pp.arcade.v1.domain.rank.dto.RankFindDto;
 import io.pp.arcade.v1.domain.rank.dto.RankModifyStatusMessageDto;
@@ -24,7 +24,6 @@ import io.pp.arcade.v1.domain.user.dto.*;
 import io.pp.arcade.v1.global.scheduler.CurrentMatchUpdater;
 import io.pp.arcade.v1.global.scheduler.GameGenerator;
 import io.pp.arcade.v1.global.type.GameType;
-import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.type.RoleType;
 import io.pp.arcade.v1.global.util.ExpLevelCalculator;
 import io.pp.arcade.v1.global.util.HeaderUtil;
@@ -164,7 +163,7 @@ public class UserControllerImpl implements UserController {
     @GetMapping(value = "/users/{userId}/historics")
     public UserHistoricResponseDto userFindHistorics(String userId, Integer season, Pageable pageable) {
         UserDto user = userService.findByIntraId(UserFindDto.builder().intraId(userId).build());
-        PChangePageDto pChangePage = pChangeService.findRankPChangeByUserId(PChangeFindDto.builder()
+        PChangeListDto pChangePage = pChangeService.findRankPChangeByUserId(PChangeFindDto.builder()
                 .user(user)
                 .season(season == 0 ? seasonService.findLatestRankSeason().getId() : season)
                 .count(10)
