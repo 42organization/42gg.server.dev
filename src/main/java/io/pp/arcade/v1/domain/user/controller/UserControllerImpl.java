@@ -2,6 +2,7 @@ package io.pp.arcade.v1.domain.user.controller;
 
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchDto;
+import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchFindByUserDto;
 import io.pp.arcade.v1.domain.game.dto.GameDto;
 import io.pp.arcade.v1.domain.noti.NotiService;
 import io.pp.arcade.v1.domain.noti.dto.NotiCountDto;
@@ -210,7 +211,7 @@ public class UserControllerImpl implements UserController {
     @GetMapping(value = "/users/live")
     public UserLiveInfoResponseDto userLiveInfo(HttpServletRequest request) throws MessagingException {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByIntraId(user.getIntraId());
+        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByIntraId(CurrentMatchFindByUserDto.builder().user(user).build());
         GameDto currentMatchGame = currentMatch == null ? null : currentMatch.getGame();
         SeasonDto season = seasonService.findCurrentSeason();
         String event = currentMatch == null ? null : "match";

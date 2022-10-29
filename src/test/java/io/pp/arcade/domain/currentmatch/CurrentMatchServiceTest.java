@@ -84,7 +84,7 @@ class CurrentMatchServiceTest {
     void addCurrentMatch() {
         CurrentMatchAddDto addDto = CurrentMatchAddDto.builder()
                 .slot(SlotDto.from(slot))
-                .userId(user1.getId())
+                .user(UserDto.from(user1))
                 .build();
         currentMatchService.addCurrentMatch(addDto);
         CurrentMatch match = currentMatchRepository.findByUserAndIsDel(user1, false).orElseThrow(() -> new BusinessException("E0001"));
@@ -103,8 +103,7 @@ class CurrentMatchServiceTest {
                 .user(user1)
                 .build());
         CurrentMatchModifyDto modifyDto = CurrentMatchModifyDto.builder()
-                .gameDto(GameDto.from(game))
-                .slotId(slot.getId())
+                .slot(SlotDto.from(slot))
                 .isMatched(true)
                 .matchImminent(false)
                 .build();
@@ -126,7 +125,7 @@ class CurrentMatchServiceTest {
                 .matchImminent(false)
                 .build());
         CurrentMatchSaveGameDto saveGameDto = CurrentMatchSaveGameDto.builder()
-                .gameId(game.getId())
+                .game(GameDto.from(game))
                 .build();
         slotTeamUserRepository.save(SlotTeamUser.builder().slot(slot).team(team1).user(user1).build());
 
@@ -162,7 +161,7 @@ class CurrentMatchServiceTest {
                 .build());
 
         CurrentMatchRemoveDto removeDto = CurrentMatchRemoveDto.builder()
-                .userId(user1.getId()).build();
+                .user(UserDto.from(user1)).build();
 
         Assertions.assertThat(currentMatchRepository.findAll()).isNotEqualTo(Collections.EMPTY_LIST);
         currentMatchService.removeCurrentMatch(removeDto);

@@ -4,10 +4,7 @@ import io.pp.arcade.TestInitiator;
 import io.pp.arcade.v1.domain.game.Game;
 import io.pp.arcade.v1.domain.game.GameRepository;
 import io.pp.arcade.v1.domain.game.GameService;
-import io.pp.arcade.v1.domain.game.dto.GameAddDto;
-import io.pp.arcade.v1.domain.game.dto.GameFindDto;
-import io.pp.arcade.v1.domain.game.dto.GameModifyStatusDto;
-import io.pp.arcade.v1.domain.game.dto.GameResultListDto;
+import io.pp.arcade.v1.domain.game.dto.*;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.slot.SlotRepository;
 import io.pp.arcade.v1.domain.slot.dto.SlotDto;
@@ -101,7 +98,7 @@ class GameServiceTest {
                 .build());
 
         GameModifyStatusDto modifyDto = GameModifyStatusDto.builder()
-                .gameId(game.getId())
+                .game(GameDto.from(game))
                 .status(StatusType.END)
                 .build();
         //when

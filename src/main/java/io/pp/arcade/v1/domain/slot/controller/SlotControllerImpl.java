@@ -74,7 +74,6 @@ public class SlotControllerImpl implements SlotController {
     public void slotAddUser(Integer tableId, GameType type, SlotAddUserRequestDto addReqDto, HttpServletRequest request) throws MessagingException {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         doubleNotSupportedYet(type);
-        Integer userId = user.getId();
         SlotDto slot = slotService.findSlotById(addReqDto.getSlotId());
 
         checkIfUserHaveCurrentMatch(user);
@@ -88,7 +87,7 @@ public class SlotControllerImpl implements SlotController {
         //유저가 슬롯에 입장하면 currentMatch에 등록된다.
         CurrentMatchAddDto matchAddDto = CurrentMatchAddDto.builder()
                 .slot(slot)
-                .userId(userId)
+                .user(user)
                 .build();
         currentMatchService.addCurrentMatch(matchAddDto);
 
@@ -131,7 +130,7 @@ public class SlotControllerImpl implements SlotController {
         checkIfUserRemovable(currentMatch, slot);
 
         CurrentMatchRemoveDto currentMatchRemoveDto = CurrentMatchRemoveDto.builder()
-                .userId(user.getId()).build();
+                .user(user).build();
         currentMatchService.removeCurrentMatch(currentMatchRemoveDto);
         teamService.removeUserInTeam(TeamRemoveUserDto.builder()
                 .slotId(slot.getId()).userId(user.getId()).build());
@@ -163,7 +162,7 @@ public class SlotControllerImpl implements SlotController {
         List<UserDto> users = new ArrayList<>();
 
         currentMatchService.modifyCurrentMatch(CurrentMatchModifyDto.builder()
-                .slotId(slot.getId())
+                .slot(slot)
                 .isMatched(false)
                 .matchImminent(false)
                 .build());
@@ -197,7 +196,7 @@ public class SlotControllerImpl implements SlotController {
         Boolean isMatched = (slot.getHeadCount()).equals(maxSlotHeadCount);
         Boolean isImminent = slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5));
         CurrentMatchModifyDto matchModifyDto = CurrentMatchModifyDto.builder()
-                .slotId(slot.getId())
+                .slot(slot)
                 .isMatched(isMatched)
                 .matchImminent(isImminent)
                 .isDel(false)

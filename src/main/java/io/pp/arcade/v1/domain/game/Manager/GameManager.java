@@ -2,7 +2,7 @@ package io.pp.arcade.v1.domain.game.Manager;
 
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchDto;
-import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchFindDto;
+import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchFindByGameDto;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchRemoveDto;
 import io.pp.arcade.v1.domain.game.GameService;
 import io.pp.arcade.v1.domain.game.dto.GameDto;
@@ -62,7 +62,7 @@ public class GameManager {
 
     public void endGameStatus(GameDto game) {
         GameModifyStatusDto modifyStatusDto = GameModifyStatusDto.builder()
-                .gameId(game.getId())
+                .game(game)
                 .status(StatusType.END).build();
         gameService.modifyGameStatus(modifyStatusDto);
     }
@@ -122,13 +122,13 @@ public class GameManager {
     }
 
     public void removeCurrentMatch(GameDto game) {
-        CurrentMatchFindDto findDto = CurrentMatchFindDto.builder()
+        CurrentMatchFindByGameDto findDto = CurrentMatchFindByGameDto.builder()
                 .game(game)
                 .build();
         List<CurrentMatchDto> currentMatchDtos = currentMatchService.findCurrentMatchByGame(findDto);
         currentMatchDtos.forEach(currentMatchDto -> {
             CurrentMatchRemoveDto removeDto = CurrentMatchRemoveDto.builder()
-                    .userId(currentMatchDto.getUser().getId()).build();
+                    .user(currentMatchDto.getUser()).build();
             currentMatchService.removeCurrentMatch(removeDto);
         });
     }

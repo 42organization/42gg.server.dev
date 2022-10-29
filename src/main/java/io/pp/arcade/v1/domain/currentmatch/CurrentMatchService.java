@@ -36,7 +36,7 @@ public class CurrentMatchService {
 
     @Transactional
     public void addCurrentMatch(CurrentMatchAddDto addDto){
-        User user = userRepository.findById(addDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        User user = userRepository.findById(addDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
         Slot slot = slotRepository.findById(addDto.getSlot().getId()).orElseThrow(() -> new BusinessException("E0001"));
         currentMatchRepository.save(CurrentMatch.builder()
                         .slot(slot)
@@ -49,7 +49,7 @@ public class CurrentMatchService {
 
     @Transactional
     public void modifyCurrentMatch(CurrentMatchModifyDto modifyDto){
-        List<CurrentMatch> currentMatchList = currentMatchRepository.findAllBySlotId(modifyDto.getSlotId());
+        List<CurrentMatch> currentMatchList = currentMatchRepository.findAllBySlotId(modifyDto.getSlot().getId());
         currentMatchList.forEach(currentMatch -> {
             currentMatch.setMatchImminent(modifyDto.getMatchImminent());
             currentMatch.setIsMatched(modifyDto.getIsMatched());
@@ -59,7 +59,7 @@ public class CurrentMatchService {
 
     @Transactional
     public void saveGameInCurrentMatch(CurrentMatchSaveGameDto saveDto) {
-        Game game = gameRepository.findById(saveDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
+        Game game = gameRepository.findById(saveDto.getGame().getId()).orElseThrow(() -> new BusinessException("E0001"));
         List<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllBySlotId(game.getSlot().getId());
         slotTeamUsers.forEach(slotTeamUser -> {
             CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(slotTeamUser.getUser(), false).orElse(null);
@@ -86,8 +86,8 @@ public class CurrentMatchService {
     }
 
     @Transactional
-    public CurrentMatchDto findCurrentMatchByIntraId(String intraId) {
-        User user = userRepository.findByIntraId(intraId).orElseThrow(() -> new BusinessException("E0001"));
+    public CurrentMatchDto findCurrentMatchByIntraId(CurrentMatchFindByUserDto findByUserDto) {
+        User user = userRepository.findByIntraId(findByUserDto.getUser().getIntraId()).orElseThrow(() -> new BusinessException("E0001"));
         CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(user, false).orElse(null);
         CurrentMatchDto dto = null;
 
@@ -104,7 +104,7 @@ public class CurrentMatchService {
     }
 
     @Transactional
-    public List<CurrentMatchDto> findCurrentMatchByGame(CurrentMatchFindDto findDto) {
+    public List<CurrentMatchDto> findCurrentMatchByGame(CurrentMatchFindByGameDto findDto) {
         List<CurrentMatch> matches = currentMatchRepository.findAllByGameId(findDto.getGame().getId());
         List<CurrentMatchDto> currentMatchDtos = matches.stream().map(CurrentMatchDto::from).collect(Collectors.toList());
         return currentMatchDtos;
@@ -112,15 +112,15 @@ public class CurrentMatchService {
 
     @Transactional
     public void removeCurrentMatch(CurrentMatchRemoveDto removeDto) {
-        if (removeDto.getSlotId() == null) {
-            User user = userRepository.findById(removeDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        if (removeDto.getSlot() == null) {
+            User user = userRepository.findById(removeDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
             CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(user, false).orElse(null);
             if (currentMatch != null) {
                 currentMatch.setIsDel(true);
             }
 //            currentMatchRepository.deleteByUser(user);
         } else {
-            List<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllBySlotId(removeDto.getSlotId());
+            List<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllBySlotId(removeDto.getSlot().getId());
             slotTeamUsers.forEach(slotTeamUser -> {
                 CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(slotTeamUser.getUser(), false).orElse(null);
                 if (currentMatch != null) {
