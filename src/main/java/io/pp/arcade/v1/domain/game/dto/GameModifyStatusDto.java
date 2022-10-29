@@ -7,13 +7,13 @@ import lombok.Getter;
 @Getter
 @Builder
 public class GameModifyStatusDto {
-    private Integer gameId;
+    private GameDto game;
     private StatusType status;
 
     @Override
     public String toString() {
         return "GameModifyStatusDto{" +
-                "gameId=" + gameId +
+                "game=" + game.toString() +
                 ", status=" + status +
                 '}';
     }

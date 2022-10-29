@@ -102,7 +102,7 @@ public class GameGenerator extends AbstractScheduler {
         if (slot != null) {
             GameDto game = gameService.findBySlotIdNullable(slot.getId());
             if (game != null && game.getStatus().equals(StatusType.LIVE)) {
-                gameService.modifyGameStatus(GameModifyStatusDto.builder().gameId(game.getId()).status(StatusType.WAIT).build());
+                gameService.modifyGameStatus(GameModifyStatusDto.builder().game(game).status(StatusType.WAIT).build());
             }
         }
     }
