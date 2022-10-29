@@ -209,7 +209,7 @@ class SlotControllerTest {
          * status : close
          * */
         slot = slots[2];
-        saveSlot(slot, 1, GameType.SINGLE, 900, (User) null);
+        saveSlot(slot, 1, GameType.SINGLE, 900, (User) null, Mode.RANK);
         saveUserPpp(users[10], 100);
         mockMvc.perform(get("/pingpong/match/tables/1/rank/{type}", GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + testInitiator.tokens[10].getAccessToken()))
