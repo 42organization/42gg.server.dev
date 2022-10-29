@@ -138,7 +138,7 @@ public class GameControllerImplV1 {
 
         currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder().user(user).game(game).build());
         gameManager.modifyUserExp(game);
-        gameService.modifyGameStatus(GameModifyStatusDto.builder().gameId(game.getId()).status(StatusType.END).build());
+        gameService.modifyGameStatus(GameModifyStatusDto.builder().game(game).status(StatusType.END).build());
 
         throw new ResponseStatusException(HttpStatus.CREATED, "");
     }

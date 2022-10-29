@@ -62,7 +62,7 @@ public class GameManager {
 
     public void endGameStatus(GameDto game) {
         GameModifyStatusDto modifyStatusDto = GameModifyStatusDto.builder()
-                .gameId(game.getId())
+                .game(game)
                 .status(StatusType.END).build();
         gameService.modifyGameStatus(modifyStatusDto);
     }

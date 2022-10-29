@@ -60,7 +60,7 @@ public class GameService {
 
     @Transactional
     public void modifyGameStatus(GameModifyStatusDto modifyStatusDto) {
-        Game game = gameRepository.findById(modifyStatusDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
+        Game game = gameRepository.findById(modifyStatusDto.getGame().getId()).orElseThrow(() -> new BusinessException("E0001"));
         game.setStatus(modifyStatusDto.getStatus());
     }
 
