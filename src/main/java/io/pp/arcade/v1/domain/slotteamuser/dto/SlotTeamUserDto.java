@@ -22,4 +22,12 @@ public class SlotTeamUserDto {
                 .build();
     }
 
+    @Override
+    public String toString() {
+        return "SlotTeamUserDto{" +
+                "slot=" + slot +
+                ", team=" + team +
+                ", user=" + user +
+                '}';
+    }
 }

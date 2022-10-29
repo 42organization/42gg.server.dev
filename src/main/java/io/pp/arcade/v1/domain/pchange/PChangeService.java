@@ -30,8 +30,8 @@ public class PChangeService {
 
     @Transactional
     public void addPChange(PChangeAddDto addDto) {
-        Game game = gameRepository.findById(addDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
-        User user = userRepository.findById(addDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        Game game = gameRepository.findById(addDto.getGame().getId()).orElseThrow(() -> new BusinessException("E0001"));
+        User user = userRepository.findById(addDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
 
         pChangeRepository.save(PChange.builder()
                 .game(game)
@@ -45,37 +45,32 @@ public class PChangeService {
     }
 
     @Transactional
-    public List<PChangeDto> findPChangeByGameId(PChangeFindDto findDto) {
-        Game game = gameRepository.findById(findDto.getGame().getId()).orElseThrow(() -> new BusinessException("E0001"));
-        List<PChange> pChangeList = pChangeRepository.findAllByGame(game).orElseThrow(() -> new BusinessException("E0001"));
-        return pChangeList.stream().map(PChangeDto::from).collect(Collectors.toList());
-    }
-
-    @Transactional
     public List<PChangeDto> findPChangeByUserIdNotPage(PChangeFindDto findDto){
         List<PChange> pChangeList = pChangeRepository.findAllByUserIntraId(findDto.getUser().getIntraId()).orElseThrow(() -> new BusinessException("E0001"));;
         return pChangeList.stream().map(PChangeDto::from).collect(Collectors.toList());
     }
 
     @Transactional
-    public PChangePageDto findRankPChangeByUserId(PChangeFindDto findDto){
-//        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+    public PChangeListDto findRankPChangeByUserId(PChangeFindDto findDto){
         List<PChange> pChangePage = pChangeRepository.findPChangeHistory(findDto.getUser().getIntraId(), findDto.getSeason(), Mode.RANK.getValue(), findDto.getCount());
-        PChangePageDto dto = PChangePageDto.builder()
+        PChangeListDto dto = PChangeListDto.builder()
                 .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()))
                 .build();
         return dto;
     }
 
     @Transactional
-    public PChangePageDto findPChangeByUserIdAfterGameIdAndGameMode(PChangeListFindDto findDto){
-//        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+    public PChangeListDto findPChangeByUserIdAfterGameIdAndGameMode(PChangeListFindDto findDto){
         Integer gameId = findDto.getGameId() == null ? Integer.MAX_VALUE : findDto.getGameId();
         Integer mode = findDto.getMode() == null ? null : findDto.getMode().getValue();
 
-        List<PChange> pChangePage = pChangeRepository.findPChangesByGameModeAndUser(findDto.getSeason(), mode, findDto.getIntraId(), gameId, findDto.getCount());
-        PChangePageDto dto = PChangePageDto.builder()
+        List<PChange> pChangePage = pChangeRepository.findPChangesByGameModeAndUser(findDto.getSeason(), mode, findDto.getIntraId(), gameId, findDto.getCount() + 1);
+        Integer count = pChangePage.size();
+        if (count == findDto.getCount() + 1)
+            pChangePage.remove(count - 1);
+        PChangeListDto dto = PChangeListDto.builder()
                 .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()))
+                .isLast(count < findDto.getCount() + 1)
                 .build();
         return dto;
     }
@@ -110,8 +105,6 @@ public class PChangeService {
 
     @Transactional
     public Integer findPChangeIdByUserAndGame(PChangeFindDto findDto) {
-//        Game game = gameRepository.findById(findDto.getGameId()).orElseThrow(() -> new BusinessException("E0001"));
-//        User user = userRepository.findByIntraId(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         PChange pChange = pChangeRepository.findByUser_IntraIdAndGame_Id(findDto.getUser().getIntraId(), findDto.getGame().getId()).orElseThrow(() -> new BusinessException("E0001"));
         return  pChange.getId();
     }
