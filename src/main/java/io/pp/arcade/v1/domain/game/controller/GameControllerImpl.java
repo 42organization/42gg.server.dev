@@ -15,8 +15,7 @@ import io.pp.arcade.v1.domain.noti.dto.NotiAddDto;
 import io.pp.arcade.v1.domain.pchange.PChangeService;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeListFindDto;
-import io.pp.arcade.v1.domain.pchange.dto.PChangePageDto;
-import io.pp.arcade.v1.domain.rank.service.RankRedisService;
+import io.pp.arcade.v1.domain.pchange.dto.PChangeListDto;
 import io.pp.arcade.v1.domain.season.SeasonService;
 import io.pp.arcade.v1.domain.security.jwt.TokenService;
 import io.pp.arcade.v1.domain.slot.dto.SlotDto;
@@ -31,8 +30,6 @@ import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.type.NotiType;
 import io.pp.arcade.v1.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -128,7 +125,6 @@ public class GameControllerImpl implements GameController {
             season = seasonService.findLatestRankSeason().getId();
         }
 
-        Pageable pageable = PageRequest.of(0, requestDto.getCount());
         PChangeListFindDto findDto = PChangeListFindDto.builder()
                 .intraId(intraId)
                 .gameId(requestDto.getGameId())
@@ -136,8 +132,8 @@ public class GameControllerImpl implements GameController {
                 .mode(requestDto.getMode())
                 .count(requestDto.getCount())
                 .build();
-        PChangePageDto pChangePageDto = pChangeService.findPChangeByUserIdAfterGameIdAndGameMode(findDto);
-        List<PChangeDto> pChangeLists = pChangePageDto.getPChangeList();
+        PChangeListDto pChangeListDto = pChangeService.findPChangeByUserIdAfterGameIdAndGameMode(findDto);
+        List<PChangeDto> pChangeLists = pChangeListDto.getPChangeList();
         List<GameDto> gameLists = pChangeLists.stream().map(PChangeDto::getGame).collect(Collectors.toList());;
         List<GameResultDto> gameResultList = new ArrayList<>();
         Integer lastGameId;
@@ -153,8 +149,7 @@ public class GameControllerImpl implements GameController {
         GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
                 .games(gameResultList)
                 .lastGameId(lastGameId)
-//                .totalPage(pChangePageDto.getTotalPage())
-//                .currentPage(pChangePageDto.getCurrentPage() + 1)
+                .isLast(pChangeListDto.getIsLast())
                 .build();
         return gameResultResponse;
     }
