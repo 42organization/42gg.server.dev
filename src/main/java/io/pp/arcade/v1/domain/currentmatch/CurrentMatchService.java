@@ -112,15 +112,15 @@ public class CurrentMatchService {
 
     @Transactional
     public void removeCurrentMatch(CurrentMatchRemoveDto removeDto) {
-        if (removeDto.getSlotId() == null) {
-            User user = userRepository.findById(removeDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        if (removeDto.getSlot().getId() == null) {
+            User user = userRepository.findById(removeDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
             CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(user, false).orElse(null);
             if (currentMatch != null) {
                 currentMatch.setIsDel(true);
             }
 //            currentMatchRepository.deleteByUser(user);
         } else {
-            List<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllBySlotId(removeDto.getSlotId());
+            List<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllBySlotId(removeDto.getSlot().getId());
             slotTeamUsers.forEach(slotTeamUser -> {
                 CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(slotTeamUser.getUser(), false).orElse(null);
                 if (currentMatch != null) {

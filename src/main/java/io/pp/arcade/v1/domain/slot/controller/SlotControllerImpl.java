@@ -130,7 +130,7 @@ public class SlotControllerImpl implements SlotController {
         checkIfUserRemovable(currentMatch, slot);
 
         CurrentMatchRemoveDto currentMatchRemoveDto = CurrentMatchRemoveDto.builder()
-                .userId(user.getId()).build();
+                .user(user).build();
         currentMatchService.removeCurrentMatch(currentMatchRemoveDto);
         teamService.removeUserInTeam(TeamRemoveUserDto.builder()
                 .slotId(slot.getId()).userId(user.getId()).build());

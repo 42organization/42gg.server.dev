@@ -77,7 +77,7 @@ public class GameGenerator extends AbstractScheduler {
         notiGenerater.addCancelNotisBySlot(canceledDto);
 
         CurrentMatchRemoveDto removeDto = CurrentMatchRemoveDto.builder()
-                .slotId(slotDto.getId())
+                .slot(slotDto)
                 .build();
         currentMatchService.removeCurrentMatch(removeDto);
     }
