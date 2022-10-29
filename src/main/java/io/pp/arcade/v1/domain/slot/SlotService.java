@@ -191,7 +191,7 @@ public class SlotService {
             status = SlotStatusType.CLOSE;
         } else if (headCount.equals(maxCount)) {
             status = SlotStatusType.CLOSE;
-        } else if (dto.getUserMode() != null && !dto.getUserMode().equals(dto.getSlot().getMode())) {
+        } else if (dto.getUserMode() != null && !dto.getUserMode().equals(dto.getSlot().getMode()) && !dto.getSlot().getMode().equals(Mode.BOTH)) {
             status = SlotStatusType.CLOSE;
         }
         return status;
