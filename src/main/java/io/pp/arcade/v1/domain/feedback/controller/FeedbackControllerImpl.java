@@ -24,12 +24,12 @@ public class FeedbackControllerImpl implements FeedbackController {
     @Override
     @PostMapping(value = "/feedback")
     public void feedbackSave(FeedbackRequestDto saveReqDto, HttpServletRequest request) {
-        if (saveReqDto.getContent().isBlank() == true) {
+        if (saveReqDto.getContent().isBlank()) {
             throw new BusinessException("RP001");
         }
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         FeedbackAddDto feedbackAddDto = FeedbackAddDto.builder()
-                .userId(user.getId())
+                .user(user)
                 .category(saveReqDto.getCategory())
                 .content(saveReqDto.getContent()).build();
         feedbackService.addFeedback(feedbackAddDto);
