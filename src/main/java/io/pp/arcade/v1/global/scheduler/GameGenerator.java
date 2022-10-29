@@ -90,7 +90,7 @@ public class GameGenerator extends AbstractScheduler {
         GameDto game = gameService.findBySlot(slotDto.getId());
 
         CurrentMatchSaveGameDto matchSaveGameDto = CurrentMatchSaveGameDto.builder()
-                .gameId(game.getId())
+                .game(game)
                 .build();
         currentMatchService.saveGameInCurrentMatch(matchSaveGameDto);
     }

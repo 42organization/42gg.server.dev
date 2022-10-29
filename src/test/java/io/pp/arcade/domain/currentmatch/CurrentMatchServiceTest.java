@@ -103,7 +103,6 @@ class CurrentMatchServiceTest {
                 .user(user1)
                 .build());
         CurrentMatchModifyDto modifyDto = CurrentMatchModifyDto.builder()
-                .gameDto(GameDto.from(game))
                 .slot(SlotDto.from(slot))
                 .isMatched(true)
                 .matchImminent(false)
@@ -126,7 +125,7 @@ class CurrentMatchServiceTest {
                 .matchImminent(false)
                 .build());
         CurrentMatchSaveGameDto saveGameDto = CurrentMatchSaveGameDto.builder()
-                .gameId(game.getId())
+                .game(GameDto.from(game))
                 .build();
         slotTeamUserRepository.save(SlotTeamUser.builder().slot(slot).team(team1).user(user1).build());
 
@@ -162,7 +161,7 @@ class CurrentMatchServiceTest {
                 .build());
 
         CurrentMatchRemoveDto removeDto = CurrentMatchRemoveDto.builder()
-                .userId(user1.getId()).build();
+                .user(UserDto.from(user1)).build();
 
         Assertions.assertThat(currentMatchRepository.findAll()).isNotEqualTo(Collections.EMPTY_LIST);
         currentMatchService.removeCurrentMatch(removeDto);
