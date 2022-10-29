@@ -128,7 +128,7 @@ public class GameManager {
         List<CurrentMatchDto> currentMatchDtos = currentMatchService.findCurrentMatchByGame(findDto);
         currentMatchDtos.forEach(currentMatchDto -> {
             CurrentMatchRemoveDto removeDto = CurrentMatchRemoveDto.builder()
-                    .userId(currentMatchDto.getUser().getId()).build();
+                    .user(currentMatchDto.getUser()).build();
             currentMatchService.removeCurrentMatch(removeDto);
         });
     }
