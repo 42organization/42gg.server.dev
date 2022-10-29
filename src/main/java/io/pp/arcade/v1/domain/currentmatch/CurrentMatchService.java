@@ -36,7 +36,7 @@ public class CurrentMatchService {
 
     @Transactional
     public void addCurrentMatch(CurrentMatchAddDto addDto){
-        User user = userRepository.findById(addDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        User user = userRepository.findById(addDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
         Slot slot = slotRepository.findById(addDto.getSlot().getId()).orElseThrow(() -> new BusinessException("E0001"));
         currentMatchRepository.save(CurrentMatch.builder()
                         .slot(slot)
@@ -86,8 +86,8 @@ public class CurrentMatchService {
     }
 
     @Transactional
-    public CurrentMatchDto findCurrentMatchByIntraId(String intraId) {
-        User user = userRepository.findByIntraId(intraId).orElseThrow(() -> new BusinessException("E0001"));
+    public CurrentMatchDto findCurrentMatchByIntraId(CurrentMatchFindByUserDto findByUserDto) {
+        User user = userRepository.findByIntraId(findByUserDto.getUser().getIntraId()).orElseThrow(() -> new BusinessException("E0001"));
         CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(user, false).orElse(null);
         CurrentMatchDto dto = null;
 
@@ -104,7 +104,7 @@ public class CurrentMatchService {
     }
 
     @Transactional
-    public List<CurrentMatchDto> findCurrentMatchByGame(CurrentMatchFindDto findDto) {
+    public List<CurrentMatchDto> findCurrentMatchByGame(CurrentMatchFindByGameDto findDto) {
         List<CurrentMatch> matches = currentMatchRepository.findAllByGameId(findDto.getGame().getId());
         List<CurrentMatchDto> currentMatchDtos = matches.stream().map(CurrentMatchDto::from).collect(Collectors.toList());
         return currentMatchDtos;
