@@ -7,13 +7,15 @@ import java.util.List;
 
 @Getter
 @Builder
-public class PChangePageDto {
+public class PChangeListDto {
     List<PChangeDto> pChangeList;
+    Boolean isLast;
 
     @Override
     public String toString() {
         return "PChangePageDto{" +
                 "pChangeList=" + pChangeList +
+                ", isLast=" + isLast +
                 '}';
     }
 }
