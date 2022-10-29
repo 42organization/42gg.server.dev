@@ -3,4 +3,4 @@
 ./src/main/resources/application-local.yml
 ./build/generated-snippets/*
 ./.idea
-
+./was-logs
