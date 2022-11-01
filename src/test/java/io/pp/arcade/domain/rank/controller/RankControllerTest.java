@@ -6,12 +6,16 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.TestInitiator;
+import io.pp.arcade.v1.domain.rank.Rank;
 import io.pp.arcade.v1.domain.rank.RankRedis;
+import io.pp.arcade.v1.domain.rank.RankRepository;
+import io.pp.arcade.v1.domain.season.Season;
 import io.pp.arcade.v1.domain.team.Team;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.domain.user.UserRepository;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.global.type.GameType;
+import io.pp.arcade.v1.global.type.RacketType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,8 +30,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -48,6 +56,9 @@ class RankControllerTest {
     private UserRepository userRepository;
 
     @Autowired
+    private RankRepository rankRepository;
+
+    @Autowired
     private RedisTemplate redisTemplate;
 
     @Autowired
@@ -62,38 +73,23 @@ class RankControllerTest {
     String port;
 
 
-    User[] users;
+    List<User> users;
+    List<User> preUsers;
     Team[] teams;
+    String preSeason;
     //Slot[] slots;
     @BeforeEach
     void init(){
         flushAll();
         testInitiator.letsgo();
-        users = testInitiator.users;
+        users = new ArrayList<>(Arrays.asList(testInitiator.users));
         teams = testInitiator.teams;
-        /*
-        user = userRepository.save(User.builder().ppp(0).statusMessage("").intraId("donghyuk").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
-        user2 = userRepository.save(User.builder().ppp(100).statusMessage("").intraId("nheo").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
-        user3 = userRepository.save(User.builder().ppp(100).statusMessage("").intraId("hakim").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
-        user4 = userRepository.save(User.builder().ppp(100).statusMessage("").intraId("jiyun").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
-        user5 = userRepository.save(User.builder().ppp(400).statusMessage("").intraId("jekim").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
-        user6 = userRepository.save(User.builder().ppp(500).statusMessage("").intraId("wochae").eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
-
-
-        users = new HashMap<>();
-        for (int i = 0; i < 10; i++){
-            String testIntraId = "test" + i;
-            User testUser = userRepository.save(User.builder().ppp(500).statusMessage("").intraId(testIntraId).eMail("").imageUri("").racketType(RacketType.SHAKEHAND).build());
-            users.put(testIntraId, testUser);
-        }
-        users.put("donghyuk", user);
-        users.put("nheo", user2);
-        users.put("hakim", user3);
-        users.put("jiyun", user4);
-        users.put("jekim", user5);
-        users.put("wochae", user6);
-        */
-        //rankRepository.save(Rank.builder().user(user).ranking(0).losses(0).wins(0).ppp(0).racketType(RacketType.SHAKEHAND).seasonId(0).build());
+        preSeason = testInitiator.preSeason.getId().toString();
+        preUsers = new ArrayList<>(users);
+        Collections.reverse(preUsers);
+        /* init preSeason user*/
+        for (int i = 0; i < preUsers.size(); ++i)
+            rankRepository.save(Rank.builder().seasonId(Integer.parseInt(preSeason)).user(preUsers.get(i)).ranking(i + 1).losses(0).wins(1).ppp(1000).racketType(RacketType.SHAKEHAND).gameType(GameType.SINGLE).build());
     }
     @AfterEach
     void end(){
@@ -104,47 +100,96 @@ class RankControllerTest {
     @Test
     @Transactional
     void rankList() throws Exception {
-        /* 유저가 존재히지 않을 경우 */
+        final GameType type = GameType.SINGLE;
+        ResultActions actions;
+        String page;
+        String count;
+        String season;
+
         /*
+         * 메인 페이지 - 현 시즌 랭킹 조회
+         * count = 3
+         * season = null
+         * */
+        page = "1";
+        count = "3";
+        actions = mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
+                .param("page",page)
+                .param("count", count))
+                .header("Authorization", "Bearer " + 0));
+        for (int i = 0; i < Integer.parseInt(count); i++) {
+            actions.andExpect(jsonPath("$.rankList["+ i +"].intraId").value(users.get(i).getIntraId()));
+        }
+        actions.andExpect(status().isOk()).andDo(document("v1-ranking-find-list-count-is-3"));
+
+        /*
+         * 랭킹 페이지 - 현 시즌 랭킹 조회
+         * count = NULL
+         * season = NULL
+         * */
+        page = "1";
+        actions = mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
+                        .param("page",page))
+                        .header("Authorization", "Bearer " + 0));
+        for (int i = 0; i < Integer.parseInt(count); i++) {
+            actions.andExpect(jsonPath("$.rankList["+ i +"].intraId").value(users.get(i).getIntraId()));
+        }
+        actions.andDo(document("v1-ranking-find-all-list"));
+
+        /*
+         * 랭킹 페이지 - 다음 페이지 조회
+         * page = 2
+         * count = 10
+         * season = 1
+         * */
+        page = "2";
+        count = "10";
+        season = "1";
+        actions = mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
+                .param("page",page)
+                .param("count", count)
+                .param("season", season))
+                .header("Authorization", "Bearer " + 0));
+        for (int i = 0, size = Integer.parseInt(count); size < users.size(); i++, size++) {
+            actions.andExpect(jsonPath("$.rankList["+ i +"].intraId").value(preUsers.get(Integer.parseInt(count) + i).getIntraId()));
+        }
+        actions.andExpect(status().isOk()).andDo(document("v1-ranking-find-all-list-count-is-10-and-next-page"));
+
+
+        /*
+         * 랭킹 페이지 - 이전 시즌 랭킹 조회
+         * count = null
+         * season = 1
+         * */
+        page = "1";
+        season = preSeason;
+        actions = mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
+                        .param("page",page)
+                        .param("season", season))
+                        .header("Authorization", "Bearer " + 0));
+        for (User preUser : preUsers) {
+            int i = preUsers.indexOf(preUser);
+            actions.andExpect(jsonPath("$.rankList["+ i +"].intraId").value(preUsers.get(i).getIntraId()));
+        }
+        actions.andExpect(status().isOk()).andDo(document("v1-ranking-find-all-list-pre-season"));
+
+        /*
+         * 랭킹 페이지 - 존재하지 않는 시즌 랭킹 조회
+         * count = null
+         * season = 100
+         * */
+        page = "1";
+        season = "100";
         mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
-                        .param("page","1"))
+                        .param("page",page)
+                        .param("season", season))
                         .header("Authorization", "Bearer " + 0))
-                .andExpect(jsonPath("$.myRank").value(null))
+                .andExpect(jsonPath("$.myRank").value(-1))
                 .andExpect(jsonPath("$.currentPage").value(1))
-                .andExpect(jsonPath("$.totalPage").value(1))
-                .andExpect(jsonPath("$.rankList").isEmpty())
-                .andExpect(status().isOk());
-         */
-
-        /* 유저가 존재할 경우 */
-
-        User client = users[0];
-        /*
-        for (User user : Arrays.stream(users).collect(Collectors.toList())) {
-            RankRedis singleRank = RankRedis.from(UserDto.from(user), GameType.SINGLE.getKey());
-            RankRedis doubleRank = RankRedis.from(UserDto.from(user), GameType.BUNGLE.getCode());
-            redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.SINGLE), singleRank);
-            redisTemplate.opsForValue().set(getUserKey(user.getIntraId(), GameType.BUNGLE), doubleRank);
-            redisTemplate.opsForZSet().add(getRankKey(GameType.SINGLE), getUserRankKey(user.getIntraId(), GameType.SINGLE), user.getPpp());
-            redisTemplate.opsForZSet().add(getRankKey(GameType.BUNGLE), getUserRankKey(user.getIntraId(), GameType.BUNGLE), user.getPpp());
-        }*/
-
-        GameType type = GameType.SINGLE;
-        RankRedis userRankInfo = RankRedis.from(UserDto.from(client), type);
-        mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
-                .param("page","1"))
-                .header("Authorization", "Bearer " + 0))
-                .andExpect(jsonPath("$.myRank").value(getRanking(userRankInfo, type)))
-//                .andExpect(jsonPath("$.currentPage").value(1))
-//                .andExpect(jsonPath("$.totalPage").value(1))
-                .andExpect(jsonPath("$.rankList[0].intraId").value(userRankInfo.getIntraId()))
-                .andExpect(jsonPath("$.rankList[0].ppp").value(userRankInfo.getPpp()))
-                .andExpect(jsonPath("$.rankList[0].statusMessage").value(userRankInfo.getStatusMessage()))
-                .andExpect(jsonPath("$.rankList[0].losses").value(userRankInfo.getLosses()))
-                .andExpect(jsonPath("$.rankList[0].wins").value(userRankInfo.getWins()))
-                .andExpect(jsonPath("$.rankList[0].winRate").value(userRankInfo.getWinRate()))
+                .andExpect(jsonPath("$.totalPage").value(0))
+                .andExpect(jsonPath("$.rankList.length()").value(0))
                 .andExpect(status().isOk())
-                .andDo(document("ranking-List"));
+                .andDo(document("v1-ranking-find-all-list-wrong-season"));
     }
 
     private String getUserRankKey(String intraId, GameType gameType) {
@@ -158,7 +203,7 @@ class RankControllerTest {
 
     private Integer getRanking(RankRedis userInfo ,GameType gameType){
         Integer totalGames = userInfo.getLosses() + userInfo.getWins();
-        Integer ranking= (totalGames == 0) ? -1 : redisRank.opsForZSet().reverseRank(getRankKey(gameType), getUserRankKey(userInfo.getIntraId(), gameType)).intValue() + 1;
+        Integer ranking = (totalGames == 0) ? -1 : redisRank.opsForZSet().reverseRank(getRankKey(gameType), getUserRankKey(userInfo.getIntraId(), gameType)).intValue() + 1;
         return ranking;
     }
 

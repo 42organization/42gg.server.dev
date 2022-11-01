@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RankRepository extends JpaRepository<Rank,Integer> {
-    List<Rank> findAllBySeasonId(Integer seasonId);
+    Page<Rank> findAllBySeasonId(Integer seasonId, Pageable pageable);
     Optional<Rank> findBySeasonIdAndUserId(Integer seasonId, Integer userId);
     Page<Rank> findAllByOrderByIdDesc(Pageable pageable);
 }

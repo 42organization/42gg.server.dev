@@ -33,8 +33,8 @@ public class RankRedisService implements RankNTService {
 
     @Transactional
     public RankListDto findRankList(RankFindListDto rankFindListDto) {
-        int pageNumber = rankFindListDto.getPageable().getPageNumber();
-        int count =rankFindListDto.getCount();
+        Integer pageNumber = rankFindListDto.getPageable().getPageNumber();
+        Integer count = rankFindListDto.getCount();
         GameType type = rankFindListDto.getGameType();
         Long size = redisRank.opsForZSet().size(getRankKey(type));
 
@@ -44,7 +44,6 @@ public class RankRedisService implements RankNTService {
             totalPage = size.intValue() / (count) + 1;
             totalPage = size.intValue() % (count) == 0 ? totalPage - 1 : totalPage;
         }
-        currentPage = currentPage > totalPage ? totalPage : currentPage;
         int start = (currentPage - 1) * count;
         int end = start + count - 1;
 
