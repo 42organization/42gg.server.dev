@@ -140,19 +140,15 @@ class RankControllerTest {
          * 랭킹 페이지 - 다음 페이지 조회
          * page = 2
          * count = 10
-         * season = 1
+         * season = null
          * */
         page = "2";
         count = "10";
-        season = "1";
         actions = mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
                 .param("page",page)
                 .param("count", count)
-                .param("season", season))
-                .header("Authorization", "Bearer " + 0));
-        for (int i = 0, size = Integer.parseInt(count); size < users.size(); i++, size++) {
-            actions.andExpect(jsonPath("$.rankList["+ i +"].intraId").value(preUsers.get(Integer.parseInt(count) + i).getIntraId()));
-        }
+                .header("Authorization", "Bearer " + 0)));
+        actions.andExpect(jsonPath("$.rankList.length()").value(2));
         actions.andExpect(status().isOk()).andDo(document("v1-ranking-find-all-list-count-is-10-and-next-page"));
 
 
