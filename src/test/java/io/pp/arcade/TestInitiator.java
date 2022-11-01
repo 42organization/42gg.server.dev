@@ -67,6 +67,7 @@ public class TestInitiator {
     public Slot[] slots;
     public SlotTeamUser[] slotTeamUser;
     public Season testSeason;
+    public Season preSeason;
     public RankRedis[] ranks;
     public void letsgo() {
         users = new User[12];
@@ -149,6 +150,7 @@ public class TestInitiator {
         teams[34] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[17]).headCount(0).score(0).build());
         teams[35] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[17]).headCount(0).score(0).build());
 
+        preSeason = seasonRepository.save(Season.builder().seasonName("Test").startTime(LocalDateTime.now().minusYears(3)).endTime(LocalDateTime.now().minusYears(2)).startPpp(1000).pppGap(150).seasonMode(Mode.BOTH).build());
         testSeason = seasonRepository.save(Season.builder().seasonName("Test").startTime(LocalDateTime.now().minusYears(1)).endTime(LocalDateTime.now().plusYears(1)).startPpp(1000).pppGap(150).seasonMode(Mode.NORMAL).build());
     }
 

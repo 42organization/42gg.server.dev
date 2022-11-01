@@ -80,6 +80,5 @@ class RankControllerNormalTest {
                 .andExpect(jsonPath("$.rankList[11].exp").value(users[11].getTotalExp())) //
                 .andExpect(status().isOk())
                 .andDo(document("vip-List"));
-
     }
 }

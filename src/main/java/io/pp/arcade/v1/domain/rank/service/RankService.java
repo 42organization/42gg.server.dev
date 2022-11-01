@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.data.web.config.PageableHandlerMethodArgumentResolverCustomizer;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -28,7 +30,17 @@ import java.util.stream.Collectors;
 public class RankService {
     private final RankRepository rankRepository;
     private final UserRepository userRepository;
-
+    @Transactional
+    public RankListDto  findAllBySeasonId(Integer seasonId, Pageable pageable) {
+        Page<Rank> pageRank = rankRepository.findAllBySeasonId(seasonId, pageable);
+        List<RankUserDto> rankUserDtos = pageRank.stream().map(RankUserDto::from).collect(Collectors.toList());
+        RankListDto rankListDto =  RankListDto.builder()
+                .rankList(rankUserDtos)
+                .currentPage(pageRank.getNumber())
+                .totalPage(pageRank.getTotalPages())
+                .build();
+        return rankListDto;
+    }
     @Transactional
     public RankDto findBySeasonIdAndUserId(Integer seasonId, Integer userId) {
         Rank rank = rankRepository.findBySeasonIdAndUserId(seasonId, userId).orElse(null);
@@ -40,7 +52,7 @@ public class RankService {
     
     @Transactional
     public VipListResponseDto vipList(UserDto curUser, Integer count, Pageable pageable) {
-        Integer pageNum = pageable.getPageNumber() < 1 ? 1 : pageable.getPageNumber() - 1;
+        Integer pageNum = pageable.getPageNumber() < 1 ? 0 : pageable.getPageNumber() - 1;
         pageable = PageRequest.of(pageNum, count);
 
         Page<User> userPage = userRepository.findAllByOrderByTotalExpDesc(pageable);
@@ -55,7 +67,7 @@ public class RankService {
                 .rankList(vipUserList)
                 .myRank(myRank)
                 .totalPage(userPage.getTotalPages())
-                .currentPage(userPage.getNumber())
+                .currentPage(pageNum + 1)
                 .build();
     }
 
@@ -115,5 +127,13 @@ public class RankService {
         Page<Rank> ranks = rankRepository.findAllByOrderByIdDesc(pageable);
         List<RankDto> rankDtos = ranks.stream().map(RankDto::from).collect(Collectors.toList());
         return rankDtos;
+    }
+
+    public RankUserDto findUserBySeasonId(Integer userSeason, UserDto userDto) {
+        Rank rank = rankRepository.findBySeasonIdAndUserId(userSeason, userDto.getId()).orElse(null);
+        RankUserDto rankUserDto = null;
+        if (rank != null)
+            rankUserDto = RankUserDto.from(rank);
+        return rankUserDto;
     }
 }
