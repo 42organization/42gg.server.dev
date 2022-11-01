@@ -1,6 +1,7 @@
 package io.pp.arcade.v1.domain.rank.dto;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.pp.arcade.v1.domain.rank.Rank;
 import io.pp.arcade.v1.domain.rank.RankRedis;
 import lombok.Builder;
 import lombok.Getter;
@@ -30,6 +31,20 @@ public class RankUserDto {
         return dto;
     }
 
+    public static RankUserDto from (Rank rank) {
+        Integer wins = rank.getWins();
+        Integer losses = rank.getLosses();
+        RankUserDto dto = RankUserDto.builder()
+                .intraId(rank.getUser().getIntraId())
+                .ppp(rank.getPpp())
+                .wins(rank.getWins())
+                .losses(rank.getLosses())
+                .winRate((losses + wins) == 0 ? 0 : ((double)wins / (double)(losses + wins) * 100))
+                .rank(rank.getRanking())
+                .statusMessage(rank.getUser().getStatusMessage())
+                .build();
+        return dto;
+    }
     @Override
     public String toString() {
         return "RankUserDto{" +
