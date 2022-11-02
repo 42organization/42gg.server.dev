@@ -65,7 +65,6 @@ public class UserControllerImpl implements UserController {
         UserResponseDto responseDto = UserResponseDto.builder()
                 .intraId(user.getIntraId())
                 .userImageUri(user.getImageUri())
-                .seasonMode(season.getSeasonMode().getCode())
                 .isAdmin(user.getRoleType() == RoleType.ADMIN)
                 .build();
         return responseDto;
@@ -223,7 +222,6 @@ public class UserControllerImpl implements UserController {
         UserLiveInfoResponseDto userLiveInfoResponse = UserLiveInfoResponseDto.builder()
                 .notiCount(notiCount.getNotiCount())
                 .currentMatchMode(currentMatch == null ? null : currentMatch.getSlot().getMode().getCode()) // is it right to find mode in slot?
-                .seasonMode(season.getSeasonMode().getCode())
                 .event(event)
                 .build();
         return userLiveInfoResponse;
