@@ -172,15 +172,15 @@ public class SlotControllerImpl implements SlotController {
         List<List<SlotStatusDto>> slotGroups = new ArrayList<>();
         if (!slotStatusDtos.isEmpty()) {
             List<SlotStatusDto> oneGroup = new ArrayList<>();
-            int groupTime = slotStatusDtos.get(0).getSlot().getTime().getHour();
+            int groupTime = slotStatusDtos.get(0).getTime().getHour();
 
             for(SlotStatusDto slot: slotStatusDtos) {
-                if (slot.getSlot().getTime().getHour() == groupTime) {
+                if (slot.getTime().getHour() == groupTime) {
                     oneGroup.add(slot);
                 } else {
                     slotGroups.add(oneGroup);
                     oneGroup = new ArrayList<>(); //다음 그루핑을 위한 그룹 생성
-                    groupTime = slot.getSlot().getTime().getHour(); //시간 갱신
+                    groupTime = slot.getTime().getHour(); //시간 갱신
                     oneGroup.add(slot);
                 }
             }
