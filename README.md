@@ -43,3 +43,6 @@
 🌱 [주차별 기록](https://island-zebra-5e0.notion.site/42GG-a5fd8c15d9014709af5fb2d16d1cec4f)
 
 🌱 [API별 HTTP 상태코드](https://graceful-atom-bb0.notion.site/API-HTTP-bb2a6c2a7ab44df68a5810eafad76b33)
+
+🌱 [문제 해결 기록](https://copper-way-3a6.notion.site/42GG-Problem-List-e27c3a1eefa9417b832a6b8ab83af5f9)
+
