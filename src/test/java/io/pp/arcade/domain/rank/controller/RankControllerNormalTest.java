@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -54,6 +55,9 @@ class RankControllerNormalTest {
     @Transactional
     @DisplayName("노말용 VIP 페이지 (/vip)")
     void vipList() throws Exception {
+        String page;
+        String count;
+        ResultActions actions;
         /* 유저가 존재히지 않을 경우  -> 얘기를 해봐야 함니다 */
 //        mockMvc.perform((get("/pingpong/vip").contentType(MediaType.APPLICATION_JSON)
 //                        .param("page","1"))
@@ -80,5 +84,36 @@ class RankControllerNormalTest {
                 .andExpect(jsonPath("$.rankList[11].exp").value(users[11].getTotalExp())) //
                 .andExpect(status().isOk())
                 .andDo(document("vip-List"));
+
+        /* 유저가 존재할 경우 */
+        mockMvc.perform((get("/pingpong/vip").contentType(MediaType.APPLICATION_JSON))
+                        .param("page","1")
+                        .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken())) // header 해줘야함
+                .andExpect(jsonPath("$.myRank").value(1)) //
+                .andExpect(jsonPath("$.rankList[0].intraId").value("hhakim")) //
+                .andExpect(jsonPath("$.rankList[0].statusMessage").value("kikikaka")) //
+                .andExpect(jsonPath("$.rankList[0].level").value(7)) //
+                .andExpect(jsonPath("$.rankList[0].exp").value(users[0].getTotalExp())) //
+                .andExpect(jsonPath("$.rankList[11].intraId").value("hjujeon")) //
+                .andExpect(jsonPath("$.rankList[11].statusMessage").value("kiki")) //
+                .andExpect(jsonPath("$.rankList[11].level").value(1)) //
+                .andExpect(jsonPath("$.rankList[11].exp").value(users[11].getTotalExp())) //
+                .andExpect(status().isOk())
+                .andDo(document("vip-List"));
+
+        /*
+         * 랭킹 페이지 - 일반전 다음 페이지 조회
+         * page = 2
+         * count = 10
+         * season = null
+         * */
+        page = "2";
+        count = "10";
+        actions = mockMvc.perform((get("/pingpong/vip").contentType(MediaType.APPLICATION_JSON))
+                .param("page","2")
+                .param("count", count)
+                .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()));
+        actions.andExpect(jsonPath("$.rankList[0].rank").value(Integer.parseInt(count) * (Integer.parseInt(page) - 1) + 1));
+        actions.andExpect(status().isOk()).andDo(document("v1-ranking-find-all-list-count-is-10-and-next-page"));
     }
 }
