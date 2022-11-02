@@ -9,7 +9,6 @@ import lombok.Getter;
 public class UserResponseDto {
     private String intraId;
     private String userImageUri;
-    private String seasonMode;
     private Boolean isAdmin;
 
     @Override
@@ -17,7 +16,6 @@ public class UserResponseDto {
         return "UserResponseDto{" +
                 "intraId='" + intraId + '\'' +
                 ", userImageUri='" + userImageUri + '\'' +
-                ", seasonMode=" + seasonMode +
                 ", isAdmin=" + isAdmin +
                 '}';
     }

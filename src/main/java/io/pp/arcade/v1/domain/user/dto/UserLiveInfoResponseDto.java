@@ -10,7 +10,6 @@ public class UserLiveInfoResponseDto {
     Integer notiCount;
     String event;
     String currentMatchMode;
-    String seasonMode;
 
     @Override
     public String toString() {
@@ -18,7 +17,6 @@ public class UserLiveInfoResponseDto {
                 "notiCount=" + notiCount +
                 ", event='" + event + '\'' +
                 ", currentMatchMode=" + currentMatchMode +
-                ", seasonMode=" + seasonMode +
                 '}';
     }
 }
