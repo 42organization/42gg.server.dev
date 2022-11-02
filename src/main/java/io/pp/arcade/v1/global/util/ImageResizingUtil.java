@@ -20,8 +20,9 @@ public class ImageResizingUtil {
     private static BufferedImage resize(BufferedImage img, double ratio) {
         int newWidth = (int) (img.getWidth() * ratio);
         int newHeight = (int) (img.getHeight() * ratio);
+        System.out.println("newHeight +  = " + newHeight + " newWidth = " + newWidth);
         Image imageToResize = img.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-        BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, img.getType());
+        BufferedImage resizedImage = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_INT_RGB);
         resizedImage.getGraphics().drawImage(imageToResize, 0, 0, newWidth, newHeight, null);
         return resizedImage;
     }
