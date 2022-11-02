@@ -83,7 +83,7 @@ public class SeasonService {
 
     @Transactional
     public List<SeasonNameDto> findAllRankSeason() {
-        List<Season> seasons =  seasonRepository.findAllBySeasonMode(Mode.RANK);
+        List<Season> seasons =  seasonRepository.findAllBySeasonModeOrSeasonMode(Mode.RANK, Mode.BOTH);
         List<SeasonNameDto> dtoList = new ArrayList<>();
 
         for (Season season : seasons) {

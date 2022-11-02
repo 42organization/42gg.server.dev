@@ -14,5 +14,6 @@ public interface SeasonRepository extends JpaRepository <Season, Integer> {
     Optional<Season> findFirstByOrderByIdDesc();
     Optional<Season> findFirstBySeasonModeOrderByIdDesc(Mode seasonMode);
     List<Season> findAllBySeasonMode(Mode mode);
+    List<Season> findAllBySeasonModeOrSeasonMode(Mode mode1, Mode mode2);
     Page<Season> findAllByOrderByIdDesc(Pageable pageable);
 }
