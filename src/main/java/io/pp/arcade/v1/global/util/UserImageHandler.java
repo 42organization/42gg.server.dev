@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
+import java.util.Arrays;
 
 @Component
 public class UserImageHandler {
@@ -42,7 +43,7 @@ public class UserImageHandler {
     private Boolean isStringValid(String intraId) {
         return intraId != null && intraId.length() != 0;
     }
-    //public String upload(InputStream inputStream, String intraId) {
+
     public String uploadToS3(MultipartFile multipartFile) throws IOException {
         try {
             String s3FileName = dir + multipartFile.getOriginalFilename();
