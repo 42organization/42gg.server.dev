@@ -8,5 +8,6 @@ import java.util.List;
 @Getter
 @Builder
 public class SeasonListResponseDto {
+    String seasonMode;
     List<SeasonNameDto> seasonList;
 }
