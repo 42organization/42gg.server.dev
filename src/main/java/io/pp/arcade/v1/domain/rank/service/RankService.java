@@ -59,7 +59,7 @@ public class RankService {
         Integer myRank = userRepository.findExpRankingByIntraId(curUser.getIntraId());
 
         List<VipUserDto> vipUserList = new ArrayList<>();
-        Integer index = (pageable.getPageSize() - 1) * pageable.getPageNumber();
+        Integer index = pageable.getPageSize() * pageable.getPageNumber();
         for (User user : userPage) {
             vipUserList.add(VipUserDto.from(user, ++index));
         }
