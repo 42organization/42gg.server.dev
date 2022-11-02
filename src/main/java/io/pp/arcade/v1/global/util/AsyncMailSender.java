@@ -14,7 +14,7 @@ import javax.mail.internet.MimeMessage;
 public class AsyncMailSender {
     private final JavaMailSender javaMailSender;
 
-    @Async("mailExecutor")
+    @Async("asyncExecutor")
     public void send(MimeMessage message) {
         javaMailSender.send(message);
     }
