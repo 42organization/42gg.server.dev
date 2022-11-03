@@ -11,9 +11,6 @@ import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 
 @Configuration
 public class AWSConfig {
-//    private String iamAccessKey = "AKIAYXL3AA4JP7LOARWS"; // IAM Access Key
-//    private String iamSecretKey = "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"; // IAM Secret Key
-//    private String region = "ap-northeast-2"; // Bucket Region
 
     @Value("${cloud.aws.credentials.accessKey}")
     private String accessKey;
