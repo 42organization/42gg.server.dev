@@ -2,10 +2,14 @@ package io.pp.arcade.v1.domain.security.oauth.v2.info.impl;
 
 
 import io.pp.arcade.v1.domain.security.oauth.v2.info.OAuthUserInfo;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Map;
 
 public class FortyTwoOAuthUserInfo extends OAuthUserInfo {
+
+    @Value("${info.image.defaultUrl}")
+    private String defaultImageUrl;
 
     public FortyTwoOAuthUserInfo(Map<String, Object> attributes) {
         super(attributes);
@@ -22,7 +26,7 @@ public class FortyTwoOAuthUserInfo extends OAuthUserInfo {
 
     public String getImageUrl() {
         if (attributes.get("image_url") == null) {
-            return "https://42gg-public-image.s3.ap-northeast-2.amazonaws.com/images/small_default.jpeg";
+            return defaultImageUrl;
         }
         return attributes.get("image_url").toString();
     }

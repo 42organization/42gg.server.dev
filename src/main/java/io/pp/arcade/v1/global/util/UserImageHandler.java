@@ -26,9 +26,12 @@ public class UserImageHandler {
     @Value("${cloud.aws.s3.dir}")
     private String dir;
 
+    @Value("${info.image.defaultUrl}")
+    private String defaultImageUrl;
+
     public String uploadAndGetS3ImageUri(String intraId, String imageUrl) {
         if (!isStringValid(intraId) || !isStringValid(imageUrl)) {
-            return "https://42gg-public-image.s3.ap-northeast-2.amazonaws.com/images/small_default.jpeg";
+            return defaultImageUrl;
         }
         byte[] downloadedImageBytes = fileDownloader.downloadFromUrl(imageUrl);
         try {
@@ -36,7 +39,7 @@ public class UserImageHandler {
             MultipartFile multipartFile = new JpegMultipartFile(resizedImageBytes, intraId);
             return uploadToS3(multipartFile);
         } catch (IOException e) {
-            return "https://42gg-public-image.s3.ap-northeast-2.amazonaws.com/images/small_default.jpeg";
+            return defaultImageUrl;
         }
     }
 
@@ -53,7 +56,7 @@ public class UserImageHandler {
             amazonS3.putObject(new PutObjectRequest(bucketName, s3FileName, inputStream, objMeta).withCannedAcl(CannedAccessControlList.PublicRead));
             return amazonS3.getUrl(bucketName, s3FileName).toString();
         } catch (Exception e) {
-            return "https://42gg-public-image.s3.ap-northeast-2.amazonaws.com/images/small_default.jpeg";
+            return defaultImageUrl;
         }
     }
 }
