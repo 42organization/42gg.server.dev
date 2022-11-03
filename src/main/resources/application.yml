@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: test
 
   security:
     oauth2.client:
@@ -62,3 +62,20 @@ app:
       - http://localhost:3000/oauth/redirect
 
 jwt.secret: a2f6abd304bcd1d2ff9691bb0e7c1bab1010d0466c628d23b49550fb932300a43054a6030811f6118eb8129d9033cf5e2b63b762c5bd7bee246f63d34ee04fd3
+
+cloud:
+  aws:
+    credentials:
+      accessKey: AKIAYXL3AA4JP7LOARWS
+      secretKey: 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
+    s3:
+      bucket: 42gg-public-image
+      dir: images/
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+
+info:
+  image:
+    defaultUrl: 'https://42gg-public-image.s3.ap-northeast-2.amazonaws.com/images/small_default.jpeg'
