@@ -141,8 +141,11 @@ public class SlotService {
                     .build();
             SlotStatusType status = getStatus(filterDto);
             slotStatusDtos.add(SlotStatusDto.builder()
-                    .slot(SlotDto.from(slot))
-                    .status(status)
+                    .slotId(slot.getId())
+                    .headCount(slot.getHeadCount())
+                    .time(slot.getTime())
+                    .mode(slot.getMode())
+                    .status(getStatus(filterDto))
                     .build()
             );
         }
