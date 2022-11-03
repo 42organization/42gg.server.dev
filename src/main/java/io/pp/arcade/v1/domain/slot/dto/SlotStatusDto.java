@@ -9,20 +9,29 @@ import java.time.LocalDateTime;
 
 @Getter
 public class SlotStatusDto {
-    private SlotDto slot;
+    private Integer slotId;
+    private LocalDateTime time;
     private String status;
+    private Integer headCount;
+    private Mode mode;
 
     @Builder
-    public SlotStatusDto(SlotDto slot, SlotStatusType status) {
-        this.slot = slot;
+    public SlotStatusDto(Integer slotId, LocalDateTime time, SlotStatusType status, Integer headCount, Mode mode) {
+        this.slotId = slotId;
+        this.time = time;
         this.status = status.getCode();
+        this.headCount = headCount;
+        this.mode = mode;
     }
 
     @Override
     public String toString() {
         return "SlotStatusDto{" +
-                "slot=" + slot.toString() +
+                "slotId=" + slotId +
+                ", time=" + time +
                 ", status='" + status + '\'' +
+                ", headCount=" + headCount +
+                ", mode=" + mode +
                 '}';
     }
 }

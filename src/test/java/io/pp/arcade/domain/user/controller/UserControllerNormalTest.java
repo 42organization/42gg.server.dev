@@ -107,7 +107,6 @@ class UserControllerNormalTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.event").isEmpty())
                 .andExpect(jsonPath("$.currentMatchMode").isEmpty()) // enum 추가
-                .andExpect(jsonPath("$.seasonMode").value(Mode.NORMAL.getCode())) // enum 추가
                 .andDo(document("user-live"));
 
         //매치 상태
