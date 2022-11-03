@@ -26,7 +26,7 @@ spring:
       registration:
         42:
           client-id: "353cdada0d271c99afd647ecb5c77f257750a212e40b613fe6847985bc1f21c6"
-          client-secret: "dffc8c74b7ea02c91960d67a4b795b85c2a3c8420392a1df3d9bb9983257bc63"
+          client-secret: "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"
 
   # Redis 설정
   cache:

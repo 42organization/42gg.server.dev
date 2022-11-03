@@ -13,7 +13,7 @@ public class SlotStatusDto {
     private LocalDateTime time;
     private String status;
     private Integer headCount;
-    private Mode mode;
+    private String mode;
 
     @Builder
     public SlotStatusDto(Integer slotId, LocalDateTime time, SlotStatusType status, Integer headCount, Mode mode) {
@@ -21,7 +21,7 @@ public class SlotStatusDto {
         this.time = time;
         this.status = status.getCode();
         this.headCount = headCount;
-        this.mode = mode;
+        this.mode = mode.getCode();
     }
 
     @Override
