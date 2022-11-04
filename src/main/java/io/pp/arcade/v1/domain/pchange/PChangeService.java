@@ -93,7 +93,7 @@ public class PChangeService {
         Integer increasedLevel = ExpLevelCalculator.getLevel(pChange.getExpResult()) - beforeLevel;
 
         GameExpAndPppResultDto resultDto = GameExpAndPppResultDto.builder()
-                .beforeExp(beforeTotalExp)
+                .beforeExp(ExpLevelCalculator.getCurrentLevelMyExp(beforeTotalExp))
                 .increasedExp(increasedExp)
                 .beforeMaxExp(beforeMaxExp)
                 .beforeLevel(beforeLevel)
