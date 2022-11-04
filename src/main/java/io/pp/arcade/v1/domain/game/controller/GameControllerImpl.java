@@ -101,8 +101,8 @@ public class GameControllerImpl implements GameController {
             throw new BusinessException("E0001");
         }
         List<SlotTeamUserDto> slotTeamUsers = slotTeamUserService.findAllBySlotId(currentMatch.getSlot().getId());
-        currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder()
-                .user(user).build());
+//        currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder()
+//                .user(user).build());
         // modify team with game result
 
         gameManager.modifyTeams(game, requestDto, slotTeamUsers, user);
@@ -113,6 +113,13 @@ public class GameControllerImpl implements GameController {
         // checkEvent(game);
         // modify users' ranks with game result
         throw new ResponseStatusException(HttpStatus.CREATED, "");
+    }
+
+    @DeleteMapping(value = "/games/current")
+    public void deleteCurrentMatch(HttpServletRequest request) {
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder()
+                .user(user).build());
     }
 
     private void validateInput(GameResultRequestDto requestDto) {
