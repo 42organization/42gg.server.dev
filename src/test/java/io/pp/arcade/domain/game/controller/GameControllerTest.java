@@ -228,6 +228,7 @@ class GameControllerTest {
         slotTeamUserRepository.save(SlotTeamUser.builder().slot(slot).team(teamList.get(1)).user(user2).build());
         slot.setType(GameType.SINGLE);
         slot.setMode(Mode.RANK);
+        slot.setGamePpp(1000);
         slot = slotRepository.findById(slot.getId()).orElse(null);
         Game game = Game.builder()
                 .slot(slot)
@@ -604,7 +605,7 @@ class GameControllerTest {
 //        정 상 요 청
         Map<String, String> body8 = new HashMap<>();
         body8.put("myTeamScore", "2");
-        body8.put("enemyTeamScore", "0");
+        body8.put("enemyTeamScore", "1");
         mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body8))
                         .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
@@ -625,10 +626,17 @@ class GameControllerTest {
 //        입력된결과확인
         LinkedMultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("count", "20");
-        mockMvc.perform(get("/pingpong/users/{intraId}/games", users[2].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/users/{intraId}/games", users[8].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                 .params(params)
                 .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.games[0].status").value(StatusType.END.getCode()))
+                .andExpect(jsonPath("$.games[0].team1.score").value(body8.get("myTeamScore")))
+                .andExpect(jsonPath("$.games[0].team1.players[0].intraId").value(users[8].getIntraId()))
+                .andExpect(jsonPath("$.games[0].team1.isWin").value(true))
+                .andExpect(jsonPath("$.games[0].team2.score").value(body8.get("enemyTeamScore")))
+                .andExpect(jsonPath("$.games[0].team2.players[0].intraId").value(users[9].getIntraId()))
+                .andExpect(jsonPath("$.games[0].team2.isWin").value(false))
                 .andDo(document("game-find-results-only-user-request"));
     }
 }
