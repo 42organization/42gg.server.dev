@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class UserModifyExpDto {
-    private Integer userId;
+    private UserDto user;
     private Integer exp;
 }
