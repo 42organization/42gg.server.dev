@@ -2,13 +2,19 @@ package io.pp.arcade.v1.domain.security.oauth.v2.info.impl;
 
 
 import io.pp.arcade.v1.domain.security.oauth.v2.info.OAuthUserInfo;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.Map;
 
 public class FortyTwoOAuthUserInfo extends OAuthUserInfo {
+
+    @Value("${info.image.defaultUrl}")
+    private String defaultImageUrl;
+
     public FortyTwoOAuthUserInfo(Map<String, Object> attributes) {
         super(attributes);
     }
+
     @Override
     public String getIntraId() {
         return attributes.get("login").toString();
@@ -20,7 +26,7 @@ public class FortyTwoOAuthUserInfo extends OAuthUserInfo {
 
     public String getImageUrl() {
         if (attributes.get("image_url") == null) {
-            return "https://cdn.intra.42.fr/users/small_default.jpg";
+            return defaultImageUrl;
         }
         return attributes.get("image_url").toString();
     }
