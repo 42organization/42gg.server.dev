@@ -34,7 +34,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
-	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    implementation 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 
 	/* database */
 	runtimeOnly 'mysql:mysql-connector-java'
@@ -72,6 +73,15 @@ dependencies {
 
 	/* When..? Error */
 	implementation 'org.apache.commons:commons-lang3:3.12.0'
+
+	/* REST template */
+	implementation 'org.apache.httpcomponents:httpcore:4.4.15'
+	implementation 'org.apache.httpcomponents:httpclient:4.5.13'
+
+	/* S3 Image Bucket */
+	implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+	implementation 'org.springframework:spring-test:5.3.20'
+	implementation "com.amazonaws:aws-java-sdk-s3:1.12.281"
 }
 
 test {
