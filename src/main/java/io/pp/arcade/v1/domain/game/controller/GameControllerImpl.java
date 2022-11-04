@@ -60,7 +60,7 @@ public class GameControllerImpl implements GameController {
     private final GameManager gameManager;
 
     @Override
-    @GetMapping(value = "/games/result")
+    @GetMapping(value = "/games/players")
     public GameUserInfoResponseDto gameUserInfo(HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUser(user);
@@ -90,7 +90,7 @@ public class GameControllerImpl implements GameController {
     }
 
     @Override
-    @PostMapping(value = "/games/result")
+    @PostMapping(value = "/games/result/rank")
     public void gameResultSave(GameResultRequestDto requestDto, HttpServletRequest request) throws MessagingException {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         validateInput(requestDto);

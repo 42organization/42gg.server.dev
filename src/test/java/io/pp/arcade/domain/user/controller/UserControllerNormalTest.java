@@ -84,16 +84,16 @@ class UserControllerNormalTest {
                 .andExpect(jsonPath("$.winRate").value(rank.getWinRate())) // 승률
                 .andDo(document("user-profile-rank-with-season-0"));
 
-        mockMvc.perform(get("/pingpong/users/{targetIntraId}/rank", user.getIntraId()).contentType(MediaType.APPLICATION_JSON) // intra id, season 값 넣어야함
-                .param("season", initiator.testSeason.getId().toString())
-                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.rank").value(rank.getRank())) // 등수
-                .andExpect(jsonPath("$.ppp").value(rank.getPpp())) // 탁구력
-                .andExpect(jsonPath("$.wins").value(rank.getWins())) // 승리
-                .andExpect(jsonPath("$.losses").value(rank.getLosses())) // 패배
-                .andExpect(jsonPath("$.winRate").value(rank.getWinRate())) // 승률
-                .andDo(document("user-profile-rank-with-season-current"));
+//        mockMvc.perform(get("/pingpong/users/{targetIntraId}/rank", user.getIntraId()).contentType(MediaType.APPLICATION_JSON) // intra id, season 값 넣어야함
+//                .param("season", initiator.testSeason.getId().toString())
+//                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.rank").value(rank.getRank())) // 등수
+//                .andExpect(jsonPath("$.ppp").value(rank.getPpp())) // 탁구력
+//                .andExpect(jsonPath("$.wins").value(rank.getWins())) // 승리
+//                .andExpect(jsonPath("$.losses").value(rank.getLosses())) // 패배
+//                .andExpect(jsonPath("$.winRate").value(rank.getWinRate())) // 승률
+//                .andDo(document("user-profile-rank-with-season-current"));
     }
 
     @Test
