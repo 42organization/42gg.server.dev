@@ -2,6 +2,7 @@ package io.pp.arcade.v1.domain.game.controller;
 
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchDto;
+import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchRemoveDto;
 import io.pp.arcade.v1.domain.event.EventService;
 import io.pp.arcade.v1.domain.event.dto.EventUserDto;
 import io.pp.arcade.v1.domain.event.dto.FindEventDto;
@@ -22,12 +23,14 @@ import io.pp.arcade.v1.domain.slot.dto.SlotDto;
 import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUserService;
 import io.pp.arcade.v1.domain.slotteamuser.dto.SlotTeamUserDto;
 import io.pp.arcade.v1.domain.team.TeamService;
+import io.pp.arcade.v1.domain.team.dto.TeamPosDto;
 import io.pp.arcade.v1.domain.team.dto.TeamsUserListDto;
 import io.pp.arcade.v1.domain.user.UserService;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.domain.user.dto.UserFindDto;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.type.NotiType;
+import io.pp.arcade.v1.global.type.StatusType;
 import io.pp.arcade.v1.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -70,9 +73,15 @@ public class GameControllerImpl implements GameController {
 
         //make Dto to return
         TeamsUserListDto matchUsers = teamService.findUserListInTeams(slot, user);
+        TeamPosDto teamPos = teamService.findUsersByTeamPos(slot, user);
         GameUserInfoResponseDto gameUserInfoResponseDto = GameUserInfoResponseDto.builder()
-                .matchTeamsInfo(MatchTeamsInfoDto.builder().myTeam(matchUsers.getMyTeam())
-                        .enemyTeam(matchUsers.getEnemyTeam()).build())
+                .matchTeamsInfo(
+                        MatchTeamsInfoDto.builder()
+                            .myTeam(GameResultUserInfoDto.builder().teams(matchUsers.getMyTeam())
+                                .teamScore(currentMatch.getGame().getStatus() == StatusType.END ? teamPos.getMyTeam().getScore() : null).build())
+                            .enemyTeam(GameResultUserInfoDto.builder().teams(matchUsers.getEnemyTeam())
+                                .teamScore(currentMatch.getGame().getStatus() == StatusType.END ? teamPos.getEnemyTeam().getScore() : null).build())
+                            .build())
                 .mode(slot.getMode().getCode())
                 .gameId(currentMatch.getGame().getId())
                 .startTime(slot.getTime())
@@ -92,14 +101,14 @@ public class GameControllerImpl implements GameController {
             throw new BusinessException("E0001");
         }
         List<SlotTeamUserDto> slotTeamUsers = slotTeamUserService.findAllBySlotId(currentMatch.getSlot().getId());
-        gameManager.removeCurrentMatch(game);
+        currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder()
+                .user(user).build());
         // modify team with game result
 
-        gameManager.modifyTeams(game, requestDto, slotTeamUsers);
+        gameManager.modifyTeams(game, requestDto, slotTeamUsers, user);
         slotTeamUsers = slotTeamUserService.findAllBySlotId(currentMatch.getSlot().getId());
         // figuring out team number for myteam and enemyteam
         // modify users with game result
-        gameManager.modifyUserExp(game);
         gameManager.endGameStatus(game);
         // checkEvent(game);
         // modify users' ranks with game result
