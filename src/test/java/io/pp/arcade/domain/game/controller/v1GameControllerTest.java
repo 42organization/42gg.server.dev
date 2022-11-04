@@ -15,6 +15,7 @@ import io.pp.arcade.v1.domain.slot.SlotRepository;
 import io.pp.arcade.v1.domain.slot.dto.SlotDto;
 import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.v1.domain.user.User;
+import io.pp.arcade.v1.domain.user.UserRepository;
 import io.pp.arcade.v1.global.type.GameType;
 import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.util.ExpLevelCalculator;
@@ -62,6 +63,8 @@ public class v1GameControllerTest {
 
     @Autowired
     private SlotTeamUserRepository slotTeamUserRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     TestInitiator initiator;
@@ -136,15 +139,16 @@ public class v1GameControllerTest {
                             .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                     .andExpect(status().isCreated());
 
-            mockMvc.perform(get("/pingpong/games/{gameId}/result", game.getId()).contentType(MediaType.APPLICATION_JSON)
+            User afterUser = userRepository.findById(user.getId()).get();
+            mockMvc.perform(get("/pingpong/games/{gameId}/result/normal", game.getId()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                     .andExpect(status().isOk())
-//                    .andExpect(jsonPath("$.beforeLevel").value(currentLevel))
-//                    .andExpect(jsonPath("$.beforeExp").value(currentExp))
-//                    .andExpect(jsonPath("$.beforeMaxExp").value(ExpLevelCalculator.getLevelMaxExp(currentLevel)))
-//                    .andExpect(jsonPath("$.increasedExp").value(ExpLevelCalculator.getCurrentLevelMyExp(user.getTotalExp())))
-//                    .andExpect(jsonPath("$.increasedLevel").value(ExpLevelCalculator.getLevel(user.getTotalExp())))
-//                    .andExpect(jsonPath("$.afterMaxExp").value(ExpLevelCalculator.getLevelMaxExp(ExpLevelCalculator.getLevel(user.getTotalExp()))))
+                    .andExpect(jsonPath("$.beforeLevel").value(currentLevel))
+                    .andExpect(jsonPath("$.beforeExp").value(currentExp))
+                    .andExpect(jsonPath("$.beforeMaxExp").value(ExpLevelCalculator.getLevelMaxExp(currentLevel)))
+                    .andExpect(jsonPath("$.increasedLevel").value(ExpLevelCalculator.getLevel(afterUser.getTotalExp()) - currentLevel))
+                    .andExpect(jsonPath("$.increasedExp").value(ExpLevelCalculator.getCurrentLevelMyExp(afterUser.getTotalExp()) - currentExp))
+                    .andExpect(jsonPath("$.afterMaxExp").value(ExpLevelCalculator.getLevelMaxExp(ExpLevelCalculator.getLevel(afterUser.getTotalExp()))))
                     .andDo(document("v1-exp-result"));
             }
     }
