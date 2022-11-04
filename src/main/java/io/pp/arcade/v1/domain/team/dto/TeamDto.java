@@ -6,6 +6,8 @@ import io.pp.arcade.v1.domain.user.dto.UserDto;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.util.Objects;
+
 @Getter
 @Builder
 public class TeamDto {
@@ -29,6 +31,14 @@ public class TeamDto {
                 .win(team.getWin())
                 .slot(SlotDto.from(team.getSlot()))
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TeamDto teamDto = (TeamDto) o;
+        return Objects.equals(id, teamDto.id);
     }
 
     @Override
