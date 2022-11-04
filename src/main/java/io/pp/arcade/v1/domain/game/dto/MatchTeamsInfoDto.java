@@ -8,6 +8,6 @@ import java.util.List;
 @Getter
 @Builder
 public class MatchTeamsInfoDto {
-    List<GameUserInfoDto> myTeam;
-    List<GameUserInfoDto> enemyTeam;
+    GameResultUserInfoDto myTeam;
+    GameResultUserInfoDto enemyTeam;
 }
