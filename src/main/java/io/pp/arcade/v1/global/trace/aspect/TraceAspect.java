@@ -20,16 +20,16 @@ import java.util.Arrays;
 public class TraceAspect {
     private final LogTrace logTrace;
 
-    @Pointcut("execution(* io.pp.arcade.domain..*(..))")
+    @Pointcut("execution(* io.pp.arcade.v1.domain..*(..))")
     public void allDomain(){}
 
-    @Pointcut("execution(* io.pp.arcade.domain.security..*(..))")
+    @Pointcut("execution(* io.pp.arcade.v1.domain.security..*(..))")
     public void securityDomain(){}
 
-    @Pointcut("execution(* io.pp.arcade.global.util..*(..))")
+    @Pointcut("execution(* io.pp.arcade.v1.global.util..*(..))")
     public void utilDomain(){}
 
-    @Pointcut("execution(* io.pp.arcade.global.scheduler..*(..))")
+    @Pointcut("execution(* io.pp.arcade.v1.global.scheduler..*(..))")
     public void schedulerDomain(){}
 
     @Around("(allDomain() || utilDomain() || schedulerDomain()) && !securityDomain()")
