@@ -59,7 +59,7 @@ public class UserService {
 
     @Transactional
     public void modifyUserExp(UserModifyExpDto modifyDto) {
-        User user = userRepository.findById(modifyDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        User user = userRepository.findById(modifyDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
         user.setTotalExp(user.getTotalExp() + modifyDto.getExp());
     }
 

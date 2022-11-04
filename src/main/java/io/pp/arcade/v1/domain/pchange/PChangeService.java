@@ -5,7 +5,6 @@ import io.pp.arcade.v1.domain.admin.dto.delete.PChangeDeleteDto;
 import io.pp.arcade.v1.domain.admin.dto.update.PChangeUpdateDto;
 import io.pp.arcade.v1.domain.game.Game;
 import io.pp.arcade.v1.domain.game.GameRepository;
-import io.pp.arcade.v1.domain.game.dto.GameExpResultResponseDto;
 import io.pp.arcade.v1.domain.pchange.dto.*;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.domain.user.UserRepository;
@@ -84,23 +83,26 @@ public class PChangeService {
     }
 
     @Transactional
-    public GameExpResultResponseDto findPChangeExpByUserAndGame(PChangeFindDto findDto) {
+    public GameExpAndPppResultDto findPChangeExpByUserAndGame(PChangeFindDto findDto) {
         PChange pChange = pChangeRepository.findByUser_IntraIdAndGame_Id(findDto.getUser().getIntraId(), findDto.getGame().getId()).orElseThrow(() -> new BusinessException("E0001"));
         Integer beforeTotalExp = pChange.getExpResult() - pChange.getExpChange();
-        Integer increasedExp = pChange.getExpChange();
+        Integer beforeLevel = ExpLevelCalculator.getLevel(beforeTotalExp);
         Integer beforeMaxExp = ExpLevelCalculator.getLevelMaxExp(ExpLevelCalculator.getLevel(beforeTotalExp));
+        Integer increasedExp = pChange.getExpChange();
         Integer afterMaxExp = ExpLevelCalculator.getLevelMaxExp(ExpLevelCalculator.getLevel(pChange.getExpResult()));
-        Integer increasedLevel = ExpLevelCalculator.getLevel(pChange.getExpResult()) - ExpLevelCalculator.getLevel(beforeTotalExp);
+        Integer increasedLevel = ExpLevelCalculator.getLevel(pChange.getExpResult()) - beforeLevel;
 
-        GameExpResultResponseDto responseDto = GameExpResultResponseDto.builder()
+        GameExpAndPppResultDto resultDto = GameExpAndPppResultDto.builder()
                 .beforeExp(ExpLevelCalculator.getCurrentLevelMyExp(beforeTotalExp))
                 .increasedExp(increasedExp)
                 .beforeMaxExp(beforeMaxExp)
-                .beforeLevel(ExpLevelCalculator.getLevel(beforeTotalExp))
-                .increasedLevel(ExpLevelCalculator.getLevel(increasedLevel))
+                .beforeLevel(beforeLevel)
+                .increasedLevel(increasedLevel)
                 .afterMaxExp(afterMaxExp)
+                .pppChange(pChange.getPppChange())
+                .pppResult(pChange.getPppResult())
                 .build();
-        return responseDto;
+        return resultDto;
     }
 
     @Transactional
