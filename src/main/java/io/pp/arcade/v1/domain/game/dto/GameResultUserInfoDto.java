@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Builder
-public class MatchTeamsInfoDto {
-    GameResultUserInfoDto myTeam;
-    GameResultUserInfoDto enemyTeam;
+public class GameResultUserInfoDto {
+    List<GameUserInfoDto> teams;
+    Integer teamScore;
 }

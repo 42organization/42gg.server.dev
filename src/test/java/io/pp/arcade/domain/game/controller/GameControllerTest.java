@@ -292,10 +292,10 @@ class GameControllerTest {
          * */
         mockMvc.perform(get("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(jsonPath("$.matchTeamsInfo.myTeam[0].intraId").value(users[0].getIntraId()))
-                .andExpect(jsonPath("$.matchTeamsInfo.myTeam[0].userImageUri").value(users[0].getImageUri()))
-                .andExpect(jsonPath("$.matchTeamsInfo.enemyTeam[0].intraId").value(users[1].getIntraId()))
-                .andExpect(jsonPath("$.matchTeamsInfo.enemyTeam[0].userImageUri").value(users[1].getImageUri()))
+                .andExpect(jsonPath("$.matchTeamsInfo.myTeam.teams[0].intraId").value(users[0].getIntraId()))
+                .andExpect(jsonPath("$.matchTeamsInfo.myTeam.teams[0].userImageUri").value(users[0].getImageUri()))
+                .andExpect(jsonPath("$.matchTeamsInfo.enemyTeam.teams[0].intraId").value(users[1].getIntraId()))
+                .andExpect(jsonPath("$.matchTeamsInfo.enemyTeam.teams[0].userImageUri").value(users[1].getImageUri()))
                 .andExpect(status().isOk())
                 .andDo(document("game-find-results-single"));
         /*
@@ -307,14 +307,14 @@ class GameControllerTest {
          * */
         mockMvc.perform(get("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
-                .andExpect(jsonPath("$.matchTeamsInfo.myTeam[0].intraId").value(users[2].getIntraId()))
-                .andExpect(jsonPath("$.matchTeamsInfo.myTeam[0].userImageUri").value(users[2].getImageUri()))
-                .andExpect(jsonPath("$.matchTeamsInfo.myTeam[1].intraId").value(users[3].getIntraId()))
-                .andExpect(jsonPath("$.matchTeamsInfo.myTeam[1].userImageUri").value(users[3].getImageUri()))
-                .andExpect(jsonPath("$.matchTeamsInfo.enemyTeam[0].intraId").value(users[4].getIntraId()))
-                .andExpect(jsonPath("$.matchTeamsInfo.enemyTeam[0].userImageUri").value(users[4].getImageUri()))
-                .andExpect(jsonPath("$.matchTeamsInfo.enemyTeam[1].intraId").value(users[5].getIntraId()))
-                .andExpect(jsonPath("$.matchTeamsInfo.enemyTeam[1].userImageUri").value(users[5].getImageUri()))
+                .andExpect(jsonPath("$.matchTeamsInfo.myTeam.teams[0].intraId").value(users[2].getIntraId()))
+                .andExpect(jsonPath("$.matchTeamsInfo.myTeam.teams[0].userImageUri").value(users[2].getImageUri()))
+                .andExpect(jsonPath("$.matchTeamsInfo.myTeam.teams[1].intraId").value(users[3].getIntraId()))
+                .andExpect(jsonPath("$.matchTeamsInfo.myTeam.teams[1].userImageUri").value(users[3].getImageUri()))
+                .andExpect(jsonPath("$.matchTeamsInfo.enemyTeam.teams[0].intraId").value(users[4].getIntraId()))
+                .andExpect(jsonPath("$.matchTeamsInfo.enemyTeam.teams[0].userImageUri").value(users[4].getImageUri()))
+                .andExpect(jsonPath("$.matchTeamsInfo.enemyTeam.teams[1].intraId").value(users[5].getIntraId()))
+                .andExpect(jsonPath("$.matchTeamsInfo.enemyTeam.teams[1].userImageUri").value(users[5].getImageUri()))
                 .andExpect(status().isOk())
                 .andDo(document("game-find-results-double"));
     }
