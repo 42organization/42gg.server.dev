@@ -5,8 +5,6 @@ import io.pp.arcade.TestInitiator;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.team.Team;
 import io.pp.arcade.v1.domain.user.User;
-import io.pp.arcade.v1.global.type.GameType;
-import io.pp.arcade.v1.global.type.SlotStatusType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -49,6 +48,7 @@ class SeasonControllerTest {
     }
 
     @Test
+    @Transactional
     void getSeasonList() throws Exception {
         mockMvc.perform(get("/pingpong/seasonlist").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
