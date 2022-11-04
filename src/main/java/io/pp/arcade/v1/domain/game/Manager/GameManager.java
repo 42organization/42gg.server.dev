@@ -3,6 +3,7 @@ package io.pp.arcade.v1.domain.game.Manager;
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchFindByGameDto;
+import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchModifyDto;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchRemoveDto;
 import io.pp.arcade.v1.domain.game.GameService;
 import io.pp.arcade.v1.domain.game.dto.GameDto;
@@ -67,10 +68,12 @@ public class GameManager {
         gameService.modifyGameStatus(modifyStatusDto);
     }
 
-    public void modifyTeams(GameDto game, GameResultRequestDto requestDto, List<SlotTeamUserDto> slotTeamUsers) {
+    public void modifyTeams(GameDto game, GameResultRequestDto requestDto, List<SlotTeamUserDto> slotTeamUsers, UserDto curUser) {
         Integer gamePpp = game.getSlot().getGamePpp();
         SlotDto slot = game.getSlot();
         Boolean isOneSide = Math.abs(requestDto.getMyTeamScore() - requestDto.getEnemyTeamScore()) == 2;
+
+        TeamPosDto teamPosDto = teamService.findUsersByTeamPos(slot, curUser);
 
         for(SlotTeamUserDto slotTeamUser : slotTeamUsers) {
             TeamDto team;
@@ -79,7 +82,6 @@ public class GameManager {
             Integer pppChange;
             Integer score;
             Boolean isWin;
-            TeamPosDto teamPosDto = teamService.findUsersByTeamPos(slotTeamUser.getSlot(), slotTeamUser.getUser());
 
             if (teamPosDto.getMyTeam().equals(slotTeamUser.getTeam())) {
                 enemyPpp = (gamePpp * 2 - slotTeamUser.getTeam().getTeamPpp());
@@ -102,11 +104,24 @@ public class GameManager {
                     .userId(slotTeamUser.getUser().getId())
                     .ppp(slotTeamUser.getUser().getPpp() + pppChange)
                     .build();
+
+            Integer gamePerDay = redisTemplate.opsForValue().get(Key.GAME_PER_DAY + slotTeamUser.getUser().getIntraId());
+            gamePerDay = gamePerDay != null ? gamePerDay : 0;
+
+            if (gamePerDay == 0) {
+                redisTemplate.opsForValue().set(Key.GAME_PER_DAY + slotTeamUser.getUser().getIntraId(), 1, 3, TimeUnit.HOURS);
+            } else {
+                redisTemplate.opsForValue().increment(Key.GAME_PER_DAY + slotTeamUser.getUser().getIntraId());
+            }
+            Integer expChange = ExpLevelCalculator.getExpPerGame() + ExpLevelCalculator.getExpBonus() * gamePerDay;
+
             PChangeAddDto pChangeAddDto = PChangeAddDto.builder()
                     .game(game)
                     .user(slotTeamUser.getUser())
                     .pppChange(pppChange)
                     .pppResult(slotTeamUser.getUser().getPpp() + pppChange)
+                    .expChange(expChange)
+                    .expResult(slotTeamUser.getUser().getTotalExp() + expChange)
                     .build();
             RankUpdateDto rankUpdateDto =  RankUpdateDto.builder()
                     .gameType(slotTeamUser.getSlot().getType())
@@ -117,6 +132,7 @@ public class GameManager {
             teamService.modifyGameResultInTeam(teamModifyGameResultDto);
             rankRedisService.updateUserPpp(rankUpdateDto);
             userService.modifyUserPpp(modifyPppDto);
+            userService.modifyUserExp(UserModifyExpDto.builder().user(slotTeamUser.getUser()).exp(expChange).build());
             pChangeService.addPChange(pChangeAddDto);
         }
     }
@@ -150,7 +166,7 @@ public class GameManager {
             Integer expChange = ExpLevelCalculator.getExpPerGame() + ExpLevelCalculator.getExpBonus() * gamePerDay;
 
             pChangeService.addPChange(PChangeAddDto.builder().game(game).user(user).expChange(expChange).expResult(user.getTotalExp() + expChange).build());
-            userService.modifyUserExp(UserModifyExpDto.builder().userId(user.getId()).exp(expChange).build());
+            userService.modifyUserExp(UserModifyExpDto.builder().user(user).exp(expChange).build());
         }
     }
 
@@ -158,6 +174,11 @@ public class GameManager {
         CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUser(user);
         // if the result already exists, throw 202 error
         if (currentMatch == null) {
+            throw new ResponseStatusException(HttpStatus.ACCEPTED, "");
+        }
+        if (currentMatch.getGame() != null && currentMatch.getGame().getStatus() == StatusType.END) {
+            currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder()
+                    .user(user).build());
             throw new ResponseStatusException(HttpStatus.ACCEPTED, "");
         }
         return currentMatch;

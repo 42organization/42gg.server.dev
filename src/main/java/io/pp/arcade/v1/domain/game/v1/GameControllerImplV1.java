@@ -9,6 +9,8 @@ import io.pp.arcade.v1.domain.game.Manager.GameResponseManager;
 
 import io.pp.arcade.v1.domain.game.dto.*;
 import io.pp.arcade.v1.domain.pchange.PChangeService;
+import io.pp.arcade.v1.domain.pchange.dto.GameExpAndPppResultDto;
+import io.pp.arcade.v1.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.v1.domain.season.SeasonService;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
@@ -20,8 +22,6 @@ import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.type.StatusType;
 import io.pp.arcade.v1.global.util.HeaderUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -129,7 +129,7 @@ public class GameControllerImplV1 {
 
         CurrentMatchDto currentMatch = gameManager.checkIfCurrentMatchExist(user);
         GameDto game = currentMatch.getGame();
-        if (game == null) {
+        if (game == null || game.getMode() == Mode.RANK) {
             throw new BusinessException("E0001");
         } else if (game.getStatus() == StatusType.END) {
             currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder().user(user).game(game).build());
@@ -143,16 +143,43 @@ public class GameControllerImplV1 {
         throw new ResponseStatusException(HttpStatus.CREATED, "");
     }
 
-    @GetMapping(value = "/games/{gameId}/result")
+    @GetMapping(value = "/games/{gameId}/result/normal")
     public GameExpResultResponseDto gameExpResult(@PathVariable Integer gameId, HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         GameDto game = gameService.findById(gameId);
 
-        GameExpResultResponseDto responseDto = pChangeService.findPChangeExpByUserAndGame(PChangeFindDto.builder().user(user).game(game).build());
-
+        GameExpAndPppResultDto gameExpResult = pChangeService.findPChangeExpByUserAndGame(PChangeFindDto.builder().user(user).game(game).build());
+        GameExpResultResponseDto responseDto = GameExpResultResponseDto.builder()
+                .beforeMaxExp(gameExpResult.getBeforeMaxExp())
+                .beforeExp(gameExpResult.getBeforeExp())
+                .beforeLevel(gameExpResult.getBeforeLevel())
+                .afterMaxExp(gameExpResult.getAfterMaxExp())
+                .increasedExp(gameExpResult.getIncreasedExp())
+                .increasedLevel(gameExpResult.getIncreasedLevel())
+                .build();
         return responseDto;
     }
 
+    @GetMapping(value = "/games/{gameId}/result/rank")
+    public GameExpAndPppResultResponseDto gameExpAndPppResult(@PathVariable Integer gameId, HttpServletRequest request) {
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        GameDto game = gameService.findById(gameId);
+
+        GameExpAndPppResultDto gameResult = pChangeService.findPChangeExpByUserAndGame(PChangeFindDto.builder().user(user).game(game).build());
+
+        GameExpAndPppResultResponseDto responseDto = (GameExpAndPppResultResponseDto.builder()
+                .afterMaxExp(gameResult.getAfterMaxExp())
+                .beforeMaxExp(gameResult.getBeforeMaxExp())
+                .beforeExp(gameResult.getBeforeExp())
+                .beforeLevel(gameResult.getBeforeLevel())
+                .increasedExp(gameResult.getIncreasedExp())
+                .increasedLevel(gameResult.getIncreasedLevel())
+                .changedPpp(gameResult.getPppChange())
+                .beforePpp(gameResult.getPppResult() - gameResult.getPppChange())
+                .build());
+
+        return responseDto;
+    }
 
     private GameFindDto getGameFindDto(GameResultPageRequestDto requestDto, Mode mode) {
         /* 시즌 조회 */
