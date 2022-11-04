@@ -125,7 +125,7 @@ public class v1GameControllerTest {
 
            GameDto game = addGame(SlotDto.from(slot));
 
-            mockMvc.perform(get("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(get("/pingpong/games/players").contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                     .andExpect(jsonPath("$.matchTeamsInfo.myTeam.teams[0].intraId").value(users[0].getIntraId()))
                     .andExpect(jsonPath("$.matchTeamsInfo.myTeam.teams[0].userImageUri").value(users[0].getImageUri()))

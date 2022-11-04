@@ -62,7 +62,7 @@ public class PChangeService {
     public PChangeListDto findPChangeByUserIdAfterGameIdAndGameMode(PChangeListFindDto findDto){
         Integer gameId = findDto.getGameId() == null ? Integer.MAX_VALUE : findDto.getGameId();
         Integer mode = findDto.getMode() == null ? null : findDto.getMode().getValue();
-        User user = userRepository.findByIntraId(findDto.getIntraId()).orElseThrow(() -> new BusinessException("SF0001"));
+        User user = userRepository.findByIntraId(findDto.getIntraId()).orElseThrow(() -> new BusinessException("SF001"));
 
         List<PChange> pChangePage = pChangeRepository.findPChangesByGameModeAndUser(findDto.getSeason(), mode, user.getIntraId(), gameId, findDto.getCount() + 1);
         Integer count = pChangePage.size();
