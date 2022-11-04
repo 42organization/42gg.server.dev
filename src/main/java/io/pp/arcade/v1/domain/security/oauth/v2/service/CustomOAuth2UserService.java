@@ -10,6 +10,7 @@ import io.pp.arcade.v1.domain.user.UserRepository;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.global.type.RacketType;
 import io.pp.arcade.v1.global.type.RoleType;
+import io.pp.arcade.v1.global.util.AsyncNewUserImageUploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
@@ -26,6 +27,7 @@ import java.time.LocalDateTime;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
     private final RankNTService rankNTService;
+    private final AsyncNewUserImageUploader asyncNewUserImageUploader;
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User user = super.loadUser(userRequest);
@@ -44,7 +46,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         ProviderType providerType = ProviderType.keyOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
         OAuthUserInfo userInfo = OAuthUserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        String intraId = userInfo.getIntraId();
         User savedUser = userRepository.findByIntraId(userInfo.getIntraId())
                 .orElse(null);
         if (savedUser != null)
@@ -52,15 +53,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             updateUser(savedUser , userInfo);
         } else {
             savedUser = createUser(userInfo, providerType);
+            if (userInfo.getImageUrl().startsWith("https://cdn.intra.42.fr/")) {
+                asyncNewUserImageUploader.upload(userInfo.getIntraId(), userInfo.getImageUrl());
+            }
             rankNTService.userToRedisRank(UserDto.from(savedUser));
         }
-
         return UserPrincipal.create(savedUser, user.getAttributes());
     }
 
     private User createUser(OAuthUserInfo userInfo, ProviderType providerType) {
         LocalDateTime now = LocalDateTime.now();
-
         User user = User.builder()
                 .intraId(userInfo.getIntraId())
                 .roleType(RoleType.USER)
