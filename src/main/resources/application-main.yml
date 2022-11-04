@@ -34,11 +34,6 @@ spring:
     host: 127.0.0.1
     port: 6379
 
-
-logging:
-  level:
-    org.hibernate.SQL: debug
-
 # cors 설정
 cors:
   allowed-origins: 'https://42gg.kr,http://42gg.kr,https://api-42gg.shop,http://api-42gg.shop'
