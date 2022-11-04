@@ -152,8 +152,8 @@ public class TestInitiator {
         teams[34] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[17]).headCount(0).score(0).build());
         teams[35] = teamRepository.save(Team.builder().teamPpp(0).slot(slots[17]).headCount(0).score(0).build());
 
-        preSeason = seasonRepository.save(Season.builder().seasonName("Test").startTime(LocalDateTime.now().minusYears(1)).endTime(LocalDateTime.now().plusYears(1)).startPpp(1000).pppGap(150).seasonMode(Mode.BOTH).build());
-        testSeason = seasonRepository.save(Season.builder().seasonName("Test").startTime(LocalDateTime.now().minusYears(7)).endTime(LocalDateTime.now().minusYears(6).minusSeconds(1)).startPpp(1000).pppGap(150).seasonMode(Mode.NORMAL).build());
+        preSeason = seasonRepository.save(Season.builder().seasonName("Test").startTime(LocalDateTime.now().minusYears(7)).endTime(LocalDateTime.now().minusYears(6).minusSeconds(1)).startPpp(1000).pppGap(150).seasonMode(Mode.NORMAL).build());
+        testSeason = seasonRepository.save(Season.builder().seasonName("Test").startTime(LocalDateTime.now().minusYears(1)).endTime(LocalDateTime.now().plusYears(1)).startPpp(1000).pppGap(150).seasonMode(Mode.BOTH).build());
         pastSeasons = new Season[5];
         pastSeasons[0] = seasonRepository.save(Season.builder().seasonName("Past1").startTime(LocalDateTime.now().minusYears(2)).endTime(LocalDateTime.now().minusYears(1).minusSeconds(1)).startPpp(1000).pppGap(150).seasonMode(Mode.RANK).build());
         pastSeasons[1] = seasonRepository.save(Season.builder().seasonName("Past2").startTime(LocalDateTime.now().minusYears(3)).endTime(LocalDateTime.now().minusYears(2).minusSeconds(1)).startPpp(1000).pppGap(150).seasonMode(Mode.BOTH).build());
