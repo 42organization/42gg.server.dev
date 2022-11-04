@@ -281,7 +281,7 @@ class GameControllerTest {
          * 사용자 - 진행중인 게임 결과가 없는 경우
          * -> 400
          * */
-        mockMvc.perform(get("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/players").contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + initiator.tokens[10].getAccessToken()))
                 .andExpect(status().isBadRequest())
                 .andDo(document("game-find-result-4XXError-cause-no-exists"));
@@ -291,7 +291,7 @@ class GameControllerTest {
          * enemyTeam [{nheo, imageUri}]
          * -> 200
          * */
-        mockMvc.perform(get("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/players").contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(jsonPath("$.matchTeamsInfo.myTeam.teams[0].intraId").value(users[0].getIntraId()))
                 .andExpect(jsonPath("$.matchTeamsInfo.myTeam.teams[0].userImageUri").value(users[0].getImageUri()))
@@ -306,7 +306,7 @@ class GameControllerTest {
          * enemyTeam [{jabae, imageUri}, {jihyukim, }]
          * -> 200
          * */
-        mockMvc.perform(get("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/players").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[2].getAccessToken()))
                 .andExpect(jsonPath("$.matchTeamsInfo.myTeam.teams[0].intraId").value(users[2].getIntraId()))
                 .andExpect(jsonPath("$.matchTeamsInfo.myTeam.teams[0].userImageUri").value(users[2].getImageUri()))
@@ -537,7 +537,7 @@ class GameControllerTest {
         Map<String, String> body1 = new HashMap<>();
 
 //        - Score값이 null인 경우
-        mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/pingpong/games/result/rank").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isBadRequest())
                 .andDo(document("game-result-save-Error-cause-score-is-null"));
@@ -546,7 +546,7 @@ class GameControllerTest {
         Map<String, String> body2 = new HashMap<>();
         body2.put("myTeamScore", "3");
         body2.put("enemyTeamScore", "1");
-        mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/pingpong/games/result/rank").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body2))
                         .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isBadRequest())
@@ -556,7 +556,7 @@ class GameControllerTest {
         Map<String, String> body3 = new HashMap<>();
         body3.put("myTeamScore", "1");
         body3.put("enemyTeamScore", "1");
-        mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/pingpong/games/result/rank").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body3))
                         .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isBadRequest())
@@ -566,7 +566,7 @@ class GameControllerTest {
         Map<String, String> body4 = new HashMap<>();
         body4.put("myTeamScore", "2");
         body4.put("enemyTeamScore", "2");
-        mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/pingpong/games/result/rank").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body4))
                         .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isBadRequest())
@@ -576,7 +576,7 @@ class GameControllerTest {
         Map<String, String> body5 = new HashMap<>();
         body5.put("myTeamScore", "2");
         body5.put("enemyTeamScore", "-3");
-        mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/pingpong/games/result/rank").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body5))
                         .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isBadRequest())
@@ -586,7 +586,7 @@ class GameControllerTest {
         Map<String, String> body6 = new HashMap<>();
         body6.put("myTeamScore", "0.75");
         body6.put("enemyTeamScore", "2");
-        mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/pingpong/games/result/rank").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body6))
                         .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isBadRequest())
@@ -596,7 +596,7 @@ class GameControllerTest {
         Map<String, String> body7 = new HashMap<>();
         body7.put("myTeamScore", "win");
         body7.put("enemyTeamScore", "lose");
-        mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/pingpong/games/result/rank").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body7))
                         .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isBadRequest())
@@ -606,7 +606,7 @@ class GameControllerTest {
         Map<String, String> body8 = new HashMap<>();
         body8.put("myTeamScore", "2");
         body8.put("enemyTeamScore", "1");
-        mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/pingpong/games/result/rank").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body8))
                         .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isCreated())
@@ -617,7 +617,7 @@ class GameControllerTest {
         Map<String, String> body9 = new HashMap<>();
         body9.put("myTeamScore", "2");
         body9.put("enemyTeamScore", "1");
-        mockMvc.perform(post("/pingpong/games/result").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/pingpong/games/result/rank").contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(body9))
                         .header("Authorization", "Bearer " + initiator.tokens[9].getAccessToken()))
                 .andExpect(status().isAccepted())
