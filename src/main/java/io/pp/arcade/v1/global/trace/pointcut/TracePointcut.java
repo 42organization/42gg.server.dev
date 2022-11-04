@@ -3,7 +3,7 @@ package io.pp.arcade.v1.global.trace.pointcut;
 import org.aspectj.lang.annotation.Pointcut;
 
 public class TracePointcut {
-    @Pointcut("execution(* io.pp.arcade.domain..*(..))")
+    @Pointcut("execution(* io.pp.arcade.v1.domain..*(..))")
     public void allDomain(){}
 
     //타입 패턴이 *Service
