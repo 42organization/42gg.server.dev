@@ -115,13 +115,6 @@ public class GameControllerImpl implements GameController {
         throw new ResponseStatusException(HttpStatus.CREATED, "");
     }
 
-    @DeleteMapping(value = "/games/current")
-    public void deleteCurrentMatch(HttpServletRequest request) {
-        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder()
-                .user(user).build());
-    }
-
     private void validateInput(GameResultRequestDto requestDto) {
         requestDto.getMyTeamScore();
         requestDto.getEnemyTeamScore();
