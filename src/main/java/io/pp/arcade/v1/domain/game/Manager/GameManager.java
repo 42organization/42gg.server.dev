@@ -177,8 +177,6 @@ public class GameManager {
             throw new ResponseStatusException(HttpStatus.ACCEPTED, "");
         }
         if (currentMatch.getGame() != null && currentMatch.getGame().getStatus() == StatusType.END) {
-            currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder()
-                    .user(user).build());
             throw new ResponseStatusException(HttpStatus.ACCEPTED, "");
         }
         return currentMatch;

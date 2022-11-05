@@ -2,6 +2,7 @@ package io.pp.arcade.v1.domain.currentmatch.controller;
 
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchDto;
+import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchRemoveDto;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchResponseDto;
 import io.pp.arcade.v1.domain.game.dto.GameUserInfoDto;
 import io.pp.arcade.v1.domain.security.jwt.TokenService;
@@ -11,9 +12,7 @@ import io.pp.arcade.v1.domain.team.dto.TeamsUserListDto;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -35,6 +34,13 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
         CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUser(user);;
         CurrentMatchResponseDto responseDto = getCurrentMatchResponseDto(currentMatch, user);
         return responseDto;
+    }
+
+    @PutMapping(value = "/match/current")
+    public void deleteCurrentMatch(HttpServletRequest request) {
+        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder()
+                .user(user).build());
     }
 
     private CurrentMatchResponseDto getCurrentMatchResponseDto(CurrentMatchDto currentMatch, UserDto curUser) {
