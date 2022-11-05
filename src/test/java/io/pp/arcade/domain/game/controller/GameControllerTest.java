@@ -510,6 +510,7 @@ class GameControllerTest {
                         .params(params2)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value("UF001"))
                 .andDo(document("game-find-results-4xxError-cause-couldn't-find-intraId"));
 
         /*
