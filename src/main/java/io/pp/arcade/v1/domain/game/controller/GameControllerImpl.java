@@ -101,8 +101,8 @@ public class GameControllerImpl implements GameController {
             throw new BusinessException("E0001");
         }
         List<SlotTeamUserDto> slotTeamUsers = slotTeamUserService.findAllBySlotId(currentMatch.getSlot().getId());
-        currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder()
-                .user(user).build());
+//        currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder()
+//                .user(user).build());
         // modify team with game result
 
         gameManager.modifyTeams(game, requestDto, slotTeamUsers, user);
