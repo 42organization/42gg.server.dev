@@ -112,6 +112,7 @@ public class GameManager {
                 redisTemplate.opsForValue().set(Key.GAME_PER_DAY + slotTeamUser.getUser().getIntraId(), 1, 3, TimeUnit.HOURS);
             } else {
                 redisTemplate.opsForValue().increment(Key.GAME_PER_DAY + slotTeamUser.getUser().getIntraId());
+                redisTemplate.opsForValue().getAndExpire(Key.GAME_PER_DAY + slotTeamUser.getUser().getIntraId(), 3, TimeUnit.HOURS);
             }
             Integer expChange = ExpLevelCalculator.getExpPerGame() + ExpLevelCalculator.getExpBonus() * gamePerDay;
 
