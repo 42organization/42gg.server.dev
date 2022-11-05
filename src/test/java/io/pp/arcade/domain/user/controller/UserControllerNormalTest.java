@@ -2,13 +2,17 @@ package io.pp.arcade.domain.user.controller;
 
 import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.TestInitiator;
+import io.pp.arcade.v1.domain.currentmatch.CurrentMatch;
+import io.pp.arcade.v1.domain.currentmatch.CurrentMatchRepository;
 import io.pp.arcade.v1.domain.rank.dto.RankFindDto;
 import io.pp.arcade.v1.domain.rank.dto.RankUserDto;
 import io.pp.arcade.v1.domain.rank.service.RankRedisService;
+import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.global.type.GameType;
 import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.util.ExpLevelCalculator;
+import org.checkerframework.checker.units.qual.Current;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,6 +46,9 @@ class UserControllerNormalTest {
 
     @Autowired
     private RankRedisService rankRedisService;
+
+    @Autowired
+    private CurrentMatchRepository currentMatchRepository;
 
     @BeforeEach
     void init() {
@@ -110,13 +117,29 @@ class UserControllerNormalTest {
                 .andDo(document("user-live"));
 
         //매치 상태
-//        mockMvc.perform(get("/pingpong/users/live").contentType(MediaType.APPLICATION_JSON)
-//                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken())) // "Authorization", "Bearer " + initiator.tokens[0].getAccessToken())
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.event").value("match"))))
-//                .andExpect(jsonPath("$.currentMatchMode").value(slot.getMode().getCode()))) // enum 추가
-//                .andExpect(jsonPath("$.seasonMode").value(Mode.NORMAL.getCode())) // enum 추가
-//                .andDo(document("user-live"));
+        createCurrentMatch();
+        mockMvc.perform(get("/pingpong/users/live").contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken())) // "Authorization", "Bearer " + initiator.tokens[0].getAccessToken())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.event").value("match"))
+                .andExpect(jsonPath("$.currentMatchMode").value(Mode.NORMAL.getCode())) // enum 추가
+                .andDo(document("user-live-with-match"));
     }
 
+    @Transactional
+    CurrentMatch createCurrentMatch() {
+        User user = initiator.users[0];
+        Slot slot = initiator.slots[0];
+        slot.setMode(Mode.NORMAL);
+        CurrentMatch currentMatch = CurrentMatch.builder()
+                .user(user)
+                .slot(slot)
+                .game(null)
+                .matchImminent(false)
+                .isMatched(true)
+                .isDel(false)
+                .build();
+        currentMatchRepository.save(currentMatch);
+        return currentMatch;
+    }
 }
