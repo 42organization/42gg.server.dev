@@ -27,7 +27,10 @@ public enum ExceptionCode {
     SECURITY_01(HttpStatus.UNAUTHORIZED, "S0001", "권한이 없습니다."),
 
     /* 피드백 공백 에러 */
-    FEEDBACK_RP_BLANK(HttpStatus.BAD_REQUEST, "RP001");
+    FEEDBACK_RP_BLANK(HttpStatus.BAD_REQUEST, "RP001"),
+
+    /*유저별 전적 페이지 에러 - 유저 찾을 수 없음*/
+    USER_FALSE(HttpStatus.BAD_REQUEST, "UF001");
 
     private final HttpStatus status;
     private final String code;
