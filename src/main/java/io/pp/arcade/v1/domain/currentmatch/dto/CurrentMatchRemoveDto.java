@@ -16,8 +16,8 @@ public class CurrentMatchRemoveDto {
     @Override
     public String toString() {
         return "CurrentMatchRemoveDto{" +
-                "user=" + user != null ? user.toString() : null +
-                ", slot=" + slot != null ? slot.toString() : null +
+                "user=" + (user != null ? user.toString() : null) +
+                ", slot=" + (slot != null ? slot.toString() : null) +
                 ", game=" + game +
                 '}';
     }
