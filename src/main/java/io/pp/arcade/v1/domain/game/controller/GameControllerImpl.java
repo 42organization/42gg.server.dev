@@ -2,7 +2,6 @@ package io.pp.arcade.v1.domain.game.controller;
 
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchDto;
-import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchRemoveDto;
 import io.pp.arcade.v1.domain.event.EventService;
 import io.pp.arcade.v1.domain.event.dto.EventUserDto;
 import io.pp.arcade.v1.domain.event.dto.FindEventDto;
@@ -78,13 +77,14 @@ public class GameControllerImpl implements GameController {
                 .matchTeamsInfo(
                         MatchTeamsInfoDto.builder()
                             .myTeam(GameResultUserInfoDto.builder().teams(matchUsers.getMyTeam())
-                                .teamScore(currentMatch.getGame().getStatus() == StatusType.END ? teamPos.getMyTeam().getScore() : null).build())
+                                .teamScore(teamPos.getMyTeam().getScore()).build())
                             .enemyTeam(GameResultUserInfoDto.builder().teams(matchUsers.getEnemyTeam())
-                                .teamScore(currentMatch.getGame().getStatus() == StatusType.END ? teamPos.getEnemyTeam().getScore() : null).build())
+                                .teamScore(teamPos.getEnemyTeam().getScore()).build())
                             .build())
                 .mode(slot.getMode().getCode())
                 .gameId(currentMatch.getGame().getId())
                 .startTime(slot.getTime())
+                .isScoreExist(currentMatch.getGame().getStatus() == StatusType.END ? true : false)
                 .build();
         return gameUserInfoResponseDto;
     }

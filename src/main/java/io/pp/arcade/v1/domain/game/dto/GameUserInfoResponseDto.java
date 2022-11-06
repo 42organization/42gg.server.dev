@@ -1,6 +1,5 @@
 package io.pp.arcade.v1.domain.game.dto;
 
-import io.pp.arcade.v1.global.type.Mode;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -9,13 +8,15 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class GameUserInfoResponseDto {
-    String mode;
+    private String mode;
 
-    Integer gameId;
+    private Integer gameId;
 
-    LocalDateTime startTime;
+    private LocalDateTime startTime;
 
-    MatchTeamsInfoDto matchTeamsInfo;
+    private MatchTeamsInfoDto matchTeamsInfo;
+    private Boolean isScoreExist;
+
 
     @Override
     public String toString() {
@@ -25,6 +26,7 @@ public class GameUserInfoResponseDto {
                 ", startTime=" + startTime +
                 ", myTeam=" + matchTeamsInfo.getMyTeam() +
                 ", enemyTeam=" + matchTeamsInfo.getEnemyTeam() +
+                ", isScoreExist=" + isScoreExist +
                 '}';
     }
 }
