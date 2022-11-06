@@ -87,7 +87,7 @@ public class NotiControllerImpl implements NotiController {
     }
 
     @Override
-    @DeleteMapping(value = "notifications/{notiId}")
+    @DeleteMapping(value = "/notifications/{notiId}")
     public void notiRemoveOne(Integer notiId, HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         notiService.findNotiByIdAndUser(NotiFindDto.builder().notiId(notiId).user(user).build());
