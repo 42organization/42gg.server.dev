@@ -39,7 +39,7 @@ public class RankUserDto {
                 .ppp(rank.getPpp())
                 .wins(rank.getWins())
                 .losses(rank.getLosses())
-                .winRate((losses + wins) == 0 ? 0 : ((double)wins / (double)(losses + wins) * 100))
+                .winRate((losses + wins) == 0 ? 0 : ((double)(wins * 10000 / (losses + wins)) / 100))
                 .rank(rank.getRanking())
                 .statusMessage(rank.getUser().getStatusMessage())
                 .build();
