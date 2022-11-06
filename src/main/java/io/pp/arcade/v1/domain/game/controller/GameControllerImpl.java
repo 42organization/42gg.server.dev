@@ -78,13 +78,14 @@ public class GameControllerImpl implements GameController {
                 .matchTeamsInfo(
                         MatchTeamsInfoDto.builder()
                             .myTeam(GameResultUserInfoDto.builder().teams(matchUsers.getMyTeam())
-                                .teamScore(currentMatch.getGame().getStatus() == StatusType.END ? teamPos.getMyTeam().getScore() : null).build())
+                                .teamScore(teamPos.getMyTeam().getScore()).build())
                             .enemyTeam(GameResultUserInfoDto.builder().teams(matchUsers.getEnemyTeam())
-                                .teamScore(currentMatch.getGame().getStatus() == StatusType.END ? teamPos.getEnemyTeam().getScore() : null).build())
+                                .teamScore(teamPos.getEnemyTeam().getScore()).build())
                             .build())
                 .mode(slot.getMode().getCode())
                 .gameId(currentMatch.getGame().getId())
                 .startTime(slot.getTime())
+                .scoreExist(currentMatch.getGame().getStatus() == StatusType.END ? true : false)
                 .build();
         return gameUserInfoResponseDto;
     }
