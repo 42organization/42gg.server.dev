@@ -25,7 +25,7 @@ public class UserDetailResponseDto {
         this.level = level;
         this.currentExp = currentExp;
         this.maxExp = maxExp;
-        this.expRate = (double) (currentExp / maxExp * 100);
+        this.expRate = (double)(currentExp * 10000 / maxExp) / 100;
         this.rivalRecord = rivalRecord;
     }
 

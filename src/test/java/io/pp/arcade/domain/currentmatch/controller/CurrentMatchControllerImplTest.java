@@ -33,6 +33,7 @@ import java.time.LocalDateTime;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -74,6 +75,7 @@ class CurrentMatchControllerImplTest {
     User user5;
     User user6;
     User user7;
+    User user8;
     Slot[] slotList;
 
     @BeforeEach
@@ -87,6 +89,7 @@ class CurrentMatchControllerImplTest {
         user5 = initiator.users[5];
         user6 = initiator.users[6];
         user7 = initiator.users[7];
+        user8 = initiator.users[8];
         slotList = initiator.slots;
     }
 
@@ -235,9 +238,14 @@ class CurrentMatchControllerImplTest {
         slot = saveSlot(slot);
         Game game1 = Game.builder().season(1).slot(slot).status(StatusType.LIVE).build();
         game = saveGame(game1);
-        currentMatchSave(game1, slot, user4, true, true);
+        currentMatchSave(game, slot, user8, true, true);
         mockMvc.perform(get("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().is3xxRedirection())
                 .andDo(document("current-match-info-unauthorized-request"));
+
+        mockMvc.perform(put("/pingpong/match/current").contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
+                .andExpect(status().isOk())
+                .andDo(document("current-match-info-put-request"));
     }
 }

@@ -211,14 +211,19 @@ class UserControllerTest {
          * -> intraId, userImageUri, statusMessage, ppp
          * -> rank, wins, losses
          * */
-        mockMvc.perform(get("/pingpong/users/" + users[1].getIntraId() + "/detail").contentType(MediaType.APPLICATION_JSON)
+
+        Integer currentExp = ExpLevelCalculator.getCurrentLevelMyExp(users[2].getTotalExp());
+        Integer maxExp = ExpLevelCalculator.getLevelMaxExp(ExpLevelCalculator.getLevel(users[2].getTotalExp()));
+        Double expRate = (double)(currentExp * 10000 / maxExp) / 100;
+        mockMvc.perform(get("/pingpong/users/" + users[2].getIntraId() + "/detail").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(jsonPath("$.intraId").value(users[1].getIntraId()))
-                .andExpect(jsonPath("$.userImageUri").value(users[1].getImageUri()))
-                .andExpect(jsonPath("$.statusMessage").value(users[1].getStatusMessage()))
-                .andExpect(jsonPath("$.level").value(ExpLevelCalculator.getLevel(users[1].getTotalExp())))
-                .andExpect(jsonPath("$.currentExp").value(ExpLevelCalculator.getCurrentLevelMyExp(users[1].getTotalExp())))
-                .andExpect(jsonPath("$.maxExp").value(ExpLevelCalculator.getLevelMaxExp(ExpLevelCalculator.getLevel(users[1].getTotalExp()))))
+                .andExpect(jsonPath("$.intraId").value(users[2].getIntraId()))
+                .andExpect(jsonPath("$.userImageUri").value(users[2].getImageUri()))
+                .andExpect(jsonPath("$.statusMessage").value(users[2].getStatusMessage()))
+                .andExpect(jsonPath("$.level").value(ExpLevelCalculator.getLevel(users[2].getTotalExp())))
+                .andExpect(jsonPath("$.currentExp").value(currentExp))
+                .andExpect(jsonPath("$.maxExp").value(maxExp))
+                .andExpect(jsonPath("$.expRate").value(expRate))
 //                .andExpect(jsonPath("$.rank").value(getRanking(userRank, GameType.SINGLE)))
 //                .andExpect(jsonPath("$.losses").value(userRank.getLosses()))
                 .andExpect(status().isOk())
