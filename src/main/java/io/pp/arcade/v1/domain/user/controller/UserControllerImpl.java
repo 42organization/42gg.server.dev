@@ -142,7 +142,7 @@ public class UserControllerImpl implements UserController {
                         .rank(temp.getRanking())
                         .wins(temp.getWins())
                         .losses(temp.getLosses())
-                        .winRate((temp.getWins() + temp.getLosses()) == 0 ? 0 : ((double)temp.getWins() / (double)(temp.getLosses() + temp.getWins()) * 100))
+                        .winRate((temp.getWins() + temp.getLosses()) == 0 ? 0 : (double)(temp.getWins() * 10000 / (temp.getLosses() + temp.getWins())) / 100)
                         .ppp(temp.getPpp())
                         .statusMessage(targetUser.getStatusMessage())
                         .build();
