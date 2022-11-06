@@ -9,13 +9,15 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 public class GameUserInfoResponseDto {
-    String mode;
+    private String mode;
 
-    Integer gameId;
+    private Integer gameId;
 
-    LocalDateTime startTime;
+    private LocalDateTime startTime;
 
-    MatchTeamsInfoDto matchTeamsInfo;
+    private MatchTeamsInfoDto matchTeamsInfo;
+    private Boolean scoreExist;
+
 
     @Override
     public String toString() {
