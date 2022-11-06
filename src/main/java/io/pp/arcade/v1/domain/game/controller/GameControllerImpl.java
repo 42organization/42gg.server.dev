@@ -2,7 +2,6 @@ package io.pp.arcade.v1.domain.game.controller;
 
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchDto;
-import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchRemoveDto;
 import io.pp.arcade.v1.domain.event.EventService;
 import io.pp.arcade.v1.domain.event.dto.EventUserDto;
 import io.pp.arcade.v1.domain.event.dto.FindEventDto;
@@ -85,7 +84,7 @@ public class GameControllerImpl implements GameController {
                 .mode(slot.getMode().getCode())
                 .gameId(currentMatch.getGame().getId())
                 .startTime(slot.getTime())
-                .scoreExist(currentMatch.getGame().getStatus() == StatusType.END ? true : false)
+                .isScoreExist(currentMatch.getGame().getStatus() == StatusType.END ? true : false)
                 .build();
         return gameUserInfoResponseDto;
     }
