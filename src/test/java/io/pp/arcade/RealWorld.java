@@ -66,9 +66,6 @@ public class RealWorld {
     private final LocalDateTime now = LocalDateTime.now();
     private Integer createdUserCount = 0;
 
-    public RealWorld() {
-    }
-
     public void makeMixedGameResults() {
         Season[] seasons;
         Slot[] slots;
