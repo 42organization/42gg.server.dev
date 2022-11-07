@@ -66,18 +66,35 @@ public class RealWorld {
     private final LocalDateTime now = LocalDateTime.now();
     private Integer createdUserCount = 0;
 
-    public void makeMixedGameResults() {
-        Season[] seasons;
+    public void makeMixedGameResultsForYesterday(Season season) {
         Slot[] slots;
         Team[] teams;
         User[] users;
 
+        if (!(season.getStartTime().isBefore(now) && season.getEndTime().isAfter(now))) {
+            return;
+        }
+
         LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
-        seasons = makeDefaultSeasons();
         users = makeDeafultUsers();
         slots = makeSlotsByTime(yesterday);
         teams = makeTeamsBySlots(slots);
-        makeEndGames(seasons, slots, teams, users);
+        makeEndGames(season, slots, teams, users);
+        // NOTI..? ㅠ ㅠ
+    }
+
+    public void makeMixedGameResultsForDayAmongPastSeason(Season season, Integer dayAfterSeasonStart) {
+        Slot[] slots;
+        Team[] teams;
+        User[] users;
+        if (!(season.getStartTime().isBefore(now) && season.getEndTime().isBefore(now.plusDays(dayAfterSeasonStart)))) {
+            return;
+        }
+        LocalDateTime day = season.getStartTime().plusDays(dayAfterSeasonStart);
+        users = makeDeafultUsers();
+        slots = makeSlotsByTime(day);
+        teams = makeTeamsBySlots(slots);
+        makeEndGames(season, slots, teams, users);
         // NOTI..? ㅠ ㅠ
     }
 
@@ -307,6 +324,7 @@ public class RealWorld {
                 .score(0)
                 .slot(slot)
                 .build());
+        return slot;
     }
 
     public Slot getNormalSlotWithOneUserMinutesLater(User user, Integer minutes) {
@@ -343,6 +361,7 @@ public class RealWorld {
                 .matchImminent(false)
                 .isDel(false)
                 .build());
+        return slot;
     }
 
     public Slot getNormalSlotWithTwoUsersMinutesLater(User user1, User user2, Integer minutes) {
@@ -391,6 +410,7 @@ public class RealWorld {
                 .matchImminent(minutes > 5)
                 .isDel(false)
                 .build());
+        return slot;
     }
 
     public Slot getRankedSlotWithOneUserMinutesLater(User user, Integer minutes) {
@@ -427,6 +447,7 @@ public class RealWorld {
                 .matchImminent(false)
                 .isDel(false)
                 .build());
+        return slot;
     }
 
     public Slot getRankedSlotWithTwoUsersMinutesLater(User user1, User user2, Integer minutes) {
@@ -475,6 +496,7 @@ public class RealWorld {
                 .matchImminent(minutes > 5)
                 .isDel(false)
                 .build());
+        return slot;
     }
 
     public User[] getUsersWithVariousPPP() {
@@ -597,14 +619,14 @@ public class RealWorld {
         return seasons;
     }
 
-    private void makeEndGames(Season[] seasons, Slot[] slots, Team[] teams, User[] users) {
+    private void makeEndGames(Season season, Slot[] slots, Team[] teams, User[] users) {
         SlotTeamUser[] slotTeamUsers = new SlotTeamUser[20];
         CurrentMatch[] currentMatches = new CurrentMatch[20];
 
         for (int i = 0; i < slots.length; i++) {
             Game game = gameRepository.save(Game.builder()
                     .slot(slots[i])
-                    .season(seasons[2].getId())
+                    .season(season.getId())
                     .status(StatusType.END)
                     .mode(i % 2 == 0 ? Mode.RANK : Mode.NORMAL)
                     .type(GameType.SINGLE)
