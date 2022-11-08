@@ -506,7 +506,7 @@ class GameControllerTest {
         LinkedMultiValueMap<String, String> params2 = new LinkedMultiValueMap<>();
         params2.add("gameId", "1234");
         params2.add("count", "20");
-        mockMvc.perform(get("/pingpong/users/{intraId}/games","NOTFOUND").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/users/{intraId}","NOTFOUND").contentType(MediaType.APPLICATION_JSON)
                         .params(params2)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(status().isBadRequest())
@@ -520,7 +520,7 @@ class GameControllerTest {
         LinkedMultiValueMap<String, String> params3 = new LinkedMultiValueMap<>();
         params3.add("gameId", "1234");
         params3.add("count", "20");
-        mockMvc.perform(get("/pingpong/users/{intraId}/games", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/users/{intraId}", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                         .params(params3)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(jsonPath("$.games").isEmpty())
@@ -627,7 +627,7 @@ class GameControllerTest {
 //        입력된결과확인
         LinkedMultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("count", "20");
-        mockMvc.perform(get("/pingpong/users/{intraId}/games", users[8].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/users/{intraId}", users[8].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                 .params(params)
                 .header("Authorization", "Bearer " + initiator.tokens[8].getAccessToken()))
                 .andExpect(status().isOk())

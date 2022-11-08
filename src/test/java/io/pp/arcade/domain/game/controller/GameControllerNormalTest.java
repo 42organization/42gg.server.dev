@@ -759,7 +759,7 @@ class GameControllerNormalTest {
 
     @Test
     @Transactional
-    @DisplayName("개인 최근 게임 기록 - 전체 (/pingpong/users/{intraId}/games)")
+    @DisplayName("개인 최근 게임 기록 - 전체 (/pingpong/games/users/{intraId})")
     void gameResultByUserIdAndIndexAndCountAll() throws Exception {
         /*
          * IntraId 찾을 수 없는 경우
@@ -769,7 +769,7 @@ class GameControllerNormalTest {
         params2.add("gameId", "1234");
         params2.add("count", "20");
         params2.add("season", "1");
-        mockMvc.perform(get("/pingpong/users/{intraId}/games","NOTFOUND").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/users/{intraId}","NOTFOUND").contentType(MediaType.APPLICATION_JSON)
                         .params(params2)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(status().isBadRequest())
@@ -783,7 +783,7 @@ class GameControllerNormalTest {
         params3.add("gameId", "1234");
         params3.add("count", "20");
         params3.add("season", "1");
-        mockMvc.perform(get("/pingpong/users/{intraId}/games", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/users/{intraId}", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                         .params(params3)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(jsonPath("$.games").isEmpty())
@@ -799,7 +799,7 @@ class GameControllerNormalTest {
         params4.add("gameId", "12345");
         params4.add("count", "20");
         params4.add("season", "1");
-        mockMvc.perform(get("/pingpong/users/{intraId}/games", users[0].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/users/{intraId}", users[0].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                 .params(params4)
                 .header("Authorization", "Bearer 0"))
 //                .andExpect(jsonPath().value())
@@ -809,7 +809,7 @@ class GameControllerNormalTest {
 
     @Test
     @Transactional
-    @DisplayName("개인 최근 게임 기록 - 랭크 (/pingpong/users/{intraId}/games?mode=rank)")
+    @DisplayName("개인 최근 게임 기록 - 랭크 (/pingpong/games/users/{intraId}?mode=rank)")
     void gameResultByUserIdAndIndexAndCountRankOnly() throws Exception {
         /*
          * IntraId 찾을 수 없는 경우
@@ -820,7 +820,7 @@ class GameControllerNormalTest {
         params2.add("count", "20");
         params2.add("season", "1");
         params2.add("mode", Mode.RANK.getCode());
-        mockMvc.perform(get("/pingpong/users/{intraId}/games","NOTFOUND").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/users/{intraId}","NOTFOUND").contentType(MediaType.APPLICATION_JSON)
                         .params(params2)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(status().isBadRequest())
@@ -835,7 +835,7 @@ class GameControllerNormalTest {
         params3.add("count", "20");
         params3.add("season", "1");
         params3.add("mode", Mode.RANK.getCode());
-        mockMvc.perform(get("/pingpong/users/{intraId}/games", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/users/{intraId}", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                 .params(params3)
                 .header("Authorization", "Bearer 0"))
                 .andExpect(jsonPath("$.games").isEmpty())
@@ -852,7 +852,7 @@ class GameControllerNormalTest {
         params4.add("count", "20");
         params4.add("season", "1");
         params4.add("mode", Mode.RANK.getCode());
-        mockMvc.perform(get("/pingpong/users/{intraId}/games", users[0].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/users/{intraId}", users[0].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                 .params(params4)
                 .header("Authorization", "Bearer 0"))
 //                .andExpect(jsonPath().value())
@@ -862,7 +862,7 @@ class GameControllerNormalTest {
 
     @Test
     @Transactional
-    @DisplayName("개인 최근 게임 기록 - 노말 (/pingpong/users/{intraId}/games?mode=normal)")
+    @DisplayName("개인 최근 게임 기록 - 노말 (/pingpong/games/users/{intraId}?mode=normal)")
     void gameResultByUserIdAndIndexAndCountNormalOnly() throws Exception {
         /*
          * IntraId 찾을 수 없는 경우
@@ -873,7 +873,7 @@ class GameControllerNormalTest {
         params2.add("count", "20");
         params2.add("mode", Mode.NORMAL.getCode());
         params2.add("season", "1");
-        mockMvc.perform(get("/pingpong/users/{intraId}/games","notfound").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/users/{intraId}","notfound").contentType(MediaType.APPLICATION_JSON)
                         .params(params2)
                         .header("Authorization", "Bearer 0"))
                 .andExpect(status().isBadRequest())
@@ -888,7 +888,7 @@ class GameControllerNormalTest {
         params3.add("count", "20");
         params3.add("mode", Mode.NORMAL.getCode());
         params3.add("season", "1");
-        mockMvc.perform(get("/pingpong/users/{intraId}/games", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/users/{intraId}", users[10].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                 .params(params3)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
                 .andExpect(jsonPath("$.games").isEmpty())
@@ -904,7 +904,7 @@ class GameControllerNormalTest {
         params4.add("gameId", "12345");
         params4.add("count", "20");
         params4.add("mode", Mode.NORMAL.getCode());
-        mockMvc.perform(get("/pingpong/users/{intraId}/games", users[0].getIntraId()).contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/games/users/{intraId}", users[0].getIntraId()).contentType(MediaType.APPLICATION_JSON)
                 .params(params4)
                 .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
 //                .andExpect(jsonPath().value())
