@@ -121,7 +121,7 @@ public class GameControllerImpl implements GameController {
     }
 
     @Override
-    @GetMapping(value = "/users/{intraId}/games")
+    @GetMapping(value = "/games/users/{intraId}")
     public GameResultResponseDto gameResultByUserIdAndByGameIdAndCount(String intraId, GameResultUserPageRequestDto requestDto, HttpServletRequest request) {
         //Pageable
         /*
