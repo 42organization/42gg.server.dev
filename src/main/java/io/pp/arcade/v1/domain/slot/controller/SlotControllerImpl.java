@@ -78,7 +78,7 @@ public class SlotControllerImpl implements SlotController {
 
         checkIfUserHaveCurrentMatch(user);
         checkIfUserHavePenalty(user);
-        checkIfModeMatches(addReqDto, slot);
+//        checkIfModeMatches(addReqDto, slot);
         checkIfSlotAvailable(slot, type, user, addReqDto);
 
         //user가 들어갈 팀을 정한당
