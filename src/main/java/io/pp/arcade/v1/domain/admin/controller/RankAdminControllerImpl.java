@@ -3,6 +3,7 @@ package io.pp.arcade.v1.domain.admin.controller;
 import io.pp.arcade.v1.domain.admin.dto.create.RankCreateRequestDto;
 import io.pp.arcade.v1.domain.admin.dto.delete.RankDeleteDto;
 import io.pp.arcade.v1.domain.admin.dto.update.RankUpdateRequestDto;
+import io.pp.arcade.v1.domain.admin.service.AdminRankRedisService;
 import io.pp.arcade.v1.domain.rank.service.RankRedisService;
 import io.pp.arcade.v1.domain.rank.dto.RankDto;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping(value = "/admin")
 public class RankAdminControllerImpl implements RankAdminController {
-    private final RankRedisService rankRedisService;
+    private final AdminRankRedisService rankRedisService;
 
     /* 봉인
     @Override

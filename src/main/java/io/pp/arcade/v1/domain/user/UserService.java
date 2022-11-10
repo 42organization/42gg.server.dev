@@ -26,6 +26,12 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
+    public List<UserDto> findAll() {
+        List<User> users = userRepository.findAll();
+        List<UserDto> userDtos = users.stream().map(UserDto::from).collect(Collectors.toList());
+        return userDtos;
+    }
+    @Transactional
     public UserDto findByIntraId(UserFindDto findDto) {
         User user = userRepository.findByIntraId(findDto.getIntraId()).orElseThrow(() -> new BusinessException("E0001"));
         return UserDto.from(user);

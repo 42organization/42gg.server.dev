@@ -49,7 +49,7 @@ public class RankRedisRepository {
 
     public void addRanking(RedisRankingAddDto addDto) {
         RankRedis rank = addDto.getRank();
-        String rankingKey = redisKeyManager.getCurrentRankingKey(rank.getGameType());
+        String rankingKey = addDto.getRankingKey();
         String userIndex = rank.getId().toString();
         Integer isPlayer =  addDto.getRank().getLosses() + addDto.getRank().getWins() > 0 ? RankType.RANK_PLAYER : RankType.UN_RANKPLAYER;
         redis.opsForZSet().add(rankingKey, userIndex, rank.getPpp() * isPlayer);
