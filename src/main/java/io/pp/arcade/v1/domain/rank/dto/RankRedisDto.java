@@ -1,6 +1,6 @@
 package io.pp.arcade.v1.domain.rank.dto;
 
-import io.pp.arcade.v1.domain.rank.RankRedis;
+import io.pp.arcade.v1.domain.rank.entity.RankRedis;
 import io.pp.arcade.v1.global.type.GameType;
 import io.pp.arcade.v1.global.type.RacketType;
 import lombok.Builder;

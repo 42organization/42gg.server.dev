@@ -1,18 +1,19 @@
 package io.pp.arcade.v1.domain.rank.dto;
 
+import io.pp.arcade.v1.domain.user.dto.UserDto;
 import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @Builder
-public class RankModifyStatusMessageDto {
-    private String intraId;
+public class RankUpdateStatusMessageDto {
+    private UserDto userDto;
     private String statusMessage;
 
     @Override
     public String toString() {
         return "RankModifyStatusMessageDto{" +
-                "intraId='" + intraId + '\'' +
+                "intraId='" + userDto.getIntraId() + '\'' +
                 ", statusMessage='" + statusMessage + '\'' +
                 '}';
     }

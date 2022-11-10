@@ -1,6 +1,6 @@
 package io.pp.arcade.v1.domain.rank.dto;
 
-import io.pp.arcade.v1.domain.rank.Rank;
+import io.pp.arcade.v1.domain.rank.entity.Rank;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.global.type.GameType;
 import io.pp.arcade.v1.global.type.RacketType;
@@ -20,6 +20,7 @@ public class RankDto {
     private Integer wins;
     private Integer losses;
     private Integer ppp;
+    private String statusMessage;
 
     public static RankDto from(Rank rank){
         RankDto rankDto = RankDto.builder()
@@ -32,6 +33,7 @@ public class RankDto {
                 .seasonId(rank.getSeasonId())
                 .user(UserDto.from(rank.getUser()))
                 .racketType(rank.getRacketType())
+                .statusMessage(rank.getStatusMessage())
                 .build();
         return rankDto;
     }
@@ -48,6 +50,7 @@ public class RankDto {
                 ", wins=" + wins +
                 ", losses=" + losses +
                 ", ppp=" + ppp +
+                ", statusMessage='" + statusMessage + '\'' +
                 '}';
     }
 }

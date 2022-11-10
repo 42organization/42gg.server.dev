@@ -1,6 +1,7 @@
 package io.pp.arcade.v1.domain.security.oauth.v2.service;
 
-import io.pp.arcade.v1.domain.rank.service.RankNTService;
+import io.pp.arcade.v1.domain.rank.service.RankRedisService;
+import io.pp.arcade.v1.domain.rank.service.RankService;
 import io.pp.arcade.v1.domain.security.oauth.v2.domain.ProviderType;
 import io.pp.arcade.v1.domain.security.oauth.v2.domain.UserPrincipal;
 import io.pp.arcade.v1.domain.security.oauth.v2.info.OAuthUserInfo;
@@ -26,7 +27,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
-    private final RankNTService rankNTService;
+    private final RankService rankService;
+    private final RankRedisService rankRedisService;
     private final AsyncNewUserImageUploader asyncNewUserImageUploader;
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -56,7 +58,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             if (userInfo.getImageUrl().startsWith("https://cdn.intra.42.fr/")) {
                 asyncNewUserImageUploader.upload(userInfo.getIntraId(), userInfo.getImageUrl());
             }
-            rankNTService.userToRedisRank(UserDto.from(savedUser));
+            rankRedisService.addUserRank(UserDto.from(savedUser));
         }
         return UserPrincipal.create(savedUser, user.getAttributes());
     }

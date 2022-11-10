@@ -4,24 +4,25 @@ import io.jsonwebtoken.lang.Collections;
 import io.pp.arcade.v1.domain.admin.dto.create.RankCreateRequestDto;
 import io.pp.arcade.v1.domain.admin.dto.delete.RankDeleteDto;
 import io.pp.arcade.v1.domain.admin.dto.update.RankUpdateRequestDto;
-import io.pp.arcade.v1.domain.rank.Rank;
+import io.pp.arcade.v1.domain.rank.entity.Rank;
 import io.pp.arcade.v1.domain.rank.RankRepository;
 
+import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.domain.user.UserRepository;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.domain.rank.dto.*;
+import io.pp.arcade.v1.global.type.GameType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.data.web.config.PageableHandlerMethodArgumentResolverCustomizer;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -71,19 +72,40 @@ public class RankService {
                 .build();
     }
 
-
     @Transactional
-    public void saveAll(RankSaveAllDto saveAllDto) {
-        if (saveAllDto.getSeasonId() == null) {
+    public void redisToMySql(RankSaveAllDto saveAllDto) {
+        if (saveAllDto.getSeasonDto() == null) {
             throw new BusinessException("{server.internal.error}");
         }
-        List<RankRedisDto> rankRedisDtos = saveAllDto.getRankRedisDtos();
-        List<Rank> rankList = rankRedisDtos.stream().map(rankRedisDto -> {
-            Rank rank = new Rank();
-            User user = userRepository.getUserByIntraId(rankRedisDto.getIntraId());
-            rank.update(rankRedisDto, user, saveAllDto.getSeasonId());
-            return rank;
-        }).collect(Collectors.toList());
+        /* 현재 시즌의 모든 랭크리스트 구하기 */
+        SeasonDto seasonDto = saveAllDto.getSeasonDto();
+        List<Rank> ranks =  rankRepository.findAllBySeasonId(seasonDto.getId());
+
+        HashMap<String, Rank> rankHashMap = new HashMap<>();
+        ranks.forEach(rank -> rankHashMap.put(rank.getUser().getIntraId(), rank));
+
+        List<Rank> rankList = new ArrayList<>();
+        List<RankUserDto> rankRedisDtos = saveAllDto.getRankUserDtos();
+        rankRedisDtos.forEach(rankUser -> {
+            Rank rank = rankHashMap.get(rankUser.getIntraId());
+            if (rank == null) {
+                User user = userRepository.getUserByIntraId(rankUser.getIntraId());
+                rank = Rank.builder()
+                        .ranking(rankUser.getRank())
+                        .losses(rankUser.getLosses())
+                        .wins(rankUser.getWins())
+                        .ppp(rankUser.getPpp())
+                        .user(user)
+                        .racketType(user.getRacketType())
+                        .statusMessage(user.getStatusMessage())
+                        .seasonId(seasonDto.getId())
+                        .gameType(GameType.SINGLE)
+                        .build();
+            } else {
+                rank.updateRedisInfo(rankUser.getPpp(),rankUser.getWins(), rankUser.getLosses(), rankUser.getRank());
+            }
+            rankList.add(rank);
+        });
         if (!Collections.isEmpty(rankList))
             rankRepository.saveAll(rankList);
     }

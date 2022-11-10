@@ -9,18 +9,16 @@ import java.util.List;
 @Getter
 @Builder
 public class RankListResponseDto {
-    private Integer myRank;
+    private Integer myRanking;
     private Integer currentPage;
     private Integer totalPage;
     private List<RankUserDto> rankList;
 
-    @Override
-    public String toString() {
-        return "RankListResponseDto{" +
-                ", myRank=" + myRank +
-                ", currentPage=" + currentPage +
-                ", totalPage=" + totalPage +
-                ", rankList=" + rankList +
-                '}';
+    @Builder
+    public RankListResponseDto(Integer myRanking, Integer currentPage, Integer totalPage, List<RankUserDto> rankList) {
+        this.myRanking = myRanking;
+        this.currentPage = currentPage;
+        this.totalPage = totalPage;
+        this.rankList = rankList;
     }
 }

@@ -1,6 +1,6 @@
 package io.pp.arcade.v1.domain.rank.dto;
 
-import io.pp.arcade.v1.domain.rank.Rank;
+import io.pp.arcade.v1.domain.rank.entity.Rank;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import lombok.Builder;
 import lombok.Getter;
