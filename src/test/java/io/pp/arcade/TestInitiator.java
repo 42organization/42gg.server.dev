@@ -4,7 +4,7 @@ import io.pp.arcade.v1.domain.currentmatch.CurrentMatchRepository;
 import io.pp.arcade.v1.domain.game.GameRepository;
 import io.pp.arcade.v1.domain.noti.NotiRepository;
 import io.pp.arcade.v1.domain.pchange.PChangeRepository;
-import io.pp.arcade.v1.domain.rank.RankRedis;
+import io.pp.arcade.v1.domain.rank.entity.RankRedis;
 import io.pp.arcade.v1.domain.rank.RankRepository;
 import io.pp.arcade.v1.domain.season.Season;
 import io.pp.arcade.v1.domain.season.SeasonRepository;

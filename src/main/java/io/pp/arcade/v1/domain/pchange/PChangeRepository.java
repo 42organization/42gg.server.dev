@@ -19,7 +19,7 @@ public interface PChangeRepository extends JpaRepository<PChange, Integer> {
 
     @Query(nativeQuery = true, value = "SELECT * FROM pchange " +
             "where game_id in (SELECT id FROM game where season = :season and mode = :mode Order By id Desc ) " +
-            "AND user_id = :intraId ORDER BY id Desc limit :limit")
+            "AND user_id = :intraId ORDER BY id Asc limit :limit")
     List<PChange> findPChangeHistory(@Param("intraId") String intraId,
                                      @Param("season") Integer season,
                                      @Param("mode") Integer mode, @Param("limit") Integer limit);

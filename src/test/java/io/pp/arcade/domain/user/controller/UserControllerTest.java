@@ -8,7 +8,7 @@ import io.pp.arcade.v1.domain.game.Game;
 import io.pp.arcade.v1.domain.game.GameRepository;
 import io.pp.arcade.v1.domain.pchange.PChange;
 import io.pp.arcade.v1.domain.pchange.PChangeRepository;
-import io.pp.arcade.v1.domain.rank.RankRedis;
+import io.pp.arcade.v1.domain.rank.entity.RankRedis;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.slot.SlotRepository;
 import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUser;
@@ -211,19 +211,14 @@ class UserControllerTest {
          * -> intraId, userImageUri, statusMessage, ppp
          * -> rank, wins, losses
          * */
-
-        Integer currentExp = ExpLevelCalculator.getCurrentLevelMyExp(users[2].getTotalExp());
-        Integer maxExp = ExpLevelCalculator.getLevelMaxExp(ExpLevelCalculator.getLevel(users[2].getTotalExp()));
-        Double expRate = (double)(currentExp * 10000 / maxExp) / 100;
-        mockMvc.perform(get("/pingpong/users/" + users[2].getIntraId() + "/detail").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(get("/pingpong/users/" + users[1].getIntraId() + "/detail").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(jsonPath("$.intraId").value(users[2].getIntraId()))
-                .andExpect(jsonPath("$.userImageUri").value(users[2].getImageUri()))
-                .andExpect(jsonPath("$.statusMessage").value(users[2].getStatusMessage()))
-                .andExpect(jsonPath("$.level").value(ExpLevelCalculator.getLevel(users[2].getTotalExp())))
-                .andExpect(jsonPath("$.currentExp").value(currentExp))
-                .andExpect(jsonPath("$.maxExp").value(maxExp))
-                .andExpect(jsonPath("$.expRate").value(expRate))
+                .andExpect(jsonPath("$.intraId").value(users[1].getIntraId()))
+                .andExpect(jsonPath("$.userImageUri").value(users[1].getImageUri()))
+                .andExpect(jsonPath("$.statusMessage").value(users[1].getStatusMessage()))
+                .andExpect(jsonPath("$.level").value(ExpLevelCalculator.getLevel(users[1].getTotalExp())))
+                .andExpect(jsonPath("$.currentExp").value(ExpLevelCalculator.getCurrentLevelMyExp(users[1].getTotalExp())))
+                .andExpect(jsonPath("$.maxExp").value(ExpLevelCalculator.getLevelMaxExp(ExpLevelCalculator.getLevel(users[1].getTotalExp()))))
 //                .andExpect(jsonPath("$.rank").value(getRanking(userRank, GameType.SINGLE)))
 //                .andExpect(jsonPath("$.losses").value(userRank.getLosses()))
                 .andExpect(status().isOk())

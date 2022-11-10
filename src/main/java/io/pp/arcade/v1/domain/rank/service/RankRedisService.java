@@ -1,245 +1,206 @@
 package io.pp.arcade.v1.domain.rank.service;
 
-import io.jsonwebtoken.lang.Collections;
-import io.pp.arcade.v1.domain.admin.dto.create.RankCreateRequestDto;
-import io.pp.arcade.v1.domain.admin.dto.delete.RankDeleteDto;
-import io.pp.arcade.v1.domain.admin.dto.update.RankUpdateRequestDto;
+import io.pp.arcade.v1.domain.rank.RankRedisRepository;
+import io.pp.arcade.v1.domain.rank.RedisKeyManager;
 import io.pp.arcade.v1.domain.rank.dto.*;
+import io.pp.arcade.v1.domain.season.SeasonService;
+import io.pp.arcade.v1.domain.season.dto.SeasonDto;
+import io.pp.arcade.v1.domain.season.dto.SeasonNameDto;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
-import io.pp.arcade.v1.global.redis.Key;
-import io.pp.arcade.v1.domain.rank.RankRedis;
+import io.pp.arcade.v1.domain.rank.entity.RankRedis;
 
 import io.pp.arcade.v1.global.type.GameType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.ListOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
-import java.util.ArrayList;
+
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import static io.pp.arcade.v1.global.type.GameType.DOUBLE;
 import static io.pp.arcade.v1.global.type.GameType.SINGLE;
 
 
 @Service
 @AllArgsConstructor
-public class RankRedisService implements RankNTService {
+public class RankRedisService {
     private final RedisTemplate<String, String> redisRank;
-    private final RedisTemplate<String, RankRedis> redisUser;
+    private final ListOperations<String, RankRedis> redisRankList;
+    private final RedisKeyManager redisKeyManager;
+    private final RankRedisRepository rankRedisRepository;
+    private final SeasonService seasonService;
 
     @Transactional
-    public RankListDto findRankList(RankFindListDto rankFindListDto) {
-        Integer pageNumber = rankFindListDto.getPageable().getPageNumber();
-        Integer count = rankFindListDto.getCount();
-        GameType type = rankFindListDto.getGameType();
-        Long size = redisRank.opsForZSet().size(getRankKey(type));
+    public void updateRankPpp(RankUpdateDto updateDto) {
+        Integer userId = updateDto.getUserDto().getId();
+        Integer isWin = booleanToInt(updateDto.getIsWin());
+        String curSeasonKey = redisKeyManager.getCurrentRankKey();
 
-        int currentPage = (pageNumber < 1) ? 1 : pageNumber;
-        int totalPage = 1;
-        if (size != null) {
-            totalPage = size.intValue() / (count) + 1;
-            totalPage = size.intValue() % (count) == 0 ? totalPage - 1 : totalPage;
-        }
-        int start = (currentPage - 1) * count;
-        int end = start + count - 1;
+        RankRedis userRank = rankRedisRepository.findRank(curSeasonKey , userId);
+        userRank.update(isWin, updateDto.getPpp());
 
-        Set<String> reverseRange = redisRank.opsForZSet().reverseRange(getRankKey(type), start, end);
-        List<RankUserDto> rankUserList = getUserRankingList(reverseRange, type);
-        RankListDto findListDto = RankListDto.builder()
-                .currentPage(currentPage) // 최대값은 totalPage
-                .totalPage(totalPage)
-                .rankList(rankUserList)
-                .build();
-        return findListDto;
+        rankRedisRepository.updateRank(RedisRankUpdateDto.builder().seasonKey(curSeasonKey).userId(userId).userRank(userRank).build());
+
+        String RankingKey = redisKeyManager.getCurrentRankingKey( updateDto.getGameType());
+        rankRedisRepository.updateRanking(RedisRankingUpdateDto.builder().rankingKey(RankingKey).rank(userRank).ppp(updateDto.getPpp()).build());
     }
 
+    /* 상태메시지 수정완료 */
     @Transactional
-    public RankUserDto findRankById(RankFindDto findDto) {
-        String intraId = findDto.getIntraId();
-        GameType gameType = findDto.getGameType();
+    public void updateRankStatusMessage(RankUpdateStatusMessageDto updateDto) {
+        Integer userId = updateDto.getUserDto().getId();
+        String curRankKey = redisKeyManager.getCurrentRankKey();
 
-        RankRedis userRankInfo = getUserRank(intraId, gameType);
-        return (userRankInfo == null) ? null : RankUserDto.from(userRankInfo, getRanking(userRankInfo));
+        RankRedis userRank = rankRedisRepository.findRank(curRankKey , userId);
+        userRank.updateStatusMessage(updateDto.getStatusMessage());
+        redisRankList.set(redisKeyManager.getCurrentRankKey(), updateDto.getUserDto().getId(), userRank);
+        //RankRedis doubleRank = getUserRank(modifyDto.getIntraId(), DOUBLE);
+        //doubleRank.updateStatusMessage(modifyDto.getStatusMessage());
+        //saveUserRank(doubleRank);
     }
 
+    /* 어드민 - 유저 정보 수정*/
     @Transactional
-    public void modifyUserPpp(RankModifyDto modifyDto) {
-        String intraId = modifyDto.getIntraId();
+    public void modifyRankPpp(RankRedisModifyPppDto modifyDto)
+    {
+        SeasonDto seasonDto = seasonService.findCurrentSeason();
+
+        /* Rank 수정 */
+        Integer userId = modifyDto.getUserDto().getId();
+        RankKeyGetDto keyGetDto = RankKeyGetDto.builder().seasonId(seasonDto.getId()).seasonName(seasonDto.getSeasonName()).build();
+        String curRankKey = redisKeyManager.getRankKeyBySeason(keyGetDto);
+        RankRedis rank = rankRedisRepository.findRank(curRankKey, userId);
+        rank.modify(modifyDto.getModifyStatus(), modifyDto.getPpp());
+
+        /* 수정된 Rank 적용 */
         GameType gameType = modifyDto.getGameType();
-        RankRedis userRank = getUserRank(intraId, gameType);
-        userRank.modify(modifyDto.getModifyStatus(), modifyDto.getPpp());
-        saveUserRank(userRank);
-        saveUserRankingPpp(userRank, modifyDto.getPpp());
+        rankRedisRepository.updateRank(RedisRankUpdateDto.builder().seasonKey(curRankKey).userId(userId).userRank(rank).build());
+
+        /* 수정된 Ranking 적용 */
+        String RankingKey = redisKeyManager.getCurrentRankingKey(gameType);
+        rankRedisRepository.updateRanking(RedisRankingUpdateDto.builder().rankingKey(RankingKey).ppp(modifyDto.getPpp()).rank(rank).build());
     }
 
-    @Transactional
-    public void updateUserPpp(RankUpdateDto modifyDto) {
-        String intraId = modifyDto.getIntraId();
-        GameType gameType = modifyDto.getGameType();
+    public void addUserRank(UserDto userDto) {
+        SeasonDto seasonDto = seasonService.findCurrentSeason();
 
-        RankRedis userRank = getUserRank(intraId, gameType);
-        userRank.update(modifyDto.getIsWin(), modifyDto.getPpp());
-        saveUserRank(userRank);
-        saveUserRankingPpp(userRank, modifyDto.getPpp());
-    }
+        RankRedis singleRank = RankRedis.from(userDto, SINGLE);
+        singleRank.setPpp(seasonDto.getStartPpp());
 
+        RankKeyGetDto rankKeyGetDto = RankKeyGetDto.builder().seasonId(seasonDto.getId()).seasonName(seasonDto.getSeasonName()).build();
+        String rankKey = redisKeyManager.getRankKeyBySeason(rankKeyGetDto);
+        RedisRankAddDto redisRankAddDto = RedisRankAddDto.builder().key(rankKey).userId(userDto.getId()).rank(singleRank).build();
+        rankRedisRepository.addRank(redisRankAddDto);
 
-    @Transactional
-    public void modifyRankStatusMessage(RankModifyStatusMessageDto modifyDto) {
-        RankRedis singleRank = getUserRank(modifyDto.getIntraId(), SINGLE);
-//        RankRedis doubleRank = getUserRank(modifyDto.getIntraId(), DOUBLE);
-        singleRank.updateStatusMessage(modifyDto.getStatusMessage());
-//        doubleRank.updateStatusMessage(modifyDto.getStatusMessage());
-        saveUserRank(singleRank);
-//        saveUserRank(doubleRank);
-    }
-
-    @Transactional
-    public List<RankRedisDto> findRankAll(RankFindAllDto findAllDto) {
-        Set rankKeys = redisRank.keys(Key.RANK_USER_ALL + findAllDto.getGameType().getCode());
-        List<RankRedis> rankList = redisUser.opsForValue().multiGet(rankKeys);
-        List<RankRedisDto> rankRedisDtos = new ArrayList<RankRedisDto>();
-        if (!Collections.isEmpty(rankList)) {
-            rankRedisDtos = rankList.stream().map(rank -> {
-                Integer singleRanking = getRanking(rank);
-                return RankRedisDto.from(rank, singleRanking.intValue());
-            }).collect(Collectors.toList());
-        }
-        return rankRedisDtos;
-    }
-
-    public List<RankRedisDto> findRankAll() {
-        Set rankKeys = redisRank.keys(Key.RANK_USER_ALL + SINGLE.getCode());
-        List<RankRedis> rankList = redisUser.opsForValue().multiGet(rankKeys);
-        List<RankRedisDto> rankRedisDtos = new ArrayList<RankRedisDto>();
-        if (!Collections.isEmpty(rankList)) {
-            rankRedisDtos = rankList.stream().map(rank -> {
-                Integer singleRanking = getRanking(rank);
-                return RankRedisDto.from(rank, singleRanking.intValue());
-            }).collect(Collectors.toList());
-        }
-        return rankRedisDtos;
+        String rankingKey = redisKeyManager.getRankKeyBySeason(rankKeyGetDto);
+        RedisRankingAddDto redisRankingAddDto = RedisRankingAddDto.builder().rankingKey(rankingKey).rank(singleRank).build();
+        rankRedisRepository.addRanking(redisRankingAddDto);
     }
 
     @Transactional
     public Boolean isEmpty() {
-        return !redisRank.hasKey(Key.SINGLE);
+        return redisKeyManager.isEmpty();
     }
 
     @Transactional
-    public void saveAll(List<RankDto> rankDtos) {
+    public void mysqlToRedis(List<RankDto> rankDtos) {
+        HashMap<Integer,RankKeyGetDto> hashMap = new HashMap<>();
+
+        /* 모든 시즌 정보를 해시맵에 저장 */
+        List<SeasonNameDto> seasonList = seasonService.findAllSeason();
+        seasonList.forEach(season -> {
+            RankKeyGetDto keyGetDto = RankKeyGetDto.builder().seasonName(season.getName()).seasonId(season.getId()).build();
+            hashMap.put(season.getId(), keyGetDto);
+        });
+
+        /* 모든 랭크 데이터를 레디스에 저장 */
         rankDtos.forEach(rankDto -> {
-            rankToRedisRank(rankDto);
+            RankKeyGetDto keyGetDto = hashMap.get(rankDto.getSeasonId());
+
+            String rankKey = redisKeyManager.getRankKeyBySeason(keyGetDto);
+            Integer userId = rankDto.getUser().getId();
+            RankRedis rank = RankRedis.from(rankDto, rankDto.getGameType());
+            RedisRankAddDto redisRankAddDto = RedisRankAddDto.builder().key(rankKey).userId(userId).rank(rank).build();
+            rankRedisRepository.addRank(redisRankAddDto);
+
+            String rankingKey = redisKeyManager.getRankingKeyBySeason(keyGetDto, rankDto.getGameType());
+            RedisRankingAddDto redisRankingAddDto = RedisRankingAddDto.builder().rankingKey(rankingKey).rank(rank).build();
+            rankRedisRepository.addRanking(redisRankingAddDto);
         });
     }
 
-    /* Admin method */
+    /*
+     * count null일 경우 수정
+     */
+    public RankListDto findRankList(RankFindListDto findListDto) {
+        Integer page = findListDto.getPageable().getPageNumber();
+        Integer count = findListDto.getCount() == null ? findListDto.getPageable().getPageSize() : findListDto.getCount();
+        GameType gameType = findListDto.getGameType();
+        String curRankingKey = redisKeyManager.getCurrentRankingKey(gameType);
+        SeasonDto seasonDto = seasonService.findSeasonById(findListDto.getSeasonId());
+        Long size = redisRank.opsForZSet().size(curRankingKey);
 
-    @Transactional
-    public void createRankByAdmin(RankCreateRequestDto createRequestDto) {
+        int currentPage = (page > 1) ? page : 1;
+        int totalPage = ((size.intValue() - 1) / count) + 1;
+        int start = (currentPage - 1) * count;
+        int end = start + count - 1;
 
+        RankKeyGetDto rankKeyGetDto = RankKeyGetDto.builder().seasonId(seasonDto.getId()).seasonName(seasonDto.getSeasonName()).build();
+        RedisRankingFindListDto redisRankingFindListDto = RedisRankingFindListDto.builder().curRankingKey(curRankingKey).start(start).end(end).rankKeyGetDto(rankKeyGetDto).build();
+        List<RankUserDto> rankUserList = rankRedisRepository.findRankingList(redisRankingFindListDto);
+        RankListDto rankListDto = RankListDto.builder()
+                .currentPage(currentPage)
+                .totalPage(totalPage)
+                .rankList(rankUserList)
+                .build();
+        return rankListDto;
     }
 
-    @Transactional
-    public void updateRankByAdmin(RankUpdateRequestDto updateRequestDto) {
-
+    public List<RankUserDto> findCurrentRankList() {
+        SeasonDto seasonDto = seasonService.findCurrentSeason();
+        RankKeyGetDto keyGetDto = RankKeyGetDto.builder().seasonId(seasonDto.getId()).seasonName(seasonDto.getSeasonName()).build();
+        String rankKey = redisKeyManager.getRankKeyBySeason(keyGetDto);
+        List<RankRedis> rankUserList = rankRedisRepository.findAllRank(rankKey);
+        List<RankUserDto> rankUserDtos = rankUserList.stream().map(rank -> {
+            RedisRankingFindDto findDto = RedisRankingFindDto.builder().rank(rank).keyGetDto(keyGetDto).build();
+            Integer ranking = rankRedisRepository.findRanking(findDto);
+            return RankUserDto.from(rank, ranking);
+        }).collect(Collectors.toList());
+        return rankUserDtos;
     }
 
-    @Transactional
-    public void deleteRankByAdmin(RankDeleteDto deleteDto) {
+    /* 현재 시즌만 조회 가능 */
+    public RankUserDto findRankById(RankRedisFindDto findDto) {
+        Integer userId = findDto.getUserDto().getId();
+        SeasonDto curSeasonDto = seasonService.findCurrentSeason();
+        RankKeyGetDto keyGetDto = RankKeyGetDto.builder().seasonId(curSeasonDto.getId()).seasonName(curSeasonDto.getSeasonName()).build();
+        String curRankKey = redisKeyManager.getRankKeyBySeason(keyGetDto);
 
+        RankRedis rank = rankRedisRepository.findRank(curRankKey, userId);
+        Integer ranking = rankRedisRepository.findRanking(RedisRankingFindDto.builder().rank(rank).keyGetDto(keyGetDto).build());
+        return (rank == null) ? null : RankUserDto.from(rank, ranking);
     }
 
+    /* 시즌별 유저 랭킹 조회 */
+    public Integer findRankingById(RankRankingFindDto findDto) {
+        Integer userId = findDto.getUserId();
+        SeasonDto seasonDto = findDto.getSeasonDto();
+        RankKeyGetDto keyGetDto = RankKeyGetDto.builder().seasonName(seasonDto.getSeasonName()).seasonId(seasonDto.getId()).build();
+        RankRedis rank = rankRedisRepository.findRank(redisKeyManager.getRankKeyBySeason(keyGetDto), userId);
+
+        RedisRankingFindDto rankingFindDto = RedisRankingFindDto.builder().rank(rank).keyGetDto(keyGetDto).build();
+        return rankRedisRepository.findRanking(rankingFindDto);
+    }
     @Transactional
     public List<RankDto> findRankByAdmin(Pageable pageable) {
        return null;
     }
 
-    /* Private Method */
-    private List<RankUserDto> getUserRankingList(Set<String> range, GameType gameType) {
-        List<RankUserDto> rankList = new ArrayList<RankUserDto>();
-        range.forEach(key -> {
-            RankRedis userRankInfo = getUserRank(key);
-            rankList.add(RankUserDto.builder()
-                    .intraId(userRankInfo.getIntraId())
-                    .ppp(userRankInfo.getPpp())
-                    .rank(getRanking(userRankInfo))
-                    .statusMessage(userRankInfo.getStatusMessage())
-                    .losses(userRankInfo.getLosses())
-                    .wins(userRankInfo.getWins())
-                    .winRate(userRankInfo.getWinRate())
-                    .build());
-        });
-        return rankList;
-    }
-
-    @Transactional
-    protected RankRedis getUserRank(String rankingKey) {
-        String userKey = getUserKey(rankingKey.replaceAll("\"",""));
-        RankRedis userRankInfo = redisUser.opsForValue().get(userKey);
-        return userRankInfo;
-    }
-
-    @Transactional
-    protected RankRedis getUserRank(String intraId, GameType type) {
-        String userKey = getUserKey(intraId, type);
-        RankRedis userRankInfo = redisUser.opsForValue().get(userKey);
-        return userRankInfo;
-    }
-
-    @Transactional
-    protected void saveUserRankingPpp(RankRedis userRank, Integer ppp) {
-        Integer isRanked = userRank.getLosses() + userRank.getWins() != 0 ? 1 : 0;
-        redisRank.opsForZSet().add(userRank.getGameType().getCode(), getUserRankKey(userRank.getIntraId(), userRank.getGameType()), ppp * isRanked);
-    }
-
-    @Transactional
-    protected void saveUserRank(RankRedis rank) {
-        redisUser.opsForValue().set(getUserKey(rank.getIntraId(), rank.getGameType()), rank);
-    }
-
-    private String getUserKey(String key) {
-        return Key.RANK_USER + key;
-    }
-
-    private String getUserKey(String intraId, GameType gameType) {
-        return Key.RANK_USER + intraId + gameType.getCode();
-    }
-
-    private String getUserRankKey(String intraId, GameType gameType) {
-        return "\"" + intraId + gameType.getCode() + "\"";
-    }
-
-    private String getRankKey(GameType gameType) {
-        return gameType.getCode();
-    }
-
-    @Transactional
-    protected Integer getRanking(RankRedis userInfo){
-        Integer totalGames = userInfo.getLosses() + userInfo.getWins();
-        GameType gameType = userInfo.getGameType();
-        Integer ranking = (totalGames == 0) ? -1 : redisRank.opsForZSet().reverseRank(getRankKey(gameType), getUserRankKey(userInfo.getIntraId(), gameType)).intValue() + 1;
-        return ranking;
-    }
-
-    @Transactional
-    protected void rankToRedisRank(RankDto rankDto) {
-        RankRedis rank = RankRedis.from(rankDto, rankDto.getGameType());
-        saveUserRank(rank);
-        saveUserRankingPpp(rank, rankDto.getPpp());
-    }
-
-    @Transactional
-    public void userToRedisRank(UserDto user) {
-        RankRedis singleRank = RankRedis.from(user, SINGLE);
-        RankRedis doubleRank = RankRedis.from(user, DOUBLE);
-        saveUserRank(singleRank);
-        saveUserRank(doubleRank);
-        saveUserRankingPpp(singleRank, user.getPpp());
-        saveUserRankingPpp(doubleRank, user.getPpp());
+    private int booleanToInt(boolean value) {
+        return value ? 1 : 0;
     }
 }
