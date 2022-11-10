@@ -23,7 +23,6 @@
         <td align=center><a href="https://github.com/triplecheeseburger">김한결 @hakim</a></td>
         <td align=center><a href="https://github.com/tomatozil">윤지윤 @jiyun</a></td>
         <td align=center><a href="https://github.com/wochae">채우석 @wochae</a></td>
-        <td align=center><a href="https://github.com/Two-Jay">김정준 @jekim</a></td>
     </tr>
     <tr>
         <td align=center>프로젝트 전체 대장</td>
