@@ -78,8 +78,8 @@ public class SlotControllerImpl implements SlotController {
 
         checkIfUserHaveCurrentMatch(user);
         checkIfUserHavePenalty(user);
-//        checkIfModeMatches(addReqDto, slot);
-        checkIfSlotAvailable(slot, type, user);
+        checkIfModeMatches(addReqDto, slot);
+        checkIfSlotAvailable(slot, type, user, addReqDto);
 
         //user가 들어갈 팀을 정한당
         TeamAddUserDto teamAddUserDto = getTeamAddUserDto(slot, user);
@@ -108,7 +108,7 @@ public class SlotControllerImpl implements SlotController {
 
     private void checkIfModeMatches(SlotAddUserRequestDto addReqDto, SlotDto slot) {
         if (slot.getMode() != Mode.BOTH && slot.getMode() != addReqDto.getMode()) {
-            throw new BusinessException("SC004");
+            throw new BusinessException("SC001");
         }
     }
 
@@ -224,13 +224,14 @@ public class SlotControllerImpl implements SlotController {
         return teamAddUserDto;
     }
 
-    private void checkIfSlotAvailable(SlotDto slot, GameType gameType, UserDto user) {
+    private void checkIfSlotAvailable(SlotDto slot, GameType gameType, UserDto user, SlotAddUserRequestDto requestDto) {
         Integer pppGap = getPppGapFromSeason();
 
         SlotFilterDto slotFilterDto = SlotFilterDto.builder()
                 .slot(slot)
                 .gameType(gameType)
                 .userPpp(user.getPpp())
+                .userMode(requestDto.getMode())
                 .pppGap(pppGap)
                 .build();
         if (SlotStatusType.CLOSE.equals(slotService.getStatus(slotFilterDto))) {
