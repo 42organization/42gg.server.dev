@@ -9,7 +9,7 @@ import io.pp.arcade.v1.domain.game.dto.GameDto;
 import io.pp.arcade.v1.domain.pchange.PChangeService;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeFindDto;
-import io.pp.arcade.v1.domain.rank.dto.RankFindDto;
+import io.pp.arcade.v1.domain.rank.dto.RankRedisFindDto;
 import io.pp.arcade.v1.domain.rank.dto.RankUserDto;
 import io.pp.arcade.v1.domain.rank.service.RankRedisService;
 import io.pp.arcade.v1.domain.slotteamuser.dto.SlotTeamUserDto;
@@ -33,9 +33,9 @@ public class GameRankFactory implements GameFactory{
     public GamePlayer getGamePlayer(GameDto gameDto, SlotTeamUserDto slotTeamUser){
         GamePlayer gamePlayerDto;
 
-        RankUserDto rankUserDto = rankRedisService.findRankById(RankFindDto.builder()
+        RankUserDto rankUserDto = rankRedisService.findRankById(RankRedisFindDto.builder()
                 .gameType(gameDto.getSlot().getType())
-                .intraId(slotTeamUser.getUser().getIntraId()).build());
+                .userDto(slotTeamUser.getUser()).build());
         PChangeDto pChangeDto = gameDto.getStatus() == StatusType.END ?
                 pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().game(gameDto).user(slotTeamUser.getUser()).build())
                 : PChangeDto.builder().user(slotTeamUser.getUser()).game(gameDto).pppChange(0).pppResult(0).expChange(0).expResult(0).build();

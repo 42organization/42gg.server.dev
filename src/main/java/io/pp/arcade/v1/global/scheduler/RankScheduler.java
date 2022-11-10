@@ -1,10 +1,11 @@
 package io.pp.arcade.v1.global.scheduler;
 
-import io.pp.arcade.v1.domain.rank.dto.RankRedisDto;
 import io.pp.arcade.v1.domain.rank.dto.RankSaveAllDto;
+import io.pp.arcade.v1.domain.rank.dto.RankUserDto;
 import io.pp.arcade.v1.domain.rank.service.RankRedisService;
 import io.pp.arcade.v1.domain.rank.service.RankService;
 import io.pp.arcade.v1.domain.season.SeasonService;
+import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -24,10 +25,10 @@ public class RankScheduler extends  AbstractScheduler {
     }
 
     public void dailyProcess() {
-        List<RankRedisDto> rankRedisDtos = rankRedisService.findRankAll();
-        Integer seasonId = seasonService.findCurrentSeason().getId();
-        RankSaveAllDto rankSaveAllDto = RankSaveAllDto.builder().rankRedisDtos(rankRedisDtos).seasonId(seasonId).build();
-        rankService.saveAll(rankSaveAllDto);
+        List<RankUserDto> rankRedisDtos = rankRedisService.findCurrentRankList();
+        SeasonDto season = seasonService.findCurrentSeason();
+        RankSaveAllDto rankSaveAllDto = RankSaveAllDto.builder().rankUserDtos(rankRedisDtos).seasonDto(season).build();
+        rankService.redisToMySql(rankSaveAllDto);
     }
 
     @Override

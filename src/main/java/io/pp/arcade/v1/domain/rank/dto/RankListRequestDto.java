@@ -1,6 +1,5 @@
 package io.pp.arcade.v1.domain.rank.dto;
 
-import io.pp.arcade.v1.global.type.GameType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,13 +7,13 @@ import lombok.Setter;
 @Setter
 public class RankListRequestDto {
     private Integer count;
-    private Integer season;
+    private Integer seasonId;
 
     @Override
     public String toString() {
         return "RankListRequestDto{" +
                 "count=" + count +
-                ", season=" + season +
+                ", season=" + seasonId +
                 '}';
     }
 }

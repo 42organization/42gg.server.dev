@@ -4,15 +4,15 @@ import io.pp.arcade.RestDocsConfiguration;
 import io.pp.arcade.TestInitiator;
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchRepository;
-import io.pp.arcade.v1.domain.rank.dto.RankFindDto;
+import io.pp.arcade.v1.domain.rank.dto.RankRedisFindDto;
 import io.pp.arcade.v1.domain.rank.dto.RankUserDto;
 import io.pp.arcade.v1.domain.rank.service.RankRedisService;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.user.User;
+import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.global.type.GameType;
 import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.util.ExpLevelCalculator;
-import org.checkerframework.checker.units.qual.Current;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,7 +78,8 @@ class UserControllerNormalTest {
     @DisplayName("유저 정보 조회 - 상세히, 랭크 (/pingpong/users/{targetIntraId}/rank)")
     void findDetailUserRank() throws Exception {
         User user = initiator.users[0];
-        RankUserDto rank = rankRedisService.findRankById(RankFindDto.builder().intraId(user.getIntraId()).gameType(GameType.SINGLE).build());
+        UserDto userDto = UserDto.from(user);
+        RankUserDto rank = rankRedisService.findRankById(RankRedisFindDto.builder().userDto(userDto).gameType(GameType.SINGLE).build());
 
         mockMvc.perform(get("/pingpong/users/{targetIntraId}/rank", user.getIntraId()).contentType(MediaType.APPLICATION_JSON) // intra id, season 값 넣어야함
                 .param("season", "0")

@@ -1,4 +1,4 @@
-package io.pp.arcade.v1.domain.rank;
+package io.pp.arcade.v1.domain.rank.entity;
 
 import io.pp.arcade.v1.domain.rank.dto.RankDto;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
@@ -31,6 +31,7 @@ public class RankRedis implements Serializable {
     @Indexed
     private GameType gameType;
 
+    @Setter
     private Integer ppp;
 
     private Integer wins;
@@ -77,26 +78,22 @@ public class RankRedis implements Serializable {
                 .id(rankDto.getId())
                 .intraId(rankDto.getUser().getIntraId())
                 .ppp(rankDto.getPpp())
-                .statusMessage(rankDto.getUser().getStatusMessage())
                 .gameType(gameType)
                 .racketType(rankDto.getRacketType())
                 .wins(rankDto.getWins())
                 .losses(rankDto.getLosses())
-                .winRate((losses + wins) == 0 ? 0 : (double)(wins * 10000 / (losses + wins)) / 100)
+                .winRate((losses + wins) == 0 ? 0 : ((double)wins / (double)(losses + wins) * 100))
+                .statusMessage(rankDto.getStatusMessage())
                 .build();
         return rankRedis;
     }
 
-    public void update(Boolean isWin, Integer ppp){
-        if (isWin == true) {
-            this.wins++;
-        } else {
-            this.losses++;
-        }
+    public void update(Integer isWin, Integer ppp){
         this.ppp = ppp;
-        this.winRate = (losses + wins) == 0 ? 0 : (double)(wins * 10000 / (losses + wins)) / 100;
+        this.wins += isWin;
+        this.losses += isWin ^ 1;
+        this.winRate = (double)wins / (wins + losses) * 100;
     }
-
     public void modify(Integer modifyStatus, Integer ppp){
         if (modifyStatus == 0) {
             this.losses--;
@@ -107,7 +104,7 @@ public class RankRedis implements Serializable {
             this.wins--;
         }
         this.ppp = ppp;
-        this.winRate = (losses + wins) == 0 ? 0 : (double)(wins * 10000 / (losses + wins)) / 100;
+        this.winRate = (double)wins / (wins + losses) * 100;
     }
 
     public void updateStatusMessage(String statusMessage){
