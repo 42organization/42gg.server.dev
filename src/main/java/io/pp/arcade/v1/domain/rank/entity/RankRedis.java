@@ -94,6 +94,7 @@ public class RankRedis implements Serializable {
         this.losses += isWin ^ 1;
         this.winRate = (double)wins / (wins + losses) * 100;
     }
+
     public void modify(Integer modifyStatus, Integer ppp){
         if (modifyStatus == 0) {
             this.losses--;
