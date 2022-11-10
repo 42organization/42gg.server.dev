@@ -12,8 +12,8 @@ import io.pp.arcade.v1.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeListDto;
 import io.pp.arcade.v1.domain.rank.dto.RankDto;
-import io.pp.arcade.v1.domain.rank.dto.RankFindDto;
-import io.pp.arcade.v1.domain.rank.dto.RankModifyStatusMessageDto;
+import io.pp.arcade.v1.domain.rank.dto.RankRedisFindDto;
+import io.pp.arcade.v1.domain.rank.dto.RankUpdateStatusMessageDto;
 import io.pp.arcade.v1.domain.rank.dto.RankUserDto;
 import io.pp.arcade.v1.domain.rank.service.RankRedisService;
 import io.pp.arcade.v1.domain.rank.service.RankService;
@@ -117,7 +117,7 @@ public class UserControllerImpl implements UserController {
         }
 
         if (season.equals(seasonService.findCurrentSeason().getId()))  {
-            rankDto = rankRedisService.findRankById(RankFindDto.builder().intraId(targetUserId).gameType(GameType.SINGLE).build());
+            rankDto = rankRedisService.findRankById(RankRedisFindDto.builder().userDto(targetUser).gameType(GameType.SINGLE).build());
         } else {
             rankDto = getRankUserDtoFromSeasonAndTargetUser(season, targetUser);
         }
@@ -133,7 +133,11 @@ public class UserControllerImpl implements UserController {
 
     private RankUserDto getRankUserDtoFromSeasonAndTargetUser(Integer season, UserDto targetUser) {
         RankUserDto rankDto;
-        SeasonDto seasonDto = seasonService.findSeasonById(season);
+        SeasonDto seasonDto;
+        if (season != null)
+            seasonDto = seasonService.findSeasonById(season);
+        else
+            seasonDto = seasonService.findCurrentSeason();
         if (seasonDto != null) {
             RankDto temp = rankService.findBySeasonIdAndUserId(seasonDto.getId(), targetUser.getId());
             if (temp != null) {
@@ -142,7 +146,7 @@ public class UserControllerImpl implements UserController {
                         .rank(temp.getRanking())
                         .wins(temp.getWins())
                         .losses(temp.getLosses())
-                        .winRate((temp.getWins() + temp.getLosses()) == 0 ? 0 : (double)(temp.getWins() * 10000 / (temp.getLosses() + temp.getWins())) / 100)
+                        .winRate((temp.getWins() + temp.getLosses()) == 0 ? 0 : ((double)temp.getWins() / (double)(temp.getLosses() + temp.getWins()) * 100))
                         .ppp(temp.getPpp())
                         .statusMessage(targetUser.getStatusMessage())
                         .build();
@@ -189,8 +193,8 @@ public class UserControllerImpl implements UserController {
     @PutMapping(value = "/users/detail")
     public void userModifyProfile(UserModifyProfileRequestDto requestDto, HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        RankModifyStatusMessageDto modifyDto = RankModifyStatusMessageDto.builder().statusMessage(requestDto.getStatusMessage()).intraId(user.getIntraId()).build();
-        rankRedisService.modifyRankStatusMessage(modifyDto);
+        RankUpdateStatusMessageDto updateDto = RankUpdateStatusMessageDto.builder().statusMessage(requestDto.getStatusMessage()).userDto(user).build();
+        rankRedisService.updateRankStatusMessage(updateDto);
         userService.modifyUserProfile(UserModifyProfileDto.builder()
                 .userId(user.getId())
                 .racketType(requestDto.getRacketType())

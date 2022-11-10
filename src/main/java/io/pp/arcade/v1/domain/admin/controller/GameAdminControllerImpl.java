@@ -10,7 +10,7 @@ import io.pp.arcade.v1.domain.game.dto.GameDto;
 import io.pp.arcade.v1.domain.pchange.PChangeService;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeFindDto;
-import io.pp.arcade.v1.domain.rank.dto.RankModifyDto;
+import io.pp.arcade.v1.domain.rank.dto.RankRedisModifyPppDto;
 import io.pp.arcade.v1.domain.rank.service.RankRedisService;
 import io.pp.arcade.v1.domain.slot.SlotService;
 import io.pp.arcade.v1.domain.slot.dto.SlotDto;
@@ -136,13 +136,13 @@ public class GameAdminControllerImpl implements GameAdminController {
                 .pppResult(userFinalPpp)
                 .build());
         GameType gameType = gameService.findById(game.getId()).getType();
-        RankModifyDto rankModifyDto =  RankModifyDto.builder()
+        RankRedisModifyPppDto rankModifyDto =  RankRedisModifyPppDto.builder()
                 .gameType(gameType)
-                .Ppp(userFinalPpp)
-                .intraId(slotTeamUser.getUser().getIntraId())
+                .ppp(userFinalPpp)
+                .userDto(slotTeamUser.getUser())
                 .modifyStatus(beforeEnemyTeamDto.getWin() == enemyTeamDto.getWin() ? -1 : booleanToInt(enemyTeamDto.getWin()))
                 .build();
-        rankRedisService.modifyUserPpp(rankModifyDto);
+        rankRedisService.modifyRankPpp(rankModifyDto);
     }
 
     @Override

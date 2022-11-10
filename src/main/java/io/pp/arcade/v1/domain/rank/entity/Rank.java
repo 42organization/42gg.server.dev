@@ -1,4 +1,4 @@
-package io.pp.arcade.v1.domain.rank;
+package io.pp.arcade.v1.domain.rank.entity;
 
 import io.pp.arcade.v1.domain.rank.dto.RankRedisDto;
 import io.pp.arcade.v1.domain.user.User;
@@ -54,8 +54,11 @@ public class Rank extends BaseTimeEntity implements Serializable {
     @Column(name = "losses")
     private Integer losses;
 
+    @Column(name = "status_message")
+    private String statusMessage;
+
     @Builder
-    public Rank(User user, Integer ppp, Integer seasonId, Integer ranking, RacketType racketType, GameType gameType, Integer wins, Integer losses) {
+    public Rank(User user, Integer ppp, Integer seasonId, Integer ranking, RacketType racketType, GameType gameType, Integer wins, Integer losses, String statusMessage) {
         this.user = user;
         this.ppp = ppp;
         this.seasonId = seasonId;
@@ -64,14 +67,22 @@ public class Rank extends BaseTimeEntity implements Serializable {
         this.gameType = gameType;
         this.wins = wins;
         this.losses = losses;
+        this.statusMessage = statusMessage;
     }
-
 
     public void update(Integer ppp, Integer wins, Integer losses) {
         this.ppp = ppp;
         this.wins = wins;
         this.losses = losses;
     }
+
+    public void updateRedisInfo(Integer ppp, Integer wins, Integer losses, Integer ranking) {
+        this.ppp = ppp;
+        this.wins = wins;
+        this.losses = losses;
+        this.ranking = ranking;
+    }
+
     public void update(RankRedisDto rankDto, User user, Integer seasonId) {
         this.user = user;
         this.id = rankDto.getId();

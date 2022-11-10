@@ -10,14 +10,14 @@ import org.springframework.data.domain.Pageable;
 public class RankFindListDto {
     private Pageable pageable;
     private GameType gameType;
+    private Integer seasonId;
     private Integer count;
 
-    @Override
-    public String toString() {
-        return "RankFindListDto{" +
-                "pageable=" + pageable +
-                ", gameType=" + gameType +
-                ", count=" + count +
-                '}';
+    @Builder
+    public RankFindListDto(Pageable pageable, GameType gameType, Integer seasonId, Integer count) {
+        this.pageable = pageable;
+        this.gameType = gameType;
+        this.seasonId = seasonId;
+        this.count = count;
     }
 }

@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface RankAdminController {
+    /*
     void rankCreate(@RequestBody RankCreateRequestDto rankCreateRequestDto, HttpServletRequest request);
     void rankUpdate(@RequestBody RankUpdateRequestDto rankUpdateDto, HttpServletRequest request);
     void rankDelete(@PathVariable Integer rankId, HttpServletRequest request);
+    */
     List<RankDto> rankAll(Pageable pageable, HttpServletRequest request);
 }

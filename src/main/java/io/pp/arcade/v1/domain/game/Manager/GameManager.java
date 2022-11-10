@@ -3,7 +3,6 @@ package io.pp.arcade.v1.domain.game.Manager;
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchFindByGameDto;
-import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchModifyDto;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchRemoveDto;
 import io.pp.arcade.v1.domain.game.GameService;
 import io.pp.arcade.v1.domain.game.dto.GameDto;
@@ -127,11 +126,11 @@ public class GameManager {
             RankUpdateDto rankUpdateDto =  RankUpdateDto.builder()
                     .gameType(slotTeamUser.getSlot().getType())
                     .Ppp(slotTeamUser.getUser().getPpp() + pppChange)
-                    .intraId(slotTeamUser.getUser().getIntraId())
+                    .userDto(slotTeamUser.getUser())
                     .isWin(isWin)
                     .build();
             teamService.modifyGameResultInTeam(teamModifyGameResultDto);
-            rankRedisService.updateUserPpp(rankUpdateDto);
+            rankRedisService.updateRankPpp(rankUpdateDto);
             userService.modifyUserPpp(modifyPppDto);
             userService.modifyUserExp(UserModifyExpDto.builder().user(slotTeamUser.getUser()).exp(expChange).build());
             pChangeService.addPChange(pChangeAddDto);

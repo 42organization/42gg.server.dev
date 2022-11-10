@@ -1,5 +1,6 @@
 package io.pp.arcade.v1.domain.rank.dto;
 
+import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.global.type.GameType;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,7 +8,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class RankModifyDto {
-    private String intraId;
+    private UserDto userDto;
     private GameType gameType;
     private Integer modifyStatus;
     private Integer Ppp;
@@ -15,7 +16,7 @@ public class RankModifyDto {
     @Override
     public String toString() {
         return "RankModifyDto{" +
-                "intraId='" + intraId + '\'' +
+                "intraId='" + userDto.getIntraId() + '\'' +
                 ", gameType=" + gameType +
                 ", modifyStatus=" + modifyStatus +
                 ", Ppp=" + Ppp +

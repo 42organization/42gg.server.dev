@@ -18,6 +18,7 @@ import java.util.List;
 public class RankAdminControllerImpl implements RankAdminController {
     private final RankRedisService rankRedisService;
 
+    /* 봉인
     @Override
     @PostMapping(value = "/rank")
     public void rankCreate(RankCreateRequestDto createRequestDto, HttpServletRequest request) {
@@ -36,6 +37,7 @@ public class RankAdminControllerImpl implements RankAdminController {
         RankDeleteDto deleteDto = RankDeleteDto.builder().rankId(rankId).build();
         rankRedisService.deleteRankByAdmin(deleteDto);
     }
+    */
 
     @Override
     @GetMapping(value = "/rank/all")
