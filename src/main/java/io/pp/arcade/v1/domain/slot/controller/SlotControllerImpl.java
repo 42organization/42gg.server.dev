@@ -78,7 +78,7 @@ public class SlotControllerImpl implements SlotController {
 
         checkIfUserHaveCurrentMatch(user);
         checkIfUserHavePenalty(user);
-        checkIfModeMatches(addReqDto, slot);
+//        checkIfModeMatches(addReqDto, slot);
         checkIfSlotAvailable(slot, type, user);
 
         //user가 들어갈 팀을 정한당
@@ -145,6 +145,7 @@ public class SlotControllerImpl implements SlotController {
             notiGenerater.addCancelNotisBySlot(NotiCanceledTypeDto.builder().slotDto(slot).notiType(NotiType.CANCELEDBYMAN).build());
         }
     }
+
 
     private void checkIfUserRemovable(CurrentMatchDto currentMatch, SlotDto slot) {
         if (currentMatch.getMatchImminent() && slot.getHeadCount() == (slot.getType().equals(GameType.SINGLE) ? 2 : 4)) {
