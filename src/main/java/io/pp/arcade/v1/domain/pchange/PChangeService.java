@@ -17,6 +17,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,6 +54,7 @@ public class PChangeService {
     @Transactional
     public PChangeListDto findRankPChangeByUserId(PChangeFindDto findDto){
         List<PChange> pChangePage = pChangeRepository.findPChangeHistory(findDto.getUser().getIntraId(), findDto.getSeason(), Mode.RANK.getValue(), findDto.getCount());
+        Collections.reverse(pChangePage);
         PChangeListDto dto = PChangeListDto.builder()
                 .pChangeList(pChangePage.stream().map(PChangeDto::from).collect(Collectors.toList()))
                 .build();

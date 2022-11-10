@@ -273,7 +273,7 @@ class UserControllerTest {
         mockMvc.perform(get("/pingpong/users/" + user.getIntraId() +"/historics").contentType(MediaType.APPLICATION_JSON)
                         .param("season","1")
                         .header("Authorization", "Bearer " + initiator.tokens[0].getAccessToken()))
-                .andExpect(jsonPath("$.historics[0].ppp").value(pChange2.getPppResult()))
+                .andExpect(jsonPath("$.historics[0].ppp").value(userPchange.getPppResult()))
                 .andExpect(jsonPath("$.historics[0].date").value(gameDate))
                 .andExpect(status().isOk())
                 .andDo(document("user-find-historics"));
