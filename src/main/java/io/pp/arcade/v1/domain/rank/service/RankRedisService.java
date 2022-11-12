@@ -196,7 +196,6 @@ public class RankRedisService {
         RedisRankingFindDto rankingFindDto = RedisRankingFindDto.builder().rank(rank).keyGetDto(keyGetDto).build();
         return rankRedisRepository.findRanking(rankingFindDto);
     }
-
     private int booleanToInt(boolean value) {
         return value ? 1 : 0;
     }
