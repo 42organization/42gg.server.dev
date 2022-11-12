@@ -8,8 +8,14 @@ import io.pp.arcade.v1.domain.noti.Noti;
 import io.pp.arcade.v1.domain.noti.NotiRepository;
 import io.pp.arcade.v1.domain.pchange.PChange;
 import io.pp.arcade.v1.domain.pchange.PChangeRepository;
-import io.pp.arcade.v1.domain.rank.RankRedis;
+import io.pp.arcade.v1.domain.rank.RankRedisRepository;
 import io.pp.arcade.v1.domain.rank.RankRepository;
+import io.pp.arcade.v1.domain.rank.RedisKeyManager;
+import io.pp.arcade.v1.domain.rank.dto.RankKeyGetDto;
+import io.pp.arcade.v1.domain.rank.dto.RedisRankAddDto;
+import io.pp.arcade.v1.domain.rank.dto.RedisRankUpdateDto;
+import io.pp.arcade.v1.domain.rank.dto.RedisRankingAddDto;
+import io.pp.arcade.v1.domain.rank.entity.RankRedis;
 import io.pp.arcade.v1.domain.season.Season;
 import io.pp.arcade.v1.domain.season.SeasonRepository;
 import io.pp.arcade.v1.domain.security.jwt.TokenRepository;
@@ -29,6 +35,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Random;
 
 import static io.pp.arcade.v1.global.type.GameType.SINGLE;
@@ -43,6 +50,10 @@ public class RealWorld {
     NotiRepository notiRepository;
     @Autowired
     PChangeRepository pChangeRepository;
+    @Autowired
+    RankRedisRepository rankRedisRepository;
+    @Autowired
+    RedisKeyManager redisKeyManager;
     @Autowired
     RankRepository rankRepository;
     @Autowired
@@ -65,6 +76,8 @@ public class RealWorld {
     private final String defaultUrl = "https://42gg-public-image.s3.ap-northeast-2.amazonaws.com/images/small_default.jpeg";
     private final LocalDateTime now = LocalDateTime.now();
     private Integer createdUserCount = 0;
+    private Integer baseImminentTime = 5;
+    private Integer baseIntervalTime = 10;
 
     public void makeMixedGameResultsForYesterday(Season season) {
         Slot[] slots;
@@ -98,7 +111,7 @@ public class RealWorld {
         // NOTI..? ㅠ ㅠ
     }
 
-    public User getUserWinRateInfiniteDecimal() {
+    public User getUserWinRateInfiniteDecimal(){
         User user = userRepository.save(User.builder()
                 .intraId("infiniteDecimal")
                 .eMail("infiniteDecimal" + "@42gg.kr")
@@ -109,14 +122,15 @@ public class RealWorld {
                 .totalExp(3000)
                 .roleType(RoleType.USER)
                 .build());
-        RankRedis singleRank = RankRedis.from(UserDto.from(user), SINGLE);
-        saveUserRank(singleRank);
-        saveUserRankingPpp(singleRank, user.getPpp());
 
-        RankRedis userRank = getUserRank(user.getIntraId(), GameType.SINGLE);
-        userRank.update(true, 0);
-        userRank.update(true, 0);
-        userRank.update(false, 0);
+        RankRedis userRank = addRankRedisByUser(user);
+
+        userRank.update(1, 0);
+        userRank.update(1, 0);
+        userRank.update(0, 0);
+
+        String curSeason = redisKeyManager.getCurrentRankKey();
+        rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank).userId(user.getId()).seasonKey(curSeason).build());
         return user;
     }
 
@@ -131,15 +145,16 @@ public class RealWorld {
                 .totalExp(2000)
                 .roleType(RoleType.USER)
                 .build());
-        RankRedis singleRank = RankRedis.from(UserDto.from(user), SINGLE);
-        saveUserRank(singleRank);
-        saveUserRankingPpp(singleRank, user.getPpp());
 
-        RankRedis userRank = getUserRank(user.getIntraId(), GameType.SINGLE);
-        userRank.update(true, 0);
-        userRank.update(true, 0);
-        userRank.update(false, 0);
-        userRank.update(false, 0);
+        RankRedis userRank = addRankRedisByUser(user);
+
+        userRank.update(1, 0);
+        userRank.update(1, 0);
+        userRank.update(0, 0);
+        userRank.update(0, 0);
+
+        String curSeason = redisKeyManager.getCurrentRankKey();
+        rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank).userId(user.getId()).seasonKey(curSeason).build());
         return user;
     }
 
@@ -154,20 +169,36 @@ public class RealWorld {
                 .totalExp(1000)
                 .roleType(RoleType.USER)
                 .build());
-        RankRedis singleRank = RankRedis.from(UserDto.from(user), SINGLE);
-        saveUserRank(singleRank);
-        saveUserRankingPpp(singleRank, user.getPpp());
 
-        RankRedis userRank = getUserRank(user.getIntraId(), GameType.SINGLE);
-        userRank.update(false, 0);
-        userRank.update(false, 0);
-        userRank.update(false, 0);
-        userRank.update(false, 0);
+        RankRedis userRank = addRankRedisByUser(user);
+
+        userRank.update(0, 0);
+        userRank.update(0, 0);
+        userRank.update(0, 0);
+        userRank.update(0, 0);
+
+        String curSeason = redisKeyManager.getCurrentRankKey();
+        rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank).userId(user.getId()).seasonKey(curSeason).build());
         return user;
     }
 
     public User getUserStatusMessageDifferentEverySeason() {
-        // 동현에게 물어보고 만들 것
+        User user = userRepository.save(User.builder()
+                .intraId("StatusMessageBySeason")
+                .eMail("StatusMessageBySeason" + "@42gg.kr")
+                .imageUri(defaultUrl)
+                .racketType(RacketType.DUAL)
+                .statusMessage("Hello, I have message for every season")
+                .ppp(1000)
+                .totalExp(1000)
+                .roleType(RoleType.USER)
+                .build());
+        List<Season> seasons = seasonRepository.findAll();
+        seasons.forEach(season -> {
+            user.setStatusMessage(season.getSeasonName());
+            addRankRedisByUser(user, season);
+        });
+        return user;
     }
 
     public User basicUser() {
@@ -181,12 +212,13 @@ public class RealWorld {
                 .totalExp(1000)
                 .roleType(RoleType.USER)
                 .build());
+        addRankRedisByUser(user);
         createdUserCount++;
         return user;
     }
 
     public User getUserWithNoCurrentMatch() {
-        return userRepository.save(User.builder()
+        User user = userRepository.save(User.builder()
                 .intraId("noCurrentMatch")
                 .eMail("noCurrentMatch" + "@42gg.kr")
                 .imageUri(defaultUrl)
@@ -196,6 +228,8 @@ public class RealWorld {
                 .totalExp(1000)
                 .roleType(RoleType.USER)
                 .build());
+        addRankRedisByUser(user);
+        return user;
     }
 
     public User getUserWithVariousNotis() {
@@ -209,6 +243,7 @@ public class RealWorld {
                 .totalExp(1000)
                 .roleType(RoleType.USER)
                 .build());
+        addRankRedisByUser(user);
         for (NotiType notiType : NotiType.values()) {
             notiRepository.save(Noti.builder()
                     .slot(null)
@@ -260,23 +295,303 @@ public class RealWorld {
 
 
     public CurrentMatch[] makeUsersHaveCurrentMatchMatchedNotImminent(Mode mode, User user1, User user2) {
+        Slot slot = slotRepository.save(Slot.builder()
+                .tableId(1)
+                .time(now.plusMinutes(baseImminentTime * 2))
+                .gamePpp((user1.getPpp() + user2.getPpp()) / 2)
+                .headCount(2)
+                .type(GameType.SINGLE)
+                .mode(mode)
+                .build());
+        Team user1Team = teamRepository.save(Team.builder()
+                .teamPpp(user1.getPpp())
+                .headCount(1)
+                .score(0)
+                .slot(slot)
+                .build());
+        Team user2Team = teamRepository.save(Team.builder()
+                .teamPpp(user2.getPpp())
+                .headCount(1)
+                .score(0)
+                .slot(slot)
+                .build());
 
+        SlotTeamUser slotTeamUser1 = slotTeamUserRepository.save(SlotTeamUser.builder()
+                .slot(slot)
+                .team(user1Team)
+                .user(user1)
+                .build());
+        SlotTeamUser slotTeamUser2 = slotTeamUserRepository.save(SlotTeamUser.builder()
+                .slot(slot)
+                .team(user2Team)
+                .user(user2)
+                .build());
+        CurrentMatch currentMatch1 = currentMatchRepository.save(CurrentMatch.builder()
+                .slot(slot)
+                .user(user1)
+                .isMatched(true)
+                .matchImminent(false)
+                .isDel(false)
+                .build());
+        CurrentMatch currentMatch2 = currentMatchRepository.save(CurrentMatch.builder()
+                .slot(slot)
+                .user(user2)
+                .isMatched(true)
+                .matchImminent(false)
+                .isDel(false)
+                .build());
+        return new CurrentMatch[]{currentMatch1, currentMatch2};
     }
 
     public CurrentMatch[] makeUsersHaveCurrentMatchMatchedImminentGameNotStarted(Mode mode, User user1, User user2) {
+        Slot slot = slotRepository.save(Slot.builder()
+                .tableId(1)
+                .time(now.plusMinutes(baseImminentTime).minusSeconds(1))
+                .gamePpp((user1.getPpp() + user2.getPpp()) / 2)
+                .headCount(2)
+                .type(GameType.SINGLE)
+                .mode(mode)
+                .build());
+        Team user1Team = teamRepository.save(Team.builder()
+                .teamPpp(user1.getPpp())
+                .headCount(1)
+                .score(0)
+                .slot(slot)
+                .build());
+        Team user2Team = teamRepository.save(Team.builder()
+                .teamPpp(user2.getPpp())
+                .headCount(1)
+                .score(0)
+                .slot(slot)
+                .build());
 
+        SlotTeamUser slotTeamUser1 = slotTeamUserRepository.save(SlotTeamUser.builder()
+                .slot(slot)
+                .team(user1Team)
+                .user(user1)
+                .build());
+        SlotTeamUser slotTeamUser2 = slotTeamUserRepository.save(SlotTeamUser.builder()
+                .slot(slot)
+                .team(user2Team)
+                .user(user2)
+                .build());
+        CurrentMatch currentMatch1 = currentMatchRepository.save(CurrentMatch.builder()
+                .slot(slot)
+                .user(user1)
+                .isMatched(true)
+                .matchImminent(true)
+                .isDel(false)
+                .build());
+        CurrentMatch currentMatch2 = currentMatchRepository.save(CurrentMatch.builder()
+                .slot(slot)
+                .user(user2)
+                .isMatched(true)
+                .matchImminent(true)
+                .isDel(false)
+                .build());
+        return new CurrentMatch[]{currentMatch1, currentMatch2};
     }
 
     public CurrentMatch[] makeUsersHaveCurrentMatchMatchedImminentGameStatusLive(Mode mode, Season season, User user1, User user2) {
+        Slot slot = slotRepository.save(Slot.builder()
+                .tableId(1)
+                .time(now.minusSeconds(1))
+                .gamePpp((user1.getPpp() + user2.getPpp()) / 2)
+                .headCount(2)
+                .type(GameType.SINGLE)
+                .mode(mode)
+                .build());
+        Team user1Team = teamRepository.save(Team.builder()
+                .teamPpp(user1.getPpp())
+                .headCount(1)
+                .score(0)
+                .slot(slot)
+                .build());
+        Team user2Team = teamRepository.save(Team.builder()
+                .teamPpp(user2.getPpp())
+                .headCount(1)
+                .score(0)
+                .slot(slot)
+                .build());
 
+        SlotTeamUser slotTeamUser1 = slotTeamUserRepository.save(SlotTeamUser.builder()
+                .slot(slot)
+                .team(user1Team)
+                .user(user1)
+                .build());
+        SlotTeamUser slotTeamUser2 = slotTeamUserRepository.save(SlotTeamUser.builder()
+                .slot(slot)
+                .team(user2Team)
+                .user(user2)
+                .build());
+        CurrentMatch currentMatch1 = currentMatchRepository.save(CurrentMatch.builder()
+                .slot(slot)
+                .user(user1)
+                .isMatched(true)
+                .matchImminent(true)
+                .isDel(false)
+                .build());
+        CurrentMatch currentMatch2 = currentMatchRepository.save(CurrentMatch.builder()
+                .slot(slot)
+                .user(user2)
+                .isMatched(true)
+                .matchImminent(true)
+                .isDel(false)
+                .build());
+        Game game = gameRepository.save(Game.builder()
+                .slot(slot)
+                .season(season.getId())
+                .status(StatusType.LIVE)
+                .mode(mode)
+                .type(GameType.SINGLE)
+                .time(slot.getTime())
+                .build());
+        return new CurrentMatch[]{currentMatch1, currentMatch2};
     }
 
     public CurrentMatch[] makeUsersHaveCurrentMatchMatchedImminentGameStatusWait(Mode mode, Season season, User user1, User user2) {
+        Slot slot = slotRepository.save(Slot.builder()
+                .tableId(1)
+                .time(now.minusMinutes(baseIntervalTime).minusSeconds(1))
+                .gamePpp((user1.getPpp() + user2.getPpp()) / 2)
+                .headCount(2)
+                .type(GameType.SINGLE)
+                .mode(mode)
+                .build());
+        Team user1Team = teamRepository.save(Team.builder()
+                .teamPpp(user1.getPpp())
+                .headCount(1)
+                .score(0)
+                .slot(slot)
+                .build());
+        Team user2Team = teamRepository.save(Team.builder()
+                .teamPpp(user2.getPpp())
+                .headCount(1)
+                .score(0)
+                .slot(slot)
+                .build());
 
+        SlotTeamUser slotTeamUser1 = slotTeamUserRepository.save(SlotTeamUser.builder()
+                .slot(slot)
+                .team(user1Team)
+                .user(user1)
+                .build());
+        SlotTeamUser slotTeamUser2 = slotTeamUserRepository.save(SlotTeamUser.builder()
+                .slot(slot)
+                .team(user2Team)
+                .user(user2)
+                .build());
+        CurrentMatch currentMatch1 = currentMatchRepository.save(CurrentMatch.builder()
+                .slot(slot)
+                .user(user1)
+                .isMatched(true)
+                .matchImminent(true)
+                .isDel(false)
+                .build());
+        CurrentMatch currentMatch2 = currentMatchRepository.save(CurrentMatch.builder()
+                .slot(slot)
+                .user(user2)
+                .isMatched(true)
+                .matchImminent(true)
+                .isDel(false)
+                .build());
+        Game game = gameRepository.save(Game.builder()
+                .slot(slot)
+                .season(season.getId())
+                .status(StatusType.WAIT)
+                .mode(mode)
+                .type(GameType.SINGLE)
+                .time(slot.getTime())
+                .build());
+        return new CurrentMatch[]{currentMatch1, currentMatch2};
     }
 
-    public CurrentMatch[] makeUsersHaveCurrentMatchDeletedGameStatusEnd(Mode mode, Season season, User user1, User user2, Integer user1Score, Integer user2Score) {
+    public CurrentMatch[] makeUsersHaveCurrentMatchDeletedGameStatusEnd(Mode mode, Season season, User winUser, User loseUser, Integer winUserScore, Integer loseUserScore) {
+        Slot slot = slotRepository.save(Slot.builder()
+                .tableId(1)
+                .time(now.minusMinutes(baseIntervalTime).minusSeconds(1))
+                .gamePpp((winUser.getPpp() + loseUser.getPpp()) / 2)
+                .headCount(2)
+                .type(GameType.SINGLE)
+                .mode(mode)
+                .build());
+        Team winTeam = teamRepository.save(Team.builder()
+                .teamPpp(winUser.getPpp())
+                .headCount(1)
+                .score(winUserScore)
+                .slot(slot)
+                .build());
+        Team loseTeam = teamRepository.save(Team.builder()
+                .teamPpp(loseUser.getPpp())
+                .headCount(1)
+                .score(loseUserScore)
+                .slot(slot)
+                .build());
 
+        SlotTeamUser slotTeamUserWon = slotTeamUserRepository.save(SlotTeamUser.builder()
+                .slot(slot)
+                .team(winTeam)
+                .user(winUser)
+                .build());
+        SlotTeamUser slotTeamUserLost = slotTeamUserRepository.save(SlotTeamUser.builder()
+                .slot(slot)
+                .team(loseTeam)
+                .user(loseUser)
+                .build());
+        CurrentMatch currentMatch1 = currentMatchRepository.save(CurrentMatch.builder()
+                .slot(slot)
+                .user(winUser)
+                .isMatched(true)
+                .matchImminent(true)
+                .isDel(true)
+                .build());
+        CurrentMatch currentMatch2 = currentMatchRepository.save(CurrentMatch.builder()
+                .slot(slot)
+                .user(loseUser)
+                .isMatched(true)
+                .matchImminent(true)
+                .isDel(true)
+                .build());
+        Game game = gameRepository.save(Game.builder()
+                .slot(slot)
+                .season(season.getId())
+                .status(StatusType.END)
+                .mode(mode)
+                .type(GameType.SINGLE)
+                .time(slot.getTime())
+                .build());
+        pChangeRepository.save(PChange.builder()
+                .game(game)
+                .user(winUser)
+                .pppChange(20)
+                .pppResult(winUser.getPpp() + 20)
+                .expChange(100)
+                .expResult(winUser.getTotalExp() + 100)
+                .build());
+        pChangeRepository.save(PChange.builder()
+                .game(game)
+                .user(loseUser)
+                .pppChange(-20)
+                .pppResult(loseUser.getPpp() - 20)
+                .expChange(100)
+                .expResult(loseUser.getTotalExp() + 100)
+                .build());
+        winUser.setPpp(winUser.getPpp() + 20);
+        winUser.setTotalExp(winUser.getTotalExp() + 100);
+
+        loseUser.setPpp(loseUser.getPpp() - 20);
+        loseUser.setTotalExp(loseUser.getTotalExp() - 100);
+
+        String redisSeason = redisKeyManager.getSeasonKey(season.getId().toString(), season.getSeasonName());
+
+        RankRedis userRank = addRankRedisByUser(winUser, season);
+        userRank.update(booleanToInt(winTeam.getWin()), winUser.getPpp());
+        rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank).userId(winUser.getId()).seasonKey(redisSeason).build());
+
+        RankRedis userRank2 = addRankRedisByUser(loseUser, season);
+        userRank2.update(booleanToInt(loseTeam.getWin()), loseUser.getPpp());
+        rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank2).userId(loseUser.getId()).seasonKey(redisSeason).build());
+        return new CurrentMatch[]{currentMatch1, currentMatch2};
     }
 
     public Slot getEmptySlotMinutesLater(Integer minutes) {
@@ -400,14 +715,14 @@ public class RealWorld {
                 .slot(slot)
                 .user(user1)
                 .isMatched(true)
-                .matchImminent(minutes > 5)
+                .matchImminent(minutes > baseImminentTime)
                 .isDel(false)
                 .build());
         CurrentMatch currentMatch2 = currentMatchRepository.save(CurrentMatch.builder()
                 .slot(slot)
                 .user(user2)
                 .isMatched(true)
-                .matchImminent(minutes > 5)
+                .matchImminent(minutes > baseImminentTime)
                 .isDel(false)
                 .build());
         return slot;
@@ -486,14 +801,14 @@ public class RealWorld {
                 .slot(slot)
                 .user(user1)
                 .isMatched(true)
-                .matchImminent(minutes > 5)
+                .matchImminent(minutes > baseImminentTime)
                 .isDel(false)
                 .build());
         CurrentMatch currentMatch2 = currentMatchRepository.save(CurrentMatch.builder()
                 .slot(slot)
                 .user(user2)
                 .isMatched(true)
-                .matchImminent(minutes > 5)
+                .matchImminent(minutes > baseImminentTime)
                 .isDel(false)
                 .build());
         return slot;
@@ -516,9 +831,7 @@ public class RealWorld {
                     .totalExp(100 * i)
                     .roleType(RoleType.USER)
                     .build());
-            RankRedis singleRank = RankRedis.from(UserDto.from(users[i]), SINGLE);
-            saveUserRank(singleRank);
-            saveUserRankingPpp(singleRank, users[i].getPpp());
+            addRankRedisByUser(users[i]);
         }
         return users;
     }
@@ -536,9 +849,7 @@ public class RealWorld {
                     .totalExp(100 * i)
                     .roleType(RoleType.ADMIN)
                     .build());
-            RankRedis singleRank = RankRedis.from(UserDto.from(users[i]), SINGLE);
-            saveUserRank(singleRank);
-            saveUserRankingPpp(singleRank, users[i].getPpp());
+            addRankRedisByUser(users[i]);
         }
         return users;
     }
@@ -560,34 +871,9 @@ public class RealWorld {
                     .totalExp(100 * i)
                     .roleType(RoleType.USER)
                     .build());
-            RankRedis singleRank = RankRedis.from(UserDto.from(users[i]), SINGLE);
-            saveUserRank(singleRank);
-            saveUserRankingPpp(singleRank, users[i].getPpp());
+            addRankRedisByUser(users[i]);
         }
         return users;
-    }
-
-    private void saveUserRankingPpp(RankRedis userRank, Integer ppp) {
-        Integer isRanked = userRank.getLosses() + userRank.getWins() != 0 ? 1 : 0;
-        redisRank.opsForZSet().add(userRank.getGameType().getCode(), getUserRankKey(userRank.getIntraId(), userRank.getGameType()), ppp * isRanked);
-    }
-
-    private void saveUserRank(RankRedis rank) {
-        redisUser.opsForValue().set(getUserKey(rank.getIntraId(), rank.getGameType()), rank);
-    }
-
-    private String getUserKey(String intraId, GameType gameType) {
-        return Key.RANK_USER + intraId + gameType.getCode();
-    }
-
-    private String getUserRankKey(String intraId, GameType gameType) {
-        return "\"" + intraId + gameType.getCode() + "\"";
-    }
-
-    private RankRedis getUserRank(String intraId, GameType type) {
-        String userKey = getUserKey(intraId, type);
-        RankRedis userRankInfo = redisUser.opsForValue().get(userKey);
-        return userRankInfo;
     }
 
     private Season[] makeDefaultSeasons() {
@@ -681,16 +967,18 @@ public class RealWorld {
                     .build());
             users[i * 2].setPpp(users[i * 2].getPpp() + 20);
             users[i * 2].setTotalExp(users[i * 2].getTotalExp() + 100);
-            RankRedis userRank = getUserRank(users[i * 2].getIntraId(), game.getType());
-            userRank.update(teams[i * 2].getWin(), users[i * 2].getPpp());
-            saveUserRank(userRank);
-            saveUserRankingPpp(userRank, users[i * 2].getPpp());
+
+            String redisSeason = redisKeyManager.getSeasonKey(season.getId().toString(), season.getSeasonName());
+
+            RankRedis userRank = addRankRedisByUser(users[i * 2], season);
+            userRank.update(booleanToInt(teams[i * 2].getWin()), users[i * 2].getPpp());
+            rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank).userId(users[i * 2].getId()).seasonKey(redisSeason).build());
+
             users[i * 2 + 1].setPpp(users[i * 2 + 1].getPpp() + 20);
             users[i * 2 + 1].setTotalExp(users[i * 2 + 1].getTotalExp() + 100);
-            RankRedis userRank2 = getUserRank(users[i * 2 + 1].getIntraId(), game.getType());
-            userRank2.update(teams[i * 2 + 1].getWin(), users[i * 2 + 1].getPpp());
-            saveUserRank(userRank2);
-            saveUserRankingPpp(userRank2, users[i * 2 + 1].getPpp());
+            RankRedis userRank2 = addRankRedisByUser(users[i * 2 + 1], season);
+            userRank2.update(booleanToInt(teams[i * 2 + 1].getWin()), users[i * 2 + 1].getPpp());
+            rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank2).userId(users[i * 2 + 1].getId()).seasonKey(redisSeason).build());
         }
     }
 
@@ -729,5 +1017,33 @@ public class RealWorld {
                     .build());
         }
         return slots;
+    }
+
+    private RankRedis addRankRedisByUser(User user) {
+        /* 현재 시즌 정보 */
+        LocalDateTime now = LocalDateTime.now();
+        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now,now).orElse(null);
+
+        return addRankRedisByUser(user, season);
+    }
+
+    private RankRedis addRankRedisByUser(User user, Season season) {
+        UserDto userDto = UserDto.from(user);
+        RankRedis userRank = RankRedis.from(userDto, SINGLE);
+
+        RankKeyGetDto rankKeyGetDto = RankKeyGetDto.builder().seasonId(season.getId()).seasonName(season.getSeasonName()).build();
+        String rankKey = redisKeyManager.getRankKeyBySeason(rankKeyGetDto);
+        RedisRankAddDto redisRankAddDto = RedisRankAddDto.builder().key(rankKey).userId(userDto.getId()).rank(userRank).build();
+        rankRedisRepository.addRank(redisRankAddDto);
+
+        String rankingKey = redisKeyManager.getRankKeyBySeason(rankKeyGetDto);
+        RedisRankingAddDto redisRankingAddDto = RedisRankingAddDto.builder().rankingKey(rankingKey).rank(userRank).build();
+        rankRedisRepository.addRanking(redisRankingAddDto);
+
+        return userRank;
+    }
+
+    private int booleanToInt(boolean value) {
+        return value ? 1 : 0;
     }
 }

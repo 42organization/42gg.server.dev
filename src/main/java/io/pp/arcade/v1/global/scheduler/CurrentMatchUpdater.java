@@ -22,7 +22,7 @@ public class CurrentMatchUpdater extends AbstractScheduler {
         this.slotService = slotService;
         this.notiGenerater = notiGenerater;
         this.currentMatchService = currentMatchService;
-        this.setCron("0 */5 12-18 * * *");
+        this.setCron("0 */5 * * * *");
         this.setInterval(5);
     }
 

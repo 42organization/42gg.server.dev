@@ -2,6 +2,9 @@ package io.pp.arcade.v1.domain.admin.controller;
 
 import io.pp.arcade.v1.domain.admin.dto.create.SeasonCreateRequestDto;
 import io.pp.arcade.v1.domain.admin.dto.update.SeasonUpdateDto;
+import io.pp.arcade.v1.domain.admin.service.AdminRankRedisService;
+import io.pp.arcade.v1.domain.rank.service.RankRedisService;
+import io.pp.arcade.v1.domain.rank.service.RankService;
 import io.pp.arcade.v1.domain.season.SeasonService;
 import io.pp.arcade.v1.domain.season.dto.SeasonDeleteDto;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
@@ -17,11 +20,12 @@ import java.util.List;
 @RequestMapping(value = "/admin")
 public class SeasonAdminControllerImpl implements SeasonAdminController {
     private final SeasonService seasonService;
-
+    private final AdminRankRedisService rankRedisService;
     @Override
     @PostMapping(value = "/season")
     public void seasonCreate(SeasonCreateRequestDto createRequestDto, HttpServletRequest request) {
         seasonService.createSeasonByAdmin(createRequestDto);
+        rankRedisService.addAllUserRankByNewSeason();
     }
 
     @Override

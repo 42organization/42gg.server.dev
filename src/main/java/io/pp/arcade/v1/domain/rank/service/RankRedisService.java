@@ -195,10 +195,6 @@ public class RankRedisService {
         RedisRankingFindDto rankingFindDto = RedisRankingFindDto.builder().rank(rank).keyGetDto(keyGetDto).build();
         return rankRedisRepository.findRanking(rankingFindDto);
     }
-    @Transactional
-    public List<RankDto> findRankByAdmin(Pageable pageable) {
-       return null;
-    }
 
     private int booleanToInt(boolean value) {
         return value ? 1 : 0;

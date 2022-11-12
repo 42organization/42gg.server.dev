@@ -53,7 +53,7 @@ public class RankRedis implements Serializable {
         this.gameType = gameType;
         this.wins = wins;
         this.losses = losses;
-        this.winRate = winRate;
+        this.winRate = (wins + losses) == 0 ? 0 : (double)(wins * 10000 / wins + losses) / 100;
         this.statusMessage = statusMessage;
     }
 
@@ -82,7 +82,7 @@ public class RankRedis implements Serializable {
                 .racketType(rankDto.getRacketType())
                 .wins(rankDto.getWins())
                 .losses(rankDto.getLosses())
-                .winRate((losses + wins) == 0 ? 0 : ((double)wins / (double)(losses + wins) * 100))
+                .winRate((wins + losses) == 0 ? 0 : (double)(wins * 10000 / wins + losses) / 100)
                 .statusMessage(rankDto.getStatusMessage())
                 .build();
         return rankRedis;
