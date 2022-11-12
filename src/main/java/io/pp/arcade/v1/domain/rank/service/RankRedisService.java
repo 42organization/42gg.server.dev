@@ -3,6 +3,7 @@ package io.pp.arcade.v1.domain.rank.service;
 import io.pp.arcade.v1.domain.rank.RankRedisRepository;
 import io.pp.arcade.v1.domain.rank.RedisKeyManager;
 import io.pp.arcade.v1.domain.rank.dto.*;
+import io.pp.arcade.v1.domain.season.Season;
 import io.pp.arcade.v1.domain.season.SeasonService;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.domain.season.dto.SeasonNameDto;
@@ -174,11 +175,10 @@ public class RankRedisService {
         return rankUserDtos;
     }
 
-    /* 현재 시즌만 조회 가능 */
     public RankUserDto findRankById(RankRedisFindDto findDto) {
-        Integer userId = findDto.getUserDto().getId();
-        SeasonDto curSeasonDto = seasonService.findLatestRankSeason();
-        RankKeyGetDto keyGetDto = RankKeyGetDto.builder().seasonId(curSeasonDto.getId()).seasonName(curSeasonDto.getSeasonName()).build();
+        Integer userId = findDto.getUser().getId();
+        SeasonDto season = findDto.getSeason() != null ? findDto.getSeason() : seasonService.findLatestRankSeason();
+        RankKeyGetDto keyGetDto = RankKeyGetDto.builder().seasonId(season.getId()).seasonName(season.getSeasonName()).build();
         String curRankKey = redisKeyManager.getRankKeyBySeason(keyGetDto);
 
         RankRedis rank = rankRedisRepository.findRank(curRankKey, userId);

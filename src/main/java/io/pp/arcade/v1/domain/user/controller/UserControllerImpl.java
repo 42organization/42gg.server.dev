@@ -115,11 +115,11 @@ public class UserControllerImpl implements UserController {
         if (season == 0) {
             season = seasonService.findLatestRankSeason().getId();
         }
-
-        if (season.equals(seasonService.findLatestRankSeason().getId()))  {
-            rankDto = rankRedisService.findRankById(RankRedisFindDto.builder().userDto(targetUser).gameType(GameType.SINGLE).build());
+        SeasonDto seasonDto = seasonService.findSeasonById(season);
+        if (seasonDto.getId().equals(seasonService.findLatestRankSeason().getId()))  {
+            rankDto = rankRedisService.findRankById(RankRedisFindDto.builder().user(targetUser).gameType(GameType.SINGLE).build());
         } else {
-            rankDto = getRankUserDtoFromSeasonAndTargetUser(season, targetUser);
+            rankDto = rankRedisService.findRankById(RankRedisFindDto.builder().user(targetUser).gameType(GameType.SINGLE).season(seasonDto).build());
         }
         UserRankResponseDto responseDto = UserRankResponseDto.builder()
                 .rank(rankDto.getRank())
