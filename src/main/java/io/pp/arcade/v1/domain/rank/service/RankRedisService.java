@@ -41,7 +41,7 @@ public class RankRedisService {
         String curSeasonKey = redisKeyManager.getCurrentRankKey();
 
         RankRedis userRank = rankRedisRepository.findRank(curSeasonKey , userId);
-        userRank.update(isWin, updateDto.getPpp());
+        userRank.update(isWin, userRank.getPpp());
 
         rankRedisRepository.updateRank(RedisRankUpdateDto.builder().seasonKey(curSeasonKey).userId(userId).userRank(userRank).build());
 
