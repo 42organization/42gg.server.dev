@@ -9,14 +9,14 @@ import java.util.List;
 @Getter
 @Builder
 public class RankListResponseDto {
-    private Integer myRanking;
+    private Integer myRank;
     private Integer currentPage;
     private Integer totalPage;
     private List<RankUserDto> rankList;
 
     @Builder
-    public RankListResponseDto(Integer myRanking, Integer currentPage, Integer totalPage, List<RankUserDto> rankList) {
-        this.myRanking = myRanking;
+    public RankListResponseDto(Integer myRank, Integer currentPage, Integer totalPage, List<RankUserDto> rankList) {
+        this.myRank = myRank;
         this.currentPage = currentPage;
         this.totalPage = totalPage;
         this.rankList = rankList;
