@@ -46,8 +46,8 @@ public class RankControllerImpl implements RankController {
     public RankListResponseDto rankList(Pageable pageable, GameType gametype, RankListRequestDto requestDto, HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         SeasonDto seasonDto;
-        if (requestDto.getSeasonId() != null)
-            seasonDto = seasonService.findSeasonById(requestDto.getSeasonId());
+        if (requestDto.getSeason() != null)
+            seasonDto = seasonService.findSeasonById(requestDto.getSeason());
         else
             seasonDto = seasonService.findLatestRankSeason();
 
