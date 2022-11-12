@@ -140,17 +140,18 @@ public class RankRedisService {
         Integer page = findListDto.getPageable().getPageNumber();
         Integer count = findListDto.getCount() == null ? findListDto.getPageable().getPageSize() : findListDto.getCount();
         GameType gameType = findListDto.getGameType();
-        String curRankingKey = redisKeyManager.getCurrentRankingKey(gameType);
         SeasonDto seasonDto = seasonService.findSeasonById(findListDto.getSeasonId());
-        Long size = redisRank.opsForZSet().size(curRankingKey);
+        RankKeyGetDto rankKeyGetDto = RankKeyGetDto.builder().seasonId(seasonDto.getId()).seasonName(seasonDto.getSeasonName()).build();
+        String rankingKey = redisKeyManager.getRankingKeyBySeason(rankKeyGetDto, gameType);
+
+        Long size = redisRank.opsForZSet().size(rankingKey);
 
         int currentPage = (page > 1) ? page : 1;
         int totalPage = ((size.intValue() - 1) / count) + 1;
         int start = (currentPage - 1) * count;
         int end = start + count - 1;
 
-        RankKeyGetDto rankKeyGetDto = RankKeyGetDto.builder().seasonId(seasonDto.getId()).seasonName(seasonDto.getSeasonName()).build();
-        RedisRankingFindListDto redisRankingFindListDto = RedisRankingFindListDto.builder().curRankingKey(curRankingKey).start(start).end(end).rankKeyGetDto(rankKeyGetDto).build();
+        RedisRankingFindListDto redisRankingFindListDto = RedisRankingFindListDto.builder().rankingKey(rankingKey).start(start).end(end).rankKeyGetDto(rankKeyGetDto).build();
         List<RankUserDto> rankUserList = rankRedisRepository.findRankingList(redisRankingFindListDto);
         RankListDto rankListDto = RankListDto.builder()
                 .currentPage(currentPage)
