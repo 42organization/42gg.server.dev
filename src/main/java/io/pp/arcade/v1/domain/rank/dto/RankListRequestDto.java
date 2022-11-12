@@ -7,13 +7,13 @@ import lombok.Setter;
 @Setter
 public class RankListRequestDto {
     private Integer count;
-    private Integer seasonId;
+    private Integer season;
 
     @Override
     public String toString() {
         return "RankListRequestDto{" +
                 "count=" + count +
-                ", season=" + seasonId +
+                ", season=" + season +
                 '}';
     }
 }
