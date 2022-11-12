@@ -27,7 +27,7 @@ public class SeasonService {
     public void createSeasonByAdmin(SeasonCreateRequestDto createDto) {
         Season lastSeason = seasonRepository.findFirstByOrderByIdDesc().orElse(null);
         if (lastSeason != null) {
-            lastSeason.setEndTime(createDto.getStartTime().minusSeconds(1));
+            lastSeason.setEndTime(LocalDateTime.now().minusSeconds(1));
         }
         Season season = Season.builder()
                 .seasonName(createDto.getSeasonName())
