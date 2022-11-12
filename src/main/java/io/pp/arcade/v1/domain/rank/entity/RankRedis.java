@@ -53,7 +53,7 @@ public class RankRedis implements Serializable {
         this.gameType = gameType;
         this.wins = wins;
         this.losses = losses;
-        this.winRate = (wins + losses) == 0 ? 0 : (double)(wins * 10000 / wins + losses) / 100;
+        this.winRate = (wins + losses) == 0 ? 0 : (double)(wins * 10000 / (wins + losses)) / 100;
         this.statusMessage = statusMessage;
     }
 
@@ -82,7 +82,7 @@ public class RankRedis implements Serializable {
                 .racketType(rankDto.getRacketType())
                 .wins(rankDto.getWins())
                 .losses(rankDto.getLosses())
-                .winRate((wins + losses) == 0 ? 0 : (double)(wins * 10000 / wins + losses) / 100)
+                .winRate((wins + losses) == 0 ? 0 : (double)(wins * 10000 / (wins + losses)) / 100)
                 .statusMessage(rankDto.getStatusMessage())
                 .build();
         return rankRedis;
@@ -92,7 +92,7 @@ public class RankRedis implements Serializable {
         this.ppp = ppp;
         this.wins += isWin;
         this.losses += isWin ^ 1;
-        this.winRate = (double)wins / (wins + losses) * 100;
+        this.winRate = (wins + losses) == 0 ? 0 : (double)(wins * 10000 / (wins + losses)) / 100;
     }
     public void modify(Integer modifyStatus, Integer ppp){
         if (modifyStatus == 0) {
@@ -104,7 +104,7 @@ public class RankRedis implements Serializable {
             this.wins--;
         }
         this.ppp = ppp;
-        this.winRate = (double)wins / (wins + losses) * 100;
+        this.winRate = (wins + losses) == 0 ? 0 : (double)(wins * 10000 / (wins + losses)) / 100;
     }
 
     public void updateStatusMessage(String statusMessage){
