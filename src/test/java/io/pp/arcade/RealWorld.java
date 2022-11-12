@@ -854,9 +854,9 @@ public class RealWorld {
         return users;
     }
 
-    public User[] getGuestUsers() {
-        // 추후 게스트 양식 정해지는대로 작성
-    }
+//    public User[] getGuestUsers() {
+//        // 추후 게스트 양식 정해지는대로 작성
+//    }
 
     private User[] makeDeafultUsers() {
         User[] users = new User[10];
