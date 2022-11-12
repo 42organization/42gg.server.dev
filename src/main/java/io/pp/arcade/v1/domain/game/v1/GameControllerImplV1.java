@@ -132,11 +132,9 @@ public class GameControllerImplV1 {
         if (game == null || game.getMode() == Mode.RANK) {
             throw new BusinessException("E0001");
         } else if (game.getStatus() == StatusType.END) {
-            currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder().user(user).game(game).build());
             throw new ResponseStatusException(HttpStatus.CREATED, "");
         }
 
-        currentMatchService.removeCurrentMatch(CurrentMatchRemoveDto.builder().user(user).game(game).build());
         gameManager.modifyUserExp(game);
         gameService.modifyGameStatus(GameModifyStatusDto.builder().game(game).status(StatusType.END).build());
 
