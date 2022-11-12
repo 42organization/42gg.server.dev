@@ -125,8 +125,9 @@ public class SlotControllerImpl implements SlotController {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         // 유저 조회, 슬롯 조회, 팀 조회( 슬롯에 헤드 카운트 -, 팀에서 유저 퇴장 )
         CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUser(user);
+
         checkIfCurrentMatchExists(currentMatch);
-        SlotDto slot = currentMatch.getSlot();
+        SlotDto slot = slotService.findSlotById(slotId);
         checkIfUserRemovable(currentMatch, slot);
 
         CurrentMatchRemoveDto currentMatchRemoveDto = CurrentMatchRemoveDto.builder()
@@ -148,13 +149,16 @@ public class SlotControllerImpl implements SlotController {
 
 
     private void checkIfUserRemovable(CurrentMatchDto currentMatch, SlotDto slot) {
+        if (currentMatch.getSlot().getId() != slot.getId()) {
+            throw new BusinessException("E0001");
+        }
         if (currentMatch.getMatchImminent() && slot.getHeadCount() == (slot.getType().equals(GameType.SINGLE) ? 2 : 4)) {
             throw new BusinessException("SD002");
         }
     }
 
     private void checkIfCurrentMatchExists(CurrentMatchDto currentMatch) {
-        if (currentMatch == null) {
+        if (currentMatch == null || currentMatch.getGame() != null) {
             throw new BusinessException("SD001");
         }
     }
