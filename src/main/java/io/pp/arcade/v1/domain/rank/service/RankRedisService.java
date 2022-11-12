@@ -41,12 +41,12 @@ public class RankRedisService {
         String curSeasonKey = redisKeyManager.getCurrentRankKey();
 
         RankRedis userRank = rankRedisRepository.findRank(curSeasonKey , userId);
-        userRank.update(isWin, userRank.getPpp());
+        userRank.update(isWin, updateDto.getPpp());
 
         rankRedisRepository.updateRank(RedisRankUpdateDto.builder().seasonKey(curSeasonKey).userId(userId).userRank(userRank).build());
 
         String RankingKey = redisKeyManager.getCurrentRankingKey( updateDto.getGameType());
-        rankRedisRepository.updateRanking(RedisRankingUpdateDto.builder().rankingKey(RankingKey).rank(userRank).ppp(updateDto.getPpp()).build());
+        rankRedisRepository.updateRanking(RedisRankingUpdateDto.builder().rankingKey(RankingKey).rank(userRank).ppp(userRank.getPpp()).build());
     }
 
     /* 상태메시지 수정완료 */
