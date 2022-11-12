@@ -30,7 +30,7 @@ public class AdminRankRedisService {
     private final RankRedisRepository rankRedisRepository;
 
     @Transactional
-    public void addAllUserRankByNewSeason() {
+    public void addAllUserRankByNewSeason(Integer StartPpp) {
         List<UserDto> userDtos = userService.findAll();
         SeasonDto seasonDto = seasonService.findLatestRankSeason();
         RankKeyGetDto rankKeyGetDto = RankKeyGetDto.builder().seasonId(seasonDto.getId()).seasonName(seasonDto.getSeasonName()).build();
@@ -39,6 +39,7 @@ public class AdminRankRedisService {
 
         userDtos.forEach(userDto -> {
             RankRedis userRank = RankRedis.from(userDto, GameType.SINGLE);
+            userRank.setPpp(StartPpp);
             RedisRankAddDto redisRankAddDto = RedisRankAddDto.builder().key(curRankKey).userId(userDto.getId()).rank(userRank).build();
             rankRedisRepository.addRank(redisRankAddDto);
 
