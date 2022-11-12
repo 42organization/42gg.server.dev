@@ -91,6 +91,19 @@ public class SeasonService {
         return dtoList;
     }
 
+    @Transactional
+    public List<SeasonNameDto> findAllRankSeasonUntilCurrent() {
+        LocalDateTime now = LocalDateTime.now();
+        List<Season> seasons =  seasonRepository.findAllBySeasonModeOrSeasonModeAndStartTimeIsBefore(Mode.RANK, Mode.BOTH, now);
+        List<SeasonNameDto> dtoList = new ArrayList<>();
+
+        for (Season season : seasons) {
+            SeasonNameDto dto = SeasonNameDto.builder().id(season.getId()).name(season.getSeasonName()).build();
+            dtoList.add(dto);
+        }
+        return dtoList;
+    }
+
 
     @Transactional
     public List<SeasonDto> findSeasonsByAdmin(Pageable pageable) {
