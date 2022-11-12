@@ -72,6 +72,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .statusMessage("")
                 .racketType(RacketType.NONE)
                 .ppp(1000)
+                .totalExp(0)
                 .eMail(userInfo.getEmail())
                 .build();
         return userRepository.saveAndFlush(user);
