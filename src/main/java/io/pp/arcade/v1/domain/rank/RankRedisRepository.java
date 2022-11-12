@@ -65,7 +65,7 @@ public class RankRedisRepository {
     }
 
     public List<RankUserDto> findRankingList(RedisRankingFindListDto findListDto) {
-        String curRankingKey = findListDto.getCurRankingKey();
+        String curRankingKey = findListDto.getRankingKey();
         Integer start = findListDto.getStart();
         Integer end = findListDto.getEnd();
         Set<String> range = redis.opsForZSet().reverseRange(curRankingKey, start, end);
