@@ -8,6 +8,7 @@ import io.pp.arcade.v1.domain.rank.service.RankService;
 import io.pp.arcade.v1.domain.season.SeasonService;
 import io.pp.arcade.v1.domain.season.dto.SeasonDeleteDto;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
+import io.pp.arcade.v1.global.type.Mode;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +26,9 @@ public class SeasonAdminControllerImpl implements SeasonAdminController {
     @PostMapping(value = "/season")
     public void seasonCreate(SeasonCreateRequestDto createRequestDto, HttpServletRequest request) {
         seasonService.createSeasonByAdmin(createRequestDto);
-        rankRedisService.addAllUserRankByNewSeason();
+        if (createRequestDto.getSeasonMode() != Mode.NORMAL) {
+            rankRedisService.addAllUserRankByNewSeason();
+        }
     }
 
     @Override

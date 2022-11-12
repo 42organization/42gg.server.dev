@@ -67,7 +67,7 @@ public class RankRedisService {
     @Transactional
     public void modifyRankPpp(RankRedisModifyPppDto modifyDto)
     {
-        SeasonDto seasonDto = seasonService.findCurrentSeason();
+        SeasonDto seasonDto = seasonService.findLatestRankSeason();
 
         /* Rank 수정 */
         Integer userId = modifyDto.getUserDto().getId();
@@ -86,7 +86,7 @@ public class RankRedisService {
     }
 
     public void addUserRank(UserDto userDto) {
-        SeasonDto seasonDto = seasonService.findCurrentSeason();
+        SeasonDto seasonDto = seasonService.findLatestRankSeason();
 
         RankRedis singleRank = RankRedis.from(userDto, SINGLE);
         singleRank.setPpp(seasonDto.getStartPpp());
@@ -161,7 +161,7 @@ public class RankRedisService {
     }
 
     public List<RankUserDto> findCurrentRankList() {
-        SeasonDto seasonDto = seasonService.findCurrentSeason();
+        SeasonDto seasonDto = seasonService.findLatestRankSeason();
         RankKeyGetDto keyGetDto = RankKeyGetDto.builder().seasonId(seasonDto.getId()).seasonName(seasonDto.getSeasonName()).build();
         String rankKey = redisKeyManager.getRankKeyBySeason(keyGetDto);
         List<RankRedis> rankUserList = rankRedisRepository.findAllRank(rankKey);
@@ -176,7 +176,7 @@ public class RankRedisService {
     /* 현재 시즌만 조회 가능 */
     public RankUserDto findRankById(RankRedisFindDto findDto) {
         Integer userId = findDto.getUserDto().getId();
-        SeasonDto curSeasonDto = seasonService.findCurrentSeason();
+        SeasonDto curSeasonDto = seasonService.findLatestRankSeason();
         RankKeyGetDto keyGetDto = RankKeyGetDto.builder().seasonId(curSeasonDto.getId()).seasonName(curSeasonDto.getSeasonName()).build();
         String curRankKey = redisKeyManager.getRankKeyBySeason(keyGetDto);
 

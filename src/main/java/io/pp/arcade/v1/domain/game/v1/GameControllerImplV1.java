@@ -185,7 +185,7 @@ public class GameControllerImplV1 {
         /* 시즌 조회 */
         Integer seasonId = null;
         if (requestDto.getSeason() == null) {
-            SeasonDto currentSeason = seasonService.findCurrentSeason();
+            SeasonDto currentSeason = seasonService.findLatestRankSeason();
             if (currentSeason != null) {
                 seasonId = seasonService.findLatestRankSeason().getId();
             }

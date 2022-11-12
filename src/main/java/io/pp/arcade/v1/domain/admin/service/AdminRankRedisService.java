@@ -32,7 +32,7 @@ public class AdminRankRedisService {
     @Transactional
     public void addAllUserRankByNewSeason() {
         List<UserDto> userDtos = userService.findAll();
-        SeasonDto seasonDto = seasonService.findCurrentSeason();
+        SeasonDto seasonDto = seasonService.findLatestRankSeason();
         RankKeyGetDto rankKeyGetDto = RankKeyGetDto.builder().seasonId(seasonDto.getId()).seasonName(seasonDto.getSeasonName()).build();
         String curRankKey = redisKeyManager.getRankKeyBySeason(rankKeyGetDto);
         String curRankingKey = redisKeyManager.getRankingKeyBySeason(rankKeyGetDto, GameType.SINGLE);

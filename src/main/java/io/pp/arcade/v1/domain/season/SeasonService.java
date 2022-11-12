@@ -31,7 +31,7 @@ public class SeasonService {
         }
         Season season = Season.builder()
                 .seasonName(createDto.getSeasonName())
-                .startTime(createDto.getStartTime())
+                .startTime(LocalDateTime.now())
                 .endTime(LocalDateTime.of(9999, 12, 31, 23, 59, 59))
                 .startPpp(createDto.getStartPpp())
                 .pppGap(createDto.getPppGap())
@@ -64,7 +64,7 @@ public class SeasonService {
     @Transactional
     public SeasonDto findSeasonById(Integer seasonId) {
         Season season = seasonRepository.findById(seasonId).orElse(null);
-        return season != null ? SeasonDto.from(season) : findCurrentSeason();
+        return season != null ? SeasonDto.from(season) : findLatestRankSeason();
     }
 
     @Transactional

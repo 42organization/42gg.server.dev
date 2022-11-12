@@ -61,7 +61,7 @@ public class UserControllerImpl implements UserController {
     @GetMapping(value = "/users")
     public UserResponseDto userFind(HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        SeasonDto season = seasonService.findCurrentSeason();
+
         UserResponseDto responseDto = UserResponseDto.builder()
                 .intraId(user.getIntraId())
                 .userImageUri(user.getImageUri())
@@ -113,10 +113,10 @@ public class UserControllerImpl implements UserController {
         // 일단 게임타입은 SINGLE로 구현
 
         if (season == 0) {
-            season = seasonService.findCurrentSeason().getId();
+            season = seasonService.findLatestRankSeason().getId();
         }
 
-        if (season.equals(seasonService.findCurrentSeason().getId()))  {
+        if (season.equals(seasonService.findLatestRankSeason().getId()))  {
             rankDto = rankRedisService.findRankById(RankRedisFindDto.builder().userDto(targetUser).gameType(GameType.SINGLE).build());
         } else {
             rankDto = getRankUserDtoFromSeasonAndTargetUser(season, targetUser);
@@ -137,7 +137,7 @@ public class UserControllerImpl implements UserController {
         if (season != null)
             seasonDto = seasonService.findSeasonById(season);
         else
-            seasonDto = seasonService.findCurrentSeason();
+            seasonDto = seasonService.findLatestRankSeason();
         if (seasonDto != null) {
             RankDto temp = rankService.findBySeasonIdAndUserId(seasonDto.getId(), targetUser.getId());
             if (temp != null) {
@@ -215,8 +215,6 @@ public class UserControllerImpl implements UserController {
     public UserLiveInfoResponseDto userLiveInfo(HttpServletRequest request) throws MessagingException {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByIntraId(CurrentMatchFindByUserDto.builder().user(user).build());
-        GameDto currentMatchGame = currentMatch == null ? null : currentMatch.getGame();
-        SeasonDto season = seasonService.findCurrentSeason();
         String event = currentMatch == null ? null : "match";
         doubleCheckForSchedulers(currentMatch);
         if ("match".equals(event) && currentMatch.getGame() != null) {

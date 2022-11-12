@@ -31,7 +31,7 @@ public class RedisKeyManager {
 
     public String getCurrentRankKey() {
         String key = null;
-        SeasonDto curSeason =  seasonService.findCurrentSeason();
+        SeasonDto curSeason =  seasonService.findLatestRankSeason();
         if (curSeason != null)
             key = getSeasonKey(curSeason.getId().toString(), curSeason.getSeasonName());
         return key;
@@ -39,7 +39,7 @@ public class RedisKeyManager {
 
     public String getCurrentRankingKey(GameType gameType) {
         String key = null;
-        SeasonDto curSeason =  seasonService.findCurrentSeason();
+        SeasonDto curSeason =  seasonService.findLatestRankSeason();
         if (curSeason != null) {
             RankKeyGetDto keyGetDto = RankKeyGetDto.builder().seasonId(curSeason.getId()).seasonName(curSeason.getSeasonName()).build();
             key = getRankingKeyBySeason(keyGetDto, gameType);
