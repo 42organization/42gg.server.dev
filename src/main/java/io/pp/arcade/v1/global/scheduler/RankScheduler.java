@@ -26,7 +26,7 @@ public class RankScheduler extends  AbstractScheduler {
 
     public void dailyProcess() {
         List<RankUserDto> rankRedisDtos = rankRedisService.findCurrentRankList();
-        SeasonDto season = seasonService.findCurrentSeason();
+        SeasonDto season = seasonService.findLatestRankSeason();
         RankSaveAllDto rankSaveAllDto = RankSaveAllDto.builder().rankUserDtos(rankRedisDtos).seasonDto(season).build();
         rankService.redisToMySql(rankSaveAllDto);
     }

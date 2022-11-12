@@ -36,7 +36,7 @@ public class RankControllerImpl implements RankController {
     @GetMapping(value = "/ranks/backup")
     public void backup() {
         List<RankUserDto> rankRedisDtos = rankRedisService.findCurrentRankList();
-        SeasonDto season = seasonService.findCurrentSeason();
+        SeasonDto season = seasonService.findLatestRankSeason();
         RankSaveAllDto rankSaveAllDto = RankSaveAllDto.builder().rankUserDtos(rankRedisDtos).seasonDto(season).build();
         rankService.redisToMySql(rankSaveAllDto);
     }
@@ -49,7 +49,7 @@ public class RankControllerImpl implements RankController {
         if (requestDto.getSeasonId() != null)
             seasonDto = seasonService.findSeasonById(requestDto.getSeasonId());
         else
-            seasonDto = seasonService.findCurrentSeason();
+            seasonDto = seasonService.findLatestRankSeason();
 
         RankRankingFindDto findRankingDto = RankRankingFindDto.builder().userId(user.getId()).seasonDto(seasonDto).build();
         Integer myRanking = rankRedisService.findRankingById(findRankingDto);
@@ -58,7 +58,7 @@ public class RankControllerImpl implements RankController {
         RankListDto rankListDto = rankRedisService.findRankList(rankFindListDto);
 
         RankListResponseDto rankListResponseDto = RankListResponseDto.builder()
-                .myRanking(myRanking)
+                .myRank(myRanking)
                 .currentPage(rankListDto.getCurrentPage())
                 .totalPage(rankListDto.getTotalPage())
                 .rankList(rankListDto.getRankList())

@@ -241,7 +241,7 @@ public class SlotControllerImpl implements SlotController {
 
     private Integer getPppGapFromSeason() {
         Integer pppGap;
-        SeasonDto season = seasonService.findCurrentSeason();
+        SeasonDto season = seasonService.findLatestRankSeason();
         if (season == null) {
             pppGap = 100;
         } else {
