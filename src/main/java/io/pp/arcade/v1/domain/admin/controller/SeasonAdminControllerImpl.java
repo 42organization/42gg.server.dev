@@ -27,7 +27,7 @@ public class SeasonAdminControllerImpl implements SeasonAdminController {
     public void seasonCreate(SeasonCreateRequestDto createRequestDto, HttpServletRequest request) {
         seasonService.createSeasonByAdmin(createRequestDto);
         if (createRequestDto.getSeasonMode() != Mode.NORMAL) {
-            rankRedisService.addAllUserRankByNewSeason();
+            rankRedisService.addAllUserRankByNewSeason(createRequestDto.getStartPpp());
         }
     }
 
