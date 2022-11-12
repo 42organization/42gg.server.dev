@@ -99,13 +99,11 @@ function js_request_season_post(form) {
     let url = form['url'].value;
     let token = form['token'].value;
     let season_name = form['season_name'].value;
-    let start_time = form['start_time'].value;
     let start_ppp = form['start_ppp'].value;
     let ppp_gap = form['ppp_gap'].value;
     let season_mode = form['season_mode'].value;
     let data = {
         "seasonName": season_name,
-        "startTime": start_time,
         "startPpp": start_ppp,
         "pppGap": ppp_gap,
         "seasonMode": season_mode
