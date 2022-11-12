@@ -94,7 +94,7 @@ public class SeasonService {
     @Transactional
     public List<SeasonNameDto> findAllRankSeasonUntilCurrent() {
         LocalDateTime now = LocalDateTime.now();
-        List<Season> seasons =  seasonRepository.findAllBySeasonModeOrSeasonModeAndStartTimeIsBefore(Mode.RANK, Mode.BOTH, now);
+        List<Season> seasons =  seasonRepository.findAllBySeasonModeOrSeasonModeAndStartTimeIsBeforeOrderByStartTimeDesc(Mode.RANK, Mode.BOTH, now);
         List<SeasonNameDto> dtoList = new ArrayList<>();
 
         for (Season season : seasons) {

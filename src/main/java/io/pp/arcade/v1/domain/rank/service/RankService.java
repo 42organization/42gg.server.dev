@@ -57,7 +57,7 @@ public class RankService {
         pageable = PageRequest.of(pageNum, count);
 
         Page<User> userPage = userRepository.findAllByOrderByTotalExpDesc(pageable);
-        Integer myRank = userRepository.findExpRankingByIntraId(curUser.getIntraId());
+        Integer myRank = curUser.getTotalExp() == 0 ? -1 : userRepository.findExpRankingByIntraId(curUser.getIntraId());
 
         List<VipUserDto> vipUserList = new ArrayList<>();
         Integer index = pageable.getPageSize() * pageable.getPageNumber();
