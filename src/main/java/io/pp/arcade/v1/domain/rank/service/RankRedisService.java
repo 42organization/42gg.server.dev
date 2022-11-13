@@ -96,7 +96,7 @@ public class RankRedisService {
         RedisRankAddDto redisRankAddDto = RedisRankAddDto.builder().key(rankKey).userId(userDto.getId()).rank(singleRank).build();
         rankRedisRepository.addRank(redisRankAddDto);
 
-        String rankingKey = redisKeyManager.getRankKeyBySeason(rankKeyGetDto);
+        String rankingKey = redisKeyManager.getRankingKeyBySeason(rankKeyGetDto, SINGLE);
         RedisRankingAddDto redisRankingAddDto = RedisRankingAddDto.builder().rankingKey(rankingKey).rank(singleRank).build();
         rankRedisRepository.addRanking(redisRankingAddDto);
     }
@@ -196,7 +196,6 @@ public class RankRedisService {
         RedisRankingFindDto rankingFindDto = RedisRankingFindDto.builder().rank(rank).keyGetDto(keyGetDto).build();
         return rankRedisRepository.findRanking(rankingFindDto);
     }
-
     private int booleanToInt(boolean value) {
         return value ? 1 : 0;
     }
