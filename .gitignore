@@ -1,5 +1,14 @@
 .gradle/
-./src/main/resources/application-local.yml
-./build/generated-snippets/*
 ./.idea
-./was-logs
+.idea/
+42ggmain.sh
+42ggtest.sh
+BOOT-INF/
+backup_2022-08-23$05:00:01.sql
+build/
+out/
+src/main/resources/application-local.yml
+src/main/resources/application-main.yml
+src/main/resources/application-test.yml
+src/main/resources/application.yml
+was-logs/
