@@ -17,10 +17,10 @@ public class VipUserDto {
     public static VipUserDto from (User user, Integer rank){
         VipUserDto dto = VipUserDto.builder()
                 .intraId(user.getIntraId())
-                .rank(rank)
+                .rank(user.getTotalExp() == 0 ? -1 : rank)
                 .statusMessage(user.getStatusMessage())
-                .level(ExpLevelCalculator.getLevel(user.getTotalExp() == null ? 0 : user.getTotalExp()))
-                .exp(user.getTotalExp() == null ? 0 : user.getTotalExp())
+                .level(ExpLevelCalculator.getLevel(user.getTotalExp()))
+                .exp(user.getTotalExp())
                 .build();
         return dto;
     }
