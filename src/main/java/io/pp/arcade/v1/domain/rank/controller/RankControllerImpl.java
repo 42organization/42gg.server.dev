@@ -36,8 +36,9 @@ public class RankControllerImpl implements RankController {
     @GetMapping(value = "/ranks/{gametype}")
     public RankListResponseDto rankList(Pageable pageable, GameType gametype, RankListRequestDto requestDto, HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        Integer seasonId = requestDto.getSeason();
         SeasonDto seasonDto;
-        if (requestDto.getSeason() != null)
+        if (seasonId != null && seasonId > 0)
             seasonDto = seasonService.findSeasonById(requestDto.getSeason());
         else
             seasonDto = seasonService.findLatestRankSeason();
