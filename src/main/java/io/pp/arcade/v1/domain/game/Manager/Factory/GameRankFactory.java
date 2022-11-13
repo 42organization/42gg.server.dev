@@ -35,7 +35,7 @@ public class GameRankFactory implements GameFactory{
 
         RankUserDto rankUserDto = rankRedisService.findRankById(RankRedisFindDto.builder()
                 .gameType(gameDto.getSlot().getType())
-                .userDto(slotTeamUser.getUser()).build());
+                .user(slotTeamUser.getUser()).build());
         PChangeDto pChangeDto = gameDto.getStatus() == StatusType.END ?
                 pChangeService.findPChangeByUserAndGame(PChangeFindDto.builder().game(gameDto).user(slotTeamUser.getUser()).build())
                 : PChangeDto.builder().user(slotTeamUser.getUser()).game(gameDto).pppChange(0).pppResult(0).expChange(0).expResult(0).build();
