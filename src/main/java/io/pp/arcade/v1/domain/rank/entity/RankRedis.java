@@ -75,7 +75,7 @@ public class RankRedis implements Serializable {
         Integer losses = rankDto.getLosses();
         Integer wins = rankDto.getWins();
         RankRedis rankRedis = RankRedis.builder()
-                .id(rankDto.getId())
+                .id(rankDto.getUser().getId())
                 .intraId(rankDto.getUser().getIntraId())
                 .ppp(rankDto.getPpp())
                 .gameType(gameType)

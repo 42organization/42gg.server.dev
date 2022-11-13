@@ -182,7 +182,7 @@ public class GameControllerImplV1 {
     private GameFindDto getGameFindDto(GameResultPageRequestDto requestDto, Mode mode) {
         /* 시즌 조회 */
         Integer seasonId = requestDto.getSeason();
-        if (requestDto.getSeason() == null) {
+        if (seasonId != null && seasonId == 0) {
             SeasonDto currentSeason = seasonService.findLatestRankSeason();
             if (currentSeason != null) {
                 seasonId = seasonService.findLatestRankSeason().getId();
