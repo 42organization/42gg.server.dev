@@ -124,7 +124,7 @@ public class GameControllerImplV1 {
     }
 
     @PostMapping(value = "/games/result/normal")
-    public void gameNormalSave(HttpServletRequest request) {
+    public synchronized void gameNormalSave(HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
 
         CurrentMatchDto currentMatch = gameManager.checkIfCurrentMatchExist(user);

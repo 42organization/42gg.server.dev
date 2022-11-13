@@ -32,6 +32,7 @@ import io.pp.arcade.v1.global.type.NotiType;
 import io.pp.arcade.v1.global.type.StatusType;
 import io.pp.arcade.v1.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -39,6 +40,7 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
 @RestController
@@ -57,6 +59,7 @@ public class GameControllerImpl implements GameController {
     private final NotiService notiService;
     private final GameResponseManager gameResponseManager;
     private final GameManager gameManager;
+
 
     @Override
     @GetMapping(value = "/games/players")
@@ -91,7 +94,7 @@ public class GameControllerImpl implements GameController {
 
     @Override
     @PostMapping(value = "/games/result/rank")
-    public void gameResultSave(GameResultRequestDto requestDto, HttpServletRequest request) throws MessagingException {
+    public synchronized void gameResultSave(GameResultRequestDto requestDto, HttpServletRequest request) throws MessagingException {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         validateInput(requestDto);
 
