@@ -58,10 +58,7 @@ public class RankRedisService {
 
         RankRedis userRank = rankRedisRepository.findRank(curRankKey , userId);
         userRank.updateStatusMessage(updateDto.getStatusMessage());
-        redisRankList.set(redisKeyManager.getCurrentRankKey(), updateDto.getUserDto().getId(), userRank);
-        //RankRedis doubleRank = getUserRank(modifyDto.getIntraId(), DOUBLE);
-        //doubleRank.updateStatusMessage(modifyDto.getStatusMessage());
-        //saveUserRank(doubleRank);
+        rankRedisRepository.updateRank(RedisRankUpdateDto.builder().seasonKey(curRankKey).userId(userId).userRank(userRank).build());
     }
 
     /* 어드민 - 유저 정보 수정*/
