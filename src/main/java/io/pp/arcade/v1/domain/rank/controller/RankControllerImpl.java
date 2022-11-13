@@ -8,8 +8,10 @@ import io.pp.arcade.v1.domain.rank.service.RankService;
 import io.pp.arcade.v1.domain.season.SeasonService;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.domain.security.jwt.TokenService;
+import io.pp.arcade.v1.domain.user.UserService;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.global.type.GameType;
+import io.pp.arcade.v1.global.type.RoleType;
 import io.pp.arcade.v1.global.util.HeaderUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -29,14 +31,6 @@ public class RankControllerImpl implements RankController {
     private final RankRedisService rankRedisService;
     private final TokenService tokenService;
     private final SeasonService seasonService;
-
-    @GetMapping(value = "/ranks/backup")
-    public void backup() {
-        List<RankUserDto> rankRedisDtos = rankRedisService.findCurrentRankList();
-        SeasonDto season = seasonService.findLatestRankSeason();
-        RankSaveAllDto rankSaveAllDto = RankSaveAllDto.builder().rankUserDtos(rankRedisDtos).seasonDto(season).build();
-        rankService.redisToMySql(rankSaveAllDto);
-    }
 
     @Override
     @GetMapping(value = "/ranks/{gametype}")
