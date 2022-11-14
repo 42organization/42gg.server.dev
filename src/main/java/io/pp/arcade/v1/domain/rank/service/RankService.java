@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +55,7 @@ public class RankService {
     @Transactional
     public VipListResponseDto vipList(UserDto curUser, Integer count, Pageable pageable) {
         Integer pageNum = pageable.getPageNumber() < 1 ? 0 : pageable.getPageNumber() - 1;
-        pageable = PageRequest.of(pageNum, count);
+        pageable = PageRequest.of(pageNum, count, Sort.by("id"));
 
         Page<User> userPage = userRepository.findAllByOrderByTotalExpDesc(pageable);
         Integer myRank = curUser.getTotalExp() == 0 ? -1 : userRepository.findExpRankingByIntraId(curUser.getIntraId());
