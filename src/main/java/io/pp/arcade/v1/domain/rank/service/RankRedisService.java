@@ -3,6 +3,7 @@ package io.pp.arcade.v1.domain.rank.service;
 import io.pp.arcade.v1.domain.rank.RankRedisRepository;
 import io.pp.arcade.v1.domain.rank.RedisKeyManager;
 import io.pp.arcade.v1.domain.rank.dto.*;
+import io.pp.arcade.v1.domain.rank.type.RankType;
 import io.pp.arcade.v1.domain.season.Season;
 import io.pp.arcade.v1.domain.season.SeasonService;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
@@ -11,6 +12,7 @@ import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.domain.rank.entity.RankRedis;
 
 import io.pp.arcade.v1.global.type.GameType;
+import io.pp.arcade.v1.global.type.RacketType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.redis.core.ListOperations;
@@ -131,9 +133,6 @@ public class RankRedisService {
         });
     }
 
-    /*
-     * count null일 경우 수정
-     */
     public RankListDto findRankList(RankFindListDto findListDto) {
         Integer page = findListDto.getPageable().getPageNumber();
         Integer count = findListDto.getCount() == null ? findListDto.getPageable().getPageSize() : findListDto.getCount();
@@ -179,19 +178,25 @@ public class RankRedisService {
         String curRankKey = redisKeyManager.getRankKeyBySeason(keyGetDto);
 
         RankRedis rank = rankRedisRepository.findRank(curRankKey, userId);
+        if (rank == null) {
+            rank = RankRedis.builder().id(userId).ppp(0).losses(0).winRate(0).wins(0).gameType(SINGLE).racketType(RacketType.NONE).statusMessage("").build();
+        }
         Integer ranking = rankRedisRepository.findRanking(RedisRankingFindDto.builder().rank(rank).keyGetDto(keyGetDto).build());
         return (rank == null) ? null : RankUserDto.from(rank, ranking);
     }
 
     /* 시즌별 유저 랭킹 조회 */
     public Integer findRankingById(RankRankingFindDto findDto) {
+        Integer ranking = RankType.UN_RANK;
         Integer userId = findDto.getUserId();
         SeasonDto seasonDto = findDto.getSeasonDto();
         RankKeyGetDto keyGetDto = RankKeyGetDto.builder().seasonName(seasonDto.getSeasonName()).seasonId(seasonDto.getId()).build();
         RankRedis rank = rankRedisRepository.findRank(redisKeyManager.getRankKeyBySeason(keyGetDto), userId);
-
-        RedisRankingFindDto rankingFindDto = RedisRankingFindDto.builder().rank(rank).keyGetDto(keyGetDto).build();
-        return rankRedisRepository.findRanking(rankingFindDto);
+        if (rank != null) {
+            RedisRankingFindDto rankingFindDto = RedisRankingFindDto.builder().rank(rank).keyGetDto(keyGetDto).build();
+            ranking = rankRedisRepository.findRanking(rankingFindDto);
+        }
+        return ranking;
     }
     private int booleanToInt(boolean value) {
         return value ? 1 : 0;

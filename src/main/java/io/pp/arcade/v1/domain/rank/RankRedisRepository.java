@@ -36,7 +36,11 @@ public class RankRedisRepository {
         if (totalGames > 0) {
             String userIndex = rank.getId().toString();
             String rankingKey = redisKeyManager.getRankingKeyBySeason(findDto.getKeyGetDto(), gameType);
-            ranking = redis.opsForZSet().reverseRank(rankingKey, userIndex).intValue() + 1; /* +1은 0부터 시작하기에 */
+            Long tempRanking = redis.opsForZSet().reverseRank(rankingKey, userIndex);
+            if (tempRanking != null) {
+                ranking = tempRanking.intValue() + 1;
+            }
+//            ranking = redis.opsForZSet().reverseRank(rankingKey, userIndex).intValue() + 1; /* +1은 0부터 시작하기에 */
         }
         return ranking;
     }
