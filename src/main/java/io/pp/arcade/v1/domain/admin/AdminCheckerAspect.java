@@ -30,11 +30,11 @@ public class AdminCheckerAspect {
     private final TokenService tokenService;
     private final ApplicationYmlRead applicationYmlRead;
 
-    @Pointcut("execution(* io.pp.arcade.domain.admin.controller..*(..))")
+    @Pointcut("execution(* io.pp.arcade.v1.domain.admin.controller..*(..))")
     public void managedAdminController() {
     }
 
-    @Pointcut("execution(* io.pp.arcade.domain.admin.management..*(..))")
+    @Pointcut("execution(* io.pp.arcade.v1.domain.admin.management..*(..))")
     public void adminManagementController() {
     }
 
