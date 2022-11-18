@@ -13,6 +13,7 @@ import io.pp.arcade.v1.global.type.RacketType;
 import io.pp.arcade.v1.global.type.RoleType;
 import io.pp.arcade.v1.global.util.AsyncNewUserImageUploader;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -30,6 +31,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final RankService rankService;
     private final RankRedisService rankRedisService;
     private final AsyncNewUserImageUploader asyncNewUserImageUploader;
+
+    @Value("${info.image.defaultUrl}")
+    private String defaultImageUrl;
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User user = super.loadUser(userRequest);
@@ -55,7 +60,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             updateUser(savedUser , userInfo);
         } else {
             savedUser = createUser(userInfo, providerType);
-            if (userInfo.getImageUrl().startsWith("https://cdn.intra.42.fr/")) {
+            if (userInfo.getImageUrl() == null) {
+                savedUser.setImageUri(defaultImageUrl);
+            }
+            else if (userInfo.getImageUrl().startsWith("https://cdn.intra.42.fr/")) {
                 asyncNewUserImageUploader.upload(userInfo.getIntraId(), userInfo.getImageUrl());
             }
             rankRedisService.addUserRank(UserDto.from(savedUser));
