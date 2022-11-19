@@ -21,9 +21,9 @@ public class SlotGenerator extends AbstractScheduler {
     @Getter @Setter
     private Integer startTime = 14;
     @Getter @Setter
-    private Integer interval = 10;
+    private Integer interval = 15;
     @Getter @Setter
-    private Integer slotNum = 18;
+    private Integer slotNum = 12;
 
     public void dailyGenerate() {
         LocalDateTime now = LocalDateTime.now();
