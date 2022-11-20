@@ -34,8 +34,8 @@ public class GameGenerator extends AbstractScheduler {
         this.slotService = slotService;
         this.currentMatchService = currentMatchService;
         this.notiGenerater = notiGenerater;
-        this.setCron("0 */10 * * * *");
-        this.setInterval(10);
+        this.setCron("0 */15 * * * *");
+        this.setInterval(15);
     }
 
     public void gameGenerator() throws MessagingException {
