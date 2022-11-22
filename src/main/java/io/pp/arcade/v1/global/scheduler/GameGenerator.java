@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 //private String cron = "0 */" + intervalTime + " " + startTime + "-" + endTime + " * * *";
 //private String cron = "0 */10 * * * *";
 @Component
-public class GameGenerator extends AbstractScheduler {
+public class GameGenerator /* extends AbstractScheduler */{
     private final GameService gameService;
     private final SlotService slotService;
     private final CurrentMatchService currentMatchService;
@@ -34,22 +34,30 @@ public class GameGenerator extends AbstractScheduler {
         this.slotService = slotService;
         this.currentMatchService = currentMatchService;
         this.notiGenerater = notiGenerater;
-        this.setCron("0 */15 * * * *");
-        this.setInterval(15);
+//        this.setCron("0 */15 * * * *");
+//        this.setInterval(15);
     }
 
-    public void gameGenerator() throws MessagingException {
-        LocalDateTime now = LocalDateTime.now();
-        now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
-        SlotDto slotDto = slotService.findByTime(now);
+//    public void gameGenerator() throws MessagingException {
+//        LocalDateTime now = LocalDateTime.now();
+//        now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
+//        SlotDto slotDto = slotService.findByTime(now);
+//
+//        if (slotDto != null) {
+//            addGameOrNotiCanceled(slotDto);
+//        }
+//    }
+
+    public void gameGenerator(LocalDateTime time) throws MessagingException {
+        SlotDto slotDto = slotService.findByTime(time);
 
         if (slotDto != null) {
             addGameOrNotiCanceled(slotDto);
         }
     }
 
-    public void gameGenerator(LocalDateTime time) throws MessagingException {
-        SlotDto slotDto = slotService.findByTime(time);
+    public void gameGenerator(Integer slotId) throws MessagingException {
+        SlotDto slotDto = slotService.findSlotById(slotId);
 
         if (slotDto != null) {
             addGameOrNotiCanceled(slotDto);
@@ -95,37 +103,15 @@ public class GameGenerator extends AbstractScheduler {
         currentMatchService.saveGameInCurrentMatch(matchSaveGameDto);
     }
 
-    public void gameLiveToWait() {
-        LocalDateTime now = LocalDateTime.now();
-        now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0).minusMinutes(interval);
-        SlotDto slot = slotService.findByTime(now);
-        if (slot != null) {
-            GameDto game = gameService.findBySlotIdNullable(slot.getId());
-            if (game != null && game.getStatus().equals(StatusType.LIVE)) {
-                gameService.modifyGameStatus(GameModifyStatusDto.builder().game(game).status(StatusType.WAIT).build());
-            }
-        }
-    }
-
-    private void saveCurrentMatch(UserDto user, GameDto game) {
-        if (user != null) {
-        }
-    }
-
-    private void removeCurrentMatch(UserDto user) {
-        if (user != null) {
-        }
-    }
-
-    @Override
-    public Runnable runnable() {
-        return () -> {
-            try {
-                gameGenerator();
-                gameLiveToWait();
-            } catch (MessagingException e) {
-                e.printStackTrace();
-            }
-        };
-    }
+//    public void gameLiveToWait() {
+//        LocalDateTime now = LocalDateTime.now();
+//        now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0).minusMinutes(interval);
+//        SlotDto slot = slotService.findByTime(now);
+//        if (slot != null) {
+//            GameDto game = gameService.findBySlotIdNullable(slot.getId());
+//            if (game != null && game.getStatus().equals(StatusType.LIVE)) {
+//                gameService.modifyGameStatus(GameModifyStatusDto.builder().game(game).status(StatusType.WAIT).build());
+//            }
+//        }
+//    }
 }
