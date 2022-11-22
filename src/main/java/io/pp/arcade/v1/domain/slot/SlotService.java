@@ -184,9 +184,7 @@ public class SlotService {
             maxCount = 4;
         }
         SlotStatusType status = SlotStatusType.OPEN;
-        if (currentTime.isAfter(slotTime)) {
-            status = SlotStatusType.CLOSE;
-        } else if (slotId.equals(userSlotId)) {
+        if (slotId.equals(userSlotId)) {
             status = SlotStatusType.MYTABLE;
         } else if (slotType != null && !gameType.equals(slotType)) {
             status = SlotStatusType.CLOSE;
@@ -195,6 +193,8 @@ public class SlotService {
         } else if (headCount.equals(maxCount)) {
             status = SlotStatusType.CLOSE;
         } else if (dto.getUserMode() != null && !dto.getUserMode().equals(dto.getSlot().getMode()) && !dto.getSlot().getMode().equals(Mode.BOTH)) {
+            status = SlotStatusType.CLOSE;
+        } else if (headCount.equals(1) && dto.getSlot().getMode().equals(Mode.CHALLENGE)) {
             status = SlotStatusType.CLOSE;
         }
         return status;
