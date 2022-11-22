@@ -5,6 +5,7 @@ import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.pp.arcade.RestDocsConfiguration;
+import io.pp.arcade.v1.domain.guest.DogUtil;
 import io.pp.arcade.v1.domain.season.Season;
 import io.pp.arcade.v1.domain.season.SeasonRepository;
 import io.pp.arcade.v1.domain.security.jwt.Token;
