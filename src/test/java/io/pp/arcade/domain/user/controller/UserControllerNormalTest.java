@@ -79,7 +79,7 @@ class UserControllerNormalTest {
     void findDetailUserRank() throws Exception {
         User user = initiator.users[0];
         UserDto userDto = UserDto.from(user);
-        RankUserDto rank = rankRedisService.findRankById(RankRedisFindDto.builder().userDto(userDto).gameType(GameType.SINGLE).build());
+        RankUserDto rank = rankRedisService.findRankById(RankRedisFindDto.builder().user(userDto).gameType(GameType.SINGLE).build());
 
         mockMvc.perform(get("/pingpong/users/{targetIntraId}/rank", user.getIntraId()).contentType(MediaType.APPLICATION_JSON) // intra id, season 값 넣어야함
                 .param("season", "0")
