@@ -68,4 +68,19 @@ public class User extends BaseTimeEntity implements Serializable {
         this.ppp = ppp;
         this.totalExp = totalExp;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", intraId='" + intraId + '\'' +
+                ", eMail='" + eMail + '\'' +
+                ", imageUri='" + imageUri + '\'' +
+                ", racketType=" + racketType +
+                ", statusMessage='" + statusMessage + '\'' +
+                ", ppp=" + ppp +
+                ", roleType=" + roleType +
+                ", totalExp=" + totalExp +
+                '}';
+    }
 }

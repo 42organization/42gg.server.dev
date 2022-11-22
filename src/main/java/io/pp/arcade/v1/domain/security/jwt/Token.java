@@ -43,4 +43,14 @@ public class Token {
         this.refreshToken = refreshToken;
         this.accessToken = accessToken;
     }
+
+    @Override
+    public String toString() {
+        return "Token{" +
+                "refreshTokenSeq=" + refreshTokenSeq +
+                ", user=" + user +
+                ", refreshToken='" + refreshToken + '\'' +
+                ", accessToken='" + accessToken + '\'' +
+                '}';
+    }
 }
