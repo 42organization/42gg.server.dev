@@ -25,6 +25,8 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
 
+    private final OpponentRepository opponentRepository;
+
     @Transactional
     public List<UserDto> findAll() {
         List<User> users = userRepository.findAll();
@@ -136,5 +138,18 @@ public class UserService {
         } else {
             user.setRoleType(RoleType.USER);
         }
+    }
+
+    @Transactional
+    public List<UserOpponentResDto> findAllOpponentByIsReady() {
+        List<Opponent> opponents = opponentRepository.findAllByIsReady();
+
+        List<UserOpponentResDto> res = new ArrayList<>();
+        for (Opponent e : opponents) {
+            UserOpponentResDto dto = UserOpponentResDto.builder()
+                    .intraId(e.getUser().getIntraId()).imageUrl(e.getImageUri()).nick(e.getNick()).detail(e.getDetail()).build();
+            res.add(dto);
+        }
+        return res;
     }
 }

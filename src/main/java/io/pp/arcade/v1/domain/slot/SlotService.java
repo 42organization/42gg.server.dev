@@ -79,7 +79,7 @@ public class SlotService {
     @Transactional
     public void addUserInSlot(SlotAddUserDto addUserDto) {
         Slot slot = slotRepository.findById(addUserDto.getSlotId()).orElseThrow(() -> new BusinessException("E0001"));
-        Integer headCountResult = slot.getHeadCount() + 1; // entity라 반영이 안되어서 미리 뺀 값을 써줘야함
+        Integer headCountResult = slot.getHeadCount() + 1; // entity라 반영이 안되어서 미리 더 한 값을 써줘야함
         if (slot.getHeadCount() == 0) {
             slot.setType(addUserDto.getType());
             slot.setGamePpp(addUserDto.getJoinUserPpp());
@@ -185,8 +185,8 @@ public class SlotService {
         }
         SlotStatusType status = SlotStatusType.OPEN;
         if (currentTime.isAfter(slotTime)) {
-            status = SlotStatusType.CLOSE;
-        } else if (slotId.equals(userSlotId)) {
+            status = SlotStatusType.CLOSE;}
+        if (slotId.equals(userSlotId)) {
             status = SlotStatusType.MYTABLE;
         } else if (slotType != null && !gameType.equals(slotType)) {
             status = SlotStatusType.CLOSE;
