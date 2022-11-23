@@ -36,7 +36,7 @@ public class NotiService {
     private final SlotTeamUserRepository slotTeamUserRepository;
 
     @Transactional
-    public void addNoti(NotiAddDto notiAddDto) throws MessagingException {
+    public void addNoti(NotiAddDto notiAddDto) {
         Slot slot = null;
         if (notiAddDto.getSlot() != null) {
             slot = slotRepository.findById(notiAddDto.getSlot().getId()).orElseThrow(() -> new BusinessException("E0001"));
@@ -65,7 +65,7 @@ public class NotiService {
         }
     }
 
-    private void sendMail(Noti noti, User user) throws MessagingException {
+    private void sendMail(Noti noti, User user) {
 //        MimeMessage message = javaMailSender.createMimeMessage();
 //        MimeMessageHelper helper = new MimeMessageHelper(message);
 //        helper.setSubject("핑퐁요정🧚으로부터 도착한 편지");

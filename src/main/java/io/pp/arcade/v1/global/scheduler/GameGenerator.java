@@ -48,7 +48,7 @@ public class GameGenerator /* extends AbstractScheduler */{
 //        }
 //    }
 
-    public void gameGenerator(LocalDateTime time) throws MessagingException {
+    public void gameGenerator(LocalDateTime time) {
         SlotDto slotDto = slotService.findByTime(time);
 
         if (slotDto != null) {
@@ -56,7 +56,7 @@ public class GameGenerator /* extends AbstractScheduler */{
         }
     }
 
-    public void gameGenerator(Integer slotId) throws MessagingException {
+    public void gameGenerator(Integer slotId) {
         SlotDto slotDto = slotService.findSlotById(slotId);
 
         if (slotDto != null) {
@@ -64,7 +64,7 @@ public class GameGenerator /* extends AbstractScheduler */{
         }
     }
 
-    private void addGameOrNotiCanceled(SlotDto slotDto) throws MessagingException {
+    private void addGameOrNotiCanceled(SlotDto slotDto) {
         if (slotDto.getHeadCount().equals(getMaxHeadCount(slotDto.getType()))) {
             addGame(slotDto);
         } else {
@@ -80,7 +80,7 @@ public class GameGenerator /* extends AbstractScheduler */{
         return maxHeadCount;
     }
 
-    private void notiCanceled(SlotDto slotDto) throws MessagingException {
+    private void notiCanceled(SlotDto slotDto) {
         NotiCanceledTypeDto canceledDto = NotiCanceledTypeDto.builder().slotDto(slotDto).notiType(NotiType.CANCELEDBYTIME).build();
         notiGenerater.addCancelNotisBySlot(canceledDto);
 
