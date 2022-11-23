@@ -41,8 +41,6 @@ public class GuestLoginController {
     //   현재 유저의 로컬스토리지에 토큰이 있는지 확인하고 있으면 메인페이지로 리다이렉트
     @GetMapping(value = "/login/guest")
     public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("frontUrl = " + frontUrl);
-        dogUtil.test();
         String accessToken;
         // 유저가 토큰을 가지고 있는지 확인
         accessToken = HeaderUtil.getAccessToken(request);
