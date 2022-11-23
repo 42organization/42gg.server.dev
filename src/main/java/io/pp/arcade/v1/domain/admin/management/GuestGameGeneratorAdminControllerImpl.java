@@ -1,5 +1,6 @@
-package io.pp.arcade.v1.domain.admin.controller;
+package io.pp.arcade.v1.domain.admin.management;
 
+import io.pp.arcade.v1.domain.admin.controller.GuestGameGeneratorAdminController;
 import io.pp.arcade.v1.domain.admin.dto.GameAddRequestDto;
 import io.pp.arcade.v1.domain.game.GameService;
 import io.pp.arcade.v1.global.scheduler.GameGenerator;
@@ -11,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @AllArgsConstructor
-public class GuestGameGeneratorAdminControllerImpl implements GuestGameGeneratorAdminController{
+public class GuestGameGeneratorAdminControllerImpl implements GuestGameGeneratorAdminController {
     private GameGenerator gameGenerator;
     @Override
     @PostMapping("/admin/guest/game")
