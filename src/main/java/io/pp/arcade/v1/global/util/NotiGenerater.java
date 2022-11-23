@@ -29,13 +29,13 @@ public class NotiGenerater {
         }
     }
 
-    public void addCancelNotisBySlot(NotiCanceledTypeDto canceledTypeDto) throws MessagingException {
+    public void addCancelNotisBySlot(NotiCanceledTypeDto canceledTypeDto) {
         SlotDto slot = canceledTypeDto.getSlotDto();
         NotiType notiType = canceledTypeDto.getNotiType();
         addNoti(null, slot, notiType);
     }
 
-    private void addNoti(UserDto user, SlotDto slot, NotiType type) throws MessagingException {
+    private void addNoti(UserDto user, SlotDto slot, NotiType type) {
         if (user == null) {
             NotiAddDto notiAddDto = NotiAddDto.builder()
                     .slot(slot)
