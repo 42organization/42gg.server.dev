@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 public class GuestGameGeneratorAdminControllerImpl implements GuestGameGeneratorAdminController {
     private GameGenerator gameGenerator;
     @Override
-    @PostMapping("/admin/guest/game")
+    @PostMapping("/pingpong/admin/matchtrigger")
     public void gameAdd(GameAddRequestDto gameAddRequestDto, HttpServletRequest request) {
         Integer slotId = gameAddRequestDto.getSlotId();
         gameGenerator.gameGenerator(slotId);
