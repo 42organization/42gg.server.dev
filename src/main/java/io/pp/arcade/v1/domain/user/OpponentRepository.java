@@ -8,4 +8,6 @@ import java.util.List;
 public interface OpponentRepository extends JpaRepository<Integer, Opponent> {
     @Query(nativeQuery = true, value = "select o from Opponent o where o.isReady == true")
     List<Opponent> findAllByIsReady();
+
+    Opponent findByIntraId(String intraId);
 }

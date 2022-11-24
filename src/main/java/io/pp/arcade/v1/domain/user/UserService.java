@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -142,7 +143,15 @@ public class UserService {
 
     @Transactional
     public List<UserOpponentResDto> findAllOpponentByIsReady() {
-        List<Opponent> opponents = opponentRepository.findAllByIsReady();
+        List<Opponent> allStars = opponentRepository.findAllByIsReady();
+
+        int count = allStars.size();
+        List<Opponent> opponents = new ArrayList<>();
+        Random random = new Random(count);
+        for (int i = 0; i < 3; i++) {
+            int ran = random.nextInt(count);
+            opponents.add(allStars.get(ran));
+        }
 
         List<UserOpponentResDto> res = new ArrayList<>();
         for (Opponent e : opponents) {
@@ -151,5 +160,12 @@ public class UserService {
             res.add(dto);
         }
         return res;
+    }
+
+    @Transactional
+    public UserFindDto findOpponentByName(String intraId) {
+        Opponent opp = opponentRepository.findByIntraId(intraId);
+        UserFindDto dto = UserFindDto.builder().userId(opp.getUser().getId()).intraId(opp.getIntraId()).build();
+        return dto;
     }
 }

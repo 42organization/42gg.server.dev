@@ -15,7 +15,8 @@ public class Opponent extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+//    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "user")
     private User user;
 

@@ -16,8 +16,11 @@ import io.pp.arcade.v1.domain.team.dto.TeamAddUserDto;
 import io.pp.arcade.v1.domain.team.dto.TeamDto;
 import io.pp.arcade.v1.domain.team.dto.TeamRemoveUserDto;
 import io.pp.arcade.v1.domain.slot.dto.SlotStatusResponseDto;
+import io.pp.arcade.v1.domain.user.Opponent;
+import io.pp.arcade.v1.domain.user.OpponentRepository;
 import io.pp.arcade.v1.domain.user.UserService;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
+import io.pp.arcade.v1.domain.user.dto.UserFindDto;
 import io.pp.arcade.v1.domain.user.dto.UserOpponentResDto;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.redis.Key;
@@ -77,15 +80,16 @@ public class SlotControllerImpl implements SlotController {
         doubleNotSupportedYet(type);
         SlotDto slot = slotService.findSlotById(addReqDto.getSlotId());
 
-        checkIfUserHaveCurrentMatch(user); // 어드민이면 무시
-//        checkIfUserHavePenalty(user); // 패널티 제외
-//        checkIfModeMatches(addReqDto, slot);
-        checkIfSlotAvailable(slot, type, user, addReqDto); // 헤드 카운트만 보면 될 듯
+        if (addReqDto.getMode() == Mode.CHALLENGE && addReqDto.getOpponent() != null) { // 챌린지 모드 두번째 호출 시 null 였던 opponent 값이 채워져서 돌아 온다.
+            UserFindDto userFindDto = userService.findOpponentByName(addReqDto.getOpponent());// 챌린지 모드에서 선택한 인트라 아이디로 유저를 찾아오기
+            UserDto opponent = userService.findById(userFindDto);
+            user = opponent;
+        } else { // challenge 처음 선택 ( opponent == null ) 경우 또는 랭크일 경우 // +똑같이 처음 들어가는 챌린지 모두일 때 같은 슬롯을 갖고 있는 경우 생각해봐야 함.
+            checkIfUserHaveCurrentMatch(user);
+            checkIfSlotAvailable(slot, type, user, addReqDto);
+        }
 
-
-        //user가 들어갈 팀을 정한당 // 만약 타입이 챌린지라면 유저가 맨 왼쪽에 들어간다. 챌린지 어드민은 2번에
         TeamAddUserDto teamAddUserDto = getTeamAddUserDto(slot, user);
-
         //유저가 슬롯에 입장하면 currentMatch에 등록된다.
         CurrentMatchAddDto matchAddDto = CurrentMatchAddDto.builder()
                 .slot(slot)
@@ -105,7 +109,9 @@ public class SlotControllerImpl implements SlotController {
         //유저가 슬롯에 꽉 차면 currentMatch가 전부 바뀐다.
         slot = slotService.findSlotById(slot.getId());
         modifyUsersCurrentMatchStatus(user, slot);
-        notiGenerater.addMatchNotisBySlot(slot);
+        notiGenerater.addMatchNotisBySlot(slot); // 어드민이 알림으로 상대를 구분할 수 있어야 되서 빼면 안되지 않을까?
+
+
     }
 
     private void checkIfModeMatches(SlotAddUserRequestDto addReqDto, SlotDto slot) {
@@ -147,6 +153,7 @@ public class SlotControllerImpl implements SlotController {
     public SlotFindOpponentResDto FindOpponentAvailable() {
         // 서비스에서 가용 인원을 가져온다.
         // 랜덤을 돌려서 ( 서비스에서 ? ) 반환
+        // 3명만 전달. 3명 이하면 ? 생각.
         List<UserOpponentResDto> opponents = userService.findAllOpponentByIsReady();
         SlotFindOpponentResDto res = SlotFindOpponentResDto.builder().opponents(opponents).build();
         return res;
@@ -241,14 +248,14 @@ public class SlotControllerImpl implements SlotController {
     }
 
     private void checkIfSlotAvailable(SlotDto slot, GameType gameType, UserDto user, SlotAddUserRequestDto requestDto) {
-//        Integer pppGap = getPppGapFromSeason();
+        Integer pppGap = getPppGapFromSeason();
 
         SlotFilterDto slotFilterDto = SlotFilterDto.builder()
                 .slot(slot)
                 .gameType(gameType)
                 .userPpp(user.getPpp())
                 .userMode(requestDto.getMode())
-//                .pppGap(pppGap)
+                .pppGap(pppGap)
                 .build();
         if (SlotStatusType.CLOSE.equals(slotService.getStatus(slotFilterDto))) {
             throw new BusinessException("SC001");
@@ -283,9 +290,7 @@ public class SlotControllerImpl implements SlotController {
 
     private void checkIfUserHaveCurrentMatch(UserDto user) {
         CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUser(user);
-        if (matchDto.getUser().getRoleType() == RoleType.ADMIN) {
-            matchDto.getUser(); // 여기서
-        } else if (matchDto != null) {
+        if (matchDto.getUser().getRoleType() != RoleType.ADMIN) { // 일반 참여자가 현재 매치 중이면 예외처리, 하지만 어드민은 괜찮다.
             throw new BusinessException("SC002");
         }
     }
