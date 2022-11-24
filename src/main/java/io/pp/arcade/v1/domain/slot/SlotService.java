@@ -172,7 +172,7 @@ public class SlotService {
         Integer userSlotId = dto.getUserSlotId();
         GameType slotType = dto.getSlot().getType();
         GameType gameType = dto.getGameType();
-        Integer gamePpp = dto.getSlot().getGamePpp();
+//        Integer gamePpp = dto.getSlot().getGamePpp();
         Integer userPpp = dto.getUserPpp();
         Integer headCount = dto.getSlot().getHeadCount();
         Integer pppGap = dto.getPppGap();
@@ -186,9 +186,11 @@ public class SlotService {
             status = SlotStatusType.MYTABLE;
         } else if (slotType != null && !gameType.equals(slotType)) {
             status = SlotStatusType.CLOSE;
-        } else if (slotMode == Mode.RANK && gamePpp != null && Math.abs(userPpp - gamePpp) > pppGap) {
-            status = SlotStatusType.CLOSE;
-        } else if (headCount.equals(maxCount)) {
+        }
+//        else if (slotMode == Mode.RANK && gamePpp != null && Math.abs(userPpp - gamePpp) > pppGap) {
+//            status = SlotStatusType.CLOSE;
+//        }
+        else if (headCount.equals(maxCount)) {
             status = SlotStatusType.CLOSE;
         } else if (dto.getUserMode() != null && !dto.getUserMode().equals(dto.getSlot().getMode()) && !dto.getSlot().getMode().equals(Mode.BOTH)) {
             status = SlotStatusType.CLOSE;
