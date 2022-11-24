@@ -171,14 +171,12 @@ public class SlotService {
         Integer slotId = dto.getSlot().getId();
         Integer userSlotId = dto.getUserSlotId();
         GameType slotType = dto.getSlot().getType();
-        LocalDateTime slotTime = dto.getSlot().getTime();
         GameType gameType = dto.getGameType();
         Integer gamePpp = dto.getSlot().getGamePpp();
         Integer userPpp = dto.getUserPpp();
         Integer headCount = dto.getSlot().getHeadCount();
         Integer pppGap = dto.getPppGap();
         Mode slotMode = dto.getSlot().getMode();
-        LocalDateTime currentTime = LocalDateTime.now();
         Integer maxCount = 2;
         if (slotType != null && slotType.equals(GameType.DOUBLE)) {
             maxCount = 4;
