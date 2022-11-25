@@ -12,6 +12,8 @@ import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.domain.security.jwt.TokenService;
 import io.pp.arcade.v1.domain.slot.SlotService;
 
+import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUserService;
+import io.pp.arcade.v1.domain.slotteamuser.dto.SlotTeamUserDto;
 import io.pp.arcade.v1.domain.team.TeamService;
 import io.pp.arcade.v1.domain.team.dto.TeamAddUserDto;
 import io.pp.arcade.v1.domain.team.dto.TeamDto;
@@ -51,6 +53,7 @@ public class SlotControllerImpl implements SlotController {
     private final RedisTemplate redisTemplate;
     private final SlotGenerator slotGenerator;
     private final OpponentService opponentService;
+    private final SlotTeamUserService slotTeamUserService;
 
     private final UserService userService;
 
@@ -153,7 +156,10 @@ public class SlotControllerImpl implements SlotController {
         checkIfCurrentMatchExists(currentMatch);
         SlotDto slot = slotService.findSlotById(slotId);
         checkIfUserRemovable(currentMatch, slot);
-
+        // 모드가 Challenge고 Slot headcount가 2인 경우
+        if (slot.getMode() == Mode.CHALLENGE && slot.getHeadCount() == 2) {
+            slotRemoveAdminUser(user, currentMatch, slot);
+        }
         CurrentMatchRemoveDto currentMatchRemoveDto = CurrentMatchRemoveDto.builder()
                 .user(user).build();
         currentMatchService.removeCurrentMatch(currentMatchRemoveDto);
@@ -162,6 +168,20 @@ public class SlotControllerImpl implements SlotController {
         slotService.removeUserInSlot(getSlotRemoveUserDto(slot, user));
 //        slot = slotService.findSlotById(slot.getId());
         checkIsSlotMatched(user, currentMatch, slot);
+    }
+
+    private void slotRemoveAdminUser(UserDto user, CurrentMatchDto currentMatch, SlotDto slot) throws MessagingException {
+        List<SlotTeamUserDto> users = slotTeamUserService.findAllBySlotId(slot.getId());
+        UserDto adminUser;
+        for (SlotTeamUserDto slotTeamUser : users) {
+            if (slotTeamUser.getUser().getRoleType() == RoleType.ADMIN) {
+                adminUser = slotTeamUser.getUser();
+            }
+        }
+        teamService.removeUserInTeam(TeamRemoveUserDto.builder()
+                .slotId(slot.getId()).userId(adminUser.getId()).build());
+        slotService.removeUserInSlot(getSlotRemoveUserDto(slot, adminUser));
+        checkIsSlotMatched(adminUser, currentMatch, slot);
     }
 
 //    @Override
@@ -188,7 +208,7 @@ public class SlotControllerImpl implements SlotController {
         if (currentMatch.getSlot().getId() != slot.getId()) {
             throw new BusinessException("E0001");
         }
-        if (currentMatch.getMatchImminent() && slot.getHeadCount() == (slot.getType().equals(GameType.SINGLE) ? 2 : 4)) {
+        if (slot.getMode() != Mode.CHALLENGE && currentMatch.getMatchImminent() && slot.getHeadCount() == (slot.getType().equals(GameType.SINGLE) ? 2 : 4)) {
             throw new BusinessException("SD002");
         }
     }
