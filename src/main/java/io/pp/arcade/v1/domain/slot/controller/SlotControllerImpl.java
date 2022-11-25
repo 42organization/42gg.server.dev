@@ -78,7 +78,7 @@ public class SlotControllerImpl implements SlotController {
 
         checkIfUserHaveCurrentMatch(user);
         checkIfUserHavePenalty(user);
-//        checkIfModeMatches(addReqDto, slot);
+        checkIfModeMatches(addReqDto, slot);
         checkIfSlotAvailable(slot, type, user, addReqDto);
 
         //user가 들어갈 팀을 정한당
@@ -107,6 +107,9 @@ public class SlotControllerImpl implements SlotController {
     }
 
     private void checkIfModeMatches(SlotAddUserRequestDto addReqDto, SlotDto slot) {
+        if (addReqDto.getMode() == null) {
+            throw new BusinessException("SC001");
+        }
         if (slot.getMode() != Mode.BOTH && slot.getMode() != addReqDto.getMode()) {
             throw new BusinessException("SC001");
         }
@@ -174,6 +177,7 @@ public class SlotControllerImpl implements SlotController {
     }
 
     private List<List<SlotStatusDto>> groupingSlots(List<SlotStatusDto> slotStatusDtos) {
+        /*
         List<List<SlotStatusDto>> slotGroups = new ArrayList<>();
         if (!slotStatusDtos.isEmpty()) {
             List<SlotStatusDto> oneGroup = new ArrayList<>();
@@ -191,8 +195,12 @@ public class SlotControllerImpl implements SlotController {
             }
             slotGroups.add(oneGroup);
         }
-
-
+        */
+        List<List<SlotStatusDto>> slotGroups = new ArrayList<>();
+        if (!slotStatusDtos.isEmpty()) {
+            List<SlotStatusDto> oneGroup = new ArrayList<>(slotStatusDtos);
+            slotGroups.add(oneGroup);
+        }
         return slotGroups;
     }
 
@@ -269,7 +277,7 @@ public class SlotControllerImpl implements SlotController {
         }
     }
 
-        private void checkIfUserHaveCurrentMatch(UserDto user) {
+    private void checkIfUserHaveCurrentMatch(UserDto user) {
         CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUser(user);
         if (matchDto != null) {
             throw new BusinessException("SC002");

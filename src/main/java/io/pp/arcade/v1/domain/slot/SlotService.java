@@ -171,22 +171,18 @@ public class SlotService {
         Integer slotId = dto.getSlot().getId();
         Integer userSlotId = dto.getUserSlotId();
         GameType slotType = dto.getSlot().getType();
-        LocalDateTime slotTime = dto.getSlot().getTime();
         GameType gameType = dto.getGameType();
 //        Integer gamePpp = dto.getSlot().getGamePpp();
         Integer userPpp = dto.getUserPpp();
         Integer headCount = dto.getSlot().getHeadCount();
         Integer pppGap = dto.getPppGap();
         Mode slotMode = dto.getSlot().getMode();
-        LocalDateTime currentTime = LocalDateTime.now();
         Integer maxCount = 2;
         if (slotType != null && slotType.equals(GameType.DOUBLE)) {
             maxCount = 4;
         }
         SlotStatusType status = SlotStatusType.OPEN;
-        if (currentTime.isAfter(slotTime)) {
-            status = SlotStatusType.CLOSE;
-        } else if (slotId.equals(userSlotId)) {
+        if (slotId.equals(userSlotId)) {
             status = SlotStatusType.MYTABLE;
         } else if (slotType != null && !gameType.equals(slotType)) {
             status = SlotStatusType.CLOSE;
@@ -197,6 +193,8 @@ public class SlotService {
         else if (headCount.equals(maxCount)) {
             status = SlotStatusType.CLOSE;
         } else if (dto.getUserMode() != null && !dto.getUserMode().equals(dto.getSlot().getMode()) && !dto.getSlot().getMode().equals(Mode.BOTH)) {
+            status = SlotStatusType.CLOSE;
+        } else if (headCount.equals(1) && dto.getSlot().getMode().equals(Mode.CHALLENGE)) {
             status = SlotStatusType.CLOSE;
         }
         return status;

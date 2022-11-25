@@ -18,6 +18,7 @@ import io.pp.arcade.v1.domain.rank.dto.RedisRankingAddDto;
 import io.pp.arcade.v1.domain.rank.entity.RankRedis;
 import io.pp.arcade.v1.domain.season.Season;
 import io.pp.arcade.v1.domain.season.SeasonRepository;
+import io.pp.arcade.v1.domain.security.jwt.Token;
 import io.pp.arcade.v1.domain.security.jwt.TokenRepository;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.slot.SlotRepository;
@@ -30,6 +31,7 @@ import io.pp.arcade.v1.domain.user.UserRepository;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.global.redis.Key;
 import io.pp.arcade.v1.global.type.*;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -37,6 +39,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import static io.pp.arcade.v1.global.type.GameType.SINGLE;
 
@@ -111,7 +114,7 @@ public class RealWorld {
         // NOTI..? ㅠ ㅠ
     }
 
-    public User getUserWinRateInfiniteDecimal(){
+    public User getUserWinRateInfiniteDecimal(){ // 승률이 무한소수인 경우(66.6666666666666...) 처리 테스트
         User user = userRepository.save(User.builder()
                 .intraId("infiniteDecimal")
                 .eMail("infiniteDecimal" + "@42gg.kr")
@@ -850,13 +853,31 @@ public class RealWorld {
                     .roleType(RoleType.ADMIN)
                     .build());
             addRankRedisByUser(users[i]);
+            String uuid = String.valueOf(UUID.randomUUID());
+            tokenRepository.save(new Token(users[i], uuid, uuid));
         }
         return users;
     }
 
-//    public User[] getGuestUsers() {
-//        // 추후 게스트 양식 정해지는대로 작성
-//    }
+    public User[] getGuestUsers() {
+        // 추후 게스트 양식 정해지는대로 작성
+        User[] users = new User[5];
+        for (int i = 0; i < 5; i++) {
+            users[i] =  userRepository.save(User.builder()
+                    .intraId("guest" + i)
+                    .eMail("guest" + i + "@42gg.kr")
+                    .imageUri(defaultUrl)
+                    .racketType(RacketType.values()[i % 2])
+                    .statusMessage("Hello, I'm guest " + i)
+                    .ppp(1000)
+                    .totalExp(100 * i)
+                    .roleType(RoleType.USER)
+                    .build());
+            String uuid = String.valueOf(UUID.randomUUID());
+            tokenRepository.save(new Token(users[i], uuid, uuid));
+        }
+        return users;
+    }
 
     private User[] makeDeafultUsers() {
         User[] users = new User[10];
@@ -872,6 +893,8 @@ public class RealWorld {
                     .roleType(RoleType.USER)
                     .build());
             addRankRedisByUser(users[i]);
+            String uuid = String.valueOf(UUID.randomUUID());
+            tokenRepository.save(new Token(users[i], uuid, uuid));
         }
         return users;
     }
@@ -1031,14 +1054,14 @@ public class RealWorld {
         UserDto userDto = UserDto.from(user);
         RankRedis userRank = RankRedis.from(userDto, SINGLE);
 
-        RankKeyGetDto rankKeyGetDto = RankKeyGetDto.builder().seasonId(season.getId()).seasonName(season.getSeasonName()).build();
-        String rankKey = redisKeyManager.getRankKeyBySeason(rankKeyGetDto);
-        RedisRankAddDto redisRankAddDto = RedisRankAddDto.builder().key(rankKey).userId(userDto.getId()).rank(userRank).build();
-        rankRedisRepository.addRank(redisRankAddDto);
-
-        String rankingKey = redisKeyManager.getRankKeyBySeason(rankKeyGetDto);
-        RedisRankingAddDto redisRankingAddDto = RedisRankingAddDto.builder().rankingKey(rankingKey).rank(userRank).build();
-        rankRedisRepository.addRanking(redisRankingAddDto);
+//        RankKeyGetDto rankKeyGetDto = RankKeyGetDto.builder().seasonId(season.getId()).seasonName(season.getSeasonName()).build();
+//        String rankKey = redisKeyManager.getRankKeyBySeason(rankKeyGetDto);
+//        RedisRankAddDto redisRankAddDto = RedisRankAddDto.builder().key(rankKey).userId(userDto.getId()).rank(userRank).build();
+//        rankRedisRepository.addRank(redisRankAddDto);
+//
+//        String rankingKey = redisKeyManager.getRankKeyBySeason(rankKeyGetDto);
+//        RedisRankingAddDto redisRankingAddDto = RedisRankingAddDto.builder().rankingKey(rankingKey).rank(userRank).build();
+//        rankRedisRepository.addRanking(redisRankingAddDto);
 
         return userRank;
     }

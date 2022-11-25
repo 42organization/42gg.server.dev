@@ -23,9 +23,6 @@ public class DogUtil {
             "retriever"
     };
 
-    public void test() {
-        System.out.println("dogImageUrl = " + dogImageUrl);
-    }
     public String getRandomDog() {
         return dogs[(int) (Math.random() * dogs.length)];
     }
