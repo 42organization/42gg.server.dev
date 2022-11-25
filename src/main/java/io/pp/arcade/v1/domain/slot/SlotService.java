@@ -79,7 +79,7 @@ public class SlotService {
     @Transactional
     public void addUserInSlot(SlotAddUserDto addUserDto) {
         Slot slot = slotRepository.findById(addUserDto.getSlotId()).orElseThrow(() -> new BusinessException("E0001"));
-        Integer headCountResult = slot.getHeadCount() + 1; // entity라 반영이 안되어서 미리 뺀 값을 써줘야함
+        Integer headCountResult = slot.getHeadCount() + 1; // entity라 반영이 안되어서 미리 더 한 값을 써줘야함
         if (slot.getHeadCount() == 0) {
             slot.setType(addUserDto.getType());
             slot.setGamePpp(addUserDto.getJoinUserPpp());
@@ -172,7 +172,7 @@ public class SlotService {
         Integer userSlotId = dto.getUserSlotId();
         GameType slotType = dto.getSlot().getType();
         GameType gameType = dto.getGameType();
-//        Integer gamePpp = dto.getSlot().getGamePpp();
+        Integer gamePpp = dto.getSlot().getGamePpp();
         Integer userPpp = dto.getUserPpp();
         Integer headCount = dto.getSlot().getHeadCount();
         Integer pppGap = dto.getPppGap();
@@ -187,9 +187,9 @@ public class SlotService {
         } else if (slotType != null && !gameType.equals(slotType)) {
             status = SlotStatusType.CLOSE;
         }
-//        else if (slotMode == Mode.RANK && gamePpp != null && Math.abs(userPpp - gamePpp) > pppGap) {
-//            status = SlotStatusType.CLOSE;
-//        }
+        else if (slotMode == Mode.RANK && gamePpp != null && Math.abs(userPpp - gamePpp) > pppGap) {
+            status = SlotStatusType.CLOSE;
+        }
         else if (headCount.equals(maxCount)) {
             status = SlotStatusType.CLOSE;
         } else if (dto.getUserMode() != null && !dto.getUserMode().equals(dto.getSlot().getMode()) && !dto.getSlot().getMode().equals(Mode.BOTH)) {

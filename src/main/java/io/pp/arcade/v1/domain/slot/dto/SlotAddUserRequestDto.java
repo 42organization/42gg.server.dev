@@ -1,8 +1,10 @@
 package io.pp.arcade.v1.domain.slot.dto;
 
+import io.pp.arcade.v1.domain.user.Opponent;
 import io.pp.arcade.v1.global.type.Mode;
 import lombok.Getter;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
@@ -12,6 +14,9 @@ public class SlotAddUserRequestDto {
     @Positive
     private Integer slotId;
     private Mode mode;
+
+    @Nullable
+    private String opponent;
 
     @Override
     public String toString() {
