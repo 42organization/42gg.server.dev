@@ -1,18 +1,20 @@
 package io.pp.arcade.v1.domain.opponent;
 
-import io.pp.arcade.v1.domain.opponent.Opponent;
-import io.pp.arcade.v1.domain.opponent.OpponentRepository;
-import io.pp.arcade.v1.domain.slot.dto.OpponentResponseDto;
+import io.pp.arcade.v1.domain.opponent.dto.OpponentResponseDto;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+
 @RequiredArgsConstructor
 @Transactional
 @Service
 public class OpponentService {
-
     private final OpponentRepository opponentRepository;
 
     @Transactional(readOnly = true)
@@ -21,4 +23,20 @@ public class OpponentService {
         return OpponentResponseDto.from(opponent);
     }
 
+    @Transactional(readOnly = true)
+    public List<OpponentResponseDto> findRandom3Opponents() {
+        List<OpponentResponseDto> responseDtoList = new ArrayList<>();
+        List<Opponent> opponents = opponentRepository.findAllByIsReady(true);
+        while (responseDtoList.size() < 3) {
+            OpponentResponseDto opponent = OpponentResponseDto.from(opponents.get(createRandomNumber(opponents.size())));
+            responseDtoList.add(opponent);
+        }
+        return responseDtoList;
+    }
+
+    private Integer createRandomNumber(Integer size) {
+        Random random = new Random();
+        random.setSeed(System.currentTimeMillis());
+        return random.nextInt() % size;
+    }
 }
