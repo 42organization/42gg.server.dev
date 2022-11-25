@@ -29,7 +29,9 @@ public class OpponentService {
         List<Opponent> opponents = opponentRepository.findAllByIsReady(true);
         while (responseDtoList.size() < 3) {
             OpponentResponseDto opponent = OpponentResponseDto.from(opponents.get(createRandomNumber(opponents.size())));
-            responseDtoList.add(opponent);
+            if (responseDtoList.stream().noneMatch(listedOpponent -> listedOpponent.getIntraId().equals(opponent.getIntraId()))) {
+                responseDtoList.add(opponent);
+            }
         }
         return responseDtoList;
     }
@@ -37,6 +39,6 @@ public class OpponentService {
     private Integer createRandomNumber(Integer size) {
         Random random = new Random();
         random.setSeed(System.currentTimeMillis());
-        return random.nextInt() % size;
+        return Math.abs(random.nextInt()) % size;
     }
 }
