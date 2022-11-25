@@ -172,11 +172,14 @@ public class SlotControllerImpl implements SlotController {
 
     private void slotRemoveAdminUser(UserDto user, CurrentMatchDto currentMatch, SlotDto slot) throws MessagingException {
         List<SlotTeamUserDto> users = slotTeamUserService.findAllBySlotId(slot.getId());
-        UserDto adminUser;
+        UserDto adminUser = null;
         for (SlotTeamUserDto slotTeamUser : users) {
             if (slotTeamUser.getUser().getRoleType() == RoleType.ADMIN) {
                 adminUser = slotTeamUser.getUser();
             }
+        }
+        if (adminUser == null) {
+            return ;
         }
         teamService.removeUserInTeam(TeamRemoveUserDto.builder()
                 .slotId(slot.getId()).userId(adminUser.getId()).build());
