@@ -1,6 +1,5 @@
 package io.pp.arcade.v1.domain.slot.dto;
 
-import io.pp.arcade.v1.domain.user.Opponent;
 import io.pp.arcade.v1.global.type.Mode;
 import lombok.Getter;
 
@@ -13,6 +12,8 @@ public class SlotAddUserRequestDto {
     @NotNull
     @Positive
     private Integer slotId;
+
+    @NotNull
     private Mode mode;
 
     @Nullable
@@ -22,7 +23,8 @@ public class SlotAddUserRequestDto {
     public String toString() {
         return "SlotAddUserRequestDto{" +
                 "slotId=" + slotId +
-                "mode=" + mode +
+                ", mode=" + mode +
+                ", opponent='" + opponent + '\'' +
                 '}';
     }
 }
