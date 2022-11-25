@@ -16,6 +16,7 @@ import io.pp.arcade.v1.domain.user.UserRepository;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.domain.currentmatch.dto.*;
+import io.pp.arcade.v1.global.type.RoleType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import lombok.AllArgsConstructor;
@@ -37,6 +38,9 @@ public class CurrentMatchService {
     @Transactional
     public void addCurrentMatch(CurrentMatchAddDto addDto){
         User user = userRepository.findById(addDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
+        if (user.getRoleType() == RoleType.ADMIN) {
+            return ;
+        }
         Slot slot = slotRepository.findById(addDto.getSlot().getId()).orElseThrow(() -> new BusinessException("E0001"));
         currentMatchRepository.save(CurrentMatch.builder()
                         .slot(slot)

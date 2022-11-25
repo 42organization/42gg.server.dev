@@ -88,6 +88,10 @@ public class SlotControllerImpl implements SlotController {
             checkIfUserHaveCurrentMatch(user);
             checkIfSlotAvailable(slot, type, user, addReqDto);
         }
+        // checkIfUserHaveCurrentMatch(user);
+        // checkIfUserHavePenalty(user);
+        // checkIfModeMatches(addReqDto, slot);
+        // checkIfSlotAvailable(slot, type, user, addReqDto);
 
         TeamAddUserDto teamAddUserDto = getTeamAddUserDto(slot, user);
         //유저가 슬롯에 입장하면 currentMatch에 등록된다.
@@ -115,6 +119,9 @@ public class SlotControllerImpl implements SlotController {
     }
 
     private void checkIfModeMatches(SlotAddUserRequestDto addReqDto, SlotDto slot) {
+        if (addReqDto.getMode() == null) {
+            throw new BusinessException("SC001");
+        }
         if (slot.getMode() != Mode.BOTH && slot.getMode() != addReqDto.getMode()) {
             throw new BusinessException("SC001");
         }
@@ -193,6 +200,7 @@ public class SlotControllerImpl implements SlotController {
     }
 
     private List<List<SlotStatusDto>> groupingSlots(List<SlotStatusDto> slotStatusDtos) {
+        /*
         List<List<SlotStatusDto>> slotGroups = new ArrayList<>();
         if (!slotStatusDtos.isEmpty()) {
             List<SlotStatusDto> oneGroup = new ArrayList<>();
@@ -210,8 +218,12 @@ public class SlotControllerImpl implements SlotController {
             }
             slotGroups.add(oneGroup);
         }
-
-
+        */
+        List<List<SlotStatusDto>> slotGroups = new ArrayList<>();
+        if (!slotStatusDtos.isEmpty()) {
+            List<SlotStatusDto> oneGroup = new ArrayList<>(slotStatusDtos);
+            slotGroups.add(oneGroup);
+        }
         return slotGroups;
     }
 

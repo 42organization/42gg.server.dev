@@ -48,8 +48,8 @@ public class SchedulerControllerImpl implements SchedulerController {
 
     @PutMapping(value = "/scheduler/game")
     public void gameCronUpdate(CronUpdateDto cron) {
-        gameGenerator.setInterval(cron.getInterval());
-        gameGenerator.setCron(cron.getCron());
-        gameGenerator.renewScheduler();
+//        gameGenerator.setInterval(cron.getInterval());
+//        gameGenerator.setCron(cron.getCron());
+//        gameGenerator.renewScheduler();
     }
 }

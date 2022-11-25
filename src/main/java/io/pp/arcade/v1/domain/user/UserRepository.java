@@ -24,4 +24,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Query(nativeQuery = true, value = "select ranking from (select intra_id, row_number() over (order by total_exp desc) as ranking from user) ranked where intra_id=:intraId")
     Integer findExpRankingByIntraId(@Param("intraId") String intraId);
+
+    boolean existsByIntraId(String intraId);
 }
