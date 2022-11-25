@@ -14,7 +14,7 @@ import javax.persistence.Id;
 public class Opponent {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String intraId;
     private String nick;
