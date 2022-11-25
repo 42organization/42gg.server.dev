@@ -65,7 +65,8 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
             slotTime = slot.getTime();
             isMatch = currentMatch.getIsMatched();
             // 경기는 5분전이고 매치가 성사되었는가?
-            if (currentMatch.getMatchImminent() && isMatch){
+//            if (currentMatch.getMatchImminent() && isMatch){
+            if (isMatch){
                 TeamsUserListDto teamsUserListDto = teamService.findUserListInTeams(slot, curUser);
                 myTeam = getTeamUsersIntraIdList(teamsUserListDto.getMyTeam());
                 enemyTeam = getTeamUsersIntraIdList(teamsUserListDto.getEnemyTeam());

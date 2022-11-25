@@ -21,12 +21,15 @@ public class NotiGenerater {
     public void addMatchNotisBySlot(SlotDto slot) throws MessagingException {
         Integer maxSlotHeadCount = GameType.SINGLE.equals(slot.getType()) ? 2 : 4;
         Boolean isMatched = slot.getHeadCount().equals(maxSlotHeadCount) ? true : false;
-        Boolean isImminent = isMatched && slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5)) ? true : false;
-        if (isImminent == true) {
-            addNoti(null, slot, NotiType.IMMINENT);
-        } else if (isMatched == true) {
+//        Boolean isImminent = isMatched && slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5)) ? true : false;
+        if (isMatched) {
             addNoti(null, slot, NotiType.MATCHED);
         }
+//        if (isImminent == true) {
+//            addNoti(null, slot, NotiType.IMMINENT);
+//        } else if (isMatched == true) {
+//            addNoti(null, slot, NotiType.MATCHED);
+//        }
     }
 
     public void addCancelNotisBySlot(NotiCanceledTypeDto canceledTypeDto) {

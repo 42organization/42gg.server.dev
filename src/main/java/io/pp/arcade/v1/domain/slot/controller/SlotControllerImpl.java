@@ -6,22 +6,22 @@ import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchModifyDto;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchRemoveDto;
 import io.pp.arcade.v1.domain.noti.dto.NotiCanceledTypeDto;
+import io.pp.arcade.v1.domain.opponent.OpponentService;
 import io.pp.arcade.v1.domain.season.SeasonService;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.domain.security.jwt.TokenService;
 import io.pp.arcade.v1.domain.slot.SlotService;
 
+import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUserService;
+import io.pp.arcade.v1.domain.slotteamuser.dto.SlotTeamUserDto;
 import io.pp.arcade.v1.domain.team.TeamService;
 import io.pp.arcade.v1.domain.team.dto.TeamAddUserDto;
 import io.pp.arcade.v1.domain.team.dto.TeamDto;
 import io.pp.arcade.v1.domain.team.dto.TeamRemoveUserDto;
 import io.pp.arcade.v1.domain.slot.dto.SlotStatusResponseDto;
-import io.pp.arcade.v1.domain.user.Opponent;
-import io.pp.arcade.v1.domain.user.OpponentRepository;
 import io.pp.arcade.v1.domain.user.UserService;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.domain.user.dto.UserFindDto;
-import io.pp.arcade.v1.domain.user.dto.UserOpponentResDto;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.redis.Key;
 import io.pp.arcade.v1.global.scheduler.SlotGenerator;
@@ -52,6 +52,8 @@ public class SlotControllerImpl implements SlotController {
     private final TokenService tokenService;
     private final RedisTemplate redisTemplate;
     private final SlotGenerator slotGenerator;
+    private final OpponentService opponentService;
+    private final SlotTeamUserService slotTeamUserService;
 
     private final UserService userService;
 
@@ -80,18 +82,19 @@ public class SlotControllerImpl implements SlotController {
         doubleNotSupportedYet(type);
         SlotDto slot = slotService.findSlotById(addReqDto.getSlotId());
 
+        checkHeadCountMatchesInChallenge(addReqDto, slot);
         if (addReqDto.getMode() == Mode.CHALLENGE && addReqDto.getOpponent() != null) { // 챌린지 모드 두번째 호출 시 null 였던 opponent 값이 채워져서 돌아 온다.
-            UserFindDto userFindDto = userService.findOpponentByName(addReqDto.getOpponent());// 챌린지 모드에서 선택한 인트라 아이디로 유저를 찾아오기
-            UserDto opponent = userService.findById(userFindDto);
-            user = opponent;
-        } else { // challenge 처음 선택 ( opponent == null ) 경우 또는 랭크일 경우 // +똑같이 처음 들어가는 챌린지 모두일 때 같은 슬롯을 갖고 있는 경우 생각해봐야 함.
-            checkIfUserHaveCurrentMatch(user);
-            checkIfSlotAvailable(slot, type, user, addReqDto);
+            String opponentId = opponentService.findByIntraId(addReqDto.getOpponent()).getIntraId();// 챌린지 모드에서 선택한 인트라 아이디로 유저를 찾아오기
+            user = userService.findById(UserFindDto.builder().intraId(opponentId).build());
         }
-        // checkIfUserHaveCurrentMatch(user);
+        // else { // challenge 처음 선택 ( opponent == null ) 경우 또는 랭크일 경우 // +똑같이 처음 들어가는 챌린지 모두일 때 같은 슬롯을 갖고 있는 경우 생각해봐야 함.
+        //}
         // checkIfUserHavePenalty(user);
-        // checkIfModeMatches(addReqDto, slot);
         // checkIfSlotAvailable(slot, type, user, addReqDto);
+
+        checkIfModeMatches(addReqDto, slot);
+        checkIfUserHaveCurrentMatch(user);
+        checkIfSlotAvailable(slot, type, user, addReqDto);
 
         TeamAddUserDto teamAddUserDto = getTeamAddUserDto(slot, user);
         //유저가 슬롯에 입장하면 currentMatch에 등록된다.
@@ -116,6 +119,15 @@ public class SlotControllerImpl implements SlotController {
         notiGenerater.addMatchNotisBySlot(slot); // 어드민이 알림으로 상대를 구분할 수 있어야 되서 빼면 안되지 않을까?
 
 
+    }
+
+    private void checkHeadCountMatchesInChallenge(SlotAddUserRequestDto addReqDto, SlotDto slot) {
+        if (addReqDto.getMode() == Mode.CHALLENGE && addReqDto.getOpponent() != null && slot.getHeadCount() == 0) {
+            throw new BusinessException("E0001");
+        }
+        if (addReqDto.getMode() == Mode.CHALLENGE && addReqDto.getOpponent() == null && slot.getHeadCount() != 0) {
+            throw new BusinessException("E0001");
+        }
     }
 
     private void checkIfModeMatches(SlotAddUserRequestDto addReqDto, SlotDto slot) {
@@ -144,7 +156,10 @@ public class SlotControllerImpl implements SlotController {
         checkIfCurrentMatchExists(currentMatch);
         SlotDto slot = slotService.findSlotById(slotId);
         checkIfUserRemovable(currentMatch, slot);
-
+        // 모드가 Challenge고 Slot headcount가 2인 경우
+        if (slot.getMode() == Mode.CHALLENGE && slot.getHeadCount() == 2) {
+            slotRemoveAdminUser(user, currentMatch, slot);
+        }
         CurrentMatchRemoveDto currentMatchRemoveDto = CurrentMatchRemoveDto.builder()
                 .user(user).build();
         currentMatchService.removeCurrentMatch(currentMatchRemoveDto);
@@ -155,16 +170,34 @@ public class SlotControllerImpl implements SlotController {
         checkIsSlotMatched(user, currentMatch, slot);
     }
 
-    @Override
-    @GetMapping(value = "/match/opponent")
-    public SlotFindOpponentResDto FindOpponentAvailable() {
-        // 서비스에서 가용 인원을 가져온다.
-        // 랜덤을 돌려서 ( 서비스에서 ? ) 반환
-        // 3명만 전달. 3명 이하면 ? 생각.
-        List<UserOpponentResDto> opponents = userService.findAllOpponentByIsReady();
-        SlotFindOpponentResDto res = SlotFindOpponentResDto.builder().opponents(opponents).build();
-        return res;
+    private void slotRemoveAdminUser(UserDto user, CurrentMatchDto currentMatch, SlotDto slot) throws MessagingException {
+        List<SlotTeamUserDto> users = slotTeamUserService.findAllBySlotId(slot.getId());
+        UserDto adminUser = null;
+        for (SlotTeamUserDto slotTeamUser : users) {
+            if (slotTeamUser.getUser().getRoleType() == RoleType.ADMIN) {
+                adminUser = slotTeamUser.getUser();
+            }
+        }
+        if (adminUser == null) {
+            return ;
+        }
+        teamService.removeUserInTeam(TeamRemoveUserDto.builder()
+                .slotId(slot.getId()).userId(adminUser.getId()).build());
+        slotService.removeUserInSlot(getSlotRemoveUserDto(slot, adminUser));
+        checkIsSlotMatched(adminUser, currentMatch, slot);
     }
+
+//    @Override
+//    @GetMapping(value = "/match/opponent")
+//    public SlotFindOpponentResDto FindOpponentAvailable() {
+//        // 서비스에서 가용 인원을 가져온다.
+//        // 랜덤을 돌려서 ( 서비스에서 ? ) 반환
+//        // 3명만 전달. 3명 이하면 ? 생각.
+//        List<UserOpponentResDto> opponents = userService.findAllOpponentByIsReady();
+//        SlotFindOpponentResDto res = SlotFindOpponentResDto.builder().opponents(opponents).build();
+//        return res;
+//    }
+
     private void checkIsSlotMatched(UserDto user, CurrentMatchDto currentMatch, SlotDto slot) throws MessagingException {
         if (currentMatch.getIsMatched() == true) {
             falsifyIsMatchedForRemainders(slot);
@@ -178,7 +211,7 @@ public class SlotControllerImpl implements SlotController {
         if (currentMatch.getSlot().getId() != slot.getId()) {
             throw new BusinessException("E0001");
         }
-        if (currentMatch.getMatchImminent() && slot.getHeadCount() == (slot.getType().equals(GameType.SINGLE) ? 2 : 4)) {
+        if (slot.getMode() != Mode.CHALLENGE && currentMatch.getMatchImminent() && slot.getHeadCount() == (slot.getType().equals(GameType.SINGLE) ? 2 : 4)) {
             throw new BusinessException("SD002");
         }
     }

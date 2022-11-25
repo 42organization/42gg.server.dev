@@ -24,6 +24,17 @@ public class OpponentResponseDto {
         this.isReady = opponent.getIsReady();
     }
 
+    @Override
+    public String toString() {
+        return "OpponentResponseDto{" +
+                "intraId='" + intraId + '\'' +
+                ", nick='" + nick + '\'' +
+                ", imageUrl='" + imageUrl + '\'' +
+                ", detail='" + detail + '\'' +
+                ", isReady=" + isReady +
+                '}';
+    }
+
     public static OpponentResponseDto from(Opponent opponent) {
         return new OpponentResponseDto(opponent);
     }

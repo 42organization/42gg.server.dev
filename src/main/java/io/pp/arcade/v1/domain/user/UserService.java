@@ -3,6 +3,7 @@ package io.pp.arcade.v1.domain.user;
 import io.pp.arcade.v1.domain.admin.dto.create.UserCreateRequestDto;
 import io.pp.arcade.v1.domain.admin.dto.update.UserUpdateRequestDto;
 
+import io.pp.arcade.v1.domain.opponent.Opponent;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.type.RoleType;
 import io.pp.arcade.v1.domain.user.dto.*;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
 
-    private final OpponentRepository opponentRepository;
+//    private final OpponentRepository opponentRepository;
 
     @Transactional
     public List<UserDto> findAll() {
@@ -141,31 +142,31 @@ public class UserService {
         }
     }
 
-    @Transactional
-    public List<UserOpponentResDto> findAllOpponentByIsReady() {
-        List<Opponent> allStars = opponentRepository.findAllByIsReady();
-
-        int count = allStars.size();
-        List<Opponent> opponents = new ArrayList<>();
-        Random random = new Random(count);
-        for (int i = 0; i < 3; i++) {
-            int ran = random.nextInt(count);
-            opponents.add(allStars.get(ran));
-        }
-
-        List<UserOpponentResDto> res = new ArrayList<>();
-        for (Opponent e : opponents) {
-            UserOpponentResDto dto = UserOpponentResDto.builder()
-                    .intraId(e.getUser().getIntraId()).imageUrl(e.getImageUri()).nick(e.getNick()).detail(e.getDetail()).build();
-            res.add(dto);
-        }
-        return res;
-    }
-
-    @Transactional
-    public UserFindDto findOpponentByName(String intraId) {
-        Opponent opp = opponentRepository.findByIntraId(intraId);
-        UserFindDto dto = UserFindDto.builder().userId(opp.getUser().getId()).intraId(opp.getIntraId()).build();
-        return dto;
-    }
+//    @Transactional
+//    public List<UserOpponentResDto> findAllOpponentByIsReady() {
+//        List<Opponent> allStars = opponentRepository.findAllByIsReady();
+//
+//        int count = allStars.size();
+//        List<Opponent> opponents = new ArrayList<>();
+//        Random random = new Random(count);
+//        for (int i = 0; i < 3; i++) {
+//            int ran = random.nextInt(count);
+//            opponents.add(allStars.get(ran));
+//        }
+//
+//        List<UserOpponentResDto> res = new ArrayList<>();
+//        for (Opponent e : opponents) {
+//            UserOpponentResDto dto = UserOpponentResDto.builder()
+//                    .intraId(e.getUser().getIntraId()).imageUrl(e.getImageUri()).nick(e.getNick()).detail(e.getDetail()).build();
+//            res.add(dto);
+//        }
+//        return res;
+//    }
+//
+//    @Transactional
+//    public UserFindDto findOpponentByName(String intraId) {
+//        Opponent opp = opponentRepository.findByIntraId(intraId);
+//        UserFindDto dto = UserFindDto.builder().userId(opp.getUser().getId()).intraId(opp.getIntraId()).build();
+//        return dto;
+//    }
 }

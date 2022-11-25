@@ -1,6 +1,6 @@
 package io.pp.arcade.v1.domain.opponent;
 
-import io.pp.arcade.v1.domain.slot.dto.OpponentResponseDto;
+import io.pp.arcade.v1.domain.opponent.dto.OpponentResponseDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,6 +30,14 @@ class OpponentServiceTest {
         assertThat(responseDto.getIntraId()).isEqualTo(opponent1.getIntraId());
         assertThat(responseDto.getNick()).isEqualTo(opponent1.getNick());
         assertThat(responseDto.getDetail()).isEqualTo(opponent1.getDetail());
+    }
+
+    @Test
+    void 랜덤3유저() {
+        for (int i = 0; i < 12; i++) {
+            opponentRepository.save(new Opponent("id" + i, "nick" + i, "", "hihi", i % 3 != 0));
+        }
+        opponentService.findRandom3Opponents().stream().map(OpponentResponseDto::toString).forEach(System.out::println);
     }
 
 }

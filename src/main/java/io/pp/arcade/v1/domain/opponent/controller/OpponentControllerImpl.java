@@ -1,8 +1,8 @@
 package io.pp.arcade.v1.domain.opponent.controller;
 
 import io.pp.arcade.v1.domain.opponent.OpponentService;
+import io.pp.arcade.v1.domain.opponent.dto.OpponentResponseDto;
 import io.pp.arcade.v1.domain.security.jwt.TokenService;
-import io.pp.arcade.v1.domain.slot.dto.OpponentResponseDto;
 import io.pp.arcade.v1.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,18 +24,6 @@ public class OpponentControllerImpl implements OpponentController {
     @GetMapping("/match/opponent")
     public List<OpponentResponseDto> findOpponentList(HttpServletRequest request) {
         tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        List<OpponentResponseDto> responseDtoList = new ArrayList<>();
-        String[] toIntraId = {"daekim", "donghyuk", "hakim", "him", "jabae", "jihyukim", "jiyun", "kipark", "nheo", "rjeong", "salee2", "wochae"};
-        while (responseDtoList.size() < 3) {
-            OpponentResponseDto opponent = opponentService.findByIntraId(toIntraId[createRandomNumber()]);
-            if (opponent.getIsReady())
-                responseDtoList.add(opponent);
-        }
-        return responseDtoList;
-    }
-    private Integer createRandomNumber() {
-        Random random = new Random();
-        random.setSeed(System.currentTimeMillis());
-        return random.nextInt() % 12;
+        return opponentService.findRandom3Opponents();
     }
 }
