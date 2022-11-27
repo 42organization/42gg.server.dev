@@ -27,18 +27,14 @@ public class OpponentService {
     public List<OpponentResponseDto> findRandom3Opponents() {
         List<OpponentResponseDto> responseDtoList = new ArrayList<>();
         List<Opponent> opponents = opponentRepository.findAllByIsReady(true);
+        Random random = new Random();
+        random.setSeed(System.currentTimeMillis());
         while (responseDtoList.size() < 3) {
-            OpponentResponseDto opponent = OpponentResponseDto.from(opponents.get(createRandomNumber(opponents.size())));
+            OpponentResponseDto opponent = OpponentResponseDto.from(opponents.get(Math.abs(random.nextInt()) % opponents.size()));
             if (responseDtoList.stream().noneMatch(listedOpponent -> listedOpponent.getIntraId().equals(opponent.getIntraId()))) {
                 responseDtoList.add(opponent);
             }
         }
         return responseDtoList;
-    }
-
-    private Integer createRandomNumber(Integer size) {
-        Random random = new Random();
-        random.setSeed(System.currentTimeMillis());
-        return Math.abs(random.nextInt()) % size;
     }
 }

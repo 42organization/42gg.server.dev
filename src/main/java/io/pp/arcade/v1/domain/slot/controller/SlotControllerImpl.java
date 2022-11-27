@@ -85,7 +85,7 @@ public class SlotControllerImpl implements SlotController {
         checkHeadCountMatchesInChallenge(addReqDto, slot);
         if (addReqDto.getMode() == Mode.CHALLENGE && addReqDto.getOpponent() != null) { // 챌린지 모드 두번째 호출 시 null 였던 opponent 값이 채워져서 돌아 온다.
             String opponentId = opponentService.findByIntraId(addReqDto.getOpponent()).getIntraId();// 챌린지 모드에서 선택한 인트라 아이디로 유저를 찾아오기
-            user = userService.findById(UserFindDto.builder().intraId(opponentId).build());
+            user = userService.findByIntraId(UserFindDto.builder().intraId(opponentId).build());
         }
         // else { // challenge 처음 선택 ( opponent == null ) 경우 또는 랭크일 경우 // +똑같이 처음 들어가는 챌린지 모두일 때 같은 슬롯을 갖고 있는 경우 생각해봐야 함.
         //}
@@ -302,6 +302,9 @@ public class SlotControllerImpl implements SlotController {
                 .userMode(requestDto.getMode())
                 .pppGap(pppGap)
                 .build();
+        if (user.getRoleType() == RoleType.ADMIN) {
+            return;
+        }
         if (SlotStatusType.CLOSE.equals(slotService.getStatus(slotFilterDto))) {
             throw new BusinessException("SC001");
         }
