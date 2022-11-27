@@ -335,7 +335,7 @@ public class SlotControllerImpl implements SlotController {
 
     private void checkIfUserHaveCurrentMatch(UserDto user) {
         CurrentMatchDto matchDto = currentMatchService.findCurrentMatchByUser(user);
-        if (matchDto.getUser().getRoleType() != RoleType.ADMIN) { // 일반 참여자가 현재 매치 중이면 예외처리, 하지만 어드민은 괜찮다.
+        if (user.getRoleType() != RoleType.ADMIN && matchDto != null) { // 일반 참여자가 현재 매치 중이면 예외처리, 하지만 어드민은 괜찮다.
             throw new BusinessException("SC002");
         }
     }
