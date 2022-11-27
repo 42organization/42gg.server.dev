@@ -74,7 +74,7 @@ public class TestInitiator {
 
     public void letsgo() {
         users = new User[12];
-        users[0] = userRepository.save(User.builder().intraId("hhakim").eMail("hihihoho").imageUri("hakim.jpg").statusMessage("kikikaka").ppp(1040).roleType(RoleType.ADMIN).racketType(RacketType.SHAKEHAND).totalExp(1000).build());
+        users[0] = userRepository.save(User.builder().intraId("hhakim").eMail("hihihoho").imageUri("hakim.jpg").statusMessage("kikikaka").ppp(1040).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(1000).build());
         users[1] = userRepository.save(User.builder().intraId("hnheo").eMail("hihihoho").imageUri("neho.jpg").statusMessage("kikikaka").ppp(1030).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(900).build());
         users[2] = userRepository.save(User.builder().intraId("hdonghyuk").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1020).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(800).build());
         users[3] = userRepository.save(User.builder().intraId("hjiyun").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(1010).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(700).build());
@@ -85,7 +85,7 @@ public class TestInitiator {
         users[8] = userRepository.save(User.builder().intraId("hdaekim").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(996).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(200).build());
         users[9] = userRepository.save(User.builder().intraId("hsujpark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(994).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(100).build());
         users[10] = userRepository.save(User.builder().intraId("hkipark").eMail("hihihoho").imageUri("null").statusMessage("kikikaka").ppp(100).roleType(RoleType.USER).racketType(RacketType.SHAKEHAND).totalExp(1).build());
-        users[11] = userRepository.save(User.builder().intraId("hjujeon").eMail("hihi").imageUri("null").statusMessage("kiki").ppp(1000).roleType(RoleType.ADMIN).racketType(RacketType.DUAL).totalExp(0).build());
+        users[11] = userRepository.save(User.builder().intraId("hjujeon").eMail("hihi").imageUri("null").statusMessage("kiki").ppp(1000).roleType(RoleType.USER).racketType(RacketType.DUAL).totalExp(0).build());
         tokens = new Token[12];
         for (Integer i = 0; i < 12; i++) {
             tokens[i] = tokenRepository.save(new Token(users[i], i.toString(), i.toString()));
