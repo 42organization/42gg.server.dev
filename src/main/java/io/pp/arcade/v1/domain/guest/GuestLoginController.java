@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,7 +40,7 @@ public class GuestLoginController {
     
     // 1. /login/guest 맵핑을 받는다
     //   현재 유저의 로컬스토리지에 토큰이 있는지 확인하고 있으면 메인페이지로 리다이렉트
-    @GetMapping(value = "/login/guest")
+    @PostMapping(value = "/login/guest")
     public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String accessToken;
         // 유저가 토큰을 가지고 있는지 확인
@@ -85,9 +86,9 @@ public class GuestLoginController {
                 .ppp(1000)
                 .totalExp(0)
                 .eMail("")
-                .build();
+                .build(); // 서비스에서 해결
         // 4. 토큰과 유저를 db에 저장
-        userRepository.saveAndFlush(user);
+        userRepository.saveAndFlush(user); // 서비스에서 해결
         // 5. 유저의 랭크를 생성 (레디스)
         rankRedisService.addUserRank(UserDto.from(user));
         return user;
