@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -90,7 +91,6 @@ public class SlotControllerChallengeTest {
             //given
             Slot slot = realWorld.getEmptySlotMinutesLater(10);
             User enteringUser = guestUsers[0];
-            User watchingUser = guestUsers[1];
             User opponent = adminUsers[0];
             //when
             Map<String, String> firstPost = new HashMap<>();
@@ -139,8 +139,29 @@ public class SlotControllerChallengeTest {
     @Nested
     class ChallengeModeSlotRemoveUser {
         @Test
-        void 정상퇴장() {
-
+        void 정상퇴장() throws Exception {
+            //given
+            User guest = guestUsers[0];
+            User admin = adminUsers[0];
+            Slot slot = realWorld.getChallengeSlotWithTwoUsersMinutesLater(guest, admin, 10);
+            //when
+            mockMvc.perform(delete("/pingpong/match/slots/{slotId}", slot.getId()).contentType(MediaType.APPLICATION_JSON)
+                            .header("Authorization", "Bearer " + tokenRepository.findByUserId(guest.getId()).orElseThrow().getAccessToken()))
+                    .andExpect(status().isOk())
+                    .andDo(document("slot-remove-user-in-challenge-mode-2/2"));
+            //then
+            Slot slotAfterLeaving = slotRepository.findById(slot.getId()).orElseThrow();
+            SlotTeamUser guestSTU = slotTeamUserRepository.findSlotTeamUserBySlotIdAndUserId(slot.getId(), guest.getId()).orElse(null);
+            SlotTeamUser adminSTU = slotTeamUserRepository.findSlotTeamUserBySlotIdAndUserId(slot.getId(), admin.getId()).orElse(null);
+            CurrentMatch guestCurrentMatch = currentMatchRepository.findByUserAndIsDel(guest, false).orElse(null);
+            CurrentMatch adminCurrentMatch = currentMatchRepository.findByUserAndIsDel(admin, false).orElse(null);
+            Assertions.assertThat(slotAfterLeaving.getHeadCount()).isEqualTo(0);
+            Assertions.assertThat(slotAfterLeaving.getMode()).isEqualTo(Mode.BOTH);
+            Assertions.assertThat(slotAfterLeaving.getGamePpp()).isEqualTo(null);
+            Assertions.assertThat(guestSTU).isNull();
+            Assertions.assertThat(adminSTU).isNull();
+            Assertions.assertThat(guestCurrentMatch).isNull();
+            Assertions.assertThat(adminCurrentMatch).isNull();
         }
 
         @Test
