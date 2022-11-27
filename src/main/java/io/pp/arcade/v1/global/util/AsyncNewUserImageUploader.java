@@ -25,7 +25,11 @@ public class AsyncNewUserImageUploader {
             return ;
         }
         userRepository.findByIntraId(intraId).ifPresent(user -> {
-            user.setImageUri(s3ImageUrl);
+            if (s3ImageUrl == null) {
+                user.setImageUri(defaultImageUrl);
+            } else {
+                user.setImageUri(s3ImageUrl);
+            }
             userRepository.save(user);
         });
     }
