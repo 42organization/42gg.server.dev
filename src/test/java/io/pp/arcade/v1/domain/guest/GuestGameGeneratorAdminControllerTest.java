@@ -83,7 +83,7 @@ public class GuestGameGeneratorAdminControllerTest {
 
         Map<String, String> body = new HashMap<>();
         body.put("slotId", slot.getId().toString());
-        mockMvc.perform(post("/pingpong/admin/matchtriggerg").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(post("/pingpong/admin/matchtrigger").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + adminToken.getAccessToken())
                         .content(objectMapper.writeValueAsString(body)))
                 .andExpect(status().isOk());
