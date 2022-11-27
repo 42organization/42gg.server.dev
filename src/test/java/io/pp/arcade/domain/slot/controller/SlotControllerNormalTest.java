@@ -423,7 +423,7 @@ class   SlotControllerNormalTest {
                     .andDo(document("NORMAL-(single1)slot-before-user1st-cancel-when-status-1(2)-check-is-myTable-or-not"));
 
             /* slot - user1 등록 취소 */
-            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(delete("/pingpong/match/slots/" + slot.getId().toString()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[2].getAccessToken()))
                     .andExpect(status().isOk())
                     .andDo(document("NORMAL-(single1)slot-user1st-cancel-when-status-1(2)"));
@@ -468,7 +468,7 @@ class   SlotControllerNormalTest {
                     .andExpect(status().isOk())
                     .andDo(document("NORMAL-(single2)slot-before-user1st-cancel-when-status-2(2)-check-is-myTable-or-not"));
             /* slot - user1 등록 취소 */
-            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(delete("/pingpong/match/slots/" + slot.getId().toString()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[3].getAccessToken()))
                     .andExpect(status().isOk())
                     .andDo(document("slot-user1st-cancel-status-2(2)"));
@@ -521,7 +521,7 @@ class   SlotControllerNormalTest {
                     .andExpect(status().isOk())
                     .andDo(document("NORMAL-(single3)slot-before-user2nd-cancel-when-status-2(2)-check-is-myTable-or-not"));
             /* slot - team2user 등록 취소 */
-            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(delete("/pingpong/match/slots/" + slot.getId().toString()).contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsString(body))
                             .header("Authorization", "Bearer " + testInitiator.tokens[6].getAccessToken()))
                     .andExpect(status().isOk())
@@ -563,7 +563,7 @@ class   SlotControllerNormalTest {
          * 인원이 빈 슬롯에 취소를 요청할 경우
          * -> 400
          * */
-        mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
+        mockMvc.perform(delete("/pingpong/match/slots/" + slots[0].getId().toString()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
                 .andExpect(status().isBadRequest());
 
@@ -597,7 +597,7 @@ class   SlotControllerNormalTest {
             saveCurrentMatchImminent(currentMatch, true);
 
             /* slot - user1 등록 취소 */
-            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(delete("/pingpong/match/slots/" + slot.getId().toString()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[0].getAccessToken()))
                     .andExpect(status().isBadRequest())
                     .andDo(document("slot-cancel-imminent-game"));
@@ -638,7 +638,7 @@ class   SlotControllerNormalTest {
             saveCurrentMatchGame(currentMatch2, slot);
 
             /* slot - user1 등록 취소 imminent라서 취소 불가*/
-            mockMvc.perform(delete("/pingpong/match/slots/1").contentType(MediaType.APPLICATION_JSON)
+            mockMvc.perform(delete("/pingpong/match/slots/" + slot.getId().toString()).contentType(MediaType.APPLICATION_JSON)
                             .header("Authorization", "Bearer " + testInitiator.tokens[7].getAccessToken()))
                     .andExpect(status().isBadRequest())
                     .andDo(document("slot-cancel-live-game"));
