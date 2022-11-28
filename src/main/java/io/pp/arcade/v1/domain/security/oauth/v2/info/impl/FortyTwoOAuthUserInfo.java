@@ -25,9 +25,13 @@ public class FortyTwoOAuthUserInfo extends OAuthUserInfo {
     }
 
     public String getImageUrl() {
-        if (attributes.get("image_url") == null) {
+        Map<String, Object> image = (Map<String, Object>) attributes.get("image");
+        if (image == null) {
             return defaultImageUrl;
         }
-        return attributes.get("image_url").toString();
+        if (image.get("link") == null) {
+            return defaultImageUrl;
+        }
+        return image.get("link").toString();
     }
 }
