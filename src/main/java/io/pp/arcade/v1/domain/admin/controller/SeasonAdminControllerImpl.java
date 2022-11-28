@@ -26,10 +26,10 @@ public class SeasonAdminControllerImpl implements SeasonAdminController {
     @PostMapping(value = "/season")
     public void seasonCreate(SeasonCreateRequestDto createRequestDto, HttpServletRequest request) {
         seasonService.createSeasonByAdmin(createRequestDto);
-        if (createRequestDto.getSeasonMode() != Mode.NORMAL) {
-            SeasonDto seasonDto = seasonService.findLatestRankSeason();
-            rankRedisService.addAllUserRankByNewSeason(seasonDto, createRequestDto.getStartPpp());
-        }
+//        if (createRequestDto.getSeasonMode() != Mode.NORMAL) {
+//            SeasonDto seasonDto = seasonService.findLatestRankSeason();
+//            rankRedisService.addAllUserRankByNewSeason(seasonDto, createRequestDto.getStartPpp());
+//        }
     }
 
     @Override
