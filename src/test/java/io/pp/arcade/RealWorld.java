@@ -817,6 +817,48 @@ public class RealWorld {
         return slot;
     }
 
+    public Slot getChallengeSlotWithTwoUsersMinutesLater(User guest, User admin, Integer minutes) {
+        Slot slot = slotRepository.save(Slot.builder()
+                .tableId(1)
+                .time(now.plusMinutes(minutes))
+                .gamePpp((guest.getPpp() + admin.getPpp()) / 2)
+                .headCount(2)
+                .type(GameType.SINGLE)
+                .mode(Mode.CHALLENGE)
+                .build());
+        Team user1Team = teamRepository.save(Team.builder()
+                .teamPpp(guest.getPpp())
+                .headCount(1)
+                .score(0)
+                .slot(slot)
+                .build());
+        Team user2Team = teamRepository.save(Team.builder()
+                .teamPpp(admin.getPpp())
+                .headCount(1)
+                .score(0)
+                .slot(slot)
+                .build());
+
+        SlotTeamUser slotTeamUser1 = slotTeamUserRepository.save(SlotTeamUser.builder()
+                .slot(slot)
+                .team(user1Team)
+                .user(guest)
+                .build());
+        SlotTeamUser slotTeamUser2 = slotTeamUserRepository.save(SlotTeamUser.builder()
+                .slot(slot)
+                .team(user2Team)
+                .user(admin)
+                .build());
+        CurrentMatch currentMatch1 = currentMatchRepository.save(CurrentMatch.builder()
+                .slot(slot)
+                .user(guest)
+                .isMatched(true)
+                .matchImminent(false)
+                .isDel(false)
+                .build());
+        return slot;
+    }
+
     public User[] getUsersWithVariousPPP() {
         Random random = new Random();
         random.setSeed(System.currentTimeMillis());
