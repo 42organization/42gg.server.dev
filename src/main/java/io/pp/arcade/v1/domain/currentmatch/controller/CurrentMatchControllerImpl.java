@@ -10,6 +10,7 @@ import io.pp.arcade.v1.domain.slot.dto.SlotDto;
 import io.pp.arcade.v1.domain.team.TeamService;
 import io.pp.arcade.v1.domain.team.dto.TeamsUserListDto;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
+import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -58,12 +59,14 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
         LocalDateTime slotTime = null;
         boolean isMatch = false;
         Integer slotId = null;
+        Mode mode = null;
 
         if (currentMatch != null) {
             SlotDto slot = currentMatch.getSlot();
             slotId = slot.getId();
             slotTime = slot.getTime();
             isMatch = currentMatch.getIsMatched();
+            mode = slot.getMode();
             // 경기는 5분전이고 매치가 성사되었는가?
 //            if (currentMatch.getMatchImminent() && isMatch){
             if (isMatch){
@@ -78,6 +81,7 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
                 .slotId(slotId)
                 .myTeam(myTeam)
                 .enemyTeam(enemyTeam)
+                .mode(mode)
                 .build();
         return responseDto;
     }
