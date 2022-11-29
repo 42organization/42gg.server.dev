@@ -1,6 +1,6 @@
 package io.pp.arcade.v1.domain.guest;
 
-import io.pp.arcade.v1.domain.rank.service.RankRedisService;
+import io.pp.arcade.v1.domain.rank.service.RankService;
 import io.pp.arcade.v1.domain.security.jwt.Token;
 import io.pp.arcade.v1.domain.security.jwt.TokenRepository;
 import io.pp.arcade.v1.domain.user.User;
@@ -30,7 +30,7 @@ public class GuestLoginController {
     private final RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
     private final TokenRepository tokenRepository;
     private final UserRepository userRepository;
-    private final RankRedisService rankRedisService;
+    private final RankService rankService;
     private final DogUtil dogUtil;
 
     @Value("${info.web.frontUrl}")
@@ -90,7 +90,7 @@ public class GuestLoginController {
         // 4. 토큰과 유저를 db에 저장
         userRepository.saveAndFlush(user); // 서비스에서 해결
         // 5. 유저의 랭크를 생성 (레디스)
-        rankRedisService.addUserRank(UserDto.from(user));
+        rankService.addUserRank(UserDto.from(user));
         return user;
     }
 
