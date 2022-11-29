@@ -4,7 +4,6 @@ import io.pp.arcade.v1.domain.rank.dto.RankListRequestDto;
 import io.pp.arcade.v1.domain.rank.dto.RankListResponseDto;
 import io.pp.arcade.v1.domain.rank.dto.VipListResponseDto;
 import io.pp.arcade.v1.global.type.GameType;
-import io.pp.arcade.v1.global.type.Mode;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.SortDefault;

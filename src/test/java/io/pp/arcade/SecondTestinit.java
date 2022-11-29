@@ -4,8 +4,8 @@ import io.pp.arcade.v1.domain.currentmatch.CurrentMatchRepository;
 import io.pp.arcade.v1.domain.game.GameRepository;
 import io.pp.arcade.v1.domain.noti.NotiRepository;
 import io.pp.arcade.v1.domain.pchange.PChangeRepository;
-import io.pp.arcade.v1.domain.rank.entity.RankRedis;
 import io.pp.arcade.v1.domain.rank.RankRepository;
+import io.pp.arcade.v1.domain.rank.entity.RankRedis;
 import io.pp.arcade.v1.domain.season.Season;
 import io.pp.arcade.v1.domain.season.SeasonRepository;
 import io.pp.arcade.v1.domain.security.jwt.Token;
@@ -18,20 +18,13 @@ import io.pp.arcade.v1.domain.team.Team;
 import io.pp.arcade.v1.domain.team.TeamRepository;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.domain.user.UserRepository;
-import io.pp.arcade.v1.domain.user.dto.UserDto;
-import io.pp.arcade.v1.global.redis.Key;
-import io.pp.arcade.v1.global.type.GameType;
 import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.type.RacketType;
 import io.pp.arcade.v1.global.type.RoleType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class SecondTestinit {
@@ -58,9 +51,6 @@ public class SecondTestinit {
     UserRepository userRepository;
     @Autowired
     SlotTeamUserRepository slotTeamUserRepository;
-    @Autowired
-    private RedisTemplate redisTemplate;
-
 
     public User[] users;
     public Token[] tokens;
@@ -88,7 +78,7 @@ public class SecondTestinit {
             tokens[i] = tokenRepository.save(new Token(users[i], i.toString(), i.toString()));
         }
 
-        ranks = new RankRedis[users.length * GameType.values().length];
+        /*ranks = new RankRedis[users.length * GameType.values().length];
         List<User> userList = Arrays.stream(users).collect(Collectors.toList());
         for (User user : userList) {
             int idx = userList.indexOf(user);
@@ -102,7 +92,7 @@ public class SecondTestinit {
 
             redisTemplate.opsForZSet().add(getRankKey(GameType.SINGLE), getUserRankKey(user.getIntraId(), GameType.SINGLE), user.getPpp());
             redisTemplate.opsForZSet().add(getRankKey(GameType.DOUBLE), getUserRankKey(user.getIntraId(), GameType.DOUBLE), user.getPpp());
-        }
+        }*/
 
         slots = new Slot[12];
         LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
@@ -161,17 +151,5 @@ public class SecondTestinit {
             slotTeamUser[i + 1] = slotTeamUserRepository.save(SlotTeamUser.builder().team(teams[i + 1]).slot(s).user(users[(i + 1) % users.length]).build());
             i += 2;
         }
-    }
-
-    private String getUserKey(String intraId, GameType gameType) {
-        return Key.RANK_USER + intraId + gameType.getCode();
-    }
-
-    private String getUserRankKey(String intraId, GameType gameType) {
-        return intraId + gameType.getCode();
-    }
-
-    private String getRankKey(GameType gameType) {
-        return gameType.getCode();
     }
 }

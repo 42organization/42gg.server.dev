@@ -11,14 +11,14 @@ import lombok.Getter;
 public class RankRedisFindDto {
     private UserDto user;
     private GameType gameType;
-    private SeasonDto season;
+    private SeasonDto seasonDto;
 
     @Override
     public String toString() {
         return "RankFindDto{" +
                 "user='" + user +
                 ", gameType=" + gameType +
-                ", season=" + season +
+                ", season=" + seasonDto +
                 '}';
     }
 }

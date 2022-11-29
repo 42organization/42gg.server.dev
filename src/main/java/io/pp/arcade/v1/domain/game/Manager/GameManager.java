@@ -11,7 +11,9 @@ import io.pp.arcade.v1.domain.game.dto.GameResultRequestDto;
 import io.pp.arcade.v1.domain.pchange.PChangeService;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeAddDto;
 import io.pp.arcade.v1.domain.rank.dto.RankUpdateDto;
-import io.pp.arcade.v1.domain.rank.service.RankRedisService;
+import io.pp.arcade.v1.domain.rank.service.RankService;
+import io.pp.arcade.v1.domain.season.SeasonService;
+import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.domain.slot.dto.SlotDto;
 import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUserService;
 import io.pp.arcade.v1.domain.slotteamuser.dto.SlotTeamUserDto;
@@ -46,9 +48,9 @@ public class GameManager {
     private final UserService userService;
     private final PChangeService pChangeService;
     private final CurrentMatchService currentMatchService;
-    private final RankRedisService rankRedisService;
+    private final RankService rankService;
     private final RedisTemplate<String, Integer> redisTemplate;
-
+    private final SeasonService seasonService;
 
     public void checkIfUserHavePlayingGame(CurrentMatchDto currentMatch) {
         if (currentMatch == null) {
@@ -123,14 +125,16 @@ public class GameManager {
                     .expChange(expChange)
                     .expResult(slotTeamUser.getUser().getTotalExp() + expChange)
                     .build();
+            SeasonDto seasonDto = seasonService.findLatestRankSeason();
             RankUpdateDto rankUpdateDto =  RankUpdateDto.builder()
                     .gameType(slotTeamUser.getSlot().getType())
-                    .Ppp(slotTeamUser.getUser().getPpp() + pppChange)
+                    .updatePpp(slotTeamUser.getUser().getPpp() + pppChange)
                     .userDto(slotTeamUser.getUser())
                     .isWin(isWin)
+                    .seasonDto(seasonDto)
                     .build();
             teamService.modifyGameResultInTeam(teamModifyGameResultDto);
-            rankRedisService.updateRankPpp(rankUpdateDto);
+            rankService.updateRankPpp(rankUpdateDto);
             userService.modifyUserPpp(modifyPppDto);
             userService.modifyUserExp(UserModifyExpDto.builder().user(slotTeamUser.getUser()).exp(expChange).build());
             pChangeService.addPChange(pChangeAddDto);

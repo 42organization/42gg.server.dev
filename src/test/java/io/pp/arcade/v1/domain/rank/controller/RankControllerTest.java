@@ -1,4 +1,4 @@
-package io.pp.arcade.domain.rank.controller;
+package io.pp.arcade.v1.domain.rank.controller;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,7 +31,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
@@ -40,6 +42,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureRestDocs
@@ -104,18 +110,17 @@ class RankControllerTest {
     @Test
     @Transactional
     void rankList() throws Exception {
-/*
         ResultActions actions;
         String page;
         String count;
         Integer page_int;
         Integer count_int;
 
-
+        /*
          * 메인 페이지 - 랭킹 조회
          * count = 3
          * season = null
-         *
+         * */
         page = "1";
         count = "3";
         actions = mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
@@ -133,12 +138,12 @@ class RankControllerTest {
         checkRankListResponseDto(responseDto, _page, _count);
         actions.andExpect(status().isOk()).andDo(document("v1-ranking-find-list-count-is-3"));
 
-
+        /*
          * 랭킹 페이지 - 랭킹 조회
          * page = 2
          * count = 10
          * season = null
-         *
+         * */
         page = "1";
         count = "10";
 
@@ -158,12 +163,12 @@ class RankControllerTest {
         checkRankListResponseDto(responseDto, page_int, count_int);
         actions.andExpect(status().isOk()).andDo(document("v1-ranking-find-all-list-count-is-10-and-next-page"));
 
-
+        /*
          * 랭킹 페이지 - 랭킹 조회
          * page = 1
          * count = null
          * season = null
-         *
+         * */
         page = "1";
 
         // when
@@ -182,11 +187,11 @@ class RankControllerTest {
         actions.andExpect(status().isOk()).andDo(document("v1-ranking-find-list-count-is-default-page-size"));
 
 
-
+        /*
          * 랭킹 페이지 - 현 시즌 랭킹 조회
          * count = NULL
          * season = NULL
-         *
+         * *//*
         page = "1";
         actions = mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
                         .param("page",page))
@@ -196,11 +201,11 @@ class RankControllerTest {
         }
         actions.andDo(document("v1-ranking-find-all-list"));
 
-
+        *//*
          * 랭킹 페이지 - 이전 시즌 랭킹 조회
          * count = null
          * season = 1
-         *
+         * *//*
         page = "1";
         season = preSeason;
         actions = mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
@@ -213,11 +218,11 @@ class RankControllerTest {
         }
         actions.andExpect(status().isOk()).andDo(document("v1-ranking-find-all-list-pre-season"));
 
-
+        *//*
          * 랭킹 페이지 - 존재하지 않는 시즌 랭킹 조회
          * count = null
          * season = 100
-         *
+         * *//*
         page = "1";
         season = "100";
         mockMvc.perform((get("/pingpong/ranks/single").contentType(MediaType.APPLICATION_JSON)
@@ -230,7 +235,7 @@ class RankControllerTest {
                 .andExpect(jsonPath("$.rankList.length()").value(0))
                 .andExpect(status().isOk())
                 .andDo(document("v1-ranking-find-all-list-wrong-season"));
-*/
+        */
     }
 
     private String getUserRankKey(String intraId, GameType gameType) {

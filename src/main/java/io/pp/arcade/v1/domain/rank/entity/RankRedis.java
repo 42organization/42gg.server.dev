@@ -2,8 +2,8 @@ package io.pp.arcade.v1.domain.rank.entity;
 
 import io.pp.arcade.v1.domain.rank.dto.RankDto;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
-import io.pp.arcade.v1.global.type.RacketType;
 import io.pp.arcade.v1.global.type.GameType;
+import io.pp.arcade.v1.global.type.RacketType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.Setter;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
-import javax.persistence.*;
+import javax.persistence.Id;
 import java.io.Serializable;
 
 
@@ -94,6 +94,7 @@ public class RankRedis implements Serializable {
         this.losses += isWin ^ 1;
         this.winRate = (wins + losses) == 0 ? 0 : (double)(wins * 10000 / (wins + losses)) / 100;
     }
+
     public void modify(Integer modifyStatus, Integer ppp){
         if (modifyStatus == 0) {
             this.losses--;

@@ -1,14 +1,12 @@
 package io.pp.arcade.v1.domain.admin.controller;
 
-import io.pp.arcade.v1.domain.admin.dto.create.RankCreateRequestDto;
-import io.pp.arcade.v1.domain.admin.dto.delete.RankDeleteDto;
-import io.pp.arcade.v1.domain.admin.dto.update.RankUpdateRequestDto;
 import io.pp.arcade.v1.domain.admin.service.AdminRankRedisService;
-import io.pp.arcade.v1.domain.rank.service.RankRedisService;
 import io.pp.arcade.v1.domain.rank.dto.RankDto;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;

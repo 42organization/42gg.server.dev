@@ -3,8 +3,8 @@ package io.pp.arcade.v1.domain.rank.entity;
 import io.pp.arcade.v1.domain.rank.dto.RankRedisDto;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.global.type.GameType;
-import io.pp.arcade.v1.global.util.BaseTimeEntity;
 import io.pp.arcade.v1.global.type.RacketType;
+import io.pp.arcade.v1.global.util.BaseTimeEntity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -74,6 +74,11 @@ public class Rank extends BaseTimeEntity implements Serializable {
         this.ppp = ppp;
         this.wins = wins;
         this.losses = losses;
+    }
+
+    public void update(String statusMessage)
+    {
+        this.statusMessage = statusMessage;
     }
 
     public void updateRedisInfo(Integer ppp, Integer wins, Integer losses, Integer ranking) {

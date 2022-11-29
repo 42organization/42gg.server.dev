@@ -11,7 +11,7 @@ import io.pp.arcade.v1.domain.pchange.dto.PChangeDto;
 import io.pp.arcade.v1.domain.pchange.dto.PChangeFindDto;
 import io.pp.arcade.v1.domain.rank.dto.RankRedisFindDto;
 import io.pp.arcade.v1.domain.rank.dto.RankUserDto;
-import io.pp.arcade.v1.domain.rank.service.RankRedisService;
+import io.pp.arcade.v1.domain.rank.service.RankService;
 import io.pp.arcade.v1.domain.slotteamuser.dto.SlotTeamUserDto;
 import io.pp.arcade.v1.domain.team.dto.TeamDto;
 import io.pp.arcade.v1.global.type.StatusType;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 @RequiredArgsConstructor
 public class GameRankFactory implements GameFactory{
     private final PChangeService pChangeService;
-    private final RankRedisService rankRedisService;
+    private final RankService rankService;
 
     public GameTeam getGameTeamDto() {
         return GameTeamRank.builder().players(new ArrayList<>()).build();
@@ -33,7 +33,7 @@ public class GameRankFactory implements GameFactory{
     public GamePlayer getGamePlayer(GameDto gameDto, SlotTeamUserDto slotTeamUser){
         GamePlayer gamePlayerDto;
 
-        RankUserDto rankUserDto = rankRedisService.findRankById(RankRedisFindDto.builder()
+        RankUserDto rankUserDto = rankService.findRank(RankRedisFindDto.builder()
                 .gameType(gameDto.getSlot().getType())
                 .user(slotTeamUser.getUser()).build());
         PChangeDto pChangeDto = gameDto.getStatus() == StatusType.END ?

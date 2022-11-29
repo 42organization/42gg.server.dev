@@ -3,7 +3,6 @@ package io.pp.arcade.v1.domain.user.controller;
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchFindByUserDto;
-import io.pp.arcade.v1.domain.game.dto.GameDto;
 import io.pp.arcade.v1.domain.noti.NotiService;
 import io.pp.arcade.v1.domain.noti.dto.NotiCountDto;
 import io.pp.arcade.v1.domain.noti.dto.NotiFindDto;
@@ -15,7 +14,6 @@ import io.pp.arcade.v1.domain.rank.dto.RankDto;
 import io.pp.arcade.v1.domain.rank.dto.RankRedisFindDto;
 import io.pp.arcade.v1.domain.rank.dto.RankUpdateStatusMessageDto;
 import io.pp.arcade.v1.domain.rank.dto.RankUserDto;
-import io.pp.arcade.v1.domain.rank.service.RankRedisService;
 import io.pp.arcade.v1.domain.rank.service.RankService;
 import io.pp.arcade.v1.domain.season.SeasonService;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
@@ -30,7 +28,10 @@ import io.pp.arcade.v1.global.util.ExpLevelCalculator;
 import io.pp.arcade.v1.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +49,6 @@ public class UserControllerImpl implements UserController {
     private final NotiService notiService;
     private final CurrentMatchService currentMatchService;
     private final TokenService tokenService;
-    private final RankRedisService rankRedisService;
     private final RankService rankService;
     private final SeasonService seasonService;
     private final GameGenerator gameGenerator;
@@ -107,20 +107,11 @@ public class UserControllerImpl implements UserController {
     @Override
     @GetMapping(value = "/users/{targetUserId}/rank")
     public UserRankResponseDto userFindRank(String targetUserId, Integer season, HttpServletRequest request) {
-        UserDto curUser = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         UserDto targetUser = userService.findByIntraId(UserFindDto.builder().intraId(targetUserId).build());
-        RankUserDto rankDto;
-        // 일단 게임타입은 SINGLE로 구현
 
-        if (season == 0) {
-            season = seasonService.findLatestRankSeason().getId();
-        }
         SeasonDto seasonDto = seasonService.findSeasonById(season);
-        if (seasonDto.getId().equals(seasonService.findLatestRankSeason().getId()))  {
-            rankDto = rankRedisService.findRankById(RankRedisFindDto.builder().user(targetUser).gameType(GameType.SINGLE).build());
-        } else {
-            rankDto = rankRedisService.findRankById(RankRedisFindDto.builder().user(targetUser).gameType(GameType.SINGLE).season(seasonDto).build());
-        }
+        RankUserDto rankDto = rankService.findRank(RankRedisFindDto.builder().user(targetUser).seasonDto(seasonDto).gameType(GameType.SINGLE).build());
         UserRankResponseDto responseDto = UserRankResponseDto.builder()
                 .rank(rankDto.getRank())
                 .ppp(rankDto.getPpp())
@@ -193,8 +184,9 @@ public class UserControllerImpl implements UserController {
     @PutMapping(value = "/users/detail")
     public void userModifyProfile(UserModifyProfileRequestDto requestDto, HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        RankUpdateStatusMessageDto updateDto = RankUpdateStatusMessageDto.builder().statusMessage(requestDto.getStatusMessage()).userDto(user).build();
-        rankRedisService.updateRankStatusMessage(updateDto);
+        SeasonDto seasonDto = seasonService.findCurrentSeason();
+        RankUpdateStatusMessageDto updateDto = RankUpdateStatusMessageDto.builder().seasonDto(seasonDto).statusMessage(requestDto.getStatusMessage()).userDto(user).build();
+        rankService.updateRankStatusMessage(updateDto);
         userService.modifyUserProfile(UserModifyProfileDto.builder()
                 .userId(user.getId())
                 .racketType(requestDto.getRacketType())
