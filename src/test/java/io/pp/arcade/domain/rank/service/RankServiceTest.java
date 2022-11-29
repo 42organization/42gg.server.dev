@@ -5,37 +5,21 @@ import io.lettuce.core.RedisClient;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.pp.arcade.TestInitiator;
-import io.pp.arcade.v1.domain.rank.entity.Rank;
 import io.pp.arcade.v1.domain.rank.RankRepository;
-import io.pp.arcade.v1.domain.rank.dto.RankDto;
-import io.pp.arcade.v1.domain.rank.dto.RankRedisDto;
-import io.pp.arcade.v1.domain.rank.dto.RankSaveAllDto;
-import io.pp.arcade.v1.domain.rank.service.RankRedisService;
 import io.pp.arcade.v1.domain.rank.service.RankService;
 import io.pp.arcade.v1.domain.user.User;
-import io.pp.arcade.v1.global.exception.BusinessException;
-import io.pp.arcade.v1.global.type.GameType;
-import io.pp.arcade.v1.global.type.RacketType;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import org.springframework.transaction.annotation.Transactional;
-import java.util.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
 class RankServiceTest {
     @Autowired
     private RankService rankService;
-    @Autowired
-    private RankRedisService rankRedisService;
     @Autowired
     private RankRepository rankRepository;
     @Autowired

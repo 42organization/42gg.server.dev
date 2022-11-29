@@ -8,17 +8,12 @@ import io.pp.arcade.v1.domain.noti.Noti;
 import io.pp.arcade.v1.domain.noti.NotiRepository;
 import io.pp.arcade.v1.domain.pchange.PChange;
 import io.pp.arcade.v1.domain.pchange.PChangeRepository;
-import io.pp.arcade.v1.domain.rank.RankRedisRepository;
 import io.pp.arcade.v1.domain.rank.RankRepository;
 import io.pp.arcade.v1.domain.rank.RedisKeyManager;
-import io.pp.arcade.v1.domain.rank.dto.RankKeyGetDto;
-import io.pp.arcade.v1.domain.rank.dto.RedisRankAddDto;
-import io.pp.arcade.v1.domain.rank.dto.RedisRankUpdateDto;
-import io.pp.arcade.v1.domain.rank.dto.RedisRankingAddDto;
+import io.pp.arcade.v1.domain.rank.entity.Rank;
 import io.pp.arcade.v1.domain.rank.entity.RankRedis;
 import io.pp.arcade.v1.domain.season.Season;
 import io.pp.arcade.v1.domain.season.SeasonRepository;
-import io.pp.arcade.v1.domain.security.jwt.Token;
 import io.pp.arcade.v1.domain.security.jwt.TokenRepository;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.slot.SlotRepository;
@@ -29,17 +24,15 @@ import io.pp.arcade.v1.domain.team.TeamRepository;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.domain.user.UserRepository;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
-import io.pp.arcade.v1.global.redis.Key;
 import io.pp.arcade.v1.global.type.*;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 import static io.pp.arcade.v1.global.type.GameType.SINGLE;
 
@@ -53,8 +46,6 @@ public class RealWorld {
     NotiRepository notiRepository;
     @Autowired
     PChangeRepository pChangeRepository;
-    @Autowired
-    RankRedisRepository rankRedisRepository;
     @Autowired
     RedisKeyManager redisKeyManager;
     @Autowired
@@ -114,7 +105,7 @@ public class RealWorld {
         // NOTI..? ㅠ ㅠ
     }
 
-    public User getUserWinRateInfiniteDecimal(){ // 승률이 무한소수인 경우(66.6666666666666...) 처리 테스트
+    public User getUserWinRatehalfDecimal(){
         User user = userRepository.save(User.builder()
                 .intraId("infiniteDecimal")
                 .eMail("infiniteDecimal" + "@42gg.kr")
@@ -126,14 +117,10 @@ public class RealWorld {
                 .roleType(RoleType.USER)
                 .build());
 
-        RankRedis userRank = addRankRedisByUser(user);
+        Rank userRank = addRankByUser(user);
 
-        userRank.update(1, 0);
-        userRank.update(1, 0);
-        userRank.update(0, 0);
-
-        String curSeason = redisKeyManager.getCurrentRankKey();
-        rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank).userId(user.getId()).seasonKey(curSeason).build());
+        userRank.update(0, 1, 1);
+        rankRepository.save(userRank);
         return user;
     }
 
@@ -149,18 +136,14 @@ public class RealWorld {
                 .roleType(RoleType.USER)
                 .build());
 
-        RankRedis userRank = addRankRedisByUser(user);
+        Rank userRank = addRankByUser(user);
 
-        userRank.update(1, 0);
-        userRank.update(1, 0);
-        userRank.update(0, 0);
-        userRank.update(0, 0);
-
-        String curSeason = redisKeyManager.getCurrentRankKey();
-        rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank).userId(user.getId()).seasonKey(curSeason).build());
+        userRank.update(0, 2, 1);
+        rankRepository.save(userRank);
         return user;
     }
 
+    @Transactional
     public User getUserWinRateZero() {
         User user = userRepository.save(User.builder()
                 .intraId("zero")
@@ -173,15 +156,9 @@ public class RealWorld {
                 .roleType(RoleType.USER)
                 .build());
 
-        RankRedis userRank = addRankRedisByUser(user);
-
-        userRank.update(0, 0);
-        userRank.update(0, 0);
-        userRank.update(0, 0);
-        userRank.update(0, 0);
-
-        String curSeason = redisKeyManager.getCurrentRankKey();
-        rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank).userId(user.getId()).seasonKey(curSeason).build());
+        Rank userRank = addRankByUser(user);
+        userRank.update(0, 0, 4);
+        rankRepository.save(userRank);
         return user;
     }
 
@@ -199,11 +176,12 @@ public class RealWorld {
         List<Season> seasons = seasonRepository.findAll();
         seasons.forEach(season -> {
             user.setStatusMessage(season.getSeasonName());
-            addRankRedisByUser(user, season);
+            addRankByUser(user, season);
         });
         return user;
     }
 
+    @Transactional
     public User basicUser() {
         User user = userRepository.save(User.builder()
                 .intraId("basic" + createdUserCount)
@@ -215,7 +193,22 @@ public class RealWorld {
                 .totalExp(1000)
                 .roleType(RoleType.USER)
                 .build());
-        addRankRedisByUser(user);
+        addRankByUser(user);
+        createdUserCount++;
+        return user;
+    }
+
+    public User getUserWithOutRank() {
+        User user = userRepository.save(User.builder()
+                .intraId("basic" + createdUserCount)
+                .eMail("basic" + createdUserCount + "@42gg.kr")
+                .imageUri(defaultUrl)
+                .racketType(RacketType.DUAL)
+                .statusMessage("Hello, I'm basic user number " + createdUserCount)
+                .ppp(1000)
+                .totalExp(1000)
+                .roleType(RoleType.USER)
+                .build());
         createdUserCount++;
         return user;
     }
@@ -231,7 +224,7 @@ public class RealWorld {
                 .totalExp(1000)
                 .roleType(RoleType.USER)
                 .build());
-        addRankRedisByUser(user);
+        addRankByUser(user);
         return user;
     }
 
@@ -246,7 +239,7 @@ public class RealWorld {
                 .totalExp(1000)
                 .roleType(RoleType.USER)
                 .build());
-        addRankRedisByUser(user);
+        addRankByUser(user);
         for (NotiType notiType : NotiType.values()) {
             notiRepository.save(Noti.builder()
                     .slot(null)
@@ -523,12 +516,14 @@ public class RealWorld {
                 .headCount(1)
                 .score(winUserScore)
                 .slot(slot)
+                .win(true)
                 .build());
         Team loseTeam = teamRepository.save(Team.builder()
                 .teamPpp(loseUser.getPpp())
                 .headCount(1)
                 .score(loseUserScore)
                 .slot(slot)
+                .win(false)
                 .build());
 
         SlotTeamUser slotTeamUserWon = slotTeamUserRepository.save(SlotTeamUser.builder()
@@ -585,15 +580,13 @@ public class RealWorld {
         loseUser.setPpp(loseUser.getPpp() - 20);
         loseUser.setTotalExp(loseUser.getTotalExp() - 100);
 
-        String redisSeason = redisKeyManager.getSeasonKey(season.getId().toString(), season.getSeasonName());
+        Rank winUserRank = addRankByUser(winUser, season);
+        winUserRank.update(winUser.getPpp(), winUserRank.getWins() + 1, winUserRank.getLosses());
+        rankRepository.save(winUserRank);
 
-        RankRedis userRank = addRankRedisByUser(winUser, season);
-        userRank.update(booleanToInt(winTeam.getWin()), winUser.getPpp());
-        rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank).userId(winUser.getId()).seasonKey(redisSeason).build());
-
-        RankRedis userRank2 = addRankRedisByUser(loseUser, season);
-        userRank2.update(booleanToInt(loseTeam.getWin()), loseUser.getPpp());
-        rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank2).userId(loseUser.getId()).seasonKey(redisSeason).build());
+        Rank loseUserRank = addRankByUser(loseUser, season);
+        loseUserRank.update(loseUser.getPpp(), loseUserRank.getWins(), loseUserRank.getLosses() + 1);
+        rankRepository.save(loseUserRank);
         return new CurrentMatch[]{currentMatch1, currentMatch2};
     }
 
@@ -817,48 +810,6 @@ public class RealWorld {
         return slot;
     }
 
-    public Slot getChallengeSlotWithTwoUsersMinutesLater(User guest, User admin, Integer minutes) {
-        Slot slot = slotRepository.save(Slot.builder()
-                .tableId(1)
-                .time(now.plusMinutes(minutes))
-                .gamePpp((guest.getPpp() + admin.getPpp()) / 2)
-                .headCount(2)
-                .type(GameType.SINGLE)
-                .mode(Mode.CHALLENGE)
-                .build());
-        Team user1Team = teamRepository.save(Team.builder()
-                .teamPpp(guest.getPpp())
-                .headCount(1)
-                .score(0)
-                .slot(slot)
-                .build());
-        Team user2Team = teamRepository.save(Team.builder()
-                .teamPpp(admin.getPpp())
-                .headCount(1)
-                .score(0)
-                .slot(slot)
-                .build());
-
-        SlotTeamUser slotTeamUser1 = slotTeamUserRepository.save(SlotTeamUser.builder()
-                .slot(slot)
-                .team(user1Team)
-                .user(guest)
-                .build());
-        SlotTeamUser slotTeamUser2 = slotTeamUserRepository.save(SlotTeamUser.builder()
-                .slot(slot)
-                .team(user2Team)
-                .user(admin)
-                .build());
-        CurrentMatch currentMatch1 = currentMatchRepository.save(CurrentMatch.builder()
-                .slot(slot)
-                .user(guest)
-                .isMatched(true)
-                .matchImminent(false)
-                .isDel(false)
-                .build());
-        return slot;
-    }
-
     public User[] getUsersWithVariousPPP() {
         Random random = new Random();
         random.setSeed(System.currentTimeMillis());
@@ -876,7 +827,7 @@ public class RealWorld {
                     .totalExp(100 * i)
                     .roleType(RoleType.USER)
                     .build());
-            addRankRedisByUser(users[i]);
+            addRankByUser(users[i]);
         }
         return users;
     }
@@ -894,32 +845,14 @@ public class RealWorld {
                     .totalExp(100 * i)
                     .roleType(RoleType.ADMIN)
                     .build());
-            addRankRedisByUser(users[i]);
-            String uuid = String.valueOf(UUID.randomUUID());
-            tokenRepository.save(new Token(users[i], uuid, uuid));
+            addRankByUser(users[i]);
         }
         return users;
     }
 
-    public User[] getGuestUsers() {
-        // 추후 게스트 양식 정해지는대로 작성
-        User[] users = new User[5];
-        for (int i = 0; i < 5; i++) {
-            users[i] =  userRepository.save(User.builder()
-                    .intraId("guest" + i)
-                    .eMail("guest" + i + "@42gg.kr")
-                    .imageUri(defaultUrl)
-                    .racketType(RacketType.values()[i % 2])
-                    .statusMessage("Hello, I'm guest " + i)
-                    .ppp(1000)
-                    .totalExp(100 * i)
-                    .roleType(RoleType.USER)
-                    .build());
-            String uuid = String.valueOf(UUID.randomUUID());
-            tokenRepository.save(new Token(users[i], uuid, uuid));
-        }
-        return users;
-    }
+//    public User[] getGuestUsers() {
+//        // 추후 게스트 양식 정해지는대로 작성
+//    }
 
     private User[] makeDeafultUsers() {
         User[] users = new User[10];
@@ -934,9 +867,7 @@ public class RealWorld {
                     .totalExp(100 * i)
                     .roleType(RoleType.USER)
                     .build());
-            addRankRedisByUser(users[i]);
-            String uuid = String.valueOf(UUID.randomUUID());
-            tokenRepository.save(new Token(users[i], uuid, uuid));
+            addRankByUser(users[i]);
         }
         return users;
     }
@@ -1035,15 +966,17 @@ public class RealWorld {
 
             String redisSeason = redisKeyManager.getSeasonKey(season.getId().toString(), season.getSeasonName());
 
-            RankRedis userRank = addRankRedisByUser(users[i * 2], season);
-            userRank.update(booleanToInt(teams[i * 2].getWin()), users[i * 2].getPpp());
-            rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank).userId(users[i * 2].getId()).seasonKey(redisSeason).build());
+            Integer win = teams[i * 2].getWin() ? 1 : 0;
+            Rank userRank = addRankByUser(users[i * 2], season);
+            userRank.update(users[i * 2].getPpp(), userRank.getWins() + win, userRank.getLosses() + win ^ 1);
+            rankRepository.save(userRank);
 
             users[i * 2 + 1].setPpp(users[i * 2 + 1].getPpp() + 20);
             users[i * 2 + 1].setTotalExp(users[i * 2 + 1].getTotalExp() + 100);
-            RankRedis userRank2 = addRankRedisByUser(users[i * 2 + 1], season);
-            userRank2.update(booleanToInt(teams[i * 2 + 1].getWin()), users[i * 2 + 1].getPpp());
-            rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank2).userId(users[i * 2 + 1].getId()).seasonKey(redisSeason).build());
+            win = teams[i * 2 + 1].getWin() ? 1 : 0;
+            Rank userRank2 = addRankByUser(users[i * 2 + 1], season);
+            userRank2.update(users[i * 2 + 1].getPpp(), userRank2.getWins() + win, userRank2.getLosses() + win ^ 1);
+            rankRepository.save(userRank2);
         }
     }
 
@@ -1084,28 +1017,30 @@ public class RealWorld {
         return slots;
     }
 
-    private RankRedis addRankRedisByUser(User user) {
+    private Rank addRankByUser(User user) {
         /* 현재 시즌 정보 */
         LocalDateTime now = LocalDateTime.now();
         Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now,now).orElse(null);
 
-        return addRankRedisByUser(user, season);
+        return addRankByUser(user, season);
     }
 
-    private RankRedis addRankRedisByUser(User user, Season season) {
+    private Rank addRankByUser(User user, Season season) {
         UserDto userDto = UserDto.from(user);
-        RankRedis userRank = RankRedis.from(userDto, SINGLE);
 
-//        RankKeyGetDto rankKeyGetDto = RankKeyGetDto.builder().seasonId(season.getId()).seasonName(season.getSeasonName()).build();
-//        String rankKey = redisKeyManager.getRankKeyBySeason(rankKeyGetDto);
-//        RedisRankAddDto redisRankAddDto = RedisRankAddDto.builder().key(rankKey).userId(userDto.getId()).rank(userRank).build();
-//        rankRedisRepository.addRank(redisRankAddDto);
-//
-//        String rankingKey = redisKeyManager.getRankKeyBySeason(rankKeyGetDto);
-//        RedisRankingAddDto redisRankingAddDto = RedisRankingAddDto.builder().rankingKey(rankingKey).rank(userRank).build();
-//        rankRedisRepository.addRanking(redisRankingAddDto);
-
-        return userRank;
+        Integer startPpp = season.getStartPpp();
+        Rank rank = Rank.builder()
+                .user(userRepository.findById(userDto.getId()).orElseThrow())
+                .seasonId(season.getId())
+                .racketType(userDto.getRacketType())
+                .ppp(startPpp)
+                .ranking(0)
+                .wins(0)
+                .losses(0)
+                .gameType(SINGLE)
+                .statusMessage(userDto.getStatusMessage())
+                .build();
+        return rankRepository.save(rank);
     }
 
     private int booleanToInt(boolean value) {
