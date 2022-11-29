@@ -1,6 +1,5 @@
 package io.pp.arcade.v1.domain.security.oauth.v2.service;
 
-import io.pp.arcade.v1.domain.rank.service.RankRedisService;
 import io.pp.arcade.v1.domain.rank.service.RankService;
 import io.pp.arcade.v1.domain.security.oauth.v2.domain.ProviderType;
 import io.pp.arcade.v1.domain.security.oauth.v2.domain.UserPrincipal;
@@ -29,7 +28,6 @@ import java.time.LocalDateTime;
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
     private final RankService rankService;
-    private final RankRedisService rankRedisService;
     private final AsyncNewUserImageUploader asyncNewUserImageUploader;
 
     @Value("${info.image.defaultUrl}")
@@ -66,7 +64,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             else if (userInfo.getImageUrl().startsWith("https://cdn.intra.42.fr/")) {
                 asyncNewUserImageUploader.upload(userInfo.getIntraId(), userInfo.getImageUrl());
             }
-            rankRedisService.addUserRank(UserDto.from(savedUser));
+            rankService.addUserRank(UserDto.from(savedUser));
         }
         return UserPrincipal.create(savedUser, user.getAttributes());
     }
