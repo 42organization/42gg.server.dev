@@ -17,8 +17,8 @@ public interface RankRepository extends JpaRepository<Rank,Integer> {
 
     List<Rank> findAllBySeasonId(Integer seasonId);
 
-    @Query(nativeQuery = true, value = "select ranking from (select user_id, row_number() over (order by ppp desc) as ranking from ranks) ranked where user_id=:userId")
-    Integer findRankingByUserId(@Param("userId")Integer userId);
+    @Query(nativeQuery = true, value = "select ranking from (select user_id, row_number() over (order by ppp desc) as ranking from ranks) ranked where user_id=:intraId")
+    Integer findRankingByIntraId(@Param("intraId")String intraId);
 
     Page<Rank> findAllByOrderByPppDesc(Pageable pageable);
 }
