@@ -208,7 +208,7 @@ public class UserControllerImpl implements UserController {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
         CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByIntraId(CurrentMatchFindByUserDto.builder().user(user).build());
         String event = currentMatch == null ? null : "match";
-        doubleCheckForSchedulers(currentMatch);
+//        doubleCheckForSchedulers(currentMatch);
         if ("match".equals(event) && currentMatch.getGame() != null) {
             event = "game";
         }

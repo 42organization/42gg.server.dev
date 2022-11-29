@@ -40,7 +40,7 @@ public class GuestLoginController {
     
     // 1. /login/guest 맵핑을 받는다
     //   현재 유저의 로컬스토리지에 토큰이 있는지 확인하고 있으면 메인페이지로 리다이렉트
-    @PostMapping(value = "/login/guest")
+    @GetMapping(value = "/login/guest")
     public void login(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String accessToken;
         // 유저가 토큰을 가지고 있는지 확인

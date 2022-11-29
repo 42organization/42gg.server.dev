@@ -67,9 +67,9 @@ public class GameGenerator /* extends AbstractScheduler */{
     private void addGameOrNotiCanceled(SlotDto slotDto) {
         if (slotDto.getHeadCount().equals(getMaxHeadCount(slotDto.getType()))) {
             addGame(slotDto);
-        } else {
-            notiCanceled(slotDto);
-        }
+        } //else {
+//            notiCanceled(slotDto);
+//        }
     }
 
     private Integer getMaxHeadCount(GameType type) {

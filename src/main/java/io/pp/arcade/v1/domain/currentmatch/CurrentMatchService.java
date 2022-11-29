@@ -67,7 +67,9 @@ public class CurrentMatchService {
         List<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllBySlotId(game.getSlot().getId());
         slotTeamUsers.forEach(slotTeamUser -> {
             CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(slotTeamUser.getUser(), false).orElse(null);
-            currentMatch.setGame(game);
+            if (currentMatch != null) {
+                currentMatch.setGame(game);
+            }
         });
     }
 

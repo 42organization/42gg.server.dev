@@ -13,6 +13,7 @@ import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.v1.domain.team.TeamRepository;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.type.GameType;
+import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.type.StatusType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -49,7 +50,7 @@ public class GameService {
         Slot slot = slotRepository.findById(slotDto.getId()).orElseThrow(() -> new BusinessException("E0001"));
         gameRepository.save(Game.builder()
                 .slot(slot)
-                .mode(slot.getMode())
+                .mode(slot.getMode() == Mode.CHALLENGE ? Mode.RANK : slot.getMode())
 //                .type(slotDto.getType())
 //                .time(slotDto.getTime())
                 .status(StatusType.LIVE)

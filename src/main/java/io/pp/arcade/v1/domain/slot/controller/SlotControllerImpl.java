@@ -211,9 +211,9 @@ public class SlotControllerImpl implements SlotController {
         if (currentMatch.getSlot().getId() != slot.getId()) {
             throw new BusinessException("E0001");
         }
-        if (slot.getMode() != Mode.CHALLENGE && currentMatch.getMatchImminent() && slot.getHeadCount() == (slot.getType().equals(GameType.SINGLE) ? 2 : 4)) {
-            throw new BusinessException("SD002");
-        }
+//        if (slot.getMode() != Mode.CHALLENGE && currentMatch.getMatchImminent() && slot.getHeadCount() == (slot.getType().equals(GameType.SINGLE) ? 2 : 4)) {
+//            throw new BusinessException("SD002");
+//        }
     }
 
     private void checkIfCurrentMatchExists(CurrentMatchDto currentMatch) {
