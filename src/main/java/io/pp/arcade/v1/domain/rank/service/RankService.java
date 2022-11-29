@@ -59,7 +59,7 @@ public class RankService {
 
     @Transactional
     public Integer findRankingById(RankRankingFindDto findDto) {
-        Integer myRank = rankRepository.findRankingByUserId(findDto.getUserId());
+        Integer myRank = rankRepository.findRankingByIntraId(findDto.getIntraId());
         return myRank;
     }
 
@@ -238,9 +238,10 @@ public class RankService {
     public RankUserDto findRank(RankRedisFindDto findDto) {
         Integer seasonId = findDto.getSeasonDto().getId();
         Integer userId = findDto.getUser().getId();
+        String intraId = findDto.getUser().getIntraId();
 
         Rank userRank = rankRepository.findBySeasonIdAndUserId(seasonId, userId).orElseThrow(() -> new BusinessException("E0001"));
-        Integer ranking = rankRepository.findRankingByUserId(userId);
+        Integer ranking = rankRepository.findRankingByIntraId(intraId);
 
         return RankUserDto.from(userRank, ranking);
     }
