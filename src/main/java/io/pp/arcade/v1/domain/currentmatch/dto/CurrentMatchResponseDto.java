@@ -1,5 +1,6 @@
 package io.pp.arcade.v1.domain.currentmatch.dto;
 
+import io.pp.arcade.v1.global.type.Mode;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,6 +16,8 @@ public class CurrentMatchResponseDto {
     private List<String> enemyTeam;
     private Boolean isMatched;
 
+    private Mode mode;
+
     @Override
     public String toString() {
         return "CurrentMatchResponseDto{" +
@@ -23,6 +26,7 @@ public class CurrentMatchResponseDto {
                 ", myTeam=" + myTeam +
                 ", enemyTeam=" + enemyTeam +
                 ", isMatched=" + isMatched +
+                ", mode=" + mode +
                 '}';
     }
 }
