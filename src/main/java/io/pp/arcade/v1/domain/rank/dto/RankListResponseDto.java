@@ -3,11 +3,13 @@ package io.pp.arcade.v1.domain.rank.dto;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Getter
 @Builder
+@NoArgsConstructor
 public class RankListResponseDto {
     private Integer myRank;
     private Integer currentPage;

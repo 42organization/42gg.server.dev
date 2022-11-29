@@ -9,6 +9,12 @@ public class RankListRequestDto {
     private Integer count;
     private Integer season;
 
+    public Integer getCount() {
+        if (count == null)
+            return 20;
+        return count;
+    }
+
     @Override
     public String toString() {
         return "RankListRequestDto{" +
