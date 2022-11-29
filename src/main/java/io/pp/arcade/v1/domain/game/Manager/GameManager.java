@@ -72,7 +72,7 @@ public class GameManager {
         SlotDto slot = game.getSlot();
         Boolean isOneSide = Math.abs(requestDto.getMyTeamScore() - requestDto.getEnemyTeamScore()) == 2;
 
-        TeamPosDto teamPosDto = teamService.findUsersByTeamPos(slot, curUser);
+        TeamDto myTeam = slotTeamUserService.findTeamBySlotAndUser(slot.getId(), curUser.getId()).getTeam();
 
         for(SlotTeamUserDto slotTeamUser : slotTeamUsers) {
             TeamDto team;
@@ -82,7 +82,7 @@ public class GameManager {
             Integer score;
             Boolean isWin;
 
-            if (teamPosDto.getMyTeam().equals(slotTeamUser.getTeam())) {
+            if (myTeam.equals(slotTeamUser.getTeam())) {
                 enemyPpp = (gamePpp * 2 - slotTeamUser.getTeam().getTeamPpp());
                 team = slotTeamUser.getTeam();
                 isWin = requestDto.getMyTeamScore() > requestDto.getEnemyTeamScore();
