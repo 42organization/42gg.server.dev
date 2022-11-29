@@ -3,18 +3,22 @@ package io.pp.arcade.v1.domain.guest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Random;
+
 @Component
 public class DogUtil {
     public DogUtil() {
-
+        random = new Random();
+        random.setSeed(System.currentTimeMillis());
     }
 
+    private final Random random;
     @Value("${info.image.dogUrl}")
     private String dogImageUrl;
 
     static String[] dogs = {
             "beagle",
-            "bulldog",
+            "pug",
             "doberman",
             "poodle",
             "bichon",
@@ -28,7 +32,7 @@ public class DogUtil {
     }
 
     public String getRandomDogImage(String dog) {
-        return dogImageUrl + dog + ".png";
+        return dogImageUrl + dog + "_" + (Math.abs(random.nextInt() % 10 + 1)) + ".png";
     }
 
     public String getRandomDogName(String dog) {
@@ -53,7 +57,7 @@ public class DogUtil {
                 koreanDog = "코기";
                 break;
             case "pomeranian":
-                koreanDog = "포메라니안";
+                koreanDog = "포메";
                 break;
             case "retriever":
                 koreanDog = "리트리버";
