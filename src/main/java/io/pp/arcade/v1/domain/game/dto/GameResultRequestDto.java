@@ -12,12 +12,12 @@ import javax.validation.constraints.NotNull;
 @Getter
 public class GameResultRequestDto {
     @Min(0)
-    @Max(2)
+    @Max(5)
     @NotNull
     private Integer myTeamScore;
 
     @Min(0)
-    @Max(2)
+    @Max(5)
     @NotNull
     private Integer enemyTeamScore;
 
@@ -36,7 +36,7 @@ public class GameResultRequestDto {
     }
 
     private boolean validate() {
-        if (myTeamScore + enemyTeamScore > 3) {
+        if (myTeamScore + enemyTeamScore > 9) {
             return false;
         } else if (myTeamScore == enemyTeamScore) {
             return false;
