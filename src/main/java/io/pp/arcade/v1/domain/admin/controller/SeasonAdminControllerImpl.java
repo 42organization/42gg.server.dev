@@ -4,6 +4,7 @@ import io.pp.arcade.v1.domain.admin.dto.create.SeasonCreateRequestDto;
 import io.pp.arcade.v1.domain.admin.dto.update.SeasonUpdateDto;
 import io.pp.arcade.v1.domain.admin.service.AdminRankRedisService;
 import io.pp.arcade.v1.domain.season.SeasonService;
+import io.pp.arcade.v1.domain.season.dto.SeasonCreateDto;
 import io.pp.arcade.v1.domain.season.dto.SeasonDeleteDto;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.global.type.Mode;
@@ -23,7 +24,12 @@ public class SeasonAdminControllerImpl implements SeasonAdminController {
     @Override
     @PostMapping(value = "/season")
     public void seasonCreate(SeasonCreateRequestDto createRequestDto, HttpServletRequest request) {
-        seasonService.createSeasonByAdmin(createRequestDto);
+        SeasonCreateDto createDto = SeasonCreateDto.builder()
+                .seasonName(createRequestDto.getSeasonName())
+                .seasonMode(createRequestDto.getSeasonMode())
+                .pppGap(createRequestDto.getPppGap())
+                .startPpp(createRequestDto.getStartPpp()).build();
+        seasonService.createSeasonByAdmin(createDto);
         if (createRequestDto.getSeasonMode() != Mode.NORMAL) {
             SeasonDto seasonDto = seasonService.findLatestRankSeason();
             rankRedisService.addAllUserRankByNewSeason(seasonDto, createRequestDto.getStartPpp());

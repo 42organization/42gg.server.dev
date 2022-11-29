@@ -2,6 +2,7 @@ package io.pp.arcade.v1.domain.season;
 
 import io.pp.arcade.v1.domain.admin.dto.create.SeasonCreateRequestDto;
 import io.pp.arcade.v1.domain.admin.dto.update.SeasonUpdateDto;
+import io.pp.arcade.v1.domain.season.dto.SeasonCreateDto;
 import io.pp.arcade.v1.domain.season.dto.SeasonDeleteDto;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.domain.season.dto.SeasonNameDto;
@@ -24,8 +25,9 @@ public class SeasonService {
     private final SeasonRepository seasonRepository;
 
     @Transactional
-    public void createSeasonByAdmin(SeasonCreateRequestDto createDto) {
+    public void createSeasonByAdmin(SeasonCreateDto createDto) {
         Season lastSeason = seasonRepository.findFirstByOrderByIdDesc().orElse(null);
+
         if (lastSeason != null) {
             lastSeason.setEndTime(LocalDateTime.now().minusSeconds(1));
         }
@@ -51,7 +53,7 @@ public class SeasonService {
 //      Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElseThrow(() -> new BusinessException("E0001"));
         Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElse(null);
         if (season == null)
-            return SeasonDto.builder().seasonName("1").id(1).build();
+            return null;
         return SeasonDto.from(season);
     }
 
