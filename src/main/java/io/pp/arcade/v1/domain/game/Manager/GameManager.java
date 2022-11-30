@@ -72,10 +72,8 @@ public class GameManager {
         SlotDto slot = game.getSlot();
         Boolean isOneSide = Math.abs(requestDto.getMyTeamScore() - requestDto.getEnemyTeamScore()) == 2;
 
-        TeamDto myTeam = slotTeamUserService.findTeamBySlotAndUser(slot.getId(), curUser.getId()).getTeam();
-
         for(SlotTeamUserDto slotTeamUser : slotTeamUsers) {
-            TeamDto team;
+            TeamDto myTeam = slotTeamUserService.findTeamBySlotAndUser(slot.getId(), curUser.getId()).getTeam();    TeamDto team;
             TeamModifyGameResultDto teamModifyGameResultDto;
             Integer enemyPpp;
             Integer pppChange;
