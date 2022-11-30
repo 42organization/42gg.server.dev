@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 //private String cron = "0 */" + intervalTime + " " + startTime + "-" + endTime + " * * *";
 //private String cron = "0 */10 * * * *";
@@ -58,7 +59,14 @@ public class GameGenerator /* extends AbstractScheduler */{
 
     public void gameGenerator(Integer slotId) {
         SlotDto slotDto = slotService.findSlotById(slotId);
-
+        List<GameDto> beforeGames = gameService.findGameByStatusType(StatusType.LIVE);
+        for (GameDto beforeGame : beforeGames) {
+            GameModifyStatusDto modifyStatusDto = GameModifyStatusDto.builder()
+                    .game(beforeGame)
+                    .status(StatusType.WAIT)
+                    .build();
+            gameService.modifyGameStatus(modifyStatusDto);
+        }
         if (slotDto != null) {
             addGameOrNotiCanceled(slotDto);
         }

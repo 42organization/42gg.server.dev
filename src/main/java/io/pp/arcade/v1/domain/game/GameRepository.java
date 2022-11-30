@@ -37,4 +37,6 @@ public interface GameRepository extends JpaRepository<Game, Integer> {
     Page<Game> findByIdLessThanOrderByIdDesc (Integer id, Pageable pageable);
 
     Page<Game> findByIdLessThanAndModeOrderByIdDesc(Integer id, Mode mode, Pageable pageable);
+
+    List<Game> findAllByStatus(StatusType status);
 }

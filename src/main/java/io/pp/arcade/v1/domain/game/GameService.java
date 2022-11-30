@@ -128,4 +128,11 @@ public class GameService {
 //        return gameDtos;
         return null;
     }
+
+    @Transactional
+    public List<GameDto> findGameByStatusType(StatusType statusType) {
+        List<Game> games = gameRepository.findAllByStatus(statusType);
+        List<GameDto> gameDtos = games.stream().map(GameDto::from).collect(Collectors.toList());
+        return gameDtos;
+    }
 }
