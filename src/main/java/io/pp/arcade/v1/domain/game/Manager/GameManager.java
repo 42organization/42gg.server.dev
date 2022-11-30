@@ -88,7 +88,7 @@ public class GameManager {
                 score = requestDto.getMyTeamScore();
             } else {
                 isWin = requestDto.getMyTeamScore() < requestDto.getEnemyTeamScore();
-                enemyPpp = slotTeamUser.getTeam().getTeamPpp();
+                enemyPpp = (gamePpp * 2 - slotTeamUser.getTeam().getTeamPpp());
                 team = slotTeamUser.getTeam();
                 score = requestDto.getEnemyTeamScore();
             }
