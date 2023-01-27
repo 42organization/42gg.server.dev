@@ -18,7 +18,9 @@ import io.pp.arcade.v1.domain.rank.dto.RedisRankingAddDto;
 import io.pp.arcade.v1.domain.rank.entity.RankRedis;
 import io.pp.arcade.v1.domain.season.Season;
 import io.pp.arcade.v1.domain.season.SeasonRepository;
+import io.pp.arcade.v1.domain.security.jwt.Token;
 import io.pp.arcade.v1.domain.security.jwt.TokenRepository;
+import io.pp.arcade.v1.domain.security.oauth.v2.token.AuthToken;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.slot.SlotRepository;
 import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUser;
@@ -37,6 +39,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 import static io.pp.arcade.v1.global.type.GameType.SINGLE;
 
@@ -72,6 +75,7 @@ public class RealWorld {
     RedisTemplate<String, String> redisRank;
     @Autowired
     RedisTemplate<String, RankRedis> redisUser;
+
 
     private final String defaultUrl = "https://42gg-public-image.s3.ap-northeast-2.amazonaws.com/images/small_default.jpeg";
     private final LocalDateTime now = LocalDateTime.now();
@@ -122,6 +126,7 @@ public class RealWorld {
                 .totalExp(3000)
                 .roleType(RoleType.USER)
                 .build());
+        makeTokenForUser(user);
 
         RankRedis userRank = addRankRedisByUser(user);
 
@@ -145,6 +150,7 @@ public class RealWorld {
                 .totalExp(2000)
                 .roleType(RoleType.USER)
                 .build());
+        makeTokenForUser(user);
 
         RankRedis userRank = addRankRedisByUser(user);
 
@@ -169,6 +175,7 @@ public class RealWorld {
                 .totalExp(1000)
                 .roleType(RoleType.USER)
                 .build());
+        makeTokenForUser(user);
 
         RankRedis userRank = addRankRedisByUser(user);
 
@@ -193,6 +200,7 @@ public class RealWorld {
                 .totalExp(1000)
                 .roleType(RoleType.USER)
                 .build());
+        makeTokenForUser(user);
         List<Season> seasons = seasonRepository.findAll();
         seasons.forEach(season -> {
             user.setStatusMessage(season.getSeasonName());
@@ -212,6 +220,7 @@ public class RealWorld {
                 .totalExp(1000)
                 .roleType(RoleType.USER)
                 .build());
+        makeTokenForUser(user);
         addRankRedisByUser(user);
         createdUserCount++;
         return user;
@@ -228,6 +237,7 @@ public class RealWorld {
                 .totalExp(1000)
                 .roleType(RoleType.USER)
                 .build());
+        makeTokenForUser(user);
         addRankRedisByUser(user);
         return user;
     }
@@ -243,6 +253,7 @@ public class RealWorld {
                 .totalExp(1000)
                 .roleType(RoleType.USER)
                 .build());
+        makeTokenForUser(user);
         addRankRedisByUser(user);
         for (NotiType notiType : NotiType.values()) {
             notiRepository.save(Noti.builder()
@@ -831,6 +842,7 @@ public class RealWorld {
                     .totalExp(100 * i)
                     .roleType(RoleType.USER)
                     .build());
+            makeTokenForUser(users[i]);
             addRankRedisByUser(users[i]);
         }
         return users;
@@ -849,6 +861,7 @@ public class RealWorld {
                     .totalExp(100 * i)
                     .roleType(RoleType.ADMIN)
                     .build());
+            makeTokenForUser(users[i]);
             addRankRedisByUser(users[i]);
         }
         return users;
@@ -871,6 +884,7 @@ public class RealWorld {
                     .totalExp(100 * i)
                     .roleType(RoleType.USER)
                     .build());
+            makeTokenForUser(users[i]);
             addRankRedisByUser(users[i]);
         }
         return users;
@@ -1045,5 +1059,10 @@ public class RealWorld {
 
     private int booleanToInt(boolean value) {
         return value ? 1 : 0;
+    }
+
+    private Token makeTokenForUser(User user) {
+        String uuid = String.valueOf(UUID.randomUUID());
+        return tokenRepository.save(new Token(user, uuid, uuid));
     }
 }
