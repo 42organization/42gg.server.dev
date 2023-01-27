@@ -16,8 +16,10 @@ import io.pp.arcade.v1.domain.rank.dto.RedisRankAddDto;
 import io.pp.arcade.v1.domain.rank.dto.RedisRankUpdateDto;
 import io.pp.arcade.v1.domain.rank.dto.RedisRankingAddDto;
 import io.pp.arcade.v1.domain.rank.entity.RankRedis;
+import io.pp.arcade.v1.domain.rank.service.RankRedisService;
 import io.pp.arcade.v1.domain.season.Season;
 import io.pp.arcade.v1.domain.season.SeasonRepository;
+import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.domain.security.jwt.Token;
 import io.pp.arcade.v1.domain.security.jwt.TokenRepository;
 import io.pp.arcade.v1.domain.security.oauth.v2.token.AuthToken;
@@ -75,6 +77,8 @@ public class RealWorld {
     RedisTemplate<String, String> redisRank;
     @Autowired
     RedisTemplate<String, RankRedis> redisUser;
+    @Autowired
+    RankRedisService rankRedisService;
 
 
     private final String defaultUrl = "https://42gg-public-image.s3.ap-northeast-2.amazonaws.com/images/small_default.jpeg";
@@ -216,8 +220,8 @@ public class RealWorld {
                 .imageUri(defaultUrl)
                 .racketType(RacketType.DUAL)
                 .statusMessage("Hello, I'm basic user number " + createdUserCount)
-                .ppp(1000)
-                .totalExp(1000)
+                .ppp(1000 + createdUserCount * 10)
+                .totalExp(1000 + createdUserCount * 100)
                 .roleType(RoleType.USER)
                 .build());
         makeTokenForUser(user);
@@ -253,11 +257,12 @@ public class RealWorld {
                 .totalExp(1000)
                 .roleType(RoleType.USER)
                 .build());
+        User user2 = basicUser();
         makeTokenForUser(user);
         addRankRedisByUser(user);
         for (NotiType notiType : NotiType.values()) {
             notiRepository.save(Noti.builder()
-                    .slot(null)
+                    .slot(getRankedSlotWithTwoUsersMinutesLater(user, user2, 4))
                     .user(user)
                     .type(notiType)
                     .message("Test Code So Fun Happy Happy Emart")
@@ -833,8 +838,8 @@ public class RealWorld {
         for (int i = 0; i < 50; i++) {
             Integer randInt = (random.nextInt() % 400) - 200;
             users[i] = userRepository.save(User.builder()
-                    .intraId("ppp" + randInt)
-                    .eMail(randInt + "@42gg.kr")
+                    .intraId("ppp" + randInt + "_" + createdUserCount.toString())
+                    .eMail(randInt + "_" + createdUserCount.toString() + "@42gg.kr")
                     .imageUri(defaultUrl)
                     .racketType(RacketType.values()[i % 2])
                     .statusMessage("Hello, my ppp is " + randInt)
@@ -842,6 +847,7 @@ public class RealWorld {
                     .totalExp(100 * i)
                     .roleType(RoleType.USER)
                     .build());
+            createdUserCount++;
             makeTokenForUser(users[i]);
             addRankRedisByUser(users[i]);
         }
@@ -880,17 +886,17 @@ public class RealWorld {
                     .imageUri(defaultUrl)
                     .racketType(RacketType.values()[i % 2])
                     .statusMessage("Hello, I'm " + i)
-                    .ppp(1000)
+                    .ppp(1000 + i * 20)
                     .totalExp(100 * i)
                     .roleType(RoleType.USER)
                     .build());
             makeTokenForUser(users[i]);
-            addRankRedisByUser(users[i]);
+            rankRedisService.addUserRank(UserDto.from(users[i]));
         }
         return users;
     }
 
-    private Season[] makeDefaultSeasons() {
+    public Season[] makeDefaultSeasons() {
         Season[] seasons = new Season[3];
         seasons[0] = seasonRepository.save(Season.builder()
                 .seasonName("시즌 1 랭크")
@@ -920,8 +926,8 @@ public class RealWorld {
     }
 
     private void makeEndGames(Season season, Slot[] slots, Team[] teams, User[] users) {
-        SlotTeamUser[] slotTeamUsers = new SlotTeamUser[20];
-        CurrentMatch[] currentMatches = new CurrentMatch[20];
+        SlotTeamUser[] slotTeamUsers = new SlotTeamUser[slots.length * 2];
+        CurrentMatch[] currentMatches = new CurrentMatch[slots.length * 2];
 
         for (int i = 0; i < slots.length; i++) {
             Game game = gameRepository.save(Game.builder()
@@ -959,10 +965,11 @@ public class RealWorld {
             slots[i].setMode(game.getMode());
             slots[i].setGamePpp((users[(i * 2) % 10].getPpp() + users[(i * 2 + 1) % 10].getPpp()) / 2);
             slots[i].setType(GameType.SINGLE);
-            if (i % 2 == 0) {
-                teams[i * 2].setScore(2);
-                teams[i * 2 + 1].setScore(1);
-            }
+
+            teams[i * 2].setScore(2);
+            teams[i * 2].setWin(true);
+            teams[i * 2 + 1].setScore(1);
+            teams[i * 2 + 1].setWin(false);
             pChangeRepository.save(PChange.builder()
                     .game(game)
                     .user(users[(i * 2) % 10])
@@ -979,27 +986,27 @@ public class RealWorld {
                     .expChange(100)
                     .expResult(users[(i * 2 + 1) % 10].getTotalExp() + 100)
                     .build());
-            users[i * 2].setPpp(users[i * 2].getPpp() + 20);
-            users[i * 2].setTotalExp(users[i * 2].getTotalExp() + 100);
+            users[(i * 2) % 10].setPpp(users[(i * 2) % 10].getPpp() + 20);
+            users[(i * 2) % 10].setTotalExp(users[(i * 2) % 10].getTotalExp() + 100);
 
             String redisSeason = redisKeyManager.getSeasonKey(season.getId().toString(), season.getSeasonName());
 
-            RankRedis userRank = addRankRedisByUser(users[i * 2], season);
-            userRank.update(booleanToInt(teams[i * 2].getWin()), users[i * 2].getPpp());
-            rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank).userId(users[i * 2].getId()).seasonKey(redisSeason).build());
+            RankRedis userRank = addRankRedisByUser(users[(i * 2) % 10], season);
+            userRank.update(booleanToInt(teams[i * 2].getWin()), users[(i * 2) % 10].getPpp());
+            rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank).userId(users[(i * 2) % 10].getId()).seasonKey(redisSeason).build());
 
-            users[i * 2 + 1].setPpp(users[i * 2 + 1].getPpp() + 20);
-            users[i * 2 + 1].setTotalExp(users[i * 2 + 1].getTotalExp() + 100);
-            RankRedis userRank2 = addRankRedisByUser(users[i * 2 + 1], season);
-            userRank2.update(booleanToInt(teams[i * 2 + 1].getWin()), users[i * 2 + 1].getPpp());
-            rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank2).userId(users[i * 2 + 1].getId()).seasonKey(redisSeason).build());
+            users[(i * 2 + 1) % 10].setPpp(users[(i * 2 + 1) % 10].getPpp() + 20);
+            users[(i * 2 + 1) % 10].setTotalExp(users[(i * 2 + 1) % 10].getTotalExp() + 100);
+            RankRedis userRank2 = addRankRedisByUser(users[(i * 2 + 1) % 10], season);
+            userRank2.update(booleanToInt(teams[i * 2 + 1].getWin()), users[(i * 2 + 1) % 10].getPpp());
+            rankRedisRepository.updateRank(RedisRankUpdateDto.builder().userRank(userRank2).userId(users[(i * 2 + 1) % 10].getId()).seasonKey(redisSeason).build());
         }
     }
 
 
     private Team[] makeTeamsBySlots(Slot[] slots) {
-        Team[] teams = new Team[slots.length];
-        for (int i = 0; i < slots.length; i += 2) {
+        Team[] teams = new Team[slots.length * 2];
+        for (int i = 0; i < slots.length; i += 1) {
             teams[i * 2] = teamRepository.save(Team.builder()
                     .slot(slots[i])
                     .teamPpp(0)
@@ -1007,7 +1014,7 @@ public class RealWorld {
                     .score(0)
                     .build());
             teams[i * 2 + 1] = teamRepository.save(Team.builder()
-                    .slot(slots[i + 1])
+                    .slot(slots[i])
                     .teamPpp(0)
                     .headCount(0)
                     .score(0)
@@ -1043,18 +1050,20 @@ public class RealWorld {
 
     private RankRedis addRankRedisByUser(User user, Season season) {
         UserDto userDto = UserDto.from(user);
-        RankRedis userRank = RankRedis.from(userDto, SINGLE);
+        SeasonDto seasonDto = SeasonDto.from(season);
+        RankRedis singleRank = RankRedis.from(userDto, SINGLE);
+        singleRank.setPpp(seasonDto.getStartPpp());
 
-        RankKeyGetDto rankKeyGetDto = RankKeyGetDto.builder().seasonId(season.getId()).seasonName(season.getSeasonName()).build();
+        RankKeyGetDto rankKeyGetDto = RankKeyGetDto.builder().seasonId(seasonDto.getId()).seasonName(seasonDto.getSeasonName()).build();
         String rankKey = redisKeyManager.getRankKeyBySeason(rankKeyGetDto);
-        RedisRankAddDto redisRankAddDto = RedisRankAddDto.builder().key(rankKey).userId(userDto.getId()).rank(userRank).build();
+        RedisRankAddDto redisRankAddDto = RedisRankAddDto.builder().key(rankKey).userId(userDto.getId()).rank(singleRank).build();
         rankRedisRepository.addRank(redisRankAddDto);
 
-        String rankingKey = redisKeyManager.getRankKeyBySeason(rankKeyGetDto);
-        RedisRankingAddDto redisRankingAddDto = RedisRankingAddDto.builder().rankingKey(rankingKey).rank(userRank).build();
+        String rankingKey = redisKeyManager.getRankingKeyBySeason(rankKeyGetDto, SINGLE);
+        RedisRankingAddDto redisRankingAddDto = RedisRankingAddDto.builder().rankingKey(rankingKey).rank(singleRank).build();
         rankRedisRepository.addRanking(redisRankingAddDto);
 
-        return userRank;
+        return singleRank;
     }
 
     private int booleanToInt(boolean value) {
