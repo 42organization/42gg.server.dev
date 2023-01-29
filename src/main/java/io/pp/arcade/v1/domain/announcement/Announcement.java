@@ -27,9 +27,10 @@ public class Announcement {
     private Boolean isDel;
 
     @Builder
-    public Announcement(String title, String content, Boolean isDel) {
+    public Announcement(String title, String content, String link, Boolean isDel) {
         this.title = title;
         this.content = content;
-        this.isDel = false;
+        this.link = link;
+        this.isDel = isDel == null ? false : isDel;
     }
 }
