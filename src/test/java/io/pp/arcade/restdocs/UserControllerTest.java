@@ -81,7 +81,7 @@ class UserControllerTest {
         mockMvc.perform(get("/pingpong/users").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + tokenRepository.findByUser(user).getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("UserControllers/GET/users (유저 기본정보 조회)",
+                .andDo(document("V1/UserControllers/GET/users (유저 기본정보 조회)",
                         relaxedResponseFields(
                                 fieldWithPath("intraId").description("user's 42 intra Id"),
                                 fieldWithPath("userImageUri").description("uri for user's 42 intra profile picture"),
@@ -99,7 +99,7 @@ class UserControllerTest {
         mockMvc.perform(get("/pingpong/users/{targetUserId}/detail", user1.getIntraId()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + tokenRepository.findByUser(user0).getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("UserControllers/GET/users-{targetUserId}-detail (유저 상세정보 조회)",
+                .andDo(document("V1/UserControllers/GET/users-{targetUserId}-detail (유저 상세정보 조회)",
                         pathParameters(
                                 parameterWithName("targetUserId").description("intra Id to find detail")
                         ),
@@ -125,7 +125,7 @@ class UserControllerTest {
                         .param("season", "1")
                         .header("Authorization", "Bearer " + tokenRepository.findByUser(user).getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("UserControllers/GET/users-{targetUserId}-rank (유저 랭크정보 조회)",
+                .andDo(document("V1/UserControllers/GET/users-{targetUserId}-rank (유저 랭크정보 조회)",
                         pathParameters(
                                 parameterWithName("targetUserId").description("intra Id to find rank")
                         ),
@@ -151,7 +151,7 @@ class UserControllerTest {
                         .param("season", "1")
                         .header("Authorization", "Bearer " + tokenRepository.findByUser(user).getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("UserControllers/GET/users-{userId}-historics (유저 ppp 히스토리 조회)",
+                .andDo(document("V1/UserControllers/GET/users-{userId}-historics (유저 ppp 히스토리 조회)",
                         pathParameters(
                                 parameterWithName("userId").description("intra Id to find history")
                         ),
@@ -178,7 +178,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(body5))
                         .header("Authorization", "Bearer " + tokenRepository.findByUser(user).getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("UserControllers/PUT/users-detail (유저 프로필 변경)",
+                .andDo(document("V1/UserControllers/PUT/users-detail (유저 프로필 변경)",
                         relaxedRequestFields(
                                 fieldWithPath("racketType").description("RacketType[penholder, shakehand, dual]"),
                                 fieldWithPath("statusMessage").description("status message(min length 0, max length 30")
@@ -195,7 +195,7 @@ class UserControllerTest {
                         .param("q", "b")
                         .header("Authorization", "Bearer " + tokenRepository.findByUser(user).getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("UserControllers/GET/users-searches (유저 검색)",
+                .andDo(document("V1/UserControllers/GET/users-searches (유저 검색)",
                         requestParameters(
                                 parameterWithName("q").description("part or whole of finding id")
                         ),
@@ -213,7 +213,7 @@ class UserControllerTest {
         mockMvc.perform(get("/pingpong/users/live").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + tokenRepository.findByUser(user).getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("UserControllers/GET/users-live (유저 live 정보 조회)",
+                .andDo(document("V1/UserControllers/GET/users-live (유저 live 정보 조회)",
                         relaxedResponseFields(
                                 fieldWithPath("notiCount").description("list of user ppp change histories"),
                                 fieldWithPath("event").description("current event(null, match, game)"),

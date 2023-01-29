@@ -75,7 +75,7 @@ class SeasonControllerTest {
         mockMvc.perform(get("/pingpong/seasonlist").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + tokenRepository.findByUser(user).getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("SeasonControllers/GET/seasonlist (시즌 목록 조회)",
+                .andDo(document("V1/SeasonControllers/GET/seasonlist (시즌 목록 조회)",
                         relaxedResponseFields(
                                 fieldWithPath("seasonMode").description("mode of current season"),
                                 fieldWithPath("seasonList").description("list of seasons"),
