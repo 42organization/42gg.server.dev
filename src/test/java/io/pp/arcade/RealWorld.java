@@ -440,20 +440,6 @@ public class RealWorld {
                 .team(user2Team)
                 .user(user2)
                 .build());
-        CurrentMatch currentMatch1 = currentMatchRepository.save(CurrentMatch.builder()
-                .slot(slot)
-                .user(user1)
-                .isMatched(true)
-                .matchImminent(true)
-                .isDel(false)
-                .build());
-        CurrentMatch currentMatch2 = currentMatchRepository.save(CurrentMatch.builder()
-                .slot(slot)
-                .user(user2)
-                .isMatched(true)
-                .matchImminent(true)
-                .isDel(false)
-                .build());
         Game game = gameRepository.save(Game.builder()
                 .slot(slot)
                 .season(season.getId())
@@ -461,6 +447,22 @@ public class RealWorld {
                 .mode(mode)
                 .type(GameType.SINGLE)
                 .time(slot.getTime())
+                .build());
+        CurrentMatch currentMatch1 = currentMatchRepository.save(CurrentMatch.builder()
+                .slot(slot)
+                .game(game)
+                .user(user1)
+                .isMatched(true)
+                .matchImminent(true)
+                .isDel(false)
+                .build());
+        CurrentMatch currentMatch2 = currentMatchRepository.save(CurrentMatch.builder()
+                .slot(slot)
+                .game(game)
+                .user(user2)
+                .isMatched(true)
+                .matchImminent(true)
+                .isDel(false)
                 .build());
         return new CurrentMatch[]{currentMatch1, currentMatch2};
     }
@@ -1031,9 +1033,9 @@ public class RealWorld {
             slots[i] = slotRepository.save(Slot.builder()
                     .tableId(1)
                     .time(time)
-                    .gamePpp(null)
+                    .gamePpp(1000)
                     .headCount(0)
-                    .type(null)
+                    .type(SINGLE)
                     .mode(Mode.BOTH)
                     .build());
         }
