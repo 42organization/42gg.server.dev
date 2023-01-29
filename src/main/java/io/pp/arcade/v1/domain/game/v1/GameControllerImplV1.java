@@ -71,58 +71,6 @@ public class GameControllerImplV1 {
         return gameResultResponse;
     }
 
-    @GetMapping(value = "/games/normal")
-    public GameResultResponseDto gameNormalResult(@ModelAttribute @Valid GameResultPageRequestDto requestDto, HttpServletRequest request) {
-        tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-
-        GameFindDto gameFindDto = getGameFindDto(requestDto, Mode.NORMAL);
-        GameResultListDto resultPageDto = gameService.v1_findGamesAfterId(gameFindDto);
-
-        List<GameResultDto> gameResultList = new ArrayList<>();
-        List<GameDto> gameLists = resultPageDto.getGameList();
-        gameResponseManager.putResultInGames(gameResultList, gameLists, null);
-
-        Integer lastGameId;
-        if (gameLists.size() == 0) {
-            lastGameId = 0;
-        } else {
-            lastGameId = gameLists.get(gameLists.size() - 1).getId();
-        }
-
-        GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
-                .games(gameResultList)
-                .lastGameId(lastGameId)
-                .isLast(resultPageDto.getIsLast())
-                .build();
-        return gameResultResponse;
-    }
-
-    @GetMapping(value = "/games/rank")
-    public GameResultResponseDto gameRankResult(@ModelAttribute @Valid GameResultPageRequestDto requestDto, HttpServletRequest request) {
-        tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-
-        GameFindDto gameFindDto = getGameFindDto(requestDto, Mode.RANK);
-        GameResultListDto resultPageDto = gameService.v1_findGamesAfterId(gameFindDto);
-
-        List<GameResultDto> gameResultList = new ArrayList<>();
-        List<GameDto> gameLists = resultPageDto.getGameList();
-        gameResponseManager.putResultInGames(gameResultList, gameLists, null);
-
-        Integer lastGameId;
-        if (gameLists.size() == 0) {
-            lastGameId = 0;
-        } else {
-            lastGameId = gameLists.get(gameLists.size() - 1).getId();
-        }
-
-        GameResultResponseDto gameResultResponse = GameResultResponseDto.builder()
-                .games(gameResultList)
-                .lastGameId(lastGameId)
-                .isLast(resultPageDto.getIsLast())
-                .build();
-        return gameResultResponse;
-    }
-
     @PostMapping(value = "/games/result/normal")
     public synchronized void gameNormalSave(HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
