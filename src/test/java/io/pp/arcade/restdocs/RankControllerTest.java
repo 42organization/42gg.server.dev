@@ -83,7 +83,7 @@ class RankControllerTest {
                 .param("count", "10")
                 .header("Authorization", "Bearer " + tokenRepository.findByUser(basic).getAccessToken())))
                 .andExpect(status().isOk())
-                .andDo(document("RankControllers/GET/ranks-{gametype} (랭크 페이지 조회)",
+                .andDo(document("V1/RankControllers/GET/ranks-{gametype} (랭크 페이지 조회)",
                         requestParameters(
                                 parameterWithName("page").description("page number(OPTIONAL, default value: 1").optional(),
                                 parameterWithName("count").description("count to show on each page(OPTIONAL, default value: 20").optional(),
@@ -117,7 +117,7 @@ class RankControllerTest {
                 .param("count", "10")
                 .header("Authorization", "Bearer " + tokenRepository.findByUser(basic).getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("RankControllers/GET/vip (vip 페이지 조회)",
+                .andDo(document("V1/RankControllers/GET/vip (vip 페이지 조회)",
                         requestParameters(
                                 parameterWithName("page").description("page number(OPTIONAL, default value: 1").optional(),
                                 parameterWithName("count").description("count to show on each page(OPTIONAL, default value: 20").optional()

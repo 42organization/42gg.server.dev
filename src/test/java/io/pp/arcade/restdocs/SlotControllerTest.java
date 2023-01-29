@@ -111,7 +111,7 @@ class SlotControllerTest {
         mockMvc.perform(get("/pingpong/match/tables/{tableId}/{mode}/{type}", "1", Mode.RANK.getCode(), GameType.SINGLE.getCode()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + tokenRepository.findByUser(user).getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("SlotControllers/GET/{tableId}-{mode}-{type} (슬롯 목록 조회)",
+                .andDo(document("V1/SlotControllers/GET/{tableId}-{mode}-{type} (슬롯 목록 조회)",
                         pathParameters(
                                 parameterWithName("tableId").description("table id for the match(currently all is 1)"),
                                 parameterWithName("mode").description("querying mode(normal / rank)"),
@@ -143,7 +143,7 @@ class SlotControllerTest {
                         .content(objectMapper.writeValueAsString(body))
                         .header("Authorization", "Bearer " + tokenRepository.findByUser(slotUser).getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("SlotControllers/POST/match-tables-{tableId}-{type} (슬롯 참여)",
+                .andDo(document("V1/SlotControllers/POST/match-tables-{tableId}-{type} (슬롯 참여)",
                         pathParameters(
                                 parameterWithName("tableId").description("table id for the match(currently all is 1)"),
                                 parameterWithName("type").description("querying type(single / double")
@@ -162,7 +162,7 @@ class SlotControllerTest {
         mockMvc.perform(delete("/pingpong/match/slots/{slotId}", deleteSlot.getId()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + tokenRepository.findByUser(deleteUser).getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("SlotControllers/DELETE/match-slots-{slotId} (슬롯 취소)",
+                .andDo(document("V1/SlotControllers/DELETE/match-slots-{slotId} (슬롯 취소)",
                         pathParameters(
                                 parameterWithName("slotId").description("slot id to delete")
                         ))

@@ -86,7 +86,7 @@ class NotiControllerTest {
         mockMvc.perform(get("/pingpong/notifications").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + tokenRepository.findByUser(notiUser).getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("NotiControllers/GET/notifications (알림 조회)",
+                .andDo(document("V1/NotiControllers/GET/notifications (알림 조회)",
                         relaxedResponseFields(
                                 fieldWithPath("notifications").description("list of notifications"),
                                 fieldWithPath("notifications[].id").description("id of notification"),
@@ -109,7 +109,7 @@ class NotiControllerTest {
         mockMvc.perform(delete("/pingpong/notifications/{notiId}", notiRepository.findAll().get(0).getId().toString()).contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + tokenRepository.findByUser(notiUser).getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("NotiControllers/DELETE/notifications-{notiId} (개별 알림 삭제)",
+                .andDo(document("V1/NotiControllers/DELETE/notifications-{notiId} (개별 알림 삭제)",
                         pathParameters(
                                 parameterWithName("notiId").description("id of noti to delete")
                         ))
@@ -123,7 +123,7 @@ class NotiControllerTest {
         mockMvc.perform(delete("/pingpong/notifications").contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", "Bearer " + tokenRepository.findByUser(notiUser).getAccessToken()))
                 .andExpect(status().isOk())
-                .andDo(document("NotiControllers/DELETE/notifications (모든 알림 삭제)"));
+                .andDo(document("V1/NotiControllers/DELETE/notifications (모든 알림 삭제)"));
     }
 
     private void flushAll() {
