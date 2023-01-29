@@ -648,20 +648,6 @@ public class RealWorld {
                 .team(loseTeam)
                 .user(loseUser)
                 .build());
-        CurrentMatch currentMatch1 = currentMatchRepository.save(CurrentMatch.builder()
-                .slot(slot)
-                .user(winUser)
-                .isMatched(true)
-                .matchImminent(true)
-                .isDel(false)
-                .build());
-        CurrentMatch currentMatch2 = currentMatchRepository.save(CurrentMatch.builder()
-                .slot(slot)
-                .user(loseUser)
-                .isMatched(true)
-                .matchImminent(true)
-                .isDel(false)
-                .build());
         Game game = gameRepository.save(Game.builder()
                 .slot(slot)
                 .season(season.getId())
@@ -669,6 +655,22 @@ public class RealWorld {
                 .mode(mode)
                 .type(GameType.SINGLE)
                 .time(slot.getTime())
+                .build());
+        CurrentMatch currentMatch1 = currentMatchRepository.save(CurrentMatch.builder()
+                .slot(slot)
+                .game(game)
+                .user(winUser)
+                .isMatched(true)
+                .matchImminent(true)
+                .isDel(false)
+                .build());
+        CurrentMatch currentMatch2 = currentMatchRepository.save(CurrentMatch.builder()
+                .slot(slot)
+                .game(game)
+                .user(loseUser)
+                .isMatched(true)
+                .matchImminent(true)
+                .isDel(false)
                 .build());
         pChangeRepository.save(PChange.builder()
                 .game(game)
