@@ -118,7 +118,6 @@ public class CurrentMatchService {
             if (currentMatch != null) {
                 currentMatch.setIsDel(true);
             }
-//            currentMatchRepository.deleteByUser(user);
         } else {
             List<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllBySlotId(removeDto.getSlot().getId());
             slotTeamUsers.forEach(slotTeamUser -> {
@@ -126,7 +125,6 @@ public class CurrentMatchService {
                 if (currentMatch != null) {
                     currentMatch.setIsDel(true);
                 }
-//                currentMatchRepository.deleteByUser(slotTeamUser.getUser());
             } );
         }
     }

@@ -19,9 +19,6 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     User getUserByIntraId(String IntraId);
     Page<User> findAllByOrderByTotalExpDesc(Pageable pageable);
 
-    @Query(nativeQuery = true, value = "select u from user as u (order by total_exp desc) s where intra_id = :intraId")
-    Integer findMyRankByTotalExpAndUserId(@Param("intraId") String intraId);
-
     @Query(nativeQuery = true, value = "select ranking from (select intra_id, row_number() over (order by total_exp desc) as ranking from user) ranked where intra_id=:intraId")
     Integer findExpRankingByIntraId(@Param("intraId") String intraId);
 }

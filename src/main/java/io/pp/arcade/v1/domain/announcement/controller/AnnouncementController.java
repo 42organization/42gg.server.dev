@@ -11,5 +11,4 @@ import java.util.List;
 
 public interface AnnouncementController {
     public AnnouncementListResponseDto announcementLists(HttpServletRequest request);
-    public void announcementAdd(@RequestBody @Valid AnnouncementAddRequestDto addReqDto, HttpServletRequest request);
 }

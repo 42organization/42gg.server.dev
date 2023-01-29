@@ -33,14 +33,4 @@ public class AnnouncementControllerImpl implements AnnouncementController {
                 .announcements(announcementService.findAllAnnouncement())
                 .build();
     }
-
-    @Override
-    @PostMapping("/announcements")
-    public void announcementAdd(AnnouncementAddRequestDto addReqDto, HttpServletRequest request) {
-        UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        if (user.getRoleType() != RoleType.ADMIN) {
-            throw new BusinessException("E0001");
-        }
-        announcementService.addAnnouncement(addReqDto);
-    }
 }

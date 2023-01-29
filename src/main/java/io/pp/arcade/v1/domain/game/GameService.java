@@ -29,10 +29,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class GameService {
     private final GameRepository gameRepository;
-    private final TeamRepository teamRepository;
     private final SlotRepository slotRepository;
     private final SeasonRepository seasonRepository;
-    private final SlotTeamUserRepository slotTeamUserRepository;
 
     @Transactional
     public GameDto findById(Integer gameId) {
@@ -50,8 +48,6 @@ public class GameService {
         gameRepository.save(Game.builder()
                 .slot(slot)
                 .mode(slot.getMode())
-//                .type(slotDto.getType())
-//                .time(slotDto.getTime())
                 .status(StatusType.LIVE)
                 .season(season == null ? 1 : season.getId()) //season 추가
                 .build()
@@ -99,10 +95,7 @@ public class GameService {
         Slot slot = slotRepository.findById(createDto.getSlotId()).orElseThrow(null);
         Game game = Game.builder()
                 .slot(slot)
-//                .time(slot.getTime())
                 .season(createDto.getSeasonId())
-//                .time(slot.getTime())
-//                .type(slot.getType())
                 .status(createDto.getStatus()).build();
         gameRepository.save(game);
     }
@@ -118,13 +111,5 @@ public class GameService {
         Page<Game> games = gameRepository.findAll(pageable);
         List<GameDto> gameDtos = games.stream().map(GameDto::from).collect(Collectors.toList());
         return gameDtos;
-    }
-
-    @Transactional
-    public List<GameDto> findGameByTypeByAdmin(Pageable pageable, GameType type) {
-//        Page<Game> games = gameRepository.findAllByTypeOrderByIdDesc(pageable, type);
-//        List<GameDto> gameDtos = games.stream().map(GameDto::from).collect(Collectors.toList());
-//        return gameDtos;
-        return null;
     }
 }
