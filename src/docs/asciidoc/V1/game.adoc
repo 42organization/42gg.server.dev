@@ -78,17 +78,6 @@ include::{snippets}/V1/GameControllers/GET/games-all (게임 결과 목록)/resp
 == 랭크 게임 목록 조회 GET /pingpong/games
 
 === http-request
-include::{snippets}/V1/GameControllers/GET/games-normal (게임 결과 목록)/http-request.adoc[]
-=== request-parameters
-include::{snippets}/V1/GameControllers/GET/games-normal (게임 결과 목록)/request-parameters.adoc[]
-=== http-response
-include::{snippets}/V1/GameControllers/GET/games-normal (게임 결과 목록)/http-response.adoc[]
-=== response-fields
-include::{snippets}/V1/GameControllers/GET/games-normal (게임 결과 목록)/response-fields.adoc[]
-
-== 일반 게임 목록 조회 GET /pingpong/games
-
-=== http-request
 include::{snippets}/V1/GameControllers/GET/games-rank (게임 결과 목록)/http-request.adoc[]
 === request-parameters
 include::{snippets}/V1/GameControllers/GET/games-rank (게임 결과 목록)/request-parameters.adoc[]
@@ -96,6 +85,17 @@ include::{snippets}/V1/GameControllers/GET/games-rank (게임 결과 목록)/req
 include::{snippets}/V1/GameControllers/GET/games-rank (게임 결과 목록)/http-response.adoc[]
 === response-fields
 include::{snippets}/V1/GameControllers/GET/games-rank (게임 결과 목록)/response-fields.adoc[]
+
+== 일반 게임 목록 조회 GET /pingpong/games
+
+=== http-request
+include::{snippets}/V1/GameControllers/GET/games-normal (게임 결과 목록)/http-request.adoc[]
+=== request-parameters
+include::{snippets}/V1/GameControllers/GET/games-normal (게임 결과 목록)/request-parameters.adoc[]
+=== http-response
+include::{snippets}/V1/GameControllers/GET/games-normal (게임 결과 목록)/http-response.adoc[]
+=== response-fields
+include::{snippets}/V1/GameControllers/GET/games-normal (게임 결과 목록)/response-fields.adoc[]
 
 == 일반 게임 결과 조회 GET /pingpong/games/{gameId}/result/normal
 
