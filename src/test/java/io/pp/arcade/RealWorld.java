@@ -1029,6 +1029,12 @@ public class RealWorld {
         CurrentMatch[] currentMatches = new CurrentMatch[slots.length * 2];
 
         for (int i = 0; i < slots.length; i++) {
+            teams[i * 2].setScore(2);
+            teams[i * 2].setWin(true);
+            teams[i * 2 + 1].setScore(1);
+            teams[i * 2 + 1].setWin(false);
+            teamRepository.save(teams[i * 2]);
+            teamRepository.save(teams[i * 2 + 1]);
             Game game = gameRepository.save(Game.builder()
                     .slot(slots[i])
                     .season(season.getId())
@@ -1065,10 +1071,6 @@ public class RealWorld {
             slots[i].setGamePpp((users[(i * 2) % 10].getPpp() + users[(i * 2 + 1) % 10].getPpp()) / 2);
             slots[i].setType(GameType.SINGLE);
 
-            teams[i * 2].setScore(2);
-            teams[i * 2].setWin(true);
-            teams[i * 2 + 1].setScore(1);
-            teams[i * 2 + 1].setWin(false);
             pChangeRepository.save(PChange.builder()
                     .game(game)
                     .user(users[(i * 2) % 10])
