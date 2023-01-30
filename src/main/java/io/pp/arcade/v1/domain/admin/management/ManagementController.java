@@ -70,17 +70,6 @@ public class ManagementController {
         return "admin_management";
     }
 
-    /* 게임 결과 관리 */
-    @GetMapping("/admin/game")
-    public String gameResultPage(Model model, HttpServletRequest request) {
-        List<GameDto> singleGameList = gameService.findGameByTypeByAdmin(Pageable.ofSize(200), GameType.SINGLE);
-        List<GameDto> bungleGameList = gameService.findGameByTypeByAdmin(Pageable.ofSize(200), GameType.DOUBLE);
-        model.addAttribute("singleGameList", singleGameList);
-        model.addAttribute("bungleGameList", bungleGameList);
-        model.addAttribute("token", HeaderUtil.getAccessToken(request));
-        return "game_management";
-    }
-
     /* 시즌 관리 */
     @GetMapping("/admin/season")
     public String seasonPage(Model model, HttpServletRequest request) {
