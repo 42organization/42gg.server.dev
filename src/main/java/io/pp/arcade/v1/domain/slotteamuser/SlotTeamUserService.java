@@ -17,19 +17,6 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SlotTeamUserService {
     private final SlotTeamUserRepository slotTeamUserRepository;
-    private final SlotRepository slotRepository;
-    private final TeamRepository teamRepository;
-    private final GameRepository gameRepository;
-
-    @Transactional
-    public List<SlotTeamUserDto> findAllByTeamId(Integer teamId) {
-        return slotTeamUserRepository.findAllByTeamId(teamId).stream().map(SlotTeamUserDto::from).collect(Collectors.toList());
-    }
-
-    @Transactional
-    public List<SlotTeamUserDto> findAllByUserId(Integer userId) {
-        return slotTeamUserRepository.findAllByUserId(userId).stream().map(SlotTeamUserDto::from).collect(Collectors.toList());
-    }
 
     @Transactional
     public List<SlotTeamUserDto> findAllBySlotId(Integer slotId) {

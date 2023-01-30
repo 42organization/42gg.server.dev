@@ -32,7 +32,6 @@ import static io.pp.arcade.v1.global.type.GameType.SINGLE;
 @AllArgsConstructor
 public class RankRedisService {
     private final RedisTemplate<String, String> redisRank;
-    private final ListOperations<String, RankRedis> redisRankList;
     private final RedisKeyManager redisKeyManager;
     private final RankRedisRepository rankRedisRepository;
     private final SeasonService seasonService;

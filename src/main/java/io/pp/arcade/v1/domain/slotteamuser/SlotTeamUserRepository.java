@@ -11,9 +11,7 @@ public interface SlotTeamUserRepository extends JpaRepository<SlotTeamUser, Inte
     List<SlotTeamUser> findAllByTeamId(Integer teamId);
     List<SlotTeamUser> findAllByUserId(Integer userId);
     List<SlotTeamUser> findAllBySlotId(Integer slotId);
-    List<SlotTeamUser> findAllBySlotIdOrderByTeam(Integer slotId);
     Optional<SlotTeamUser> findSlotTeamUserBySlotIdAndUserId(Integer slotId, Integer userId);
-    Optional<SlotTeamUser> findByTeamIdAndUserId(Integer teamId, Integer userId);
 
     Page<SlotTeamUser> findAllByOrderByTeamUserId(Pageable pageable);
 }

@@ -46,16 +46,6 @@ public class SeasonService {
     }
 
     @Transactional
-    public SeasonDto findCurrentSeason() {
-        LocalDateTime now = LocalDateTime.now();
-//      Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElseThrow(() -> new BusinessException("E0001"));
-        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now, now).orElse(null);
-        if (season == null)
-            return SeasonDto.builder().seasonName("1").id(1).build();
-        return SeasonDto.from(season);
-    }
-
-    @Transactional
     public SeasonDto findLatestRankSeason() {
         Season season = seasonRepository.findFirstBySeasonModeOrSeasonModeOrderByIdDesc(Mode.RANK, Mode.BOTH).orElseThrow(() -> new BusinessException("E0001"));
         return SeasonDto.from(season);

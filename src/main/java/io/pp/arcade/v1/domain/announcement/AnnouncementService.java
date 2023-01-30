@@ -23,12 +23,4 @@ public class AnnouncementService {
         }
         return dtoList;
     }
-
-    @Transactional
-    public void addAnnouncement(AnnouncementAddRequestDto addRequestDto) {
-        announcementRepository.save(Announcement.builder()
-                .title(addRequestDto.getTitle())
-                .content(addRequestDto.getContent())
-                .build());
-    }
 }

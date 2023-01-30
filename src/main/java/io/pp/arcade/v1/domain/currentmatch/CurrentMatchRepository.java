@@ -16,5 +16,4 @@ public interface CurrentMatchRepository extends JpaRepository<CurrentMatch, Inte
     List<CurrentMatch> findAllBySlotId(Integer slotId);
     Page<CurrentMatch> findAllByOrderByIdDesc(Pageable pageable);
     List<CurrentMatch> findAllByIsDel(Boolean isDel);
-    void deleteByUser(User user);
 }
