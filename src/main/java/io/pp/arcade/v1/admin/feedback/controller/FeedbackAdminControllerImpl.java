@@ -16,6 +16,5 @@ public class FeedbackAdminControllerImpl implements FeedbackAdminController{
     @Override
     @PutMapping(value = "/feedback/is-solved")
     public void feedbackIsSolvedUpdate(FeedbackIsSolvedUpdateRequestDto updateRequestDto, HttpServletRequest request){
-
     }
 }
