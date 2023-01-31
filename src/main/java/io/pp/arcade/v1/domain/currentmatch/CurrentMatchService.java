@@ -1,8 +1,8 @@
 package io.pp.arcade.v1.domain.currentmatch;
 
-import io.pp.arcade.v1.domain.admin.dto.create.CurrentMatchCreateRequestDto;
-import io.pp.arcade.v1.domain.admin.dto.delete.CurrentMatchDeleteDto;
-import io.pp.arcade.v1.domain.admin.dto.update.CurrentMatchUpdateRequestDto;
+import io.pp.arcade.v1.admin.dto.create.CurrentMatchCreateRequestDto;
+import io.pp.arcade.v1.admin.dto.delete.CurrentMatchDeleteDto;
+import io.pp.arcade.v1.admin.dto.update.CurrentMatchUpdateRequestDto;
 import io.pp.arcade.v1.domain.game.Game;
 import io.pp.arcade.v1.domain.game.GameRepository;
 import io.pp.arcade.v1.domain.game.dto.GameDto;

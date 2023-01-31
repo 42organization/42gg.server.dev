@@ -1,9 +1,9 @@
 package io.pp.arcade.v1.domain.rank.service;
 
 import io.jsonwebtoken.lang.Collections;
-import io.pp.arcade.v1.domain.admin.dto.create.RankCreateRequestDto;
-import io.pp.arcade.v1.domain.admin.dto.delete.RankDeleteDto;
-import io.pp.arcade.v1.domain.admin.dto.update.RankUpdateRequestDto;
+import io.pp.arcade.v1.admin.dto.create.RankCreateRequestDto;
+import io.pp.arcade.v1.admin.dto.delete.RankDeleteDto;
+import io.pp.arcade.v1.admin.dto.update.RankUpdateRequestDto;
 import io.pp.arcade.v1.domain.rank.entity.Rank;
 import io.pp.arcade.v1.domain.rank.RankRepository;
 

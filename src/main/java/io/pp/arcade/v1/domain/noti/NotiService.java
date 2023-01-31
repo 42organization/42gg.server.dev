@@ -1,7 +1,7 @@
 package io.pp.arcade.v1.domain.noti;
 
-import io.pp.arcade.v1.domain.admin.dto.create.NotiCreateRequestDto;
-import io.pp.arcade.v1.domain.admin.dto.update.NotiUpdateRequestDto;
+import io.pp.arcade.v1.admin.dto.create.NotiCreateRequestDto;
+import io.pp.arcade.v1.admin.dto.update.NotiUpdateRequestDto;
 import io.pp.arcade.v1.domain.noti.dto.*;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.slot.SlotRepository;

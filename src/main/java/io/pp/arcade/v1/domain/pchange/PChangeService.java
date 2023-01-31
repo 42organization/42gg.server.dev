@@ -1,8 +1,8 @@
 package io.pp.arcade.v1.domain.pchange;
 
-import io.pp.arcade.v1.domain.admin.dto.create.PChangeCreateRequestDto;
-import io.pp.arcade.v1.domain.admin.dto.delete.PChangeDeleteDto;
-import io.pp.arcade.v1.domain.admin.dto.update.PChangeUpdateDto;
+import io.pp.arcade.v1.admin.dto.create.PChangeCreateRequestDto;
+import io.pp.arcade.v1.admin.dto.delete.PChangeDeleteDto;
+import io.pp.arcade.v1.admin.dto.update.PChangeUpdateDto;
 import io.pp.arcade.v1.domain.game.Game;
 import io.pp.arcade.v1.domain.game.GameRepository;
 import io.pp.arcade.v1.domain.pchange.dto.*;

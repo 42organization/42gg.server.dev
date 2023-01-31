@@ -1,7 +1,7 @@
 package io.pp.arcade.v1.domain.user;
 
-import io.pp.arcade.v1.domain.admin.dto.create.UserCreateRequestDto;
-import io.pp.arcade.v1.domain.admin.dto.update.UserUpdateRequestDto;
+import io.pp.arcade.v1.admin.dto.create.UserCreateRequestDto;
+import io.pp.arcade.v1.admin.dto.update.UserUpdateRequestDto;
 
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.type.RoleType;

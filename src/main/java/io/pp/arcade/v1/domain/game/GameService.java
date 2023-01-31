@@ -1,7 +1,7 @@
 package io.pp.arcade.v1.domain.game;
 
-import io.pp.arcade.v1.domain.admin.dto.create.GameCreateDto;
-import io.pp.arcade.v1.domain.admin.dto.delete.GameDeleteDto;
+import io.pp.arcade.v1.admin.dto.create.GameCreateDto;
+import io.pp.arcade.v1.admin.dto.delete.GameDeleteDto;
 
 import io.pp.arcade.v1.domain.game.dto.*;
 import io.pp.arcade.v1.domain.season.Season;
@@ -112,4 +112,5 @@ public class GameService {
         List<GameDto> gameDtos = games.stream().map(GameDto::from).collect(Collectors.toList());
         return gameDtos;
     }
+
 }

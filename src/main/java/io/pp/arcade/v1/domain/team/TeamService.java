@@ -1,9 +1,7 @@
 package io.pp.arcade.v1.domain.team;
 
-
-import io.pp.arcade.v1.domain.admin.dto.create.TeamCreateRequestDto;
-import io.pp.arcade.v1.domain.admin.dto.delete.TeamDeleteDto;
-import io.pp.arcade.v1.domain.admin.dto.update.TeamUpdateDto;
+import io.pp.arcade.v1.admin.dto.delete.TeamDeleteDto;
+import io.pp.arcade.v1.admin.dto.update.TeamUpdateDto;
 import io.pp.arcade.v1.domain.game.dto.GameUserInfoDto;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.slot.dto.SlotDto;
@@ -154,14 +152,6 @@ public class TeamService {
         return dto;
     }
 
-    @Transactional
-    public void createTeamByAdmin(TeamCreateRequestDto teamCreateDto) {
-        teamRepository.save(Team.builder()
-                .teamPpp(teamCreateDto.getTeamPpp())
-                .headCount(teamCreateDto.getHeadCount())
-                .score(teamCreateDto.getScore())
-                .build());
-    }
 
     @Transactional
     public void updateTeamByAdmin(TeamUpdateDto teamUpdateDto) {

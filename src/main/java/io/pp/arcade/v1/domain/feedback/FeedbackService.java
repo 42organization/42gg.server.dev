@@ -2,7 +2,7 @@ package io.pp.arcade.v1.domain.feedback;
 
 import io.pp.arcade.v1.domain.feedback.dto.FeedbackAddDto;
 import io.pp.arcade.v1.domain.feedback.dto.FeedbackDto;
-import io.pp.arcade.v1.domain.admin.dto.update.FeedbackUpdateDto;
+import io.pp.arcade.v1.admin.dto.update.FeedbackUpdateDto;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.domain.user.UserRepository;
 import io.pp.arcade.v1.global.exception.BusinessException;

@@ -1,8 +1,8 @@
 package io.pp.arcade.v1.domain.slot;
 
-import io.pp.arcade.v1.domain.admin.dto.create.SlotCreateRequestDto;
-import io.pp.arcade.v1.domain.admin.dto.delete.SlotDeleteDto;
-import io.pp.arcade.v1.domain.admin.dto.update.SlotUpdateDto;
+import io.pp.arcade.v1.admin.dto.create.SlotCreateRequestDto;
+import io.pp.arcade.v1.admin.dto.delete.SlotDeleteDto;
+import io.pp.arcade.v1.admin.dto.update.SlotUpdateDto;
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchRepository;
 import io.pp.arcade.v1.domain.season.Season;

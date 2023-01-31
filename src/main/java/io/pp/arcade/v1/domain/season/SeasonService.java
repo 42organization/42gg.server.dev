@@ -1,7 +1,7 @@
 package io.pp.arcade.v1.domain.season;
 
-import io.pp.arcade.v1.domain.admin.dto.create.SeasonCreateRequestDto;
-import io.pp.arcade.v1.domain.admin.dto.update.SeasonUpdateDto;
+import io.pp.arcade.v1.admin.dto.create.SeasonCreateRequestDto;
+import io.pp.arcade.v1.admin.dto.update.SeasonUpdateDto;
 import io.pp.arcade.v1.domain.season.dto.SeasonDeleteDto;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.domain.season.dto.SeasonNameDto;
