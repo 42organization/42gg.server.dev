@@ -40,8 +40,13 @@ public class FeedbackAdminControllerImpl implements FeedbackAdminController{
     @Override
     @GetMapping(value = "/feedback")
     public List<FeedbackAdminResponseDto> feedbackAll(Pageable pageable, HttpServletRequest request) {
-        return feedbackAdminService.findFeedbackByAdmin(pageable);
+        return feedbackAdminService.findAllFeedbackByAdmin(pageable);
     }
 
+    @Override
+    @GetMapping(value = "/feedback/users")
+    public List<FeedbackAdminResponseDto> feedbackFindByIntraId(String intraId, Pageable pageable ,HttpServletRequest request) {
+        return feedbackAdminService.findFeedbackByIntraId(intraId, pageable);
+    }
 
 }
