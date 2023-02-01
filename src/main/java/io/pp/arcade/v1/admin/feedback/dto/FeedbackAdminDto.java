@@ -27,7 +27,7 @@ public class FeedbackAdminDto {
 
     @Override
     public String toString(){
-        return "FeedbackDto{" +
+        return "FeedbackAdminDto{" +
                 "id=" + id +
                 ", user=" + user +
                 ", category=" + category +

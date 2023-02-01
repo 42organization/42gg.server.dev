@@ -16,9 +16,13 @@ public class FeedbackAdminService {
     private FeedbackAdminRepository feedbackAdminRepository;
 
     @Transactional
-    public void updateFeedbackIsSolvedByAdmin(FeedbackIsSolvedUpdateDto updateDto){
+    public void toggleFeedbackIsSolvedByAdmin(FeedbackIsSolvedUpdateDto updateDto){
         Feedback feedback = feedbackAdminRepository.findById(updateDto.getFeedbackId()).orElseThrow(() -> new BusinessException("E0001"));
-        feedback.setIsSolved(updateDto.getIsSolved());
+        if (feedback.getIsSolved() == true){
+            feedback.setIsSolved(false);
+        }else {
+            feedback.setIsSolved(true);
+        }
     }
 
     @Transactional
