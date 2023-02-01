@@ -1,14 +1,19 @@
 package io.pp.arcade.v1.admin.feedback.service;
 
 import io.pp.arcade.v1.admin.feedback.dto.FeedbackAdminDto;
+import io.pp.arcade.v1.admin.feedback.dto.FeedbackAdminResponseDto;
 import io.pp.arcade.v1.admin.feedback.dto.FeedbackIsSolvedToggleDto;
 import io.pp.arcade.v1.admin.feedback.repository.FeedbackAdminRepository;
 import io.pp.arcade.v1.domain.feedback.Feedback;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -35,6 +40,13 @@ public class FeedbackAdminService {
                 .isSolved(feedback.getIsSolved())
                 .build();
         return feedbackAdminDto;
+    }
+
+    @Transactional
+    public List<FeedbackAdminResponseDto> findFeedbackByAdmin(Pageable pageable){
+        Page<Feedback> feedbacks = feedbackAdminRepository.findAll(pageable);
+        Page<FeedbackAdminResponseDto> feedbackAdminResponseDtos = feedbacks.map(FeedbackAdminResponseDto::new);
+        return feedbackAdminResponseDtos.getContent();
     }
 
 

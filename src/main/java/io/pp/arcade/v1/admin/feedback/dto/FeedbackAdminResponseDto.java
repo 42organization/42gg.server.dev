@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 public class FeedbackAdminResponseDto {
     private Integer id;
     private UserAdminDto user;
@@ -15,14 +14,12 @@ public class FeedbackAdminResponseDto {
     private String content;
     private Boolean isSolved;
 
-    public static FeedbackAdminResponseDto from(Feedback feedback){
-        return FeedbackAdminResponseDto.builder()
-                .id(feedback.getId())
-                .user(UserAdminDto.from(feedback.getUser()))
-                .category(feedback.getCategory())
-                .content(feedback.getContent())
-                .isSolved(feedback.getIsSolved())
-                .build();
+    public FeedbackAdminResponseDto(Feedback feedback){
+        this.id = feedback.getId();
+        this.user = UserAdminDto.from(feedback.getUser());
+        this.category = feedback.getCategory();
+        this.content = feedback.getContent();
+        this.isSolved = feedback.getIsSolved();
     }
 
     @Override
