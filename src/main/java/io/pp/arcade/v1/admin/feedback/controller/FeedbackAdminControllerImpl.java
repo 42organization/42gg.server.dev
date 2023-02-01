@@ -1,6 +1,7 @@
 package io.pp.arcade.v1.admin.feedback.controller;
 
 import io.pp.arcade.v1.admin.feedback.dto.FeedbackAdminDto;
+import io.pp.arcade.v1.admin.feedback.dto.FeedbackIsSolvedResponseDto;
 import io.pp.arcade.v1.admin.feedback.dto.FeedbackIsSolvedUpdateDto;
 import io.pp.arcade.v1.admin.feedback.dto.FeedbackIsSolvedUpdateRequestDto;
 import io.pp.arcade.v1.admin.feedback.service.FeedbackAdminService;
@@ -19,11 +20,18 @@ public class FeedbackAdminControllerImpl implements FeedbackAdminController{
     private final FeedbackAdminService feedbackAdminService;
     @Override
     @PutMapping(value = "/feedback/is-solved")
-    public void feedbackIsSolvedUpdate(FeedbackIsSolvedUpdateRequestDto updateRequestDto, HttpServletRequest request){
+    public FeedbackIsSolvedResponseDto feedbackIsSolvedToggle(FeedbackIsSolvedUpdateRequestDto updateRequestDto, HttpServletRequest request){
+        FeedbackAdminDto feedbackAdminDto = feedbackAdminService.findFeedbackById(updateRequestDto.getFeedbackId());
+
         FeedbackIsSolvedUpdateDto updateDto = FeedbackIsSolvedUpdateDto.builder()
-                .feedbackId(updateRequestDto.getFeedbackId())  //여기서 updateRequestDto의 정보를 긁어다가 올지 아니면 admindto에 한 번 감싸서 쓰는게 맞는지
-                .isSolved(updateRequestDto.getIsSolved())
+                .feedbackId(feedbackAdminDto.getId())
+                .isSolved(feedbackAdminDto.getIsSolved())
                 .build();
-        feedbackAdminService.updateFeedbackIsSolvedByAdmin(updateDto);
+
+        feedbackAdminService.toggleFeedbackIsSolvedByAdmin(updateDto);
+        FeedbackIsSolvedResponseDto responseDto = FeedbackIsSolvedResponseDto.builder()
+                .isSolved(updateDto.getIsSolved())
+                .build();
+        return responseDto;
     }
 }
