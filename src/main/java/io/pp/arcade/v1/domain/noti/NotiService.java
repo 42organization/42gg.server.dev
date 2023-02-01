@@ -11,11 +11,7 @@ import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.domain.user.UserRepository;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.type.NotiType;
-import io.pp.arcade.v1.global.util.AsyncMailSender;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
@@ -31,8 +27,7 @@ public class NotiService {
     private final NotiRepository notiRepository;
     private final UserRepository userRepository;
     private final SlotRepository slotRepository;
-    private final JavaMailSender javaMailSender;
-    private final AsyncMailSender asyncMailSender;
+    private final NotiMailSender notiMailSender;
     private final SlotTeamUserRepository slotTeamUserRepository;
 
     @Transactional
@@ -49,7 +44,7 @@ public class NotiService {
                         .message(notiAddDto.getMessage())
                         .isChecked(false)
                         .build());
-                sendMail(noti, users.getUser());
+                notiMailSender.sendMail(noti, users.getUser());
             }
         } else {
             User user = userRepository.findById(notiAddDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
@@ -60,24 +55,9 @@ public class NotiService {
                     .message(notiAddDto.getMessage())
                     .isChecked(false)
                     .build());
-            sendMail(noti, user);
+            notiMailSender.sendMail(noti, user);
             notiRepository.save(noti);
         }
-    }
-
-    private void sendMail(Noti noti, User user) throws MessagingException {
-        MimeMessage message = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message);
-        helper.setSubject("핑퐁요정🧚으로부터 도착한 편지");
-        helper.setTo(user.getEMail());
-        if (noti.getType() != NotiType.ANNOUNCE) {
-            helper.setText("🧚: \"새로운 알림이 도착했핑.\"\n" + "🧚: \"" + noti.getType().getMessage() + "\"\n\n 🏓42GG와 함께하는 행복한 탁구생활🏓" +
-                    "\n$$지금 즉시 접속$$ ----> https://42gg.kr");
-        } else {
-            helper.setText("🧚: \"새로운 알림이 도착했핑.\"\n" + "🧚: \"" + noti.getType().getMessage() + "\"\n\n공지사항: " + noti.getMessage() + "\n\n 🏓42GG와 함께하는 행복한 탁구생활🏓" +
-                    "\n$$지금 즉시 접속$$ ----> https://42gg.kr");
-        }
-        asyncMailSender.send(message);
     }
 
     @Transactional
@@ -121,45 +101,6 @@ public class NotiService {
     }
 
     @Transactional
-    public void createNotiByAdmin(NotiCreateRequestDto createRequestDto) throws MessagingException {
-        Slot slot = createRequestDto.getSlotId() == null ? null : slotRepository.findById(createRequestDto.getSlotId()).orElse(null);
-        User user = userRepository.findByIntraId(createRequestDto.getUserId()).orElseThrow();
-        Noti noti = Noti.builder()
-                .slot(slot)
-                .user(user)
-                .type(createRequestDto.getNotiType())
-                .message(createRequestDto.getMessage())
-                .isChecked(createRequestDto.getIsChecked())
-                .build();
-        notiRepository.save(noti);
-        if (createRequestDto.getSendMail()) {
-            sendMail(noti, user);
-        }
-    }
-
-    @Transactional
-    public void updateNotiByAdmin(NotiUpdateRequestDto updateRequestDto) {
-        Noti noti = notiRepository.findById(updateRequestDto.getNotiId()).orElseThrow();
-
-        User user = userRepository.findById(updateRequestDto.getUserId()).orElse(null);
-        Slot slot = slotRepository.findById(updateRequestDto.getSlotId()).orElse(null);
-        noti.update(user, slot, updateRequestDto.getNotiType(), updateRequestDto.getMessage(), updateRequestDto.getIsChecked()); // 더 고칠게 있을까요
-    }
-
-    @Transactional
-    public void deleteNotibyAdmin(NotiDeleteDto deleteDto) {
-        Noti noti = notiRepository.findById(deleteDto.getNotiId()).orElseThrow();
-        notiRepository.delete(noti);
-    }
-
-    @Transactional
-    public List<NotiDto> findNotiByAdmin(Pageable pageable) {
-        Page<Noti> notis = notiRepository.findAllByOrderByIdDesc(pageable);
-        List<NotiDto> notiDtos = notis.stream().map(NotiDto::from).collect(Collectors.toList());
-        return notiDtos;
-    }
-
-    @Transactional
     public void createNotiForAll(NotiCreateRequestDto createRequestDto) {
         List<User> users = userRepository.findAll();
         users.forEach(user -> {
@@ -196,6 +137,6 @@ public class NotiService {
                 .message("축하합니다!! 이벤트에 당첨되었습니다🎉")
                 .isChecked(false)
                 .build();
-        sendMail(noti, user);
+        notiMailSender.sendMail(noti, user);
     }
 }
