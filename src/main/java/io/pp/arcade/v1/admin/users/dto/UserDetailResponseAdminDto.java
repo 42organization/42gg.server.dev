@@ -19,7 +19,7 @@ public class UserDetailResponseAdminDto {
 
 
     @Builder
-    public UserDetailResponseAdminDto(String intraId, String userImageUri, Integer level, Integer currentExp, Integer maxExp, RacketType racketType, String statusMessage, Integer wins, Integer losses, Integer ppp, String e_mail, RoleType role_type) {
+    public UserDetailResponseAdminDto(String intraId, String userImageUri, Integer level, Integer currentExp, Integer maxExp, RacketType racketType, String statusMessage, Integer wins, Integer losses, Integer ppp, String e_mail, String role_type) {
         this.intraId = intraId;
         this.userImageUri = userImageUri;
         this.racketType = racketType.getCode();
@@ -28,7 +28,7 @@ public class UserDetailResponseAdminDto {
         this.losses = losses;
         this.ppp = ppp;
         this.e_mail = e_mail;
-        this.role_type = role_type.getDisplayName();
+        this.role_type = role_type;
     }
 
     @Override

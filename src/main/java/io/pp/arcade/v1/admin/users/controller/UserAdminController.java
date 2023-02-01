@@ -13,5 +13,5 @@ public interface UserAdminController {
 
     UserDetailResponseAdminDto userFindDetail(@PathVariable String targetUserId, @RequestBody Integer userId, HttpServletRequest request);
     UserSearchResponseAdminDto userAll(HttpServletRequest request, @RequestParam(value = "q", required = false) String keyword, @RequestParam(value = "page") Long page);
-    void userUpdate(@RequestBody UserUpdateRequesAdmintDto userUpdateDto, HttpServletRequest request);
+    void userDetailUpdate(@RequestBody UserUpdateRequesAdmintDto userUpdateDto, HttpServletRequest request);
 }

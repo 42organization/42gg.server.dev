@@ -1,10 +1,10 @@
 package io.pp.arcade.v1.admin.users.service;
 
 import io.pp.arcade.v1.admin.users.dto.*;
+import io.pp.arcade.v1.admin.users.repository.UserAdminRepository;
+import io.pp.arcade.v1.domain.rank.RankRepository;
 import io.pp.arcade.v1.domain.user.User;
-import io.pp.arcade.v1.domain.user.UserRepository;
 import io.pp.arcade.v1.global.exception.BusinessException;
-import io.pp.arcade.v1.global.type.RoleType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,23 +17,23 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 public class UserAdminService {
-    private final UserRepository userRepository;
+    private final UserAdminRepository userAdminRepository;
 
     @Transactional
     public List<UserAdminDto> findAll() {
-        List<User> users = userRepository.findAll();
+        List<User> users = userAdminRepository.findAll();
         List<UserAdminDto> userAdminDtos = users.stream().map(UserAdminDto::from).collect(Collectors.toList());
         return userAdminDtos;
     }
     @Transactional
     public UserAdminDto findByIntraId(UserFindAdminDto findDto) {
-        User user = userRepository.findByIntraId(findDto.getIntraId()).orElseThrow(() -> new BusinessException("E0001"));
+        User user = userAdminRepository.findByIntraId(findDto.getIntraId()).orElseThrow(() -> new BusinessException("E0001"));
         return UserAdminDto.from(user);
     }
 
     @Transactional
     public UserAdminDto findById(UserFindAdminDto findDto) {
-        User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
+        User user = userAdminRepository.findById(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         return UserAdminDto.from(user);
     }
 
@@ -41,7 +41,7 @@ public class UserAdminService {
     @Transactional
     public UserSearchResponseAdminDto findByPartsOfIntraId(UserSearchRequestAdminDto userSearchDto, Pageable pageable) {
         Page<UserSearchAdminDto> result;
-        Page<User> users = userRepository.findByIntraIdContains(userSearchDto.getIntraId(), pageable);
+        Page<User> users = userAdminRepository.findByIntraIdContains(userSearchDto.getIntraId(), pageable);
         result = users.map(UserSearchAdminDto::from);
         return UserSearchResponseAdminDto.builder()
                 .userSearchAdminDtos(result.getContent())
@@ -52,7 +52,7 @@ public class UserAdminService {
 
     @Transactional
     public UserSearchResponseAdminDto findUserByAdmin(Pageable pageable) {
-        Page<User> users = userRepository.findAll(pageable);
+        Page<User> users = userAdminRepository.findAll(pageable);
         Page<UserSearchAdminDto> page = users.map(UserSearchAdminDto::from);
         return UserSearchResponseAdminDto.builder()
                 .userSearchAdminDtos(page.getContent())
@@ -62,18 +62,13 @@ public class UserAdminService {
     }
 
     @Transactional
-    public List<UserAdminDto> findAllByRoleType(RoleType roleType) {
-        List<User> users = userRepository.findAllByRoleType(roleType);
-        List<UserAdminDto> userAdminDtos = users.stream().map(UserAdminDto::from).collect(Collectors.toList());
-        return userAdminDtos;
-    }
-
-    @Transactional
-    public void updateUserByAdmin(UserUpdateRequesAdmintDto updateRequestDto) {
-        User user = userRepository.findById(updateRequestDto.getUserId()).orElseThrow();
-        user.setImageUri(updateRequestDto.getUserImageUri());
+    public void updateUserDetailByAdmin(UserUpdateRequesAdmintDto updateRequestDto) {
+        User user = userAdminRepository.findById(updateRequestDto.getUserId()).orElseThrow();
+        user.setEMail(updateRequestDto.getEMail());
         user.setRacketType(updateRequestDto.getRacketType());
         user.setStatusMessage(updateRequestDto.getStatusMessage());
-        user.setPpp(updateRequestDto.getPpp());
+        user.setRoleType(updateRequestDto.getRoleType());
+
+
     }
 }
