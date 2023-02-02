@@ -3,26 +3,26 @@ package io.pp.arcade.v1.admin.feedback.service;
 import io.pp.arcade.v1.admin.feedback.dto.FeedbackAdminDto;
 import io.pp.arcade.v1.admin.feedback.dto.FeedbackAdminResponseDto;
 import io.pp.arcade.v1.admin.feedback.dto.FeedbackIsSolvedToggleDto;
+import io.pp.arcade.v1.admin.feedback.dto.FeedbackListAdminResponseDto;
 import io.pp.arcade.v1.admin.feedback.repository.FeedbackAdminRepository;
-import io.pp.arcade.v1.admin.users.dto.UserAdminDto;
 import io.pp.arcade.v1.admin.users.repository.UserAdminRepository;
 import io.pp.arcade.v1.domain.feedback.Feedback;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class FeedbackAdminService {
-    private FeedbackAdminRepository feedbackAdminRepository;
-    private UserAdminRepository userAdminRepository;
+    private final FeedbackAdminRepository feedbackAdminRepository;
+    private final UserAdminRepository userAdminRepository;
 
     @Transactional
     public void toggleFeedbackIsSolvedByAdmin(FeedbackIsSolvedToggleDto updateDto){
@@ -47,18 +47,22 @@ public class FeedbackAdminService {
     }
 
     @Transactional
-    public List<FeedbackAdminResponseDto> findAllFeedbackByAdmin(Pageable pageable){
+    public FeedbackListAdminResponseDto findAllFeedbackByAdmin(Pageable pageable){
         Page<Feedback> feedbacks = feedbackAdminRepository.findAll(pageable);
         Page<FeedbackAdminResponseDto> feedbackAdminResponseDtos = feedbacks.map(FeedbackAdminResponseDto::new);
-        return feedbackAdminResponseDtos.getContent();
+        FeedbackListAdminResponseDto responseDto = new FeedbackListAdminResponseDto(feedbackAdminResponseDtos.getContent(),
+                feedbackAdminResponseDtos.getTotalPages(), feedbackAdminResponseDtos.getNumber() + 1);
+        return responseDto;
     }
 
     @Transactional
-    public List<FeedbackAdminResponseDto> findFeedbackByIntraId(String intraId, Pageable pageable){
+    public FeedbackListAdminResponseDto findFeedbackByIntraId(String intraId, Pageable pageable){
         User user = userAdminRepository.findByIntraId(intraId).orElseThrow(() -> new BusinessException("E0001"));
         Page<Feedback> feedbacks = feedbackAdminRepository.findAllByUser(user);
         Page<FeedbackAdminResponseDto> feedbackAdminResponseDtos = feedbacks.map(FeedbackAdminResponseDto::new);
-        return feedbackAdminResponseDtos.getContent();
+        FeedbackListAdminResponseDto responseDto = new FeedbackListAdminResponseDto(feedbackAdminResponseDtos.getContent(),
+                feedbackAdminResponseDtos.getTotalPages(), feedbackAdminResponseDtos.getNumber() + 1);
+        return responseDto;
     }
 
 }
