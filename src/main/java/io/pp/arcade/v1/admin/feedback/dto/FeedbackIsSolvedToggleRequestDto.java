@@ -5,5 +5,4 @@ import lombok.Getter;
 @Getter
 public class FeedbackIsSolvedToggleRequestDto {
     private Integer feedbackId;
-    private Boolean isSolved;
 }

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,12 +28,7 @@ public class FeedbackAdminControllerImpl implements FeedbackAdminController{
                 .feedbackId(feedbackAdminDto.getId())
                 .isSolved(feedbackAdminDto.getIsSolved())
                 .build();
-
-        feedbackAdminService.toggleFeedbackIsSolvedByAdmin(updateDto);
-        FeedbackIsSolvedResponseDto responseDto = FeedbackIsSolvedResponseDto.builder()
-                .isSolved(updateDto.getIsSolved())
-                .build();
-        return responseDto;
+        return feedbackAdminService.toggleFeedbackIsSolvedByAdmin(updateDto);
     }
 
     @Override
