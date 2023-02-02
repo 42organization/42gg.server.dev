@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -57,8 +58,8 @@ public class FeedbackAdminService {
 
     @Transactional
     public FeedbackListAdminResponseDto findFeedbackByIntraId(String intraId, Pageable pageable){
-        User user = userAdminRepository.findByIntraId(intraId).orElseThrow(() -> new BusinessException("E0001"));
-        Page<Feedback> feedbacks = feedbackAdminRepository.findAllByUser(user, pageable);
+        User user = userAdminRepository.findByIntraId(intraId).orElseThrow(() -> new BusinessException("E0001"));   //user가 없는 경우 E0001 발생
+        Page<Feedback> feedbacks = (user == null)? null : feedbackAdminRepository.findAllByUser(user, pageable);     //해당 유저가 작성한 feedback이 없는 경우 null 반환
         Page<FeedbackAdminResponseDto> feedbackAdminResponseDtos = feedbacks.map(FeedbackAdminResponseDto::new);
         FeedbackListAdminResponseDto responseDto = new FeedbackListAdminResponseDto(feedbackAdminResponseDtos.getContent(),
                 feedbackAdminResponseDtos.getTotalPages(), feedbackAdminResponseDtos.getNumber() + 1);

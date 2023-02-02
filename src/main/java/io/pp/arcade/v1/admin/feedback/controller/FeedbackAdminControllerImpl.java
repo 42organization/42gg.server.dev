@@ -2,21 +2,15 @@ package io.pp.arcade.v1.admin.feedback.controller;
 
 import io.pp.arcade.v1.admin.feedback.dto.*;
 import io.pp.arcade.v1.admin.feedback.service.FeedbackAdminService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,7 +48,7 @@ public class FeedbackAdminControllerImpl implements FeedbackAdminController{
 
     @Override
     @GetMapping(value = "/users")
-    public FeedbackListAdminResponseDto feedbackFindByIntraId(int page, int size, String intraId, HttpResponse httpResponse) {
+    public FeedbackListAdminResponseDto feedbackFindByIntraId(String intraId, int page, int size,HttpResponse httpResponse) {
         if (page < 1 || size < 1){
             httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
             return null;
