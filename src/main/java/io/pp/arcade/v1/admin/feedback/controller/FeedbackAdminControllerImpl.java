@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/admin/feedback")
@@ -48,11 +50,13 @@ public class FeedbackAdminControllerImpl implements FeedbackAdminController{
 
     @Override
     @GetMapping(value = "/users")
-    public FeedbackListAdminResponseDto feedbackFindByIntraId(String intraId, int page, int size,HttpResponse httpResponse) {
+    public FeedbackListAdminResponseDto feedbackFindByIntraId(String intraId, int page, int size, HttpResponse httpResponse) {
+        /*
         if (page < 1 || size < 1){
             httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
             return null;
         }
+        */
         Pageable pageable = PageRequest.of(page - 1, size);
         return feedbackAdminService.findFeedbackByIntraId(intraId, pageable);
     }
