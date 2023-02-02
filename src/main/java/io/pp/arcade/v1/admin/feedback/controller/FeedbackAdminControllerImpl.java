@@ -3,6 +3,7 @@ package io.pp.arcade.v1.admin.feedback.controller;
 import io.pp.arcade.v1.admin.feedback.dto.*;
 import io.pp.arcade.v1.admin.feedback.service.FeedbackAdminService;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.springframework.data.domain.Page;
@@ -18,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/admin/feedback")
 public class FeedbackAdminControllerImpl implements FeedbackAdminController{
 

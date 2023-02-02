@@ -7,5 +7,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface FeedbackAdminRepository extends JpaRepository<Feedback, Integer> {
-    Page<Feedback> findAllByUser(User user);
+    Page<Feedback> findAllByUser(User user, Pageable pageable);
 }

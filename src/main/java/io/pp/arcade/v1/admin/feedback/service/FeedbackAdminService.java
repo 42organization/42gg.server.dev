@@ -58,7 +58,7 @@ public class FeedbackAdminService {
     @Transactional
     public FeedbackListAdminResponseDto findFeedbackByIntraId(String intraId, Pageable pageable){
         User user = userAdminRepository.findByIntraId(intraId).orElseThrow(() -> new BusinessException("E0001"));
-        Page<Feedback> feedbacks = feedbackAdminRepository.findAllByUser(user);
+        Page<Feedback> feedbacks = feedbackAdminRepository.findAllByUser(user, pageable);
         Page<FeedbackAdminResponseDto> feedbackAdminResponseDtos = feedbacks.map(FeedbackAdminResponseDto::new);
         FeedbackListAdminResponseDto responseDto = new FeedbackListAdminResponseDto(feedbackAdminResponseDtos.getContent(),
                 feedbackAdminResponseDtos.getTotalPages(), feedbackAdminResponseDtos.getNumber() + 1);
