@@ -1,21 +1,29 @@
 package io.pp.arcade.v1.admin.users.controller;
 
+import io.pp.arcade.v1.admin.users.dto.*;
+import io.pp.arcade.v1.admin.users.service.UserAdminService;
+import io.pp.arcade.v1.domain.rank.dto.RankRedisFindDto;
+import io.pp.arcade.v1.domain.rank.dto.RankUserDto;
+import io.pp.arcade.v1.domain.rank.service.RankRedisService;
+import io.pp.arcade.v1.domain.rank.service.RankService;
+import io.pp.arcade.v1.domain.season.SeasonService;
+import io.pp.arcade.v1.domain.season.dto.SeasonDto;
+import io.pp.arcade.v1.domain.security.jwt.TokenService;
 import io.pp.arcade.v1.admin.dto.create.UserCreateRequestDto;
 import io.pp.arcade.v1.admin.dto.update.UserUpdateRequestDto;
-import io.pp.arcade.v1.admin.users.dto.UserAdminDto;
-import io.pp.arcade.v1.admin.users.dto.UserSearchAdminRequestDto;
-import io.pp.arcade.v1.admin.users.dto.UserSearchResultAdminResponseDto;
 import io.pp.arcade.v1.admin.users.service.UserAdminService;
 import io.pp.arcade.v1.domain.user.UserService;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.domain.user.dto.UserFindDto;
+import io.pp.arcade.v1.global.type.GameType;
+import io.pp.arcade.v1.global.util.ExpLevelCalculator;
+import io.pp.arcade.v1.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -25,7 +33,13 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @RequestMapping(value = "/admin")
 public class UserAdminControllerImpl implements UserAdminController {
+    private final UserAdminService userAdminService;
+
+    /* domain 의존 서비스 */
     private final UserService userService;
+    private final SeasonService seasonService;
+    private final RankRedisService rankRedisService;
+    private final TokenService tokenService;
 
     private final UserAdminService userAdminService;
 
@@ -33,29 +47,53 @@ public class UserAdminControllerImpl implements UserAdminController {
 
     @Override
     @GetMapping(value = "/users")
-    public List<UserDto> userAll(Long page, HttpServletRequest request, String keyword) {
+    public UserSearchResponseAdminDto userAll(HttpServletRequest request, String keyword, Long page) {
         Pageable pageable = PageRequest.of(page.intValue() - 1, 20);
 
         if (keyword == null) {
-            List<UserDto> users = userService.findUserByAdmin(pageable);
+            UserSearchResponseAdminDto users = userAdminService.findUserByAdmin(pageable);
             return users;
         }
-        return null;
+        UserSearchRequestAdminDto userSearchDto = UserSearchRequestAdminDto.builder()
+                                                    .intraId(keyword)
+                                                    .build();
+        UserSearchResponseAdminDto users = userAdminService.findByPartsOfIntraId(userSearchDto, pageable);
+        return users;
     }
 
     @Override
+    @GetMapping(value = "/users/{intraId}/detail")
+    public UserDetailResponseAdminDto userFindDetail(String intraId, Integer userId, HttpServletRequest request) {
+        UserDto targetUser = userService.findByIntraId(UserFindDto.builder().intraId(intraId).userId(userId).build());
+        SeasonDto seasonDto = seasonService.findLatestRankSeason();
+        RankRedisFindDto rankRedisFindDto = RankRedisFindDto.builder()
+                .user(targetUser)
+                .gameType(GameType.getEnumFromValue("SINGLE")) // 현재는 싱글로만 동작
+                .season(seasonDto)
+                .build();
+        RankUserDto rankUserDto = rankRedisService.findRankById(rankRedisFindDto);
+
+        UserDetailResponseAdminDto responseDto = UserDetailResponseAdminDto.builder()
+                .intraId(targetUser.getIntraId())
+                .userImageUri(targetUser.getImageUri())
+                .racketType(targetUser.getRacketType())
+                .statusMessage(targetUser.getStatusMessage())
+                .wins(rankUserDto.getWins())
+                .losses(rankUserDto.getLosses())
+                .ppp(rankUserDto.getPpp())
+                .email(targetUser.getEMail())
+                .roleType(targetUser.getRoleType().getDisplayName())
+                .build();
+        return responseDto;
+    } // domain에 의존함
+
+    @Override
     @PutMapping(value = "/users/{intraid}/detail")
-    public void userUpdate(UserUpdateRequestDto updateRequestDto, HttpServletRequest request) {
-        userService.updateUserByAdmin(updateRequestDto);
+    public void userDetailUpdate(UserUpdateRequesAdmintDto updateRequestDto, HttpServletRequest request) {
+        System.out.println(updateRequestDto.toString());
+//        userAdminService.updateUserDetailByAdmin(updateRequestDto);
     }
-
-//    @Override
-//    @DeleteMapping(value = "/users/{userId}")
-//    public void userRoleChange(Integer userId, HttpServletRequest request) {
-//        UserDto user = userService.findById(UserFindDto.builder().userId(userId).build());
-//        userService.toggleUserRoleType(user);
-//    }
-
+    
     @Override
     @GetMapping(value = "/users/searches")
     public UserSearchResultAdminResponseDto userSearchResult(String inquiringString/*HttpServletRequest request*/) {
@@ -64,5 +102,4 @@ public class UserAdminControllerImpl implements UserAdminController {
                 .stream().map(UserAdminDto::getIntraId).collect(Collectors.toList());
         return UserSearchResultAdminResponseDto.builder().users(users).build();
     }
-
 }

@@ -1,9 +1,13 @@
 package io.pp.arcade.v1.global.util;
 
+import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.Optional;
 
 @Component
 public class AsyncNewUserImageUploader {
@@ -32,5 +36,17 @@ public class AsyncNewUserImageUploader {
             }
             userRepository.save(user);
         });
+    }
+
+    @Async("asyncExecutor")
+    public void update(String intraId, MultipartFile multipartFile) {
+        User user =  userRepository.getUserByIntraId(intraId);
+        String s3ImageUrl = userImageHandler.updateAndGetS3ImageUri(user.getId() + ".jpeg", multipartFile);
+        if (s3ImageUrl == null) {
+            user.setImageUri(defaultImageUrl);
+        } else {
+            user.setImageUri(s3ImageUrl);
+        }
+        userRepository.save(user);
     }
 }

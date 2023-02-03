@@ -2,6 +2,7 @@ package io.pp.arcade.v1.global.util;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,6 +44,18 @@ public class UserImageHandler {
         }
     }
 
+    public String updateAndGetS3ImageUri(String originalFileName, MultipartFile multipartFile)
+    {
+        if (!isStringValid(originalFileName)) {
+            return defaultImageUrl;
+        }
+        try {
+            deleteAtS3(originalFileName);
+            return uploadToS3(multipartFile);
+        } catch (IOException e) {
+            return null;
+        }
+    }
     private Boolean isStringValid(String intraId) {
         return intraId != null && intraId.length() != 0;
     }
@@ -57,6 +70,16 @@ public class UserImageHandler {
             return amazonS3.getUrl(bucketName, s3FileName).toString();
         } catch (Exception e) {
             return defaultImageUrl;
+        }
+    }
+
+    public String deleteAtS3(String originalFileName) throws IOException {
+        try {
+            String s3FileName = dir + originalFileName;
+            amazonS3.deleteObject(new DeleteObjectRequest(bucketName, s3FileName));
+            return defaultImageUrl;
+        } catch (Exception e) {
+            return null;
         }
     }
 }
