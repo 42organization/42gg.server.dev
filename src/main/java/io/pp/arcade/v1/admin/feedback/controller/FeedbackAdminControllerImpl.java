@@ -52,5 +52,4 @@ public class FeedbackAdminControllerImpl implements FeedbackAdminController{
         Pageable pageable = PageRequest.of(page - 1, size);
         return feedbackAdminService.findFeedbackByIntraId(intraId, pageable);
     }
-
 }
