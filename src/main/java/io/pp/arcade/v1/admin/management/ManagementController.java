@@ -151,7 +151,7 @@ public class ManagementController {
         model.addAttribute("teamList", teamList);
         return "team_management";
     }
-
+/*
     @GetMapping("/admin/feedback")
     public String feedbackPage(Model model, HttpServletRequest request) {
         List<FeedbackDto> solvedFeedbackList = feedbackService.feedbackFindByIsSolvedByAdmin(true, Pageable.ofSize(200));
@@ -161,7 +161,7 @@ public class ManagementController {
         model.addAttribute("unsolvedFeedbackList", unsolvedFeedbackList);
         return "feedback_management";
     }
-
+*/
     @GetMapping("/admin/feedbackcategory")
     public String feedbackCategorizedPage(Model model, HttpServletRequest request) {
         List<FeedbackDto> bugFeedbackList = feedbackService.feedbackFindByCategoryByAdmin(FeedbackType.BUG, Pageable.unpaged());
