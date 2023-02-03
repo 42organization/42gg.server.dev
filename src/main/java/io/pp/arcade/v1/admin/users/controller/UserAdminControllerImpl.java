@@ -41,8 +41,6 @@ public class UserAdminControllerImpl implements UserAdminController {
     private final RankRedisService rankRedisService;
     private final TokenService tokenService;
 
-    private final UserAdminService userAdminService;
-
 
 
     @Override
@@ -98,7 +96,7 @@ public class UserAdminControllerImpl implements UserAdminController {
     @GetMapping(value = "/users/searches")
     public UserSearchResultAdminResponseDto userSearchResult(String inquiringString/*HttpServletRequest request*/) {
         //tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        List<String> users = userAdminService.findByPartsOfIntraId(UserSearchAdminRequestDto.builder().intraId(inquiringString).build())
+        List<String> users = userAdminService.SearchUserByPartsOfIntraId(UserSearchAdminRequestDto.builder().intraId(inquiringString).build())
                 .stream().map(UserAdminDto::getIntraId).collect(Collectors.toList());
         return UserSearchResultAdminResponseDto.builder().users(users).build();
     }
