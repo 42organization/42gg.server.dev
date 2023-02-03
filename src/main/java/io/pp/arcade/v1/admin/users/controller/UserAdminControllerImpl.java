@@ -9,6 +9,9 @@ import io.pp.arcade.v1.domain.rank.service.RankService;
 import io.pp.arcade.v1.domain.season.SeasonService;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.domain.security.jwt.TokenService;
+import io.pp.arcade.v1.admin.dto.create.UserCreateRequestDto;
+import io.pp.arcade.v1.admin.dto.update.UserUpdateRequestDto;
+import io.pp.arcade.v1.admin.users.service.UserAdminService;
 import io.pp.arcade.v1.domain.user.UserService;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.domain.user.dto.UserFindDto;
@@ -23,6 +26,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @AllArgsConstructor
@@ -35,6 +40,10 @@ public class UserAdminControllerImpl implements UserAdminController {
     private final SeasonService seasonService;
     private final RankRedisService rankRedisService;
     private final TokenService tokenService;
+
+    private final UserAdminService userAdminService;
+
+
 
     @Override
     @GetMapping(value = "/users")
@@ -83,5 +92,14 @@ public class UserAdminControllerImpl implements UserAdminController {
     public void userDetailUpdate(UserUpdateRequesAdmintDto updateRequestDto, HttpServletRequest request) {
         System.out.println(updateRequestDto.toString());
 //        userAdminService.updateUserDetailByAdmin(updateRequestDto);
+    }
+    
+    @Override
+    @GetMapping(value = "/users/searches")
+    public UserSearchResultAdminResponseDto userSearchResult(String inquiringString/*HttpServletRequest request*/) {
+        //tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
+        List<String> users = userAdminService.findByPartsOfIntraId(UserSearchAdminRequestDto.builder().intraId(inquiringString).build())
+                .stream().map(UserAdminDto::getIntraId).collect(Collectors.toList());
+        return UserSearchResultAdminResponseDto.builder().users(users).build();
     }
 }
