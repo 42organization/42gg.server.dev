@@ -8,12 +8,27 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 public class UserUpdateRequesAdmintDto {
     private Integer userId;
-    private MultipartFile imgFile;
+    private String intraId;
+//    private MultipartFile imgFile;
     private RacketType racketType;
     private String statusMessage;
     private Integer wins;
     private Integer losses;
     private Integer ppp;
-    private String eMail;
+    private String email;
     private RoleType roleType;
+
+    @Override
+    public String toString() {
+        return "UserAdminDto{" + '\'' +
+                "id=" + userId + '\'' +
+                "intraId=" + intraId + '\'' +
+                ", eMail=" + email + '\'' +
+//                ", imgFile='" + imgFile.getOriginalFilename() + '\'' +
+                ", racketType=" + racketType +
+                ", statusMessage='" + statusMessage + '\'' +
+                ", roleType=" + roleType +
+                ", ppp=" + ppp +
+                '}';
+    }
 }

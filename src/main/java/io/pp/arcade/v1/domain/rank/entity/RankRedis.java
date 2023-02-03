@@ -26,6 +26,7 @@ public class RankRedis implements Serializable {
     @Indexed /* Redis 조회시 사용되는 변수 */
     private String intraId;
 
+    @Setter
     private RacketType racketType;
 
     @Indexed
@@ -34,10 +35,13 @@ public class RankRedis implements Serializable {
     @Setter
     private Integer ppp;
 
+    @Setter
     private Integer wins;
 
+    @Setter
     private Integer losses;
 
+    @Setter
     private double winRate;
 
     @Setter

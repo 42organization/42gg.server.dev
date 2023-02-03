@@ -1,5 +1,6 @@
 package io.pp.arcade.v1.global.type;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +18,7 @@ public enum RoleType {
     private final String displayName;
     private final Integer value;
 
+    @JsonCreator
     public static RoleType of(String key) {
         return Arrays.stream(RoleType.values())
                 .filter(r -> r.getKey().equals(key))

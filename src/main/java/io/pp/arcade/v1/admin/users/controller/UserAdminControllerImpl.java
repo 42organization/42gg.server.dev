@@ -18,7 +18,9 @@ import io.pp.arcade.v1.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -70,8 +72,8 @@ public class UserAdminControllerImpl implements UserAdminController {
                 .wins(rankUserDto.getWins())
                 .losses(rankUserDto.getLosses())
                 .ppp(rankUserDto.getPpp())
-                .e_mail(targetUser.getEMail())
-                .role_type(targetUser.getRoleType().getDisplayName())
+                .email(targetUser.getEMail())
+                .roleType(targetUser.getRoleType().getDisplayName())
                 .build();
         return responseDto;
     } // domain에 의존함
@@ -79,6 +81,7 @@ public class UserAdminControllerImpl implements UserAdminController {
     @Override
     @PutMapping(value = "/users/{intraid}/detail")
     public void userDetailUpdate(UserUpdateRequesAdmintDto updateRequestDto, HttpServletRequest request) {
-        userAdminService.updateUserDetailByAdmin(updateRequestDto);
+        System.out.println(updateRequestDto.toString());
+//        userAdminService.updateUserDetailByAdmin(updateRequestDto);
     }
 }
