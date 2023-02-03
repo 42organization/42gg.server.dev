@@ -24,11 +24,15 @@ import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.util.AsyncNewUserImageUploader;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,6 +77,18 @@ public class UserAdminService {
                 .currentPage(result.getNumber() + 1)
                 .build();
     }
+
+    @Transactional
+    public List<UserAdminDto> SearchUserByPartsOfIntraId(UserSearchAdminRequestDto userSearchAdminRequestDto) {
+        List<UserAdminDto> result = new ArrayList<UserAdminDto>();
+        if (!userSearchAdminRequestDto.getIntraId().isEmpty()){
+            Pageable pageable = PageRequest.of(0, 5, JpaSort.unsafe("locate('" + userSearchAdminRequestDto.getIntraId() + "', intraId)").ascending().and(Sort.by("intraId")));
+            Page<User> users = userAdminRepository.findByIntraIdContains(userSearchAdminRequestDto.getIntraId(), pageable);
+            result.addAll(users.stream().map(UserAdminDto::from).collect(Collectors.toList()));
+        }
+        return result;
+    }
+
 
     @Transactional
     public UserSearchResponseAdminDto findUserByAdmin(Pageable pageable) {
