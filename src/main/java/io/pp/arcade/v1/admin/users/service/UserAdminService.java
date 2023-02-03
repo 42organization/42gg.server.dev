@@ -2,6 +2,9 @@ package io.pp.arcade.v1.admin.users.service;
 
 import io.pp.arcade.v1.admin.dto.create.UserCreateRequestDto;
 import io.pp.arcade.v1.admin.dto.update.UserUpdateRequestDto;
+import io.pp.arcade.v1.admin.users.dto.UserAdminDto;
+import io.pp.arcade.v1.admin.users.dto.UserSearchAdminRequestDto;
+import io.pp.arcade.v1.admin.users.repository.UserAdminRepository;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.domain.user.UserRepository;
 import io.pp.arcade.v1.domain.user.dto.*;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class UserAdminService {
     private final UserRepository userRepository;
+    private final UserAdminRepository userAdminRepository;
 
     @Transactional
     public List<UserDto> findAll() {
@@ -81,12 +85,12 @@ public class UserAdminService {
 
     /* 문자열을 포함하는 intraId를 가진 유저 찾기 */
     @Transactional
-    public List<UserDto> findByPartsOfIntraId(UserSearchRequestDto userSearchDto) {
-        List<UserDto> result = new ArrayList<UserDto>();
-        if (!userSearchDto.getIntraId().isEmpty()){
-            Pageable pageable = PageRequest.of(0, 5, JpaSort.unsafe("locate('" + userSearchDto.getIntraId() + "', intraId)").ascending().and(Sort.by("intraId")));
-            Page<User> users = userRepository.findByIntraIdContains(userSearchDto.getIntraId(), pageable);
-            result.addAll(users.stream().map(UserDto::from).collect(Collectors.toList()));
+    public List<UserAdminDto> findByPartsOfIntraId(UserSearchAdminRequestDto userSearchAdminRequestDto) {
+        List<UserAdminDto> result = new ArrayList<UserAdminDto>();
+        if (!userSearchAdminRequestDto.getIntraId().isEmpty()){
+            Pageable pageable = PageRequest.of(0, 5, JpaSort.unsafe("locate('" + userSearchAdminRequestDto.getIntraId() + "', intraId)").ascending().and(Sort.by("intraId")));
+            Page<User> users = userAdminRepository.findByIntraIdContains(userSearchAdminRequestDto.getIntraId(), pageable);
+            result.addAll(users.stream().map(UserAdminDto::from).collect(Collectors.toList()));
         }
         return result;
     }
