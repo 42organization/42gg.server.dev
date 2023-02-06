@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,15 +40,15 @@ public class NotiAdminService {
                 responseDtos.getNumber() + 1);
     }
 
-    public void addNotiToUser(String intraId, Integer slotId, String type, String message,
-                              Boolean sendMail) throws MessagingException {
+    public void addNotiToUser(String intraId, Integer slotId, String message,
+                                        Boolean sendMail) throws MessagingException {
         User findUser = userRepository.findByIntraId(intraId).orElseThrow();
         Slot slot;
         slot = (slotId == null)? null : slotRepository.findById(slotId).orElseThrow();
         Noti noti = Noti.builder()
                 .user(findUser)
                 .slot(slot)
-                .type(NotiType.of(type))
+                .type(NotiType.ANNOUNCE)
                 .message(message)
                 .isChecked(false)
                 .build();
@@ -58,12 +57,12 @@ public class NotiAdminService {
             notiMailSender.sendMail(noti, findUser);
     }
 
-    public void addNotiToAll(String message, String code, Boolean sendMail) {
+    public void addNotiToAll(String message, Boolean sendMail) {
         List<User> users = userRepository.findAll();
         users.forEach(user -> {
             Noti noti = Noti.builder()
                     .user(user)
-                    .type(NotiType.of(code))
+                    .type(NotiType.ANNOUNCE)
                     .message(message)
                     .isChecked(false)
                     .build();

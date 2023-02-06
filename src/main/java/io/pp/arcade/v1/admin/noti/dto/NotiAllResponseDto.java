@@ -9,6 +9,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
+@NoArgsConstructor
 public class NotiAllResponseDto {
 
     private List<NotiResponseDto> notiList;

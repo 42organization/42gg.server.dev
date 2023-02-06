@@ -2,10 +2,12 @@ package io.pp.arcade.v1.admin.noti.dto;
 
 import io.pp.arcade.v1.domain.noti.Noti;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Getter
+@NoArgsConstructor
 public class NotiResponseDto {
     Integer notiId;
     String intraId;

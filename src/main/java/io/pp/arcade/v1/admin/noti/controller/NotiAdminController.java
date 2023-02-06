@@ -17,7 +17,7 @@ import javax.mail.MessagingException;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/notifications")
+@RequestMapping("/pingpong/admin/notifications")
 public class NotiAdminController {
 
     private final NotiAdminService notiAdminService;
@@ -36,12 +36,12 @@ public class NotiAdminController {
     public void addNoitToUserByAdmin(@PathVariable String intraId,
                                      @RequestBody NotiToUserRequestDto requestDto) throws MessagingException {
         notiAdminService.addNotiToUser(intraId, requestDto.getSlotId(),
-                                requestDto.getType(), requestDto.getMessage(), requestDto.getSendMail());
+                                requestDto.getMessage(), requestDto.getSendMail());
     }
 
-    @PostMapping()
+    @PostMapping
     public void addNotiToAllUser(@RequestBody NotiToAllRequestDto requestDto) {
-        notiAdminService.addNotiToAll(requestDto.getMessage(), requestDto.getType(), requestDto.getSendMail());
+        notiAdminService.addNotiToAll(requestDto.getMessage(), requestDto.getSendMail());
     }
 
 }
