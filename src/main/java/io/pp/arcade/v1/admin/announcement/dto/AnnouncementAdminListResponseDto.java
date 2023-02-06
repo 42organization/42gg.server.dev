@@ -5,7 +5,9 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
+@Builder// 페이징네이션 처리는 후순위
 public class AnnouncementAdminListResponseDto {
-    List<AnnouncementAdminDto> announcements;
+    private List<AnnouncementAdminDto> announcements;
+//    private int totalPage;
+//    private int currentPage;
 }
