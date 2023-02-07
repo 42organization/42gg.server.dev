@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 @Getter
@@ -17,6 +18,13 @@ public enum NotiType implements Constant{
 
     private final String code;
     private final String message;
+
+    public static NotiType of(String code) {
+        return Arrays.stream(NotiType.values())
+                .filter(notiType-> notiType.getCode().equals(code))
+                .findAny()
+                .orElse(ANNOUNCE);
+    }
 
     @JsonCreator
     public static NotiType getEnumFromValue(String value) {
