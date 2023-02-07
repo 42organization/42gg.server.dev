@@ -1,13 +1,11 @@
 package io.pp.arcade.v1.admin.noti.service;
 
 import io.pp.arcade.v1.admin.noti.dto.NotiAllResponseDto;
+import io.pp.arcade.v1.admin.noti.dto.NotiFilterIntraIdResponseDto;
 import io.pp.arcade.v1.admin.noti.dto.NotiResponseDto;
-import io.pp.arcade.v1.admin.noti.dto.NotiToAllRequestDto;
-import io.pp.arcade.v1.admin.noti.dto.NotiToUserRequestDto;
 import io.pp.arcade.v1.admin.noti.repository.NotiAdminRepository;
 import io.pp.arcade.v1.domain.noti.Noti;
 import io.pp.arcade.v1.domain.noti.NotiMailSender;
-import io.pp.arcade.v1.domain.noti.NotiService;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.slot.SlotRepository;
 import io.pp.arcade.v1.domain.user.User;
@@ -75,5 +73,15 @@ public class NotiAdminService {
                 }
             }
         });
+    }
+
+    @Transactional(readOnly = true)
+    public NotiFilterIntraIdResponseDto getFilteredNotifications(Pageable pageable, String intraId) {
+        Page<Noti> findNotis = notiAdminRepository.findNotisByUserIntraId(pageable, intraId);
+        Page<NotiResponseDto> notiResponseDtoPage = findNotis.map(NotiResponseDto::new);
+        return new NotiFilterIntraIdResponseDto(
+                notiResponseDtoPage.getContent(), notiResponseDtoPage.getTotalPages(),
+                notiResponseDtoPage.getNumber() + 1
+        );
     }
 }
