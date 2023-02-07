@@ -3,6 +3,7 @@ package io.pp.arcade.v1.admin.announcement.service;
 import io.pp.arcade.v1.admin.announcement.AnnouncementAdmin;
 import io.pp.arcade.v1.admin.announcement.dto.AnnouncementAdminDto;
 import io.pp.arcade.v1.admin.announcement.dto.AnnouncementAdminAddDto;
+import io.pp.arcade.v1.admin.announcement.dto.AnnouncementAdminUpdateDto;
 import io.pp.arcade.v1.admin.announcement.repository.AnnouncementAdminRepository;
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
-@Transactional//나중에 고칠 필요 있음
+@Transactional
 public class AnnouncementAdminService {
     private final AnnouncementAdminRepository announcementAdminRepository;
 
@@ -42,9 +43,16 @@ public class AnnouncementAdminService {
                 .content(addDto.getContent())
                 .createdTime(addDto.getCreatedTime())
                 .creatorIntraId(addDto.getCreatorIntraId())
-                .deleterIntraId(null)
-                .deletedTime(null)
                 .build();
         announcementAdminRepository.save(announcementAdmin);
+    }
+
+    public AnnouncementAdmin modifyAnnouncementIsDel(AnnouncementAdminUpdateDto updateDto) {
+        AnnouncementAdmin announcement = announcementAdminRepository.findByIsDelFalse().orElse(null);
+        System.out.println(announcement.getId());
+        announcement.setIsDel(true);
+        announcement.setDeleterIntraId(updateDto.getDeleterIntraId());
+        announcement.setDeletedTime(updateDto.getDeletedTime());
+        return announcement;
     }
 }
