@@ -30,8 +30,8 @@ public class AnnouncementAdminControllerImpl implements AnnouncementAdminControl
                 .build();
     }
 
-    @PostMapping("/announcement")//synchronized?
-    public synchronized void announcementAdd(AnnouncementAdminAddDto addDto, HttpServletRequest request) {
+    @PostMapping("/announcement")
+    public void announcementAdd(AnnouncementAdminAddDto addDto, HttpServletRequest request) {
 
         AnnouncementAdminDto announcement = announcementAdminService.findAnnouncementExist();
         if (announcement != null ) {
@@ -41,7 +41,7 @@ public class AnnouncementAdminControllerImpl implements AnnouncementAdminControl
         announcementAdminService.addAnnouncement(addDto);
     }
 
-    @PutMapping("/announcement")//어느 시점에서 updatedto -> dto 로 넘겨야 할지 정해야 함, 규격에 맞는 input이 들어왔는지 확인
+    @PutMapping("/announcement")
     public void announcementModify(AnnouncementAdminUpdateDto updateDto, HttpServletRequest request) {
         AnnouncementAdminDto announcement = announcementAdminService.findAnnouncementExist();
         if (announcement == null) {
