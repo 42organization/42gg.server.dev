@@ -14,8 +14,6 @@ public interface AnnouncementAdminRepository extends JpaRepository<AnnouncementA
     Optional<List<AnnouncementAdmin>> findAllByIsDelFalse();
     Optional<AnnouncementAdmin> findByIsDelFalse();
 
-
-
     //페이징 처리하기
     //Optional<List<AnnouncementAdmin> findAll();
     // Page<AnnouncementAdmin> findAllByOrderByIdDesc(Pageable pageable);
