@@ -2,6 +2,7 @@ package io.pp.arcade.v1.admin.noti.controller;
 
 
 import io.pp.arcade.v1.admin.noti.dto.NotiAllResponseDto;
+import io.pp.arcade.v1.admin.noti.dto.NotiFilterIntraIdResponseDto;
 import io.pp.arcade.v1.admin.noti.dto.NotiToAllRequestDto;
 import io.pp.arcade.v1.admin.noti.dto.NotiToUserRequestDto;
 import io.pp.arcade.v1.admin.noti.service.NotiAdminService;
@@ -31,6 +32,19 @@ public class NotiAdminController {
         Pageable pageable = PageRequest.of(page - 1, size);
         return notiAdminService.getAllNoti(pageable);
     }
+
+    @GetMapping("/{intraId}")
+    public NotiFilterIntraIdResponseDto getFilteredNotiByIntraId(@RequestParam int page,
+                                                     @RequestParam(defaultValue = "20") int size,
+                                                     HttpResponse httpResponse, @PathVariable String intraId) {
+        if (page < 1 || size < 1) {
+            httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
+            return null;
+        }
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return notiAdminService.getFilteredNotifications(pageable, intraId);
+    }
+
 
     @PostMapping("/{intraId}")
     public void addNoitToUserByAdmin(@PathVariable String intraId,
