@@ -89,15 +89,6 @@ public class ManagementController {
         return "current_match_management";
     }
 
-    @GetMapping("/admin/noti")
-    public String notiPage(Model model, HttpServletRequest request) {
-        List<NotiDto> notiList = notiService.findNotiByAdmin(Pageable.ofSize(200));
-
-        model.addAttribute("notiList", notiList);
-        model.addAttribute("token", HeaderUtil.getAccessToken(request));
-        return "noti_management";
-    }
-
     @GetMapping("/admin/pChange")
     public String pchangePage(Model model, HttpServletRequest request) {
         List<PChangeDto> pchangeList = pChangeService.findPChangeByAdmin(Pageable.ofSize(200));
