@@ -1,7 +1,6 @@
 package io.pp.arcade.v1.domain.announcement;
 
 import io.pp.arcade.v1.admin.announcement.AnnouncementAdmin;
-import io.pp.arcade.v1.domain.announcement.dto.AnnouncementAddRequestDto;
 import io.pp.arcade.v1.domain.announcement.dto.AnnouncementDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
