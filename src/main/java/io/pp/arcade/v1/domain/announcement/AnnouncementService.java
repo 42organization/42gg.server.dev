@@ -1,5 +1,6 @@
 package io.pp.arcade.v1.domain.announcement;
 
+import io.pp.arcade.v1.admin.announcement.AnnouncementAdmin;
 import io.pp.arcade.v1.domain.announcement.dto.AnnouncementAddRequestDto;
 import io.pp.arcade.v1.domain.announcement.dto.AnnouncementDto;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,7 @@ public class AnnouncementService {
 
     @Transactional
     public List<AnnouncementDto> findAllAnnouncement() {
-        List<Announcement> announcements = announcementRepository.findAllByIsDelFalse().orElse(null);
+        List<AnnouncementAdmin> announcements = announcementRepository.findAllByIsDelFalse().orElse(null);
         List<AnnouncementDto> dtoList = null;
         if (announcements != null) {
             dtoList = announcements.stream().map(AnnouncementDto::from).collect(Collectors.toList());
