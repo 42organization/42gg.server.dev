@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
@@ -22,37 +23,31 @@ public class AnnouncementAdmin {
     @Column(name = "content")
     private String content;
 
+    @Setter
     @Column(name = "is_del")
     private Boolean isDel;
 
     @Column(name = "creator_intra_id")
     private String creatorIntraId;
 
+    @Setter
     @Column(name = "deleter_intra_id")
     private String deleterIntraId;
 
     @Column(name = "created_time")
     private LocalDateTime createdTime;
 
+    @Setter
     @Column(name = "deleted_time")
     private LocalDateTime deletedTime;
 
     @Builder
-    AnnouncementAdmin(String content, String creatorIntraId, String deleterIntraId,
-                      LocalDateTime createdTime, LocalDateTime deletedTime) {
+    AnnouncementAdmin(String content, String creatorIntraId, LocalDateTime createdTime) {
         this.content = content;
         this.creatorIntraId = creatorIntraId;
-        this.deleterIntraId = deleterIntraId;
+        this.deleterIntraId = null;
         this.createdTime = createdTime;
-        this.deletedTime = deletedTime;
-        this.isDel = isDel == null ? false : isDel;
+        this.deletedTime = null;
+        this.isDel = false;
     }
-
-//    @Builder
-//    AnnouncementAdmin(String content, String creatorIntraId, String deleterIntraId) {
-//        this.content = content;
-//        this.creatorIntraId = creatorIntraId;
-//        this.deleterIntraId = deleterIntraId;
-//        this.isDel = isDel == null ? false : isDel;
-//    }
 }
