@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Service
 @AllArgsConstructor
@@ -38,7 +39,7 @@ public class AnnouncementAdminService {
         return dto;
     }
 
-    public void addAnnouncement(AnnouncementAdminAddDto addDto) {
+    public void addAnnouncement(@RequestBody AnnouncementAdminAddDto addDto) {
         AnnouncementAdmin announcementAdmin = AnnouncementAdmin.builder()
                 .content(addDto.getContent())
                 .createdTime(addDto.getCreatedTime())
@@ -47,12 +48,12 @@ public class AnnouncementAdminService {
         announcementAdminRepository.save(announcementAdmin);
     }
 
-    public AnnouncementAdmin modifyAnnouncementIsDel(AnnouncementAdminUpdateDto updateDto) {
+    public AnnouncementAdmin modifyAnnouncementIsDel(@RequestBody AnnouncementAdminUpdateDto updateDto) {
         AnnouncementAdmin announcement = announcementAdminRepository.findByIsDelFalse().orElse(null);
-        System.out.println(announcement.getId());
         announcement.setIsDel(true);
         announcement.setDeleterIntraId(updateDto.getDeleterIntraId());
         announcement.setDeletedTime(updateDto.getDeletedTime());
+
         return announcement;
     }
 }
