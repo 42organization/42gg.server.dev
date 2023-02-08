@@ -10,6 +10,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 public class AnnouncementAdminAddDto {
     private String content;
     private String creatorIntraId;
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalDateTime createdTime;
 }
