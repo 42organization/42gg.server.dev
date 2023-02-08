@@ -9,6 +9,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Builder
 public class AnnouncementAdminUpdateDto {
     private String deleterIntraId;
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalDateTime deletedTime;
 }
