@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +32,7 @@ public class AnnouncementAdminControllerImpl implements AnnouncementAdminControl
     }
 
     @PostMapping("/announcement")
-    public void announcementAdd(AnnouncementAdminAddDto addDto, HttpServletRequest request) {
+    public void announcementAdd(@RequestBody AnnouncementAdminAddDto addDto, HttpServletRequest request) {
 
         AnnouncementAdminDto announcement = announcementAdminService.findAnnouncementExist();
         if (announcement != null ) {
@@ -42,7 +43,7 @@ public class AnnouncementAdminControllerImpl implements AnnouncementAdminControl
     }
 
     @PutMapping("/announcement")
-    public void announcementModify(AnnouncementAdminUpdateDto updateDto, HttpServletRequest request) {
+    public void announcementModify(@RequestBody AnnouncementAdminUpdateDto updateDto, HttpServletRequest request) {
         AnnouncementAdminDto announcement = announcementAdminService.findAnnouncementExist();
         if (announcement == null) {
             throw new BusinessException("E0001");
