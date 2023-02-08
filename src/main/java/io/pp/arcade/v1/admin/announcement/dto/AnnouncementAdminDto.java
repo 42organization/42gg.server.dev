@@ -13,6 +13,7 @@ public class AnnouncementAdminDto {
     private String deleterIntraId;
     private LocalDateTime createdTime;
     private LocalDateTime deletedTime;
+    private Boolean isDel;
 
     static public AnnouncementAdminDto from(AnnouncementAdmin announcement) {
         return AnnouncementAdminDto.builder()
@@ -21,6 +22,7 @@ public class AnnouncementAdminDto {
                 .deleterIntraId(announcement.getDeleterIntraId())
                 .createdTime(announcement.getCreatedTime())
                 .deletedTime(announcement.getDeletedTime())
+                .isDel(announcement.getIsDel())
                 .build();
     }
 }
