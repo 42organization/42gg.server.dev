@@ -25,12 +25,18 @@ public class RedisPenaltyUser {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime releaseTime;
+
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    private LocalDateTime startTime;
     private String reason;
 
-    public RedisPenaltyUser(String intraId, int penaltyTime, LocalDateTime releaseTime, String reason) {
+    public RedisPenaltyUser(String intraId, int penaltyTime,
+                            LocalDateTime releaseTime, String reason, LocalDateTime startTime) {
         this.intraId = intraId;
         this.penaltyTime = penaltyTime;
         this.releaseTime = releaseTime;
         this.reason = reason;
+        this.startTime = startTime;
     }
 }
