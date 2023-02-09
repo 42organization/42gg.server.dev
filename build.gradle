@@ -5,6 +5,10 @@ plugins {
 	id 'war'
 }
 
+springBoot {
+	mainClass = "io.pp.arcade.Application"
+}
+
 group = 'io.42pp'
 version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
