@@ -48,9 +48,9 @@ public class PenaltyController {
         penaltyService.releasePenaltyUser(intraId);
     }
 
-    @GetMapping("penalty/users/{keyword}")
-    List<PenaltyUserResponseDto> searchPenaltyUser(@PathVariable String keyword) {
-        return penaltyService.searchPenaltyUser(keyword);
+    @GetMapping("penalty/users/{intraId}")
+    List<PenaltyUserResponseDto> searchPenaltyUser(@PathVariable String intraId) {
+        return penaltyService.searchPenaltyUser(intraId);
     }
 
 }
