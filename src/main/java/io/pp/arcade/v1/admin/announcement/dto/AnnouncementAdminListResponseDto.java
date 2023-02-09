@@ -1,13 +1,16 @@
 package io.pp.arcade.v1.admin.announcement.dto;
 
 import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
-@Builder// 페이징네이션 처리는 후순위
 public class AnnouncementAdminListResponseDto {
-    private List<AnnouncementAdminDto> announcements;
-//    private int totalPage;
-//    private int currentPage;
+    private List<AnnouncementAdminResponseDto> announcementList;
+    private int totalPage;
+    private int currentPage;
 }

@@ -8,7 +8,7 @@ import lombok.Getter;
 @Getter
 @Builder
 public class AnnouncementAdminDto {
-    private String content;//private 안붙이니 문제가 발생하는데 해결할 필요가 있음
+    private String content;
     private String creatorIntraId;
     private String deleterIntraId;
     private LocalDateTime createdTime;
