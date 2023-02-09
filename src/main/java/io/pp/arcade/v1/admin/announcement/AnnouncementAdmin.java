@@ -20,7 +20,7 @@ public class AnnouncementAdmin {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "content")
+    @Column(name = "content", length=10000)
     private String content;
 
     @Column(name = "is_del")
