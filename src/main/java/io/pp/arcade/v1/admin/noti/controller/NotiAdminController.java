@@ -11,9 +11,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
+import java.util.NoSuchElementException;
 
 
 @RestController
@@ -45,12 +47,16 @@ public class NotiAdminController {
         return notiAdminService.getFilteredNotifications(pageable, intraId);
     }
 
-
     @PostMapping("/{intraId}")
-    public void addNoitToUserByAdmin(@PathVariable String intraId,
-                                     @RequestBody NotiToUserRequestDto requestDto) throws MessagingException {
-        notiAdminService.addNotiToUser(intraId, requestDto.getSlotId(),
-                                requestDto.getMessage(), requestDto.getSendMail());
+    public ResponseEntity addNoitToUserByAdmin(@PathVariable String intraId,
+                                               @RequestBody NotiToUserRequestDto requestDto) throws MessagingException {
+        try{
+            notiAdminService.addNotiToUser(intraId, requestDto.getSlotId(),
+                    requestDto.getMessage(), requestDto.getSendMail());
+        }catch (NoSuchElementException e){
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping
