@@ -6,5 +6,5 @@ import lombok.Getter;
 @Getter
 @Builder
 public class AnnouncementResponseDto {
-    AnnouncementDto announcement;
+    private String content;
 }
