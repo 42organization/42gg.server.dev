@@ -23,21 +23,18 @@ public class AnnouncementAdmin {
     @Column(name = "content")
     private String content;
 
-    @Setter
     @Column(name = "is_del")
     private Boolean isDel;
 
     @Column(name = "creator_intra_id")
     private String creatorIntraId;
 
-    @Setter
     @Column(name = "deleter_intra_id")
     private String deleterIntraId;
 
     @Column(name = "created_time")
     private LocalDateTime createdTime;
 
-    @Setter
     @Column(name = "deleted_time")
     private LocalDateTime deletedTime;
 
@@ -49,5 +46,11 @@ public class AnnouncementAdmin {
         this.createdTime = createdTime;
         this.deletedTime = null;
         this.isDel = false;
+    }
+
+    public void update(String creatorIntraId, LocalDateTime createdTime) {
+        this.creatorIntraId = creatorIntraId;
+        this.createdTime = createdTime;
+        this.isDel = true;
     }
 }

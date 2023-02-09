@@ -3,12 +3,16 @@ package io.pp.arcade.v1.admin.announcement.service;
 import io.pp.arcade.v1.admin.announcement.AnnouncementAdmin;
 import io.pp.arcade.v1.admin.announcement.dto.AnnouncementAdminDto;
 import io.pp.arcade.v1.admin.announcement.dto.AnnouncementAdminAddDto;
+import io.pp.arcade.v1.admin.announcement.dto.AnnouncementAdminListResponseDto;
+import io.pp.arcade.v1.admin.announcement.dto.AnnouncementAdminResponseDto;
 import io.pp.arcade.v1.admin.announcement.dto.AnnouncementAdminUpdateDto;
 import io.pp.arcade.v1.admin.announcement.repository.AnnouncementAdminRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,13 +25,11 @@ public class AnnouncementAdminService {
     private final AnnouncementAdminRepository announcementAdminRepository;
 
     @Transactional(readOnly = true)
-    public List<AnnouncementAdminDto> findAllAnnouncement() {
-        List<AnnouncementAdmin> announcements = announcementAdminRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
-        List<AnnouncementAdminDto> adminDtoList = null;
-        if (announcements != null) {
-            adminDtoList = announcements.stream().map(AnnouncementAdminDto::from).collect(Collectors.toList());
-        }
-        return adminDtoList;
+    public AnnouncementAdminListResponseDto findAllAnnouncement(Pageable pageable) {
+        Page<AnnouncementAdmin> allAnnouncements = announcementAdminRepository.findAll(pageable);
+        Page<AnnouncementAdminResponseDto> responseDtos = allAnnouncements.map(AnnouncementAdminResponseDto::new);
+        return new AnnouncementAdminListResponseDto(responseDtos.getContent(),
+                responseDtos.getTotalPages(), responseDtos.getNumber() + 1);
     }
     @Transactional(readOnly = true)
     public AnnouncementAdminDto findAnnouncementExist() {//수정 필요 있음
@@ -50,10 +52,7 @@ public class AnnouncementAdminService {
 
     public AnnouncementAdmin modifyAnnouncementIsDel(@RequestBody AnnouncementAdminUpdateDto updateDto) {
         AnnouncementAdmin announcement = announcementAdminRepository.findByIsDelFalse().orElse(null);
-        announcement.setIsDel(true);
-        announcement.setDeleterIntraId(updateDto.getDeleterIntraId());
-        announcement.setDeletedTime(updateDto.getDeletedTime());
-
+        announcement.update(updateDto.getDeleterIntraId(), updateDto.getDeletedTime());
         return announcement;
     }
 }
