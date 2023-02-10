@@ -5,6 +5,7 @@ import io.pp.arcade.v1.admin.feedback.dto.FeedbackIsSolvedResponseDto;
 import io.pp.arcade.v1.admin.feedback.dto.FeedbackIsSolvedToggleRequestDto;
 import io.pp.arcade.v1.admin.feedback.dto.FeedbackListAdminResponseDto;
 import org.apache.http.HttpResponse;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 public interface FeedbackAdminController {
     FeedbackIsSolvedResponseDto feedbackIsSolvedToggle(@RequestPart FeedbackIsSolvedToggleRequestDto updateRequestDto);
     FeedbackListAdminResponseDto feedbackAll(@RequestParam(value = "page")int page, @RequestParam(defaultValue = "20")int size, HttpResponse httpResponse);
-    FeedbackListAdminResponseDto feedbackFindByIntraId(@RequestParam(value = "q")String intraId,
+    FeedbackListAdminResponseDto feedbackFindByIntraId(@PathVariable(name = "intraId") String intraId,
                                                        @RequestParam(value = "page")int page,
                                                        @RequestParam(defaultValue = "20")int size,
                                                        HttpResponse httpResponse);

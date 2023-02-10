@@ -43,7 +43,7 @@ public class FeedbackAdminControllerImpl implements FeedbackAdminController{
     }
 
     @Override
-    @GetMapping(value = "/users")
+    @GetMapping(value = "/users/{intraId}")
     public FeedbackListAdminResponseDto feedbackFindByIntraId(String intraId, int page, int size, HttpResponse httpResponse) {
         if (page < 1 || size < 1){
             httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
