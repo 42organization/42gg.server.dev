@@ -6,11 +6,14 @@ import io.pp.arcade.v1.global.type.FeedbackType;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.sql.Date;
+
 @Getter
 @Builder
 public class FeedbackAdminDto {
     private Integer id;
-    private UserAdminDto user;
+    private String intraId;
+    private Date createdTime;
     private FeedbackType category;
     private String content;
     private Boolean isSolved;
@@ -18,7 +21,8 @@ public class FeedbackAdminDto {
     public static FeedbackAdminDto from(Feedback feedback){
         return FeedbackAdminDto.builder()
                 .id(feedback.getId())
-                .user(UserAdminDto.from(feedback.getUser()))
+                .intraId(feedback.getUser().getIntraId())
+                .createdTime(Date.valueOf(feedback.getCreatedAt().toLocalDate()))
                 .category(feedback.getCategory())
                 .content(feedback.getContent())
                 .isSolved(feedback.getIsSolved())
@@ -29,7 +33,8 @@ public class FeedbackAdminDto {
     public String toString(){
         return "FeedbackAdminDto{" +
                 "id=" + id +
-                ", user=" + user +
+                ", intraId=" + intraId +
+                ", createdTime=" + createdTime +
                 ", category=" + category +
                 ", content='" + content + '\'' +
                 ", isSolved=" + isSolved +
