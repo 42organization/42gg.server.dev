@@ -12,6 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
+
 @Service
 @RequiredArgsConstructor
 public class FeedbackAdminService {
@@ -37,6 +39,8 @@ public class FeedbackAdminService {
         Feedback feedback = feedbackAdminRepository.findById(feedbackId).orElseThrow(() -> new BusinessException("E0001"));
         FeedbackAdminDto feedbackAdminDto = FeedbackAdminDto.builder()
                 .id(feedback.getId())
+                .intraId(feedback.getUser().getIntraId())
+                .createdTime(Date.valueOf(feedback.getCreatedAt().toLocalDate()))
                 .category(feedback.getCategory())
                 .content(feedback.getContent())
                 .isSolved(feedback.getIsSolved())
