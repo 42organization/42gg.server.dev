@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin/feedback")
+@RequestMapping("pingpong/admin/feedback")
 public class FeedbackAdminControllerImpl implements FeedbackAdminController{
 
     private final FeedbackAdminService feedbackAdminService;
