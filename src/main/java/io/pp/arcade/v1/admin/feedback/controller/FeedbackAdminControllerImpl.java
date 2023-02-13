@@ -7,6 +7,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
@@ -37,7 +38,7 @@ public class FeedbackAdminControllerImpl implements FeedbackAdminController{
             httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
             return null;
         }
-        Pageable pageable = PageRequest.of(page - 1, size);
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("isSolved").and(Sort.by("createdAt")));
         return feedbackAdminService.findAllFeedbackByAdmin(pageable);
     }
 
