@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.sql.Date;
 
 @Getter
 @NoArgsConstructor
@@ -14,16 +13,16 @@ public class NotiResponseDto {
     private String intraId;
     private Integer slotId;
     private String type;
-    private Date createdTime;
+    private LocalDateTime createdTime;
     private String message;
-    private boolean isChecked;
+    private Boolean isChecked;
 
     public NotiResponseDto(Noti noti) {
         this.notiId = noti.getId();
         this.intraId = noti.getUser().getIntraId();
         this.slotId = (noti.getSlot() == null) ? null : noti.getSlot().getId();
         this.type = noti.getType().getCode();
-        this.createdTime = Date.valueOf(noti.getCreatedAt().toLocalDate());
+        this.createdTime = noti.getCreatedAt();
         this.isChecked = noti.getIsChecked();
         this.message = noti.getMessage();
     }
