@@ -2,6 +2,7 @@ package io.pp.arcade.v1.admin.penalty.controller;
 
 import io.pp.arcade.v1.admin.penalty.RedisPenaltyUser;
 import io.pp.arcade.v1.admin.penalty.dto.PenaltyAddRequestDto;
+import io.pp.arcade.v1.admin.penalty.dto.PenaltyListResponseDto;
 import io.pp.arcade.v1.admin.penalty.dto.PenaltyUserResponseDto;
 import io.pp.arcade.v1.admin.penalty.service.PenaltyService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,6 @@ import org.apache.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
@@ -20,17 +20,17 @@ public class PenaltyController {
 
     private final PenaltyService penaltyService;
     @PostMapping("users/{intraId}/penalty")
-    ResponseEntity givePenaltyToUser(@PathVariable String intraId, @RequestBody PenaltyAddRequestDto requestDto) {
+    public ResponseEntity givePenaltyToUser(@PathVariable String intraId, @RequestBody PenaltyAddRequestDto requestDto) {
         try {
             penaltyService.givePenalty(intraId, requestDto.getPenaltyTime(), requestDto.getReason());
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e){
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("penalty/users/{intraId}/detail")
-    PenaltyUserResponseDto getPenaltyUserByIntraId(@PathVariable String intraId) {
+    public PenaltyUserResponseDto getPenaltyUserByIntraId(@PathVariable String intraId) {
         RedisPenaltyUser penaltyUser =  penaltyService.getOnePenaltyUser(intraId);
         if (penaltyUser != null)
             return new PenaltyUserResponseDto(penaltyUser);
@@ -39,18 +39,22 @@ public class PenaltyController {
     }
 
     @GetMapping("penalty/users")
-    List<PenaltyUserResponseDto> getAllPenaltyUser() {
-        return penaltyService.getAllPenaltyUser();
+    public PenaltyListResponseDto getAllPenaltyUser(String q, int page, HttpResponse httpResponse,
+                                                    @RequestParam(defaultValue = "20") int size) {
+        if (page < 1 || size < 1) {
+            httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
+            return null;
+        }
+        if (q == null)
+            return penaltyService.getAllPenaltyUser(page - 1, size);
+        else
+            return penaltyService.searchPenaltyUser(q, page -1, size);
+
     }
 
     @DeleteMapping("penalty/users/{intraId}")
-    void releasePenaltyUser(@PathVariable String intraId) {
+    public void releasePenaltyUser(@PathVariable String intraId) {
         penaltyService.releasePenaltyUser(intraId);
-    }
-
-    @GetMapping("penalty/users/{intraId}")
-    List<PenaltyUserResponseDto> searchPenaltyUser(@PathVariable String intraId) {
-        return penaltyService.searchPenaltyUser(intraId);
     }
 
 }

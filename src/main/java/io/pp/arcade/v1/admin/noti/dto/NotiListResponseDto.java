@@ -9,7 +9,7 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @NoArgsConstructor
-public class NotiFilterIntraIdResponseDto {
+public class NotiListResponseDto {
 
     private List<NotiResponseDto> notiList;
     private int totalPage;
