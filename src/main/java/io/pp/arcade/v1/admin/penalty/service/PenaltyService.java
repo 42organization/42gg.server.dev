@@ -37,7 +37,6 @@ public class PenaltyService {
         RedisPenaltyUser penaltyUser;
         if (existUser != null) {
             Duration duration = Duration.between(now, existUser.getReleaseTime());
-            System.out.println("second = " + duration.getSeconds());
             releaseTime = existUser.getReleaseTime().plusHours(penaltyTime);
             penaltyTimeToSecond = duration.getSeconds() + (penaltyTime * 60 * 60);
             penaltyUser = new RedisPenaltyUser(intraId, existUser.getPenaltyTime() + penaltyTime

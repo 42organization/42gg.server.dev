@@ -16,7 +16,7 @@ public class NotiAdminRepositoryCustomImpl implements NotiAdminRepositoryCustom 
     public Page<Noti> findNotisByUserIntraId(Pageable pageable, String intraId) {
         long totalElem = countTotalElem(intraId, pageable);
         String sql = "select n from Noti n join fetch n.user left outer join fetch n.slot where " +
-                "n.user.intraId like \'%" + intraId + "%\'";
+                "n.user.intraId like \'%" + intraId + "%\' order by n.createdAt desc";
         List<Noti> notis = em.createQuery(sql, Noti.class)
                 .setFirstResult((int) pageable.getOffset())
                 .setMaxResults(pageable.getPageSize())

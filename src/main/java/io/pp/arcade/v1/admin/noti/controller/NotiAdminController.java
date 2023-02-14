@@ -10,6 +10,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,7 @@ public class NotiAdminController {
             httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
             return null;
         }
-        Pageable pageable = PageRequest.of(page - 1, size);
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
         if (q == null)
             return notiAdminService.getAllNoti(pageable);
         else
