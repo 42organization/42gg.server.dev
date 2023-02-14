@@ -7,6 +7,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.util.Optional;
 
 @Component
@@ -41,7 +42,7 @@ public class AsyncNewUserImageUploader {
     @Async("asyncExecutor")
     public void update(String intraId, MultipartFile multipartFile) {
         User user =  userRepository.getUserByIntraId(intraId);
-        String s3ImageUrl = userImageHandler.updateAndGetS3ImageUri(user.getId() + ".jpeg", multipartFile);
+        String s3ImageUrl = userImageHandler.updateAndGetS3ImageUri(multipartFile, user.getIntraId() + ".jpeg");
         if (s3ImageUrl == null) {
             user.setImageUri(defaultImageUrl);
         } else {

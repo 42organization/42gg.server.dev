@@ -38,20 +38,21 @@ public class UserImageHandler {
         try {
             byte[] resizedImageBytes = ImageResizingUtil.resizeImageBytes(downloadedImageBytes, 0.5);
             MultipartFile multipartFile = new JpegMultipartFile(resizedImageBytes, intraId);
-            return uploadToS3(multipartFile);
+            return uploadToS3(multipartFile, multipartFile.getOriginalFilename());
         } catch (IOException e) {
             return defaultImageUrl;
         }
     }
 
-    public String updateAndGetS3ImageUri(String originalFileName, MultipartFile multipartFile)
+    public String updateAndGetS3ImageUri(MultipartFile multipartFile, String fileName)
     {
-        if (!isStringValid(originalFileName)) {
-            return defaultImageUrl;
-        }
         try {
-            deleteAtS3(originalFileName);
-            return uploadToS3(multipartFile);
+            if (multipartFile.getOriginalFilename().equals("small_default.jpeg")) {
+                return defaultImageUrl;
+            }
+            else {
+                return uploadToS3(multipartFile, fileName);
+            }
         } catch (IOException e) {
             return null;
         }
@@ -60,26 +61,17 @@ public class UserImageHandler {
         return intraId != null && intraId.length() != 0;
     }
 
-    public String uploadToS3(MultipartFile multipartFile) throws IOException {
+    public String uploadToS3(MultipartFile multipartFile, String fileName) throws IOException {
         try {
-            String s3FileName = dir + multipartFile.getOriginalFilename();
+            String s3FileName = dir + fileName;
             InputStream inputStream = multipartFile.getInputStream();
             ObjectMetadata objMeta = new ObjectMetadata();
             objMeta.setContentLength(multipartFile.getSize());
             amazonS3.putObject(new PutObjectRequest(bucketName, s3FileName, inputStream, objMeta).withCannedAcl(CannedAccessControlList.PublicRead));
             return amazonS3.getUrl(bucketName, s3FileName).toString();
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return defaultImageUrl;
-        }
-    }
-
-    public String deleteAtS3(String originalFileName) throws IOException {
-        try {
-            String s3FileName = dir + originalFileName;
-            amazonS3.deleteObject(new DeleteObjectRequest(bucketName, s3FileName));
-            return defaultImageUrl;
-        } catch (Exception e) {
-            return null;
         }
     }
 }
