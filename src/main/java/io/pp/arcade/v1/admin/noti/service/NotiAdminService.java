@@ -1,7 +1,6 @@
 package io.pp.arcade.v1.admin.noti.service;
 
-import io.pp.arcade.v1.admin.noti.dto.NotiAllResponseDto;
-import io.pp.arcade.v1.admin.noti.dto.NotiFilterIntraIdResponseDto;
+import io.pp.arcade.v1.admin.noti.dto.NotiListResponseDto;
 import io.pp.arcade.v1.admin.noti.dto.NotiResponseDto;
 import io.pp.arcade.v1.admin.noti.repository.NotiAdminRepository;
 import io.pp.arcade.v1.domain.noti.Noti;
@@ -31,10 +30,10 @@ public class NotiAdminService {
     private final NotiMailSender notiMailSender;
 
     @Transactional(readOnly = true)
-    public NotiAllResponseDto getAllNoti(Pageable pageable) {
+    public NotiListResponseDto getAllNoti(Pageable pageable) {
         Page<Noti> allNotifications = notiAdminRepository.findAll(pageable);
         Page<NotiResponseDto> responseDtos = allNotifications.map(NotiResponseDto::new);
-        return new NotiAllResponseDto(responseDtos.getContent(), responseDtos.getTotalPages(),
+        return new NotiListResponseDto(responseDtos.getContent(), responseDtos.getTotalPages(),
                 responseDtos.getNumber() + 1);
     }
 
@@ -76,10 +75,10 @@ public class NotiAdminService {
     }
 
     @Transactional(readOnly = true)
-    public NotiFilterIntraIdResponseDto getFilteredNotifications(Pageable pageable, String intraId) {
+    public NotiListResponseDto getFilteredNotifications(Pageable pageable, String intraId) {
         Page<Noti> findNotis = notiAdminRepository.findNotisByUserIntraId(pageable, intraId);
         Page<NotiResponseDto> notiResponseDtoPage = findNotis.map(NotiResponseDto::new);
-        return new NotiFilterIntraIdResponseDto(
+        return new NotiListResponseDto(
                 notiResponseDtoPage.getContent(), notiResponseDtoPage.getTotalPages(),
                 notiResponseDtoPage.getNumber() + 1
         );
