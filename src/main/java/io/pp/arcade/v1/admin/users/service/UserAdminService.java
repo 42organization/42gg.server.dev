@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -94,7 +95,7 @@ public class UserAdminService {
     }
 
     @Transactional
-    public void updateUserDetailByAdmin(UserUpdateRequestAdmintDto updateRequestDto, MultipartFile multipartFile) {
+    public void updateUserDetailByAdmin(UserUpdateRequestAdmintDto updateRequestDto, MultipartFile multipartFile) throws IOException {
         User user = userAdminRepository.findById(updateRequestDto.getUserId()).orElseThrow();
         user.setEMail(updateRequestDto.getEMail());
         user.setRacketType(updateRequestDto.getRacketType());

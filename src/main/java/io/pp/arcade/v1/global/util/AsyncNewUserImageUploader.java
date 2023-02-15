@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 
 @Component
@@ -40,7 +41,7 @@ public class AsyncNewUserImageUploader {
     }
 
     @Async("asyncExecutor")
-    public void update(String intraId, MultipartFile multipartFile) {
+    public void update(String intraId, MultipartFile multipartFile) throws IOException {
         User user =  userRepository.getUserByIntraId(intraId);
         String s3ImageUrl = userImageHandler.updateAndGetS3ImageUri(multipartFile, user.getIntraId() + ".jpeg");
         if (s3ImageUrl == null) {

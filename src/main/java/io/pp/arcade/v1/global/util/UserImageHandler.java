@@ -44,34 +44,24 @@ public class UserImageHandler {
         }
     }
 
-    public String updateAndGetS3ImageUri(MultipartFile multipartFile, String fileName)
+    public String updateAndGetS3ImageUri(MultipartFile multipartFile, String fileName) throws IOException
     {
-        try {
-            if (multipartFile.getOriginalFilename().equals("small_default.jpeg")) {
-                return defaultImageUrl;
-            }
-            else {
-                return uploadToS3(multipartFile, fileName);
-            }
-        } catch (IOException e) {
-            return null;
-        }
+        System.out.println(multipartFile.getSize());
+        if (fileName.equals("small_default.jpeg"))
+            return defaultImageUrl;
+        else
+            return uploadToS3(multipartFile, fileName);
     }
     private Boolean isStringValid(String intraId) {
         return intraId != null && intraId.length() != 0;
     }
 
-    public String uploadToS3(MultipartFile multipartFile, String fileName) throws IOException {
-        try {
+    public String uploadToS3(MultipartFile multipartFile, String fileName) throws IOException{
             String s3FileName = dir + fileName;
             InputStream inputStream = multipartFile.getInputStream();
             ObjectMetadata objMeta = new ObjectMetadata();
             objMeta.setContentLength(multipartFile.getSize());
-            amazonS3.putObject(new PutObjectRequest(bucketName, s3FileName, inputStream, objMeta).withCannedAcl(CannedAccessControlList.PublicRead));
+            amazonS3.putObject(new PutObjectRequest(bucketName, s3FileName, inputStream, objMeta).withCannedAcl(CannedAccessControlList.PublicRead)); //예외 처리?
             return amazonS3.getUrl(bucketName, s3FileName).toString();
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-            return defaultImageUrl;
-        }
     }
 }
