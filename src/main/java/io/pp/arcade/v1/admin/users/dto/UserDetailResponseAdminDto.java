@@ -14,12 +14,12 @@ public class UserDetailResponseAdminDto {
     private Integer wins;
     private Integer losses;
     private Integer ppp;
-    private String email;
+    private String eMail;
     private String roleType;
 
 
     @Builder
-    public UserDetailResponseAdminDto(String intraId, String userImageUri, Integer level, Integer currentExp, Integer maxExp, RacketType racketType, String statusMessage, Integer wins, Integer losses, Integer ppp, String email, String roleType) {
+    public UserDetailResponseAdminDto(String intraId, String userImageUri, Integer level, Integer currentExp, Integer maxExp, RacketType racketType, String statusMessage, Integer wins, Integer losses, Integer ppp, String eMail, String roleType) {
         this.intraId = intraId;
         this.userImageUri = userImageUri;
         this.racketType = racketType.getCode();
@@ -27,7 +27,7 @@ public class UserDetailResponseAdminDto {
         this.wins = wins;
         this.losses = losses;
         this.ppp = ppp;
-        this.email = email;
+        this.eMail = eMail;
         this.roleType = roleType;
     }
 
@@ -41,7 +41,7 @@ public class UserDetailResponseAdminDto {
                 ", wins='" + wins.toString() + '\'' +
                 ", losses='" + losses.toString() + '\'' +
                 ", ppp='" + ppp.toString() + '\'' +
-                ", email='" + email + '\'' +
+                ", email='" + eMail + '\'' +
                 ", roleType='" + roleType + '\'' +
                 '}';
     }
