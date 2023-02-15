@@ -96,7 +96,7 @@ public class UserAdminService {
     @Transactional
     public void updateUserDetailByAdmin(UserUpdateRequestAdmintDto updateRequestDto, MultipartFile multipartFile) {
         User user = userAdminRepository.findById(updateRequestDto.getUserId()).orElseThrow();
-        user.setEMail(updateRequestDto.getEmail());
+        user.setEMail(updateRequestDto.getEMail());
         user.setRacketType(updateRequestDto.getRacketType());
         user.setStatusMessage(updateRequestDto.getStatusMessage());
         user.setRoleType(RoleType.of(updateRequestDto.getRoleType()));

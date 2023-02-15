@@ -12,7 +12,7 @@ public class UserUpdateRequestAdmintDto {
     private Integer wins;
     private Integer losses;
     private Integer ppp;
-    private String email;
+    private String eMail;
     private String roleType;
 
     @Override
@@ -25,7 +25,7 @@ public class UserUpdateRequestAdmintDto {
                 ", wins='" + wins + '\'' +
                 ", losses'" + losses + '\'' +
                 ", ppp=" + ppp + '\'' +
-                ", eMail=" + email + '\'' +
+                ", eMail=" + eMail + '\'' +
                 ", roleType=" + roleType +
                 '}';
     }

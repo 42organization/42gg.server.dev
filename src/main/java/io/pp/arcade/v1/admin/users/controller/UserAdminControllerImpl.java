@@ -50,9 +50,11 @@ public class UserAdminControllerImpl implements UserAdminController {
     }
 
     @Override
-    @GetMapping(value = "/users/{intraId}/detail")
-    public UserDetailResponseAdminDto userFindDetail(String intraId, UserDetailRequestAdminDto userdetailrequest, HttpServletRequest request) {
-        UserDto targetUser = userService.findByIntraId(UserFindDto.builder().intraId(intraId).userId(userdetailrequest.getUserId()).build());
+    @GetMapping(value = "/users/{userId}/detail")
+    public UserDetailResponseAdminDto userFindDetail(Integer userId, HttpServletRequest request) {
+        UserDto targetUser = userService.findById(UserFindDto.builder()
+                .userId(userId)
+                .build());
         SeasonDto seasonDto = seasonService.findLatestRankSeason();
         RankRedisFindDto rankRedisFindDto = RankRedisFindDto.builder()
                 .user(targetUser)
@@ -68,17 +70,15 @@ public class UserAdminControllerImpl implements UserAdminController {
                 .wins(rankUserDto.getWins())
                 .losses(rankUserDto.getLosses())
                 .ppp(rankUserDto.getPpp())
-                .email(targetUser.getEMail())
+                .eMail(targetUser.getEMail())
                 .roleType(targetUser.getRoleType().getDisplayName())
                 .build();
         return responseDto;
     } // domain에 의존함
 
     @Override
-    @PutMapping(value = "/users/{intraid}/detail")
+    @PutMapping(value = "/users/{userId}/detail")
     public void userDetailUpdate(UserUpdateRequestAdmintDto updateRequestDto, MultipartFile multipartFile, HttpServletRequest request) {
-        System.out.println(updateRequestDto.toString());
-        System.out.println(multipartFile.getOriginalFilename());
         userAdminService.updateUserDetailByAdmin(updateRequestDto, multipartFile);
     }
     

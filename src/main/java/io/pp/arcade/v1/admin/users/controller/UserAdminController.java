@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface UserAdminController {
 
-    UserDetailResponseAdminDto userFindDetail(@PathVariable String intraId, @RequestBody UserDetailRequestAdminDto userdetailrequest, HttpServletRequest request);
+    UserDetailResponseAdminDto userFindDetail(@PathVariable Integer userId, HttpServletRequest request);
     UserSearchResponseAdminDto userAll(HttpServletRequest request, @RequestParam(value = "q", required = false) String keyword, @RequestParam(value = "page") Long page);
     void userDetailUpdate(@RequestPart UserUpdateRequestAdmintDto userUpdateDto, @RequestPart MultipartFile multipartFile, HttpServletRequest request);
     UserSearchResultAdminResponseDto userSearchResult(@RequestParam(value="q", required = false, defaultValue = "") String inquiringString/* HttpServletRequest request*/);
