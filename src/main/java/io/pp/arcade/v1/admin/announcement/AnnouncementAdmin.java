@@ -48,9 +48,9 @@ public class AnnouncementAdmin {
         this.isDel = false;
     }
 
-    public void update(String creatorIntraId, LocalDateTime createdTime) {
-        this.creatorIntraId = creatorIntraId;
-        this.createdTime = createdTime;
+    public void update(String deleterIntraId, LocalDateTime deletedTime) {
+        this.deleterIntraId = deleterIntraId;
+        this.deletedTime = deletedTime;
         this.isDel = true;
     }
 }
