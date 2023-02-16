@@ -39,7 +39,7 @@ public class PenaltyController {
     }
 
     @GetMapping("penalty/users")
-    public PenaltyListResponseDto getAllPenaltyUser(String q, int page, HttpResponse httpResponse,
+    public PenaltyListResponseDto getAllPenaltyUser(String q, @RequestParam int page, HttpResponse httpResponse,
                                                     @RequestParam(defaultValue = "20") int size) {
         if (page < 1 || size < 1) {
             httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
