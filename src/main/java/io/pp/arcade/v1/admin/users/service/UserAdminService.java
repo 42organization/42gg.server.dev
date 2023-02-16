@@ -95,14 +95,20 @@ public class UserAdminService {
     }
 
     @Transactional
-    public void updateUserDetailByAdmin(UserUpdateRequestAdmintDto updateRequestDto, MultipartFile multipartFile) throws IOException {
+    public Boolean updateUserDetailByAdmin(UserUpdateRequestAdmintDto updateRequestDto, MultipartFile multipartFile) throws IOException {
         User user = userAdminRepository.findById(updateRequestDto.getUserId()).orElseThrow();
         user.setEMail(updateRequestDto.getEMail());
         user.setRacketType(updateRequestDto.getRacketType());
         user.setStatusMessage(updateRequestDto.getStatusMessage());
         user.setRoleType(RoleType.of(updateRequestDto.getRoleType()));
 
+        if (multipartFile != null)
+            asyncNewUserImageUploader.update(user.getIntraId(), multipartFile);
+
         RankRedis rankRedis = rankRedisRepository.findRank(redisKeyManager.getCurrentRankKey(), updateRequestDto.getUserId());
+        if (rankRedis == null) {
+            return false;
+        }
         rankRedis.setPpp(updateRequestDto.getPpp());
         rankRedis.setWins(updateRequestDto.getWins());
         rankRedis.setLosses(updateRequestDto.getLosses());
@@ -120,8 +126,6 @@ public class UserAdminService {
                 .seasonKey(redisSeason)
                 .build();
         rankRedisRepository.updateRank(redisRankUpdateDto);
-
-        if (multipartFile != null)
-            asyncNewUserImageUploader.update(user.getIntraId(), multipartFile);
+        return true;
     }
 }

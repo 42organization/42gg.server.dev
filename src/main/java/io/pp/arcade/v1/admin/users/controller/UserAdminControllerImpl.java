@@ -90,7 +90,10 @@ public class UserAdminControllerImpl implements UserAdminController {
     @PutMapping(value = "/users/{userId}/detail")
     public ResponseEntity userDetailUpdate(UserUpdateRequestAdmintDto updateRequestDto, MultipartFile multipartFile) {
         try {
-            userAdminService.updateUserDetailByAdmin(updateRequestDto, multipartFile);
+            if (!userAdminService.updateUserDetailByAdmin(updateRequestDto, multipartFile)){
+                System.out.println("잘못됨 요청!!!!");
+                return ResponseEntity.badRequest().build(); // redis 데이터존재X
+            }
         } catch (IOException e) {
             throw new BusinessException("E0001"); // 이미지 업데이트 실패
         }
