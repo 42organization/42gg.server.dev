@@ -10,15 +10,20 @@ import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.domain.user.UserService;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.domain.user.dto.UserFindDto;
+import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.type.GameType;
 import lombok.AllArgsConstructor;
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +40,12 @@ public class UserAdminControllerImpl implements UserAdminController {
 
     @Override
     @GetMapping(value = "/users")
-    public UserSearchResponseAdminDto userAll(HttpServletRequest request, String keyword, Long page) {
+    public UserSearchResponseAdminDto userAll(String keyword, Long page, HttpResponse httpResponse) {
+        if (page < 1) {
+            httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
+            return null;
+        }
+
         Pageable pageable = PageRequest.of(page.intValue() - 1, 20);
 
         if (keyword == null) {
@@ -51,7 +61,7 @@ public class UserAdminControllerImpl implements UserAdminController {
 
     @Override
     @GetMapping(value = "/users/{userId}/detail")
-    public UserDetailResponseAdminDto userFindDetail(Integer userId, HttpServletRequest request) {
+    public UserDetailResponseAdminDto userFindDetail(Integer userId) {
         UserDto targetUser = userService.findById(UserFindDto.builder()
                 .userId(userId)
                 .build());
@@ -78,13 +88,21 @@ public class UserAdminControllerImpl implements UserAdminController {
 
     @Override
     @PutMapping(value = "/users/{userId}/detail")
-    public void userDetailUpdate(UserUpdateRequestAdmintDto updateRequestDto, MultipartFile multipartFile, HttpServletRequest request) {
-        userAdminService.updateUserDetailByAdmin(updateRequestDto, multipartFile);
+    public ResponseEntity userDetailUpdate(UserUpdateRequestAdmintDto updateRequestDto, MultipartFile multipartFile) {
+        try {
+            if (!userAdminService.updateUserDetailByAdmin(updateRequestDto, multipartFile)){
+                System.out.println("잘못됨 요청!!!!");
+                return ResponseEntity.badRequest().build(); // redis 데이터존재X
+            }
+        } catch (IOException e) {
+            throw new BusinessException("E0001"); // 이미지 업데이트 실패
+        }
+        return ResponseEntity.ok().build();
     }
     
     @Override
     @GetMapping(value = "/users/searches")
-    public UserSearchResultAdminResponseDto userSearchResult(String inquiringString/*HttpServletRequest request*/) {
+    public UserSearchResultAdminResponseDto userSearchResult(String inquiringString) {
         List<String> users = userAdminService.SearchUserByPartsOfIntraId(UserSearchAdminRequestDto.builder().intraId(inquiringString).build())
                 .stream().map(UserAdminDto::getIntraId).collect(Collectors.toList());
         return UserSearchResultAdminResponseDto.builder().users(users).build();
