@@ -25,13 +25,14 @@ public class NotiAdminController {
 
     private final NotiAdminService notiAdminService;
     @GetMapping
-    public NotiListResponseDto getAllNotiByAdmin(int page,  @RequestParam(defaultValue = "20") int size,
+    public NotiListResponseDto getAllNotiByAdmin(@RequestParam int page,  @RequestParam(defaultValue = "20") int size,
                                                  String q, HttpResponse httpResponse) {
         if (page < 1 || size < 1) {
             httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
             return null;
         }
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("createdAt").descending());
+        Pageable pageable = PageRequest.of(page - 1, size,
+                Sort.by("createdAt").descending().and(Sort.by("user.intraId").ascending()));
         if (q == null)
             return notiAdminService.getAllNoti(pageable);
         else
