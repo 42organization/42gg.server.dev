@@ -97,7 +97,7 @@ public class UserAdminControllerImpl implements UserAdminController {
             }
             userAdminService.updateUserDetailByAdmin(updateRequestDto, multipartFile);
         } catch (IOException e) {
-            throw new BusinessException("E0001"); // 이미지 업데이트 실패
+            throw new BusinessException("E0001");
         }
         return ResponseEntity.ok().build();
     }
