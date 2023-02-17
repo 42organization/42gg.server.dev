@@ -48,15 +48,6 @@ public class UserImageHandler {
     {
         if (fileName.equals("small_default.jpeg"))
             return defaultImageUrl;
-        else if (multipartFile.getSize() > 50000 ) {
-            System.out.println("파일크기초과! " + multipartFile.getSize());
-            throw new IOException();
-        }
-        else if (!multipartFile.getContentType().equals("image/jpeg"))
-        {
-            System.out.println("파일타입이상함! " + multipartFile.getContentType());
-            throw new IOException();
-        }
         else
             return uploadToS3(multipartFile, fileName);
     }

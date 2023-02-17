@@ -10,6 +10,7 @@ import io.pp.arcade.v1.domain.season.Season;
 import io.pp.arcade.v1.domain.season.SeasonRepository;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.global.exception.BusinessException;
+import io.pp.arcade.v1.global.exception.RankUpdateException;
 import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.type.RoleType;
 import io.pp.arcade.v1.global.util.AsyncNewUserImageUploader;
@@ -94,7 +95,7 @@ public class UserAdminService {
                 .build();
     }
 
-    @Transactional
+    @Transactional(noRollbackFor = { RankUpdateException.class })
     public Boolean updateUserDetailByAdmin(UserUpdateRequestAdmintDto updateRequestDto, MultipartFile multipartFile) throws IOException {
         User user = userAdminRepository.findById(updateRequestDto.getUserId()).orElseThrow();
         user.setEMail(updateRequestDto.getEMail());
@@ -102,12 +103,13 @@ public class UserAdminService {
         user.setStatusMessage(updateRequestDto.getStatusMessage());
         user.setRoleType(RoleType.of(updateRequestDto.getRoleType()));
 
-        if (multipartFile != null)
+        if (multipartFile != null) {
             asyncNewUserImageUploader.update(user.getIntraId(), multipartFile);
+        }
 
         RankRedis rankRedis = rankRedisRepository.findRank(redisKeyManager.getCurrentRankKey(), updateRequestDto.getUserId());
         if (rankRedis == null) {
-            return false;
+            throw new RankUpdateException("RK001");
         }
         rankRedis.setPpp(updateRequestDto.getPpp());
         rankRedis.setWins(updateRequestDto.getWins());
