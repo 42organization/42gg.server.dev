@@ -47,7 +47,7 @@ public class AnnouncementAdminControllerImpl implements AnnouncementAdminControl
     public void announcementAdd(@RequestBody AnnouncementAdminAddDto addDto, HttpResponse httpResponse) {
 
         AnnouncementAdminDto announcement = announcementAdminService.findAnnouncementExist();
-        if (announcement != null ) {
+        if (announcement != null || isCreatedDataNull(addDto)) {
             httpResponse.setStatusCode((HttpStatus.SC_BAD_REQUEST));
             throw new BusinessException(("AC001"));
         }
@@ -57,11 +57,31 @@ public class AnnouncementAdminControllerImpl implements AnnouncementAdminControl
     @PutMapping("/announcement")
     public void announcementModify(@RequestBody AnnouncementAdminUpdateDto updateDto, HttpResponse httpResponse) {
         AnnouncementAdminDto announcement = announcementAdminService.findAnnouncementExist();
-        if (announcement == null) {
+        if (announcement == null || isDeletedDataNull(updateDto)) {
             httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
             throw new BusinessException("AD001");
         }
         announcementAdminService.modifyAnnouncementIsDel(updateDto);
     }
-
+    private boolean isCreatedDataNull (AnnouncementAdminAddDto addDto) {
+        if (addDto.getCreatorIntraId() == null) {
+            return true;
+        }
+        if (addDto.getCreatedTime() == null) {
+            return true;
+        }
+        if (addDto.getContent() == null) {
+            return true;
+        }
+        return false;
+    }
+    private boolean isDeletedDataNull (AnnouncementAdminUpdateDto updateDto) {
+        if (updateDto.getDeleterIntraId() == null) {
+            return true;
+        }
+        if (updateDto.getDeletedTime() == null) {
+            return true;
+        }
+        return false;
+    }
 }
