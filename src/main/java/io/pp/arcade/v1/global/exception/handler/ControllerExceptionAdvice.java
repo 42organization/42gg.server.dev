@@ -2,6 +2,7 @@ package io.pp.arcade.v1.global.exception.handler;
 
 import io.pp.arcade.v1.global.exception.AccessException;
 import io.pp.arcade.v1.global.exception.BusinessException;
+import io.pp.arcade.v1.global.exception.RankUpdateException;
 import io.pp.arcade.v1.global.exception.entity.ExceptionResponse;
 import io.pp.arcade.v1.global.util.ApplicationYmlRead;
 import io.pp.arcade.v1.global.util.AsyncMailSender;
@@ -94,6 +95,13 @@ public class ControllerExceptionAdvice {
         ExceptionResponse response = ExceptionResponse.from(ex.getMessage());
 //        sendMail(response.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(RankUpdateException.class)
+    protected ResponseEntity<ExceptionResponse> httpRequestMethodNotSupportedExceptionHandle(RankUpdateException ex) throws MessagingException {
+        log.error("RankUpdateException", ex);
+        ExceptionResponse response = ExceptionResponse.from(ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.MULTI_STATUS);
     }
 
     @ExceptionHandler(AccessException.class)

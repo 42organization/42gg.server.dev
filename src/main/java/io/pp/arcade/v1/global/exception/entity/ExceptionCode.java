@@ -30,7 +30,10 @@ public enum ExceptionCode {
     FEEDBACK_RP_BLANK(HttpStatus.BAD_REQUEST, "RP001"),
 
     /*유저별 전적 페이지 에러 - 유저 찾을 수 없음*/
-    USER_FALSE(HttpStatus.BAD_REQUEST, "UF001");
+    USER_FALSE(HttpStatus.BAD_REQUEST, "UF001"),
+
+    /* 유저 정보 수정 에러 - Rank 정보 없음 */
+    USER_RANK_UPDATE_FALSE(HttpStatus.MULTI_STATUS, "RK001");
 
     private final HttpStatus status;
     private final String code;

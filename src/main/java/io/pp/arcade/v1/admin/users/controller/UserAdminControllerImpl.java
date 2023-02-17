@@ -45,9 +45,7 @@ public class UserAdminControllerImpl implements UserAdminController {
             httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
             return null;
         }
-
         Pageable pageable = PageRequest.of(page.intValue() - 1, 20);
-
         if (keyword == null) {
             UserSearchResponseAdminDto users = userAdminService.findUserByAdmin(pageable);
             return users;
@@ -73,6 +71,7 @@ public class UserAdminControllerImpl implements UserAdminController {
                 .build();
         RankUserDto rankUserDto = rankRedisService.findRankById(rankRedisFindDto);
         UserDetailResponseAdminDto responseDto = UserDetailResponseAdminDto.builder()
+                .userId(targetUser.getId())
                 .intraId(targetUser.getIntraId())
                 .userImageUri(targetUser.getImageUri())
                 .racketType(targetUser.getRacketType())
@@ -81,7 +80,7 @@ public class UserAdminControllerImpl implements UserAdminController {
                 .losses(rankUserDto.getLosses())
                 .ppp(rankUserDto.getPpp())
                 .eMail(targetUser.getEMail())
-                .roleType(targetUser.getRoleType().getDisplayName())
+                .roleType(targetUser.getRoleType().getKey())
                 .build();
         return responseDto;
     } // domain에 의존함
@@ -90,12 +89,16 @@ public class UserAdminControllerImpl implements UserAdminController {
     @PutMapping(value = "/users/{userId}/detail")
     public ResponseEntity userDetailUpdate(UserUpdateRequestAdmintDto updateRequestDto, MultipartFile multipartFile) {
         try {
-            if (!userAdminService.updateUserDetailByAdmin(updateRequestDto, multipartFile)){
-                System.out.println("잘못됨 요청!!!!");
-                return ResponseEntity.badRequest().build(); // redis 데이터존재X
+            if (multipartFile != null) {
+                if (multipartFile.getSize() > 50000) {
+                    return ResponseEntity.status(413).build();
+                } else if (!multipartFile.getContentType().equals("image/jpeg")) {
+                    return ResponseEntity.status(415).build();
+                }
             }
+            userAdminService.updateUserDetailByAdmin(updateRequestDto, multipartFile);
         } catch (IOException e) {
-            throw new BusinessException("E0001"); // 이미지 업데이트 실패
+            throw new BusinessException("E0001");
         }
         return ResponseEntity.ok().build();
     }
