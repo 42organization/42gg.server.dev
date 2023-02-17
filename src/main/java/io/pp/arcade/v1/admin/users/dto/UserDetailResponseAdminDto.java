@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class UserDetailResponseAdminDto {
+    private Integer userId;
     private String intraId;
     private String userImageUri;
     private String racketType;
@@ -19,7 +20,8 @@ public class UserDetailResponseAdminDto {
 
 
     @Builder
-    public UserDetailResponseAdminDto(String intraId, String userImageUri, Integer level, Integer currentExp, Integer maxExp, RacketType racketType, String statusMessage, Integer wins, Integer losses, Integer ppp, String eMail, String roleType) {
+    public UserDetailResponseAdminDto(Integer userId, String intraId, String userImageUri, Integer level, Integer currentExp, Integer maxExp, RacketType racketType, String statusMessage, Integer wins, Integer losses, Integer ppp, String eMail, String roleType) {
+        this.userId = userId;
         this.intraId = intraId;
         this.userImageUri = userImageUri;
         this.racketType = racketType.getCode();

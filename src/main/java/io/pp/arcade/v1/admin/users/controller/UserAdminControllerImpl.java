@@ -71,6 +71,7 @@ public class UserAdminControllerImpl implements UserAdminController {
                 .build();
         RankUserDto rankUserDto = rankRedisService.findRankById(rankRedisFindDto);
         UserDetailResponseAdminDto responseDto = UserDetailResponseAdminDto.builder()
+                .userId(targetUser.getId())
                 .intraId(targetUser.getIntraId())
                 .userImageUri(targetUser.getImageUri())
                 .racketType(targetUser.getRacketType())
