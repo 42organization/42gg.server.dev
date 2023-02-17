@@ -33,14 +33,13 @@ public class AnnouncementAdminService {
     }
     @Transactional(readOnly = true)
     public AnnouncementAdminDto findAnnouncementExist() {//수정 필요 있음
-        List<AnnouncementAdmin> announcements = announcementAdminRepository.findAllByIsDelFalse().orElse(null);
-        if (announcements.size() == 0) {
+        AnnouncementAdmin announcement = announcementAdminRepository.findFirstByOrderByIdDesc();
+        if (announcement == null || announcement.getIsDel() == true) {
             return null;
         }
-        AnnouncementAdminDto dto = AnnouncementAdminDto.from(announcements.get(0));
+        AnnouncementAdminDto dto = AnnouncementAdminDto.from(announcement);
         return dto;
     }
-
     public void addAnnouncement(@RequestBody AnnouncementAdminAddDto addDto) {
         AnnouncementAdmin announcementAdmin = AnnouncementAdmin.builder()
                 .content(addDto.getContent())
@@ -49,9 +48,8 @@ public class AnnouncementAdminService {
                 .build();
         announcementAdminRepository.save(announcementAdmin);
     }
-
     public AnnouncementAdmin modifyAnnouncementIsDel(@RequestBody AnnouncementAdminUpdateDto updateDto) {
-        AnnouncementAdmin announcement = announcementAdminRepository.findByIsDelFalse().orElse(null);
+        AnnouncementAdmin announcement = announcementAdminRepository.findFirstByOrderByIdDesc();
         announcement.update(updateDto.getDeleterIntraId(), updateDto.getDeletedTime());
         return announcement;
     }
