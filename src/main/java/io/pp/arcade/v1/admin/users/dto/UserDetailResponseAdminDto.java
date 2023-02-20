@@ -43,7 +43,7 @@ public class UserDetailResponseAdminDto {
                 ", wins='" + wins.toString() + '\'' +
                 ", losses='" + losses.toString() + '\'' +
                 ", ppp='" + ppp.toString() + '\'' +
-                ", email='" + eMail + '\'' +
+                ", eMail='" + eMail + '\'' +
                 ", roleType='" + roleType + '\'' +
                 '}';
     }

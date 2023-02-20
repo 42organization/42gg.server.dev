@@ -3,6 +3,7 @@ package io.pp.arcade.v1.global.util;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,10 +46,9 @@ public class AsyncNewUserImageUploader {
         User user =  userRepository.getUserByIntraId(intraId);
         String s3ImageUrl = userImageHandler.updateAndGetS3ImageUri(multipartFile, user.getIntraId() + ".jpeg");
         if (s3ImageUrl == null) {
-            user.setImageUri(defaultImageUrl);
+            userRepository.updateUserImageUri(user.getId(), defaultImageUrl);
         } else {
-            user.setImageUri(s3ImageUrl);
+            userRepository.updateUserImageUri(user.getId(), s3ImageUrl);
         }
-        userRepository.save(user);
     }
 }
