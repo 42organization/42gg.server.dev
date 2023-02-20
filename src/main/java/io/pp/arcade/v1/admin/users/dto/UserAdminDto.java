@@ -13,7 +13,7 @@ import java.util.Objects;
 public class UserAdminDto {
     private Integer id;
     private String intraId;
-    private String eMail;
+    private String email;
     private String imageUri;
     private RacketType racketType;
     private String statusMessage;
@@ -30,7 +30,7 @@ public class UserAdminDto {
             userAdminDto = UserAdminDto.builder()
                     .id(user.getId())
                     .intraId(user.getIntraId())
-                    .eMail(user.getEMail())
+                    .email(user.getEMail())
                     .imageUri(user.getImageUri())
                     .racketType(user.getRacketType())
                     .statusMessage(user.getStatusMessage())
@@ -60,7 +60,7 @@ public class UserAdminDto {
         return "UserAdminDto{" +
                 "id=" + id +
                 ", intraId='" + intraId + '\'' +
-                ", eMail='" + eMail + '\'' +
+                ", email='" + email + '\'' +
                 ", imageUri='" + imageUri + '\'' +
                 ", racketType=" + racketType +
                 ", statusMessage='" + statusMessage + '\'' +

@@ -98,7 +98,7 @@ public class UserAdminService {
     @Transactional
     public Boolean updateUserDetailByAdmin(UserUpdateRequestAdmintDto updateRequestDto, MultipartFile multipartFile) throws IOException {
         User user = userAdminRepository.findById(updateRequestDto.getUserId()).orElseThrow();
-        user.setEMail(updateRequestDto.getEMail());
+        user.setEMail(updateRequestDto.getEmail());
         user.setRacketType(updateRequestDto.getRacketType());
         user.setStatusMessage(updateRequestDto.getStatusMessage());
         user.setRoleType(RoleType.of(updateRequestDto.getRoleType()));
