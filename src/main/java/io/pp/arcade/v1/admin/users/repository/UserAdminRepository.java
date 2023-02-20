@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ public interface UserAdminRepository extends JpaRepository<User, Integer> {
     Page<User> findAllByOrderByTotalExpDesc(Pageable pageable);
     @Query(nativeQuery = true, value = "select ranking from (select intra_id, row_number() over (order by total_exp desc) as ranking from user) ranked where intra_id=:intraId")
     Integer findExpRankingByIntraId(@Param("intraId") String intraId);
+    @Transactional
     @Modifying
     @Query("UPDATE User u SET u.imageUri = :imageUri WHERE u.id = :id")
     void updateUserImageUri(@Param("id") Long id, @Param("imageUri") String imageUri);

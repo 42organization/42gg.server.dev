@@ -95,7 +95,7 @@ public class UserAdminService {
                 .build();
     }
 
-    @Transactional
+    @Transactional( noRollbackFor = { RankUpdateException.class })
     public Boolean updateUserDetailByAdmin(UserUpdateRequestAdmintDto updateRequestDto, MultipartFile multipartFile) throws IOException {
         User user = userAdminRepository.findById(updateRequestDto.getUserId()).orElseThrow();
         user.setEMail(updateRequestDto.getEmail());
