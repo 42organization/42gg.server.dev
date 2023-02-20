@@ -270,6 +270,9 @@ public class SlotControllerImpl implements SlotController {
         if (redisTemplate.opsForValue().get(Key.PENALTY_USER + user.getIntraId()) != null) {
             throw new BusinessException("SC003");
         }
+        if (redisTemplate.opsForValue().get(Key.PENALTY_USER_ADMIN + user.getIntraId()) != null) {
+            throw new BusinessException("SC003");
+        }
     }
 
         private void checkIfUserHaveCurrentMatch(UserDto user) {
