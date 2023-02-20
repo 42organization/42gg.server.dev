@@ -1,5 +1,6 @@
 package io.pp.arcade.v1.admin.users.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.pp.arcade.v1.global.type.RacketType;
 import io.pp.arcade.v1.global.type.RoleType;
 import lombok.Builder;
@@ -15,12 +16,12 @@ public class UserDetailResponseAdminDto {
     private Integer wins;
     private Integer losses;
     private Integer ppp;
-    private String eMail;
+    private String email;
     private String roleType;
 
 
     @Builder
-    public UserDetailResponseAdminDto(Integer userId, String intraId, String userImageUri, Integer level, Integer currentExp, Integer maxExp, RacketType racketType, String statusMessage, Integer wins, Integer losses, Integer ppp, String eMail, String roleType) {
+    public UserDetailResponseAdminDto(Integer userId, String intraId, String userImageUri, Integer level, Integer currentExp, Integer maxExp, RacketType racketType, String statusMessage, Integer wins, Integer losses, Integer ppp, String email, String roleType) {
         this.userId = userId;
         this.intraId = intraId;
         this.userImageUri = userImageUri;
@@ -29,7 +30,7 @@ public class UserDetailResponseAdminDto {
         this.wins = wins;
         this.losses = losses;
         this.ppp = ppp;
-        this.eMail = eMail;
+        this.email = email;
         this.roleType = roleType;
     }
 
@@ -43,7 +44,7 @@ public class UserDetailResponseAdminDto {
                 ", wins='" + wins.toString() + '\'' +
                 ", losses='" + losses.toString() + '\'' +
                 ", ppp='" + ppp.toString() + '\'' +
-                ", email='" + eMail + '\'' +
+                ", email='" + email + '\'' +
                 ", roleType='" + roleType + '\'' +
                 '}';
     }

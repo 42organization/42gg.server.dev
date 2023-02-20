@@ -1,8 +1,10 @@
 package io.pp.arcade.v1.admin.users.dto;
 
 import io.pp.arcade.v1.global.type.RacketType;
+import lombok.Builder;
 import lombok.Getter;
 
+@Builder
 @Getter
 public class UserUpdateRequestAdmintDto {
     private Integer userId;
@@ -12,12 +14,12 @@ public class UserUpdateRequestAdmintDto {
     private Integer wins;
     private Integer losses;
     private Integer ppp;
-    private String eMail;
+    private String email;
     private String roleType;
 
     @Override
     public String toString() {
-        return "UserAdminDto{" + '\'' +
+        return "UserUpdateRequestAdminDto{" + '\'' +
                 "userid=" + userId + '\'' +
                 "intraId=" + intraId + '\'' +
                 ", racketType=" + racketType +
@@ -25,7 +27,7 @@ public class UserUpdateRequestAdmintDto {
                 ", wins='" + wins + '\'' +
                 ", losses'" + losses + '\'' +
                 ", ppp=" + ppp + '\'' +
-                ", eMail=" + eMail + '\'' +
+                ", email=" + email + '\'' +
                 ", roleType=" + roleType +
                 '}';
     }

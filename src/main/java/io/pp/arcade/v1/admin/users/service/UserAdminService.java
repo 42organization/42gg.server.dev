@@ -95,16 +95,17 @@ public class UserAdminService {
                 .build();
     }
 
-    @Transactional(noRollbackFor = { RankUpdateException.class })
+    @Transactional( noRollbackFor = { RankUpdateException.class })
     public Boolean updateUserDetailByAdmin(UserUpdateRequestAdmintDto updateRequestDto, MultipartFile multipartFile) throws IOException {
         User user = userAdminRepository.findById(updateRequestDto.getUserId()).orElseThrow();
-        user.setEMail(updateRequestDto.getEMail());
+        user.setEMail(updateRequestDto.getEmail());
         user.setRacketType(updateRequestDto.getRacketType());
         user.setStatusMessage(updateRequestDto.getStatusMessage());
         user.setRoleType(RoleType.of(updateRequestDto.getRoleType()));
+        userAdminRepository.save(user);
 
         if (multipartFile != null) {
-            asyncNewUserImageUploader.update(user.getIntraId(), multipartFile);
+            asyncNewUserImageUploader.update(updateRequestDto.getIntraId(), multipartFile);
         }
 
         RankRedis rankRedis = rankRedisRepository.findRank(redisKeyManager.getCurrentRankKey(), updateRequestDto.getUserId());

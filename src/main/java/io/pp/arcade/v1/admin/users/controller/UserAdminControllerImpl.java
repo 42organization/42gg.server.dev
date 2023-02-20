@@ -79,7 +79,7 @@ public class UserAdminControllerImpl implements UserAdminController {
                 .wins(rankUserDto.getWins())
                 .losses(rankUserDto.getLosses())
                 .ppp(rankUserDto.getPpp())
-                .eMail(targetUser.getEMail())
+                .email(targetUser.getEMail())
                 .roleType(targetUser.getRoleType().getKey())
                 .build();
         return responseDto;
