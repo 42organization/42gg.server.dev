@@ -17,6 +17,6 @@ public interface UserAdminController {
 
     UserDetailResponseAdminDto userFindDetail(@PathVariable Integer userId);
     UserSearchResponseAdminDto userAll(@RequestParam(value = "q", required = false) String keyword, @RequestParam(value = "page") Long page, HttpResponse httpResponse);
-    ResponseEntity userDetailUpdate(@RequestPart UserUpdateRequestAdmintDto userUpdateDto, @RequestPart MultipartFile multipartFile) throws IOException;
+    ResponseEntity userDetailUpdate(@RequestPart UserUpdateRequestAdmintDto userUpdateDto, @RequestPart(required = false) MultipartFile multipartFile) throws IOException;
     UserSearchResultAdminResponseDto userSearchResult(@RequestParam(value="q", required = false, defaultValue = "") String inquiringString);
 }

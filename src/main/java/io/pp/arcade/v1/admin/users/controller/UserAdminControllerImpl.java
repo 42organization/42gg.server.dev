@@ -92,7 +92,7 @@ public class UserAdminControllerImpl implements UserAdminController {
             if (multipartFile != null) {
                 if (multipartFile.getSize() > 50000) {
                     return ResponseEntity.status(413).build();
-                } else if (!multipartFile.getContentType().equals("image/jpeg")) {
+                } else if (multipartFile.getContentType() == null || !multipartFile.getContentType().equals("image/jpeg")) {
                     return ResponseEntity.status(415).build();
                 }
             }
