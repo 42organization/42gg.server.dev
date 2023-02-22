@@ -39,5 +39,7 @@ public class SlotTeamUser extends BaseTimeEntity {
         this.team = team;
         this.user = user;
         this.slot = slot;
+        //연관관계 추가
+        team.getSlotTeamUserList().add(this);
     }
 }
