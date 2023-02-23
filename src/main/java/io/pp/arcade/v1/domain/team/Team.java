@@ -1,6 +1,7 @@
 package io.pp.arcade.v1.domain.team;
 
 import io.pp.arcade.v1.domain.slot.Slot;
+import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUser;
 import io.pp.arcade.v1.domain.user.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +10,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -42,20 +45,11 @@ public class Team {
     @Column(name = "win")
     private Boolean win;
 
-    @Setter
-    @OneToOne
-    @JoinColumn(name = "user1_id", referencedColumnName = "intra_id")
-    private User user1;
-
-    @Setter
-    @OneToOne
-    @JoinColumn(name = "user2_id", referencedColumnName = "intra_id")
-    private User user2;
+    @OneToMany(mappedBy = "team")
+    private List<SlotTeamUser> slotTeamUserList = new ArrayList<>();
 
     @Builder
-    public Team(User user1, User user2, Slot slot, Integer teamPpp, Integer headCount, Integer score, Boolean win) {
-        this.user1 = user1;
-        this.user2 = user2;
+    public Team(Slot slot, Integer teamPpp, Integer headCount, Integer score, Boolean win) {
         this.slot = slot;
         this.teamPpp = teamPpp;
         this.headCount = headCount;
