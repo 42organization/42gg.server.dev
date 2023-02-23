@@ -75,26 +75,10 @@ public class FeedbackAdminService {
 
     @Transactional
     public FeedbackListAdminResponseDto findByPartsOfIntraId(String keyword, Pageable pageable) {
-        List<User> userList= userAdminRepository.findByIntraIdContains(keyword); //해당 keyword를 가진 유저 모두 찾아오기
-        int usersize = (int) userList.size();  //위에서 찾은 유저의 개수
-
-        List<Feedback> feedbackList = feedbackAdminRepository.findAllByUser(userList.get(0));
-        for(int i=1;i<usersize;i++){
-            List<Feedback> feedbacks = feedbackAdminRepository.findAllByUser(userList.get(i));   //해당 유저의 모든 피드백
-            for(int j=0;j<feedbacks.size();j++){
-                feedbackList.add(feedbacks.get(j));
-            }
-        }
-
-        /*feedback list -> page*/
-        int start = (int)pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), (int) feedbackList.size());
-        Page<Feedback> feedbackPage = new PageImpl<>(feedbackList.subList(start, end), pageable, feedbackList.size());
-
-        Page<FeedbackAdminResponseDto> feedbackAdminResponseDtos = feedbackPage.map(FeedbackAdminResponseDto::new);
+        Page<Feedback> feedbacks = feedbackAdminRepository.findFeedbacksByUserIntraId(keyword, pageable);
+        Page<FeedbackAdminResponseDto> feedbackAdminResponseDtos = feedbacks.map(FeedbackAdminResponseDto::new);
         FeedbackListAdminResponseDto responseDto = new FeedbackListAdminResponseDto(feedbackAdminResponseDtos.getContent(),
                 feedbackAdminResponseDtos.getTotalPages(), feedbackAdminResponseDtos.getNumber() + 1);
-
         return responseDto;
     }
 
