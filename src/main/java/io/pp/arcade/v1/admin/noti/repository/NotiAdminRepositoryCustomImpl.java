@@ -14,7 +14,7 @@ public class NotiAdminRepositoryCustomImpl implements NotiAdminRepositoryCustom 
     private final EntityManager em;
     @Override
     public Page<Noti> findNotisByUserIntraId(Pageable pageable, String intraId) {
-        long totalElem = countTotalElem(intraId, pageable);
+        long totalElem = countTotalElem(intraId);
         String sql = "select n from Noti n join fetch n.user left outer join fetch n.slot where " +
                 "n.user.intraId like \'%" + intraId + "%\' order by n.createdAt desc, n.user.intraId asc";
         List<Noti> notis = em.createQuery(sql, Noti.class)
@@ -25,7 +25,7 @@ public class NotiAdminRepositoryCustomImpl implements NotiAdminRepositoryCustom 
         return result;
     }
 
-    private long countTotalElem(String intraId, Pageable pageable) {
+    private long countTotalElem(String intraId) {
         String sql = "select n from Noti n join fetch n.user left outer join fetch n.slot where " +
                 "n.user.intraId like \'%" + intraId + "%\'";
         List<Noti> notiList = em.createQuery(sql, Noti.class)

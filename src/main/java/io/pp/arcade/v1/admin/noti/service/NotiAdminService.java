@@ -5,6 +5,7 @@ import io.pp.arcade.v1.admin.noti.dto.NotiResponseDto;
 import io.pp.arcade.v1.admin.noti.repository.NotiAdminRepository;
 import io.pp.arcade.v1.domain.noti.Noti;
 import io.pp.arcade.v1.domain.noti.NotiMailSender;
+import io.pp.arcade.v1.domain.noti.slackbot.SlackbotService;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.slot.SlotRepository;
 import io.pp.arcade.v1.domain.user.User;
@@ -27,7 +28,7 @@ public class NotiAdminService {
     private final NotiAdminRepository notiAdminRepository;
     private final UserRepository userRepository;
     private final SlotRepository slotRepository;
-    private final NotiMailSender notiMailSender;
+    private final SlackbotService slackbotService;
 
     @Transactional(readOnly = true)
     public NotiListResponseDto getAllNoti(Pageable pageable) {
@@ -37,8 +38,7 @@ public class NotiAdminService {
                 responseDtos.getNumber() + 1);
     }
 
-    public void addNotiToUser(String intraId, Integer slotId, String message,
-                                        Boolean sendMail) throws MessagingException {
+    public void addNotiToUser(String intraId, Integer slotId, String message, Boolean sendMail) {
         User findUser = userRepository.findByIntraId(intraId).orElseThrow();
         Slot slot;
         slot = (slotId == null)? null : slotRepository.findById(slotId).orElseThrow();
@@ -51,7 +51,7 @@ public class NotiAdminService {
                 .build();
         notiAdminRepository.save(noti);
         if(sendMail)
-            notiMailSender.sendMail(noti, findUser);
+            slackbotService.sendSlackNoti(findUser.getIntraId(), noti);
     }
 
     public void addNotiToAll(String message, Boolean sendMail) {
@@ -64,13 +64,8 @@ public class NotiAdminService {
                     .isChecked(false)
                     .build();
             notiAdminRepository.save(noti);
-            if (sendMail) {
-                try {
-                    notiMailSender.sendMail(noti, user);
-                } catch (MessagingException e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            if (sendMail)
+                slackbotService.sendSlackNoti(user.getIntraId(), noti);
         });
     }
 

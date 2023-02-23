@@ -3,6 +3,7 @@ package io.pp.arcade.v1.domain.noti;
 import io.pp.arcade.v1.admin.dto.create.NotiCreateRequestDto;
 import io.pp.arcade.v1.admin.dto.update.NotiUpdateRequestDto;
 import io.pp.arcade.v1.domain.noti.dto.*;
+import io.pp.arcade.v1.domain.noti.slackbot.SlackbotService;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.slot.SlotRepository;
 import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUser;
@@ -28,6 +29,7 @@ public class NotiService {
     private final UserRepository userRepository;
     private final SlotRepository slotRepository;
     private final NotiMailSender notiMailSender;
+    private final SlackbotService slackbotService;
     private final SlotTeamUserRepository slotTeamUserRepository;
 
     @Transactional
@@ -44,7 +46,8 @@ public class NotiService {
                         .message(notiAddDto.getMessage())
                         .isChecked(false)
                         .build());
-                notiMailSender.sendMail(noti, users.getUser());
+//                notiMailSender.sendMail(noti, users.getUser());
+                slackbotService.sendSlackNoti(users.getUser().getIntraId(), noti);
             }
         } else {
             User user = userRepository.findById(notiAddDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
@@ -55,7 +58,8 @@ public class NotiService {
                     .message(notiAddDto.getMessage())
                     .isChecked(false)
                     .build());
-            notiMailSender.sendMail(noti, user);
+//            notiMailSender.sendMail(noti, user);
+            slackbotService.sendSlackNoti(user.getIntraId(), noti);
             notiRepository.save(noti);
         }
     }
@@ -137,6 +141,7 @@ public class NotiService {
                 .message("축하합니다!! 이벤트에 당첨되었습니다🎉")
                 .isChecked(false)
                 .build();
-        notiMailSender.sendMail(noti, user);
+        slackbotService.sendSlackNoti(user.getIntraId(), noti);
+//        notiMailSender.sendMail(noti, user);
     }
 }

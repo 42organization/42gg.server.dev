@@ -2,6 +2,8 @@ package io.pp.arcade.v1.domain.noti.slackbot;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.pp.arcade.v1.domain.noti.Noti;
+import io.pp.arcade.v1.global.type.NotiType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +51,7 @@ public class SlackbotService {
         return responseEntity.getBody().user.id;
     }
 
-    private String getDmChannelId(String slackUserId) throws JsonProcessingException {
+    private String getDmChannelId(String slackUserId) {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.AUTHORIZATION,
                 authenticationPrefix + authenticationToken);
@@ -57,7 +59,12 @@ public class SlackbotService {
 
         Map<String, String> map = new HashMap<>();
         map.put("users", slackUserId);
-        String contentBody = objectMapper.writeValueAsString(map);
+        String contentBody = null;
+        try {
+            contentBody = objectMapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("json parse error in getDmChannelId()", e);
+        }
 
         HttpEntity<String> entity = new HttpEntity<>(contentBody, httpHeaders);
 
@@ -69,9 +76,10 @@ public class SlackbotService {
     }
 
     @Async("asyncExecutor")
-    public void sendSlackNoti(String intraId, String message) throws JsonProcessingException {
+    public void sendSlackNoti(String intraId, Noti noti) {
         String slackUserId = getSlackUserId(intraId);
         String slackChannelId = getDmChannelId(slackUserId);
+        String message = getMessage(noti);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.AUTHORIZATION,
@@ -81,7 +89,12 @@ public class SlackbotService {
         Map<String, String> map = new HashMap<>();
         map.put("channel",slackChannelId);
         map.put("text", message);
-        String contentBody = objectMapper.writeValueAsString(map);
+        String contentBody = null;
+        try {
+            contentBody = objectMapper.writeValueAsString(map);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("json parse error in sendSlackNoti()", e);
+        }
 
         HttpEntity<String> entity = new HttpEntity<>(contentBody, httpHeaders);
 
@@ -89,6 +102,18 @@ public class SlackbotService {
                 .exchange(sendMessageUrl, HttpMethod.POST, entity, String.class);
         if(respEntity.getStatusCode() != HttpStatus.OK)
             throw new RuntimeException("fail to send notification");
+    }
+
+    private String getMessage(Noti noti) {
+        String message;
+        if (noti.getType() != NotiType.ANNOUNCE) {
+            message = "🧚: \"새로운 알림이 도착했핑.\"\n" + "🧚: \"" + noti.getType().getMessage() + "\"\n\n 🏓42GG와 함께하는 행복한 탁구생활🏓" +
+                    "\n$$지금 즉시 접속$$ ----> https://42gg.kr";
+        } else {
+            message = "🧚: \"새로운 알림이 도착했핑.\"\n" + "🧚: \"" + noti.getType().getMessage() + "\"\n\n공지사항: "
+                    + noti.getMessage() + "\n\n 🏓42GG와 함께하는 행복한 탁구생활🏓" + "\n$$지금 즉시 접속$$ ----> https://42gg.kr";
+        }
+        return message;
     }
 
     @Getter
