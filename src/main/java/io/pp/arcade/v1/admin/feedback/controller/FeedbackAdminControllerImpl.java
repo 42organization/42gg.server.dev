@@ -43,13 +43,16 @@ public class FeedbackAdminControllerImpl implements FeedbackAdminController{
     }
 
     @Override
-    @GetMapping(value = "/users/{intraId}")
-    public FeedbackListAdminResponseDto feedbackFindByIntraId(String intraId, int page, int size, HttpResponse httpResponse) {
+    @GetMapping(value = "/users")
+    public FeedbackListAdminResponseDto feedbackFindByIntraId(String keyword, int page, int size, HttpResponse httpResponse) {
         if (page < 1 || size < 1){
             httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
             return null;
         }
         Pageable pageable = PageRequest.of(page - 1, size);
-        return feedbackAdminService.findFeedbackByIntraId(intraId, pageable);
+        if (keyword == null){    //keyword가 없는 경우 모든 피드백 반환
+            return feedbackAdminService.findAllFeedbackByAdmin(pageable);
+        }
+        return feedbackAdminService.findByPartsOfIntraId(keyword, pageable);
     }
 }

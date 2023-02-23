@@ -15,7 +15,8 @@ import java.util.Optional;
 
 public interface UserAdminRepository extends JpaRepository<User, Integer> {
     Optional<User> findByIntraId(String intraId);
-    List<User> findByIntraIdContains(String intraId);
+    @Query(nativeQuery = false, value = "select u from User as u where u.intraId like %:partial%")
+    List<User> findByIntraIdContains(@Param("partial")String partial);
     @Query(nativeQuery = false, value = "select u from User as u where u.intraId like %:partial%")
     Page<User> findByIntraIdContains(@Param("partial") String partial, Pageable pageable);
     List<User> findAllByRoleType(RoleType roleType);

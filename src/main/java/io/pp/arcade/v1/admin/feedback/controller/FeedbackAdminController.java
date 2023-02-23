@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 public interface FeedbackAdminController {
     FeedbackIsSolvedResponseDto feedbackIsSolvedToggle(@RequestBody FeedbackIsSolvedToggleRequestDto updateDto);
     FeedbackListAdminResponseDto feedbackAll(@RequestParam(value = "page")int page, @RequestParam(defaultValue = "20")int size, HttpResponse httpResponse);
-    FeedbackListAdminResponseDto feedbackFindByIntraId(@PathVariable(name = "intraId") String intraId,
+    FeedbackListAdminResponseDto feedbackFindByIntraId(@RequestParam(value = "q", required = false) String keyword,
                                                        @RequestParam(value = "page")int page,
                                                        @RequestParam(defaultValue = "20")int size,
                                                        HttpResponse httpResponse);
