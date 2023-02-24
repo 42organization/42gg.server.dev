@@ -11,10 +11,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AnnouncementAdminRepository extends JpaRepository<AnnouncementAdmin, Integer> {
     List<AnnouncementAdmin> findAll(Sort sort);
-    Optional<List<AnnouncementAdmin>> findAllByIsDelFalse();
-    Optional<AnnouncementAdmin> findByIsDelFalse();
 
-    //페이징 처리하기
-    //Optional<List<AnnouncementAdmin> findAll();
-    // Page<AnnouncementAdmin> findAllByOrderByIdDesc(Pageable pageable);
+    AnnouncementAdmin findFirstByOrderByIdDesc();
 }
