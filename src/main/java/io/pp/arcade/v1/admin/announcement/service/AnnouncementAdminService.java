@@ -40,7 +40,7 @@ public class AnnouncementAdminService {
         AnnouncementAdminDto dto = AnnouncementAdminDto.from(announcement);
         return dto;
     }
-    public void addAnnouncement(@RequestBody AnnouncementAdminAddDto addDto) {
+    public void addAnnouncement(AnnouncementAdminAddDto addDto) {
         AnnouncementAdmin announcementAdmin = AnnouncementAdmin.builder()
                 .content(addDto.getContent())
                 .createdTime(addDto.getCreatedTime())
@@ -48,7 +48,7 @@ public class AnnouncementAdminService {
                 .build();
         announcementAdminRepository.save(announcementAdmin);
     }
-    public AnnouncementAdmin modifyAnnouncementIsDel(@RequestBody AnnouncementAdminUpdateDto updateDto) {
+    public AnnouncementAdmin modifyAnnouncementIsDel(AnnouncementAdminUpdateDto updateDto) {
         AnnouncementAdmin announcement = announcementAdminRepository.findFirstByOrderByIdDesc();
         announcement.update(updateDto.getDeleterIntraId(), updateDto.getDeletedTime());
         return announcement;
