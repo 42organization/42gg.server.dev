@@ -16,7 +16,7 @@ public class FeedbackAdminRepositoryImpl implements FeedbackAdminRepositorySearc
     @Override
     public Page<Feedback> findFeedbacksByUserIntraId(String intraId, Pageable pageable) {
         long feedbackNum = countTotalFeedbacks(intraId, pageable);
-        String sql = "select f from Feedback f where " +
+        String sql = "select f from Feedback f join fetch f.user where " +
                 "f.user.intraId like \'%" + intraId + "%\' order by f.user.intraId asc, f.createdAt asc";
         List<Feedback> feedbackList = em.createQuery(sql, Feedback.class)
                 .setFirstResult((int) pageable.getOffset())
@@ -27,7 +27,7 @@ public class FeedbackAdminRepositoryImpl implements FeedbackAdminRepositorySearc
     }
 
     private long countTotalFeedbacks(String intraId, Pageable pageable){
-        String sql = "select f from Feedback f where " +
+        String sql = "select f from Feedback f join fetch f.user where " +
                 "f.user.intraId like \'%" + intraId + "%\'";
         List<Feedback> feedbackList = em.createQuery(sql, Feedback.class)
                 .getResultList();
