@@ -112,6 +112,7 @@ public class UserAdminService {
         if (rankRedis == null) {
             throw new RankUpdateException("RK001");
         }
+        System.out.println("{" + rankRedis.getWins() + ", " + rankRedis.getLosses() + ", " +rankRedis.getPpp() + "}");
         rankRedis.setPpp(updateRequestDto.getPpp());
         rankRedis.setWins(updateRequestDto.getWins());
         rankRedis.setLosses(updateRequestDto.getLosses());
