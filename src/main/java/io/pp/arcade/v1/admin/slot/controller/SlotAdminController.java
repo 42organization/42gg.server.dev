@@ -25,7 +25,7 @@ public class SlotAdminController {
         SlotAdminResponseDto responseDto = slotAdminService.getSlotSetting();
         if (responseDto == null) {
             httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
-            return null;
+            throw new BusinessException("SR001");
         }
         return responseDto;
     }
@@ -36,36 +36,29 @@ public class SlotAdminController {
         } catch (BusinessException e) {
             return ResponseEntity.badRequest().build();
         }
-
-//        System.out.println(requestDto.getInterval());
-//        System.out.println(requestDto.getFutureTime());
-//        System.out.println(requestDto.getPastTime());
-//        System.out.println(requestDto.getRevealTime());
-//        slotAdminService.test();
-
-//        slotAdminService.test();
-//        slotAdminService.setSlotGenerator();
-//        slotAdminService.test();
-//        System.out.println("test put");
+        slotAdminService.addSlotSetting(requestDto.getPastSlotTime(),
+                requestDto.getFutureSlotTime(),
+                requestDto.getInterval(),
+                requestDto.getOpenMinute());
         return ResponseEntity.ok().build();
     }
 
     private void checkValid(SlotAdminRequestDto requestDto) {
         List<Integer> intervals = List.of(15, 30, 60);
         if (requestDto.getInterval() == null
-                || intervals.contains(requestDto.getInterval())) {
+                || !intervals.contains(requestDto.getInterval())) {
             throw new BusinessException("SC001");
         }
-        if (requestDto.getFutureTime() == null
-                || requestDto.getFutureTime() > 12) {
+        if (requestDto.getFutureSlotTime() == null
+                || requestDto.getFutureSlotTime() > 12) {
             throw new BusinessException("SC001");
         }
-        if (requestDto.getPastTime() == null
-                || requestDto.getPastTime() > 12) {
+        if (requestDto.getPastSlotTime() == null
+                || requestDto.getPastSlotTime() > 12) {
             throw new BusinessException("SC001");
         }
-        if (requestDto.getRevealTime() == null
-                || requestDto.getRevealTime() > requestDto.getInterval()) {
+        if (requestDto.getOpenMinute() == null
+                || requestDto.getOpenMinute() > requestDto.getInterval()) {
             throw new BusinessException("SC001");
         }
     }

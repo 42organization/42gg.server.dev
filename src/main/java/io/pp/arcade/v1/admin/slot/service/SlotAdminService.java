@@ -3,7 +3,6 @@ package io.pp.arcade.v1.admin.slot.service;
 import io.pp.arcade.v1.admin.slot.SlotManagement;
 import io.pp.arcade.v1.admin.slot.dto.SlotAdminResponseDto;
 import io.pp.arcade.v1.admin.slot.repository.SlotManagementRepository;
-import io.pp.arcade.v1.global.scheduler.NewSlotGenerator;
 import io.pp.arcade.v1.global.scheduler.SlotGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,11 +26,21 @@ public class SlotAdminService {
     public void test(){
         System.out.println(slotGenerator.getInterval());
     }
-    public void setSlotGenerator(Integer interval){
+    public void setSlotGenerator(Integer interval, Integer futureSlotTime){
+        // 수정 필요 있 futureTimegap을 어떻게 해야할까.
+        // query를 날려봐야 하나..
+        slotGenerator.setFutureTimeGap(0);
         slotGenerator.setInterval(interval);
     }
-    public void addSlotSetting() {
 
-
+    public void addSlotSetting(Integer pastSlotTime, Integer futureSlotTime,
+                               Integer interval, Integer openMinute) {
+        SlotManagement slotManagement = SlotManagement.builder()
+                .futureSlotTime(futureSlotTime)
+                .pastSlotTime(pastSlotTime)
+                .interval(interval)
+                .openMinute(openMinute)
+                .build();
+        slotManagementRepository.save(slotManagement);
     }
 }

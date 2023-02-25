@@ -1,7 +1,6 @@
 package io.pp.arcade.v1.admin.slot;
 
 import io.pp.arcade.v1.global.util.BaseTimeEntity;
-import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -29,19 +28,19 @@ public class SlotManagement extends BaseTimeEntity {
     private Integer futureSlotTime;
 
     @NotNull
-    @Column(name = "interval")
-    private Integer interval;
+    @Column(name = "game_interval")
+    private Integer gameInterval;
 
     @NotNull
     @Column(name = "open_minute")
     private Integer openMinute;
 
-    public SlotManagement(Integer id, Integer pastSlotTime, Integer futureSlotTime, Integer interval,
+    @Builder
+    public SlotManagement(Integer pastSlotTime, Integer futureSlotTime, Integer interval,
                           Integer openMinute) {
-        this.id = id;
         this.pastSlotTime = pastSlotTime;
         this.futureSlotTime = futureSlotTime;
-        this.interval = interval;
+        this.gameInterval = interval;
         this.openMinute = openMinute;
     }
 }

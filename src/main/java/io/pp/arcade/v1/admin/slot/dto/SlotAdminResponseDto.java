@@ -1,7 +1,9 @@
 package io.pp.arcade.v1.admin.slot.dto;
 
 import io.pp.arcade.v1.admin.slot.SlotManagement;
+import lombok.Getter;
 
+@Getter
 public class SlotAdminResponseDto {
     private Integer pastSlotTime;
     private Integer futureSlotTime;
@@ -11,7 +13,7 @@ public class SlotAdminResponseDto {
     public SlotAdminResponseDto(SlotManagement slotManagement) {
         this.pastSlotTime = slotManagement.getPastSlotTime();
         this.futureSlotTime = slotManagement.getFutureSlotTime();
-        this.interval = slotManagement.getInterval();
+        this.interval = slotManagement.getGameInterval();
         this.openMinute = slotManagement.getOpenMinute();
     }
 }
