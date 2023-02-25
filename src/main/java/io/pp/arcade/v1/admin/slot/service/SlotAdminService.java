@@ -23,13 +23,15 @@ public class SlotAdminService {
         return new SlotAdminResponseDto(slotManagement);
     }
 
-    public void test(){
-        System.out.println(slotGenerator.getInterval());
-    }
     public void setSlotGenerator(Integer interval, Integer futureSlotTime){
-        // 수정 필요 있 futureTimegap을 어떻게 해야할까.
-        // query를 날려봐야 하나..
-        slotGenerator.setFutureTimeGap(0);
+        SlotManagement slotManagement = slotManagementRepository.findFirstByOrderByIdDesc();
+        if (slotManagement == null) {
+            slotGenerator.setFutureTimeGap(futureSlotTime);
+        }
+        else {
+            slotGenerator.setFutureTimeGap(slotGenerator.getFutureTimeGap()
+                    + futureSlotTime - slotManagement.getFutureSlotTime());
+        }
         slotGenerator.setInterval(interval);
     }
 

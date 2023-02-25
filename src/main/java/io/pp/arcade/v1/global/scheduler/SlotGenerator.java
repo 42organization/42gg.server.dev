@@ -15,7 +15,7 @@ public class SlotGenerator extends AbstractScheduler {
 
     public SlotGenerator(SlotService slotService) {
         this.slotService = slotService;
-        this.setCron("30 17 * * * *");
+        this.setCron("30 59 * * * *");
     }
 //    @Getter @Setter
 //    private Integer startTime = 0;
