@@ -1,6 +1,6 @@
 package io.pp.arcade.v1.global.scheduler;
 
-import io.pp.arcade.v1.admin.slot.dto.SlotPolicy;
+import io.pp.arcade.v1.admin.slot.SlotManagement;
 import io.pp.arcade.v1.admin.slot.repository.SlotManagementRepository;
 import io.pp.arcade.v1.admin.slot.service.SlotAdminService;
 import io.pp.arcade.v1.domain.slot.Slot;
@@ -18,8 +18,7 @@ public class SlotGenerator extends AbstractScheduler {
     private final SlotAdminService slotAdminService;
     private final SlotRepository slotRepository;
 
-    public SlotGenerator(SlotService slotService, SlotAdminService slotAdminService,
-                         SlotRepository slotRepository) {
+    public SlotGenerator(SlotService slotService, SlotAdminService slotAdminService, SlotRepository slotRepository) {
         this.slotService = slotService;
         this.slotAdminService = slotAdminService;
         this.slotRepository = slotRepository;
@@ -28,7 +27,7 @@ public class SlotGenerator extends AbstractScheduler {
     }
 
     public void dailyGenerate() {
-        SlotPolicy nowSlotPolicy = slotAdminService.getNowSlotPolicy();
+        SlotManagement nowSlotPolicy = slotAdminService.getNowSlotPolicy();
         Slot lastSlot = slotRepository.findFirstByOrderByTimeDesc().orElseThrow();
         LocalDateTime lastSlotTime = lastSlot.getTime();
         LocalDateTime startTime = LocalDateTime.of(lastSlotTime.getYear(), lastSlotTime.getMonth(), lastSlotTime.getDayOfMonth(),
@@ -36,20 +35,20 @@ public class SlotGenerator extends AbstractScheduler {
         int needSlotNum = calcNeedSlotNum(startTime, nowSlotPolicy);
 
         for(int i = 0; i < needSlotNum; i++) {
-            LocalDateTime time = startTime.plusMinutes(nowSlotPolicy.getInterval() * i);
+            LocalDateTime time = startTime.plusMinutes(nowSlotPolicy.getGameInterval() * i);
             SlotAddDto dto = SlotAddDto.builder().tableId(1).time(time).build();
             slotService.addSlot(dto);
         }
     }
 
-    private int calcNeedSlotNum(LocalDateTime startTime, SlotPolicy nowSlotPolicy) {
+    private int calcNeedSlotNum(LocalDateTime startTime, SlotManagement nowSlotPolicy) {
         int cnt = 0;
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime standard = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), 0, 0);
-        LocalDateTime targetTime = standard.plusHours(nowSlotPolicy.getFutureTimeGap() + 1);
+        LocalDateTime targetTime = standard.plusHours(nowSlotPolicy.getFutureSlotTime() + 1);
 
         while (targetTime.compareTo(startTime) > 0) {
-            startTime = startTime.plusMinutes(nowSlotPolicy.getInterval());
+            startTime = startTime.plusMinutes(nowSlotPolicy.getGameInterval());
             cnt++;
         }
         return cnt;

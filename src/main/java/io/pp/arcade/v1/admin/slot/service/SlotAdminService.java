@@ -2,9 +2,7 @@ package io.pp.arcade.v1.admin.slot.service;
 
 import io.pp.arcade.v1.admin.slot.SlotManagement;
 import io.pp.arcade.v1.admin.slot.dto.SlotAdminResponseDto;
-import io.pp.arcade.v1.admin.slot.dto.SlotPolicy;
 import io.pp.arcade.v1.admin.slot.repository.SlotManagementRepository;
-import io.pp.arcade.v1.global.scheduler.SlotGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,13 +22,17 @@ public class SlotAdminService {
     }
 
     @Transactional(readOnly = true)
-    public SlotPolicy getNowSlotPolicy() {
+    public SlotManagement getNowSlotPolicy() {
         SlotManagement nowSlotPolicy = slotManagementRepository.findFirstByOrderByCreatedAtDesc();
         if (nowSlotPolicy != null)
-            return new SlotPolicy(nowSlotPolicy.getGameInterval(), nowSlotPolicy.getFutureSlotTime(),
-                    nowSlotPolicy.getPastSlotTime());
+            return nowSlotPolicy;
         else
-            return new SlotPolicy(60, 6, 3); //return default policy
+            return SlotManagement.builder()
+                    .futureSlotTime(9)
+                    .pastSlotTime(3)
+                    .interval(15)
+                    .openMinute(5)
+                    .build(); //return default policy
     }
 
 
