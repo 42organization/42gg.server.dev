@@ -1,16 +1,18 @@
 package io.pp.arcade.v1.admin.season.controller;
 
+import io.jsonwebtoken.lang.Collections;
+import io.pp.arcade.v1.admin.dto.update.SeasonUpdateDto;
 import io.pp.arcade.v1.admin.season.dto.SeasonCreateRequestDto;
 import io.pp.arcade.v1.admin.season.dto.SeasonAdminDto;
 import io.pp.arcade.v1.admin.season.dto.SeasonListAdminResponseDto;
 import io.pp.arcade.v1.admin.season.service.SeasonAdminService;
+import io.pp.arcade.v1.domain.rank.dto.RankDto;
+import io.pp.arcade.v1.domain.rank.service.RankRedisService;
+import io.pp.arcade.v1.domain.rank.service.RankService;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.type.Mode;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,9 +23,12 @@ import java.util.List;
 public class SeasonAdminControllerImpl implements SeasonAdminController {
     private final SeasonAdminService seasonAdminService;
 
-    @GetMapping(value = "/season")
-    public SeasonListAdminResponseDto rankSeasonList() {
-        List<SeasonAdminDto> seasons = seasonAdminService.findAllRankSeason();
+    private final RankService rankService;
+    private final RankRedisService rankRedisService;
+
+    @GetMapping(value = "/season/{seasonMode}")
+    public SeasonListAdminResponseDto rankSeasonList(Mode seasonMode) {
+        List<SeasonAdminDto> seasons = seasonAdminService.findAllSeasonByMode(seasonMode);
 
         SeasonListAdminResponseDto responseDto = SeasonListAdminResponseDto.builder()
                 .seasonMode(Mode.BOTH.toString())
@@ -33,11 +38,21 @@ public class SeasonAdminControllerImpl implements SeasonAdminController {
     }
 
     @PostMapping(value = "/season")
-    public void addSeason(SeasonCreateRequestDto seasonCreateReqeustDto)
+    public void createSeason(SeasonCreateRequestDto seasonCreateReqeustDto)
     {
-        System.out.println(seasonCreateReqeustDto + "=========================================");
         if (seasonCreateReqeustDto.getStartTime().isBefore(LocalDateTime.now()))
             throw new BusinessException("E0001");
         seasonAdminService.createSeason(seasonCreateReqeustDto);
+        List<RankDto> rankList = rankService.findAll();
+        if (!Collections.isEmpty(rankList)) {
+            rankRedisService.mysqlToRedis(rankList);
+        }
+    }
+
+    @DeleteMapping(value = "/season/{seasonId}")
+    public void deleteSeason(Integer seasonId)
+    {
+        System.out.println(seasonId + "============================");
+        seasonAdminService.deleteSeason(seasonId);
     }
 }

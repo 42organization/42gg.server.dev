@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Builder
 @Getter
-public class SeasonCreateRequestDto {
+public class SeasonUpdateRequestDto {
     private String seasonName;
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalDateTime startTime;
