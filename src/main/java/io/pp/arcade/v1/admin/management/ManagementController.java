@@ -118,16 +118,16 @@ public class ManagementController {
         return "scheduler_management";
     }
 
-    @GetMapping("/admin/slot")
-    public String slotPage(Model model, HttpServletRequest request) {
-        List<SlotTeamUserDto> slotList = slotTeamUserService.findAllByAdmin(Pageable.ofSize(200));
-        model.addAttribute("slotStartTime", slotGenerator.getStartTime());
-        model.addAttribute("slotInterval", slotGenerator.getInterval());
-        model.addAttribute("slotNum", slotGenerator.getSlotNum());
-        model.addAttribute("slotList", slotList);
-        model.addAttribute("token", HeaderUtil.getAccessToken(request));
-        return "slot_management";
-    }
+//    @GetMapping("/admin/slot")
+//    public String slotPage(Model model, HttpServletRequest request) {
+//        List<SlotTeamUserDto> slotList = slotTeamUserService.findAllByAdmin(Pageable.ofSize(200));
+////        model.addAttribute("slotStartTime", slotGenerator.getStartTime());
+////        model.addAttribute("slotInterval", slotGenerator.getInterval());
+////        model.addAttribute("slotNum", slotGenerator.getSlotNum());
+//        model.addAttribute("slotList", slotList);
+//        model.addAttribute("token", HeaderUtil.getAccessToken(request));
+//        return "slot_management";
+//    }
 
     @GetMapping("/admin/user")
     public String userPage(Model model, HttpServletRequest request) {
