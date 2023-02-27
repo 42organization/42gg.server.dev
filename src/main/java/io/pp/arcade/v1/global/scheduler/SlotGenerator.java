@@ -31,23 +31,25 @@ public class SlotGenerator extends AbstractScheduler {
         SlotPolicy nowSlotPolicy = slotAdminService.getNowSlotPolicy();
         Slot lastSlot = slotRepository.findFirstByOrderByTimeDesc().orElseThrow();
         LocalDateTime lastSlotTime = lastSlot.getTime();
-        int needSlotNum = calcNeedSlotNum(lastSlotTime, nowSlotPolicy);
+        LocalDateTime startTime = LocalDateTime.of(lastSlotTime.getYear(), lastSlotTime.getMonth(), lastSlotTime.getDayOfMonth(),
+                lastSlotTime.getHour(), 0, 0).plusHours(1);
+        int needSlotNum = calcNeedSlotNum(startTime, nowSlotPolicy);
 
-        for(int i = 1; i <= needSlotNum; i++) {
-            LocalDateTime time = lastSlotTime.plusMinutes(nowSlotPolicy.getInterval() * i);
+        for(int i = 0; i < needSlotNum; i++) {
+            LocalDateTime time = startTime.plusMinutes(nowSlotPolicy.getInterval() * i);
             SlotAddDto dto = SlotAddDto.builder().tableId(1).time(time).build();
             slotService.addSlot(dto);
         }
     }
 
-    private int calcNeedSlotNum(LocalDateTime lastSlotTime, SlotPolicy nowSlotPolicy) {
+    private int calcNeedSlotNum(LocalDateTime startTime, SlotPolicy nowSlotPolicy) {
         int cnt = 0;
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime standard = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), 0, 0);
         LocalDateTime targetTime = standard.plusHours(nowSlotPolicy.getFutureTimeGap() + 1);
 
-        while (targetTime.compareTo(lastSlotTime) > 0) {
-            lastSlotTime = lastSlotTime.plusMinutes(nowSlotPolicy.getInterval());
+        while (targetTime.compareTo(startTime) > 0) {
+            startTime = startTime.plusMinutes(nowSlotPolicy.getInterval());
             cnt++;
         }
         return cnt;

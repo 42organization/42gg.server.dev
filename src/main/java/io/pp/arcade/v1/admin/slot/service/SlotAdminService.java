@@ -30,7 +30,7 @@ public class SlotAdminService {
             return new SlotPolicy(nowSlotPolicy.getGameInterval(), nowSlotPolicy.getFutureSlotTime(),
                     nowSlotPolicy.getPastSlotTime());
         else
-            return new SlotPolicy(15, 9, 9); //return default policy
+            return new SlotPolicy(60, 6, 3); //return default policy
     }
 
 

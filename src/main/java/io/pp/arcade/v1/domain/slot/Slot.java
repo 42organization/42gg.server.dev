@@ -39,33 +39,20 @@ public class Slot extends BaseTimeEntity {
     private Integer headCount;
 
     @Setter
-    @ManyToOne
-    @JoinColumn(name = "team1_id")
-    private Team team1;
-
-    @Setter
-    @ManyToOne
-    @JoinColumn(name = "team2_id")
-    private Team team2;
-
-    @Setter
     @Column(name = "type")
     private GameType type;
-
     @Setter
 //    @NotNull
     @Column(name = "mode")
     private Mode mode;
 
     @Builder
-    public Slot(Integer tableId, LocalDateTime time, Integer gamePpp, Integer headCount, GameType type, Mode mode, Team team1, Team team2) {
+    public Slot(Integer tableId, LocalDateTime time, Integer gamePpp, Integer headCount, GameType type, Mode mode) {
         this.tableId = tableId;
         this.time = time;
         this.gamePpp = gamePpp;
         this.headCount = headCount;
         this.type = type;
         this.mode = mode;
-        this.team1 = team1;
-        this.team2 = team2;
     }
 }
