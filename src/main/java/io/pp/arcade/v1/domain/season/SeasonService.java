@@ -29,15 +29,15 @@ public class SeasonService {
     }
 
     @Transactional
-    public SeasonDto findLatestRankSeason() {
-        Season season = seasonRepository.findFirstBySeasonModeOrSeasonModeOrderByIdDesc(Mode.RANK, Mode.BOTH).orElseThrow(() -> new BusinessException("E0001"));
+    public SeasonDto findCurrentRankSeason() {
+        Season season = seasonRepository.findFirstByModeOrModeAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(Mode.RANK, Mode.BOTH, LocalDateTime.now()).orElseThrow(() -> new BusinessException("E0001"));
         return SeasonDto.from(season);
     }
 
     @Transactional
     public SeasonDto findSeasonById(Integer seasonId) {
         Season season = seasonRepository.findById(seasonId).orElse(null);
-        return season != null ? SeasonDto.from(season) : findLatestRankSeason();
+        return season != null ? SeasonDto.from(season) : findCurrentRankSeason();
     }
 
     @Transactional

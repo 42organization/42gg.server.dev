@@ -21,9 +21,9 @@ public interface SeasonAdminRepository extends JpaRepository <Season, Integer> {
     /* 입력시간과 모드로 입력시간 이후 가장 가까운 시즌 가져오기 */
     @Query("SELECT e FROM Season e WHERE e.seasonMode = :mode AND e.startTime > :targetTime ORDER BY e.startTime ASC")
     List<Season> findAfterSeasons(@Param("mode") Mode seasonMode, @Param("targetTime") LocalDateTime targetTime);
-
     @Query("SELECT e FROM Season e WHERE e.seasonMode = :mode AND e.startTime < :targetTime ORDER BY e.startTime DESC")
     List<Season> findBeforeSeasons(@Param("mode") Mode seasonMode, @Param("targetTime") LocalDateTime targetTime);
+
     Optional<Season> findSeasonByAndStartTimeIsBeforeAndEndTimeIsAfter(LocalDateTime startTime, LocalDateTime endTime);
     Optional<Season> findFirstByOrderByIdDesc();
     Optional<Season> findFirstBySeasonModeOrSeasonModeOrderByIdDesc(Mode mode1, Mode mode2);
