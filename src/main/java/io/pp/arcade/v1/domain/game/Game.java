@@ -23,7 +23,7 @@ public class Game {
     private Integer id;
 
     @NotNull
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "slot_id")
     Slot slot;
 

@@ -20,7 +20,7 @@ public class Feedback extends BaseTimeEntity {
     private Integer id;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "intra_id")
     private User user;
 
