@@ -19,6 +19,7 @@ public class Season {
     private Integer id;
 
     @NotNull
+    @Setter
     @Column(name = "season_name")
     private String seasonName;
 

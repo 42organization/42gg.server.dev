@@ -19,7 +19,7 @@ public class SeasonUpdateRequestDto {
 
     @Override
     public String toString() {
-        return "SeasonCreateRequestAdminDto{" + '\'' +
+        return "SeasonUpdateRequestAdminDto{" + '\'' +
                 "seasonName=" + seasonName + '\'' +
                 ", startTime=" + startTime +
                 ", startPpp='" + startPpp + '\'' +

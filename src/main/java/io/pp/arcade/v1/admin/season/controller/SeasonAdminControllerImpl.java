@@ -1,10 +1,10 @@
 package io.pp.arcade.v1.admin.season.controller;
 
 import io.jsonwebtoken.lang.Collections;
-import io.pp.arcade.v1.admin.dto.update.SeasonUpdateDto;
 import io.pp.arcade.v1.admin.season.dto.SeasonCreateRequestDto;
 import io.pp.arcade.v1.admin.season.dto.SeasonAdminDto;
 import io.pp.arcade.v1.admin.season.dto.SeasonListAdminResponseDto;
+import io.pp.arcade.v1.admin.season.dto.SeasonUpdateRequestDto;
 import io.pp.arcade.v1.admin.season.service.SeasonAdminService;
 import io.pp.arcade.v1.domain.rank.dto.RankDto;
 import io.pp.arcade.v1.domain.rank.service.RankRedisService;
@@ -38,21 +38,20 @@ public class SeasonAdminControllerImpl implements SeasonAdminController {
     }
 
     @PostMapping(value = "/season")
-    public void createSeason(SeasonCreateRequestDto seasonCreateReqeustDto)
-    {
+    public void createSeason(SeasonCreateRequestDto seasonCreateReqeustDto) {
         if (seasonCreateReqeustDto.getStartTime().isBefore(LocalDateTime.now()))
             throw new BusinessException("E0001");
         seasonAdminService.createSeason(seasonCreateReqeustDto);
         List<RankDto> rankList = rankService.findAll();
-        if (!Collections.isEmpty(rankList)) {
-            rankRedisService.mysqlToRedis(rankList);
-        }
     }
 
     @DeleteMapping(value = "/season/{seasonId}")
-    public void deleteSeason(Integer seasonId)
-    {
-        System.out.println(seasonId + "============================");
+    public void deleteSeason(Integer seasonId) {
         seasonAdminService.deleteSeason(seasonId);
+    }
+
+    @PutMapping(value = "/season/{seasonId}")
+    public void updateSeason(Integer seasonId, SeasonUpdateRequestDto seasonUpdateRequestDto) {
+        seasonAdminService.updateSeason(seasonId, seasonUpdateRequestDto);
     }
 }

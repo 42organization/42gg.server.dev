@@ -15,8 +15,8 @@ import java.util.Optional;
 public interface SeasonAdminRepository extends JpaRepository <Season, Integer> {
 
     /* 입력시간과 모드로 입력시간이 속한 시즌 가져오기 */
-    @Query("SELECT e FROM Season e WHERE e.seasonMode = :mode AND e.startTime < :targetTime AND e.endTime > :targetTime ORDER BY e.id DESC")
-    Season findFirstByModeAndStartTimeLessThanEqualAndEndTimeGreaterThanEqualOrderByCreateTimeDesc(@Param("mode") Mode mode, @Param("targetTime") LocalDateTime targetTime);
+    @Query("SELECT e FROM Season e WHERE e.seasonMode = :mode AND e.startTime < :targetTime AND e.endTime > :targetTime")
+    Season findFirstByModeAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(@Param("mode") Mode mode, @Param("targetTime") LocalDateTime targetTime);
 
     /* 입력시간과 모드로 입력시간 이후 가장 가까운 시즌 가져오기 */
     @Query("SELECT e FROM Season e WHERE e.seasonMode = :mode AND e.startTime > :targetTime ORDER BY e.startTime ASC")
