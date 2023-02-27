@@ -13,7 +13,6 @@ public class GameTeamAdminDto {
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String intraId2;  //복식일 경우에만 있음
     private Integer teamId;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Integer score;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean win;

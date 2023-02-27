@@ -20,12 +20,35 @@ public class GameAdminControllerImpl implements GameAdminController{
     private final GameAdminService gameAdminService;
     @Override
     @GetMapping
-    public GameLogListAdminResponseDto gameAll(int seasonId, int page, int size, HttpResponse httpResponse) {
+    public GameLogListAdminResponseDto gameFindBySeasonId(int seasonId, int page, int size, HttpResponse httpResponse) {
         if (page < 1 || size < 1){
             httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
             return null;
         }
         Pageable pageable = PageRequest.of(page - 1, size, Sort.by("id").descending());
-        return gameAdminService.findAllGameByAdmin(pageable);
+
+        if (seasonId > 0){
+            return gameAdminService.findGamesBySeasonId(seasonId, pageable);
+        }
+        else {
+            return gameAdminService.findAllGamesByAdmin(pageable);
+        }
     }
+
+    @Override
+    @GetMapping("/users")
+    public GameLogListAdminResponseDto gameFindByIntraId(String keyword, int page, int size, HttpResponse httpResponse) {
+        if (page < 1 || size < 1){
+            httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
+            return null;
+        }
+        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("intra_id").and(Sort.by("createdAt")));
+        if (keyword == null){    //keyword가 없는 경우 모든 유저의 전적 반환
+            return gameAdminService.findAllGamesByAdmin(pageable);
+        }
+        else {
+            return gameAdminService.findGamesByIntraId(keyword, pageable);
+        }
+    }
+
 }

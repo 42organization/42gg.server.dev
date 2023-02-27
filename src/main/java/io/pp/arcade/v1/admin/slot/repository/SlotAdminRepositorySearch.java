@@ -6,5 +6,4 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.query.Param;
 
 public interface SlotAdminRepositorySearch {
-    Page<Slot> findSlotByGameId(@Param("gameId")Integer slotId, Pageable pageable);
 }
