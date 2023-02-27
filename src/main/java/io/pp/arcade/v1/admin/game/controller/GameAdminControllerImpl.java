@@ -7,7 +7,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,13 +24,13 @@ public class GameAdminControllerImpl implements GameAdminController{
             httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
             return null;
         }
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("id").descending());
+        Pageable pageable = PageRequest.of(page - 1, size);
 
-        if (seasonId > 0){
-            return gameAdminService.findGamesBySeasonId(seasonId, pageable);
+        if (seasonId == 0){
+            return gameAdminService.findAllGamesByAdmin(pageable);
         }
         else {
-            return gameAdminService.findAllGamesByAdmin(pageable);
+            return gameAdminService.findGamesBySeasonId(seasonId, pageable);
         }
     }
 
@@ -42,7 +41,7 @@ public class GameAdminControllerImpl implements GameAdminController{
             httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
             return null;
         }
-        Pageable pageable = PageRequest.of(page - 1, size, Sort.by("intra_id").and(Sort.by("createdAt")));
+        Pageable pageable = PageRequest.of(page - 1, size);
         if (keyword == null){    //keyword가 없는 경우 모든 유저의 전적 반환
             return gameAdminService.findAllGamesByAdmin(pageable);
         }

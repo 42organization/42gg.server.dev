@@ -6,6 +6,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface PChangeAdminRepository extends JpaRepository<PChange, Integer> {
-    List<PChange> findPChangesByUser_IntraId(@Param("q") String intraId);
+public interface PChangeAdminRepository
+        extends JpaRepository<PChange, Integer>, PChangeAdminRepositorySearch {
+    //List<PChange> findPChangesByUser_IntraId(@Param("q") String intraId);
 }

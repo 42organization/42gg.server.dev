@@ -2,7 +2,6 @@ package io.pp.arcade.v1.admin.slotteamuser.repository;
 
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUser;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

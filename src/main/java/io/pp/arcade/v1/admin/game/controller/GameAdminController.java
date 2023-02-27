@@ -10,12 +10,6 @@ public interface GameAdminController {
                                                    @RequestParam(defaultValue = "20")int size,
                                                    HttpResponse httpResponse);
 
-    /*
-    GameLogListAdminResponseDto gameFindBySeasonId(@RequestParam(value = "season", required = false) int seasonId,
-                                        @RequestParam(value = "page") int page,
-                                        @RequestParam(defaultValue = "20")int size,
-                                        HttpResponse httpResponse); */
-
     GameLogListAdminResponseDto gameFindByIntraId(@RequestParam(value = "q", required = false) String keyword,
                                                   @RequestParam(value = "page")int page,
                                                   @RequestParam(defaultValue = "20")int size,
