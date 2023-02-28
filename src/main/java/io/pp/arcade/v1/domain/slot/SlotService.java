@@ -119,7 +119,7 @@ public class SlotService {
         List<Slot> slots = slotRepository.findAllByTimeAfterOrderByTimeAsc(todayStartTime);
 
         User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
-        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(LocalDateTime.now(), LocalDateTime.now()).orElse(null);
+        Season season = seasonRepository.findFirstByModeAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(findDto.getUserMode(), LocalDateTime.now());
         Integer pppGap;
         if (season == null) {
             pppGap = 100;

@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -112,6 +113,7 @@ public class UserAdminService {
         if (rankRedis == null) {
             throw new RankUpdateException("RK001");
         }
+        System.out.println("{" + rankRedis.getWins() + ", " + rankRedis.getLosses() + ", " +rankRedis.getPpp() + "}");
         rankRedis.setPpp(updateRequestDto.getPpp());
         rankRedis.setWins(updateRequestDto.getWins());
         rankRedis.setLosses(updateRequestDto.getLosses());
@@ -121,7 +123,7 @@ public class UserAdminService {
         Integer losses = updateRequestDto.getLosses();
         rankRedis.setWinRate((wins + losses) == 0 ? 0 : (double)(wins * 10000 / (wins + losses)) / 100);
 
-        Season season = seasonRepository.findFirstBySeasonModeOrSeasonModeOrderByIdDesc(Mode.RANK, Mode.BOTH).orElseThrow(() -> new BusinessException("E0001"));
+        Season season = seasonRepository.findFirstByModeOrModeAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(Mode.BOTH, Mode.RANK, LocalDateTime.now()).orElseThrow(() -> new BusinessException("E0001"));
         String redisSeason = redisKeyManager.getSeasonKey(season.getId().toString(), season.getSeasonName());
         RedisRankUpdateDto redisRankUpdateDto = RedisRankUpdateDto.builder()
                 .userRank(rankRedis)

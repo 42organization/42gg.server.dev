@@ -1144,7 +1144,7 @@ public class RealWorld {
     private RankRedis addRankRedisByUser(User user) {
         /* 현재 시즌 정보 */
         LocalDateTime now = LocalDateTime.now();
-        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(now,now).orElse(null);
+        Season season = seasonRepository.findFirstByModeAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(Mode.BOTH, now);
 
         return addRankRedisByUser(user, season);
     }

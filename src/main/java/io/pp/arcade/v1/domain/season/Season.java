@@ -19,10 +19,12 @@ public class Season {
     private Integer id;
 
     @NotNull
+    @Setter
     @Column(name = "season_name")
     private String seasonName;
 
     @NotNull
+    @Setter
     @Column(name = "start_time")
     private LocalDateTime startTime;
 
