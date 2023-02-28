@@ -22,8 +22,7 @@ public class SlotGenerator extends AbstractScheduler {
         this.slotService = slotService;
         this.slotAdminService = slotAdminService;
         this.slotRepository = slotRepository;
-//        this.setCron("0 0 0/1 * * *");
-        this.setCron("0 0/1 * * * *");
+        this.setCron("0 0 0/1 * * *");
     }
 
     public void dailyGenerate() {

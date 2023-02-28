@@ -34,8 +34,8 @@ public class GameGenerator extends AbstractScheduler {
         this.slotService = slotService;
         this.currentMatchService = currentMatchService;
         this.notiGenerater = notiGenerater;
-        this.setCron("0 */15 * * * *");
-        this.setInterval(15);
+        this.setCron("0 */1 * * * *");
+//        this.setInterval(15);
     }
 
     public void gameGenerator() throws MessagingException {
@@ -95,12 +95,9 @@ public class GameGenerator extends AbstractScheduler {
         currentMatchService.saveGameInCurrentMatch(matchSaveGameDto);
     }
 
-    public void gameLiveToWait() {
-        LocalDateTime now = LocalDateTime.now();
-        now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0).minusMinutes(interval);
-        SlotDto slot = slotService.findByTime(now);
-        if (slot != null) {
-            GameDto game = gameService.findBySlotIdNullable(slot.getId());
+    public void gameLiveToWait(SlotDto finishSlot) {
+        if (finishSlot != null) {
+            GameDto game = gameService.findBySlotIdNullable(finishSlot.getId());
             if (game != null && game.getStatus().equals(StatusType.LIVE)) {
                 gameService.modifyGameStatus(GameModifyStatusDto.builder().game(game).status(StatusType.WAIT).build());
             }
@@ -121,8 +118,14 @@ public class GameGenerator extends AbstractScheduler {
     public Runnable runnable() {
         return () -> {
             try {
-                gameGenerator();
-                gameLiveToWait();
+                LocalDateTime now = LocalDateTime.now();
+                now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
+                SlotDto nowSlot = slotService.findByTime(now);
+                if (nowSlot == null)
+                    return;
+                SlotDto finishSlot = slotService.findSlotBeforeTime(now);
+                addGameOrNotiCanceled(nowSlot);
+                gameLiveToWait(finishSlot);
             } catch (MessagingException e) {
                 e.printStackTrace();
             }

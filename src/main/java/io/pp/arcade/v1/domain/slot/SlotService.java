@@ -158,6 +158,12 @@ public class SlotService {
         return slotDto;
     }
 
+    public SlotDto findSlotBeforeTime(LocalDateTime now) {
+        Slot slot = slotRepository.findFirstByTimeIsBeforeOrderByTimeDesc(now).orElse(null);
+        SlotDto slotDto = slot == null ? null : SlotDto.from(slot);
+        return slotDto;
+    }
+
     public SlotStatusType getStatus(SlotFilterDto dto) {
         /* if currentTime > slotTime
             then status == close

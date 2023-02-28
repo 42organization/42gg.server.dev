@@ -14,4 +14,5 @@ public interface SlotRepository extends JpaRepository<Slot, Integer> {
     Optional<Slot> findByTime(LocalDateTime time);
     Page<Slot> findAllByOrderByIdDesc(Pageable pageable);
     Optional<Slot> findFirstByOrderByTimeDesc();
+    Optional<Slot> findFirstByTimeIsBeforeOrderByTimeDesc(LocalDateTime time);
 }

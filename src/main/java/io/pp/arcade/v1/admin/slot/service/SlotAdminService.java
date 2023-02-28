@@ -29,7 +29,7 @@ public class SlotAdminService {
         else
             return SlotManagement.builder()
                     .futureSlotTime(9)
-                    .pastSlotTime(3)
+                    .pastSlotTime(5)
                     .interval(15)
                     .openMinute(5)
                     .build(); //return default policy
