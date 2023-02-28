@@ -158,9 +158,8 @@ public class SlotService {
         SlotDto slotDto = slot == null ? null : SlotDto.from(slot);
         return slotDto;
     }
-
-    public SlotDto findSlotBeforeTime(LocalDateTime now) {
-        Slot slot = slotRepository.findFirstByTimeIsBeforeOrderByTimeDesc(now).orElse(null);
+    public SlotDto getFinishSlotByNow(LocalDateTime now) {
+        Slot slot = slotRepository.findSlotByEndTime(now).orElse(null);
         SlotDto slotDto = slot == null ? null : SlotDto.from(slot);
         return slotDto;
     }
@@ -238,4 +237,5 @@ public class SlotService {
         List<SlotDto> slotDtos = slots.stream().map(SlotDto::from).collect(Collectors.toList());
         return slotDtos;
     }
+
 }

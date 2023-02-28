@@ -28,7 +28,6 @@ public class Slot extends BaseTimeEntity {
     @Column(name = "time")
     private LocalDateTime time;
 
-    @NotNull
     @Column(name = "end_time")
     private LocalDateTime endTime;
 

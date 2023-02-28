@@ -96,11 +96,9 @@ public class GameGenerator extends AbstractScheduler {
     }
 
     public void gameLiveToWait(SlotDto finishSlot) {
-        if (finishSlot != null) {
-            GameDto game = gameService.findBySlotIdNullable(finishSlot.getId());
-            if (game != null && game.getStatus().equals(StatusType.LIVE)) {
-                gameService.modifyGameStatus(GameModifyStatusDto.builder().game(game).status(StatusType.WAIT).build());
-            }
+        GameDto game = gameService.findBySlotIdNullable(finishSlot.getId());
+        if (game != null && game.getStatus().equals(StatusType.LIVE)) {
+            gameService.modifyGameStatus(GameModifyStatusDto.builder().game(game).status(StatusType.WAIT).build());
         }
     }
 
@@ -123,8 +121,10 @@ public class GameGenerator extends AbstractScheduler {
                 SlotDto nowSlot = slotService.findByTime(now);
                 if (nowSlot == null)
                     return;
-                SlotDto finishSlot = slotService.findSlotBeforeTime(now);
                 addGameOrNotiCanceled(nowSlot);
+                SlotDto finishSlot = slotService.getFinishSlotByNow(now);
+                if (finishSlot == null)
+                    return;
                 gameLiveToWait(finishSlot);
             } catch (MessagingException e) {
                 e.printStackTrace();
