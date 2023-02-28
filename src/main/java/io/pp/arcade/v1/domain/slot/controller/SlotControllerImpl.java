@@ -19,7 +19,6 @@ import io.pp.arcade.v1.domain.slot.dto.SlotStatusResponseDto;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.redis.Key;
-import io.pp.arcade.v1.global.scheduler.SlotGenerator;
 import io.pp.arcade.v1.global.type.GameType;
 import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.type.NotiType;
@@ -49,7 +48,6 @@ public class SlotControllerImpl implements SlotController {
     private final SeasonService seasonService;
     private final TokenService tokenService;
     private final RedisTemplate redisTemplate;
-    private final SlotGenerator slotGenerator;
 
     @Override
     @GetMapping(value = "/match/tables/{tableId}/{mode}/{type}")
@@ -65,7 +63,7 @@ public class SlotControllerImpl implements SlotController {
                 .build();
         slots = slotService.findSlotsStatus(findDto);
         matchBoards = groupingSlots(slots);
-        SlotStatusResponseDto responseDto = SlotStatusResponseDto.builder().matchBoards(matchBoards).intervalMinute(slotGenerator.getInterval()).build();
+        SlotStatusResponseDto responseDto = SlotStatusResponseDto.builder().matchBoards(matchBoards).build();
         return responseDto;
     }
 
