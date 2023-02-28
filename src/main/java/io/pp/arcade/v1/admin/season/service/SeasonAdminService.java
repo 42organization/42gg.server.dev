@@ -7,6 +7,7 @@ import io.pp.arcade.v1.admin.season.dto.SeasonUpdateRequestDto;
 import io.pp.arcade.v1.admin.season.repository.SeasonAdminRepository;
 import io.pp.arcade.v1.domain.rank.service.RankRedisService;
 import io.pp.arcade.v1.domain.season.Season;
+import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.type.Mode;
 import lombok.AllArgsConstructor;
@@ -35,7 +36,14 @@ public class SeasonAdminService {
     }
 
     @Transactional
-    public void createSeason(SeasonCreateRequestDto createDto) {
+    public SeasonDto findSeasonById(Integer seasonId) {
+        Season season = seasonAdminRepository.findById(seasonId).orElse(null);
+        if (season == null)
+            throw new BusinessException("E0001");
+        return SeasonDto.from(season);
+    }
+    @Transactional
+    public Integer createSeason(SeasonCreateRequestDto createDto) {
         Season newSeason = Season.builder()
                 .seasonName(createDto.getSeasonName())
                 .seasonMode(createDto.getSeasonMode())
@@ -45,6 +53,7 @@ public class SeasonAdminService {
                 .build();
         insert(newSeason);
         seasonAdminRepository.save(newSeason);
+        return (newSeason.getId());
     }
 
     @Transactional
@@ -66,13 +75,18 @@ public class SeasonAdminService {
             season.setStartTime(updateDto.getStartTime());
             season.setStartPpp(updateDto.getStartPpp());
             insert(season);
+            seasonAdminRepository.save(season);
         }
    }
 
    private void insert(Season season)
    {
-       Season beforeSeason = seasonAdminRepository.findFirstByModeAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(
-               season.getSeasonMode(), season.getStartTime());
+       List<Season> beforeSeasons = seasonAdminRepository.findBeforeSeasons(season.getSeasonMode(), season.getStartTime());
+       Season beforeSeason;
+       if (beforeSeasons.isEmpty())
+           beforeSeason = null;
+       else
+           beforeSeason = beforeSeasons.get(0).getId() != season.getId()? beforeSeasons.get(0) : beforeSeasons.get(1);
        List<Season> afterSeasons = seasonAdminRepository.findAfterSeasons(season.getSeasonMode(), season.getStartTime());
        Season afterSeason = afterSeasons.isEmpty() ? null : afterSeasons.get(0);
 
@@ -87,7 +101,6 @@ public class SeasonAdminService {
            season.setEndTime(afterSeason.getStartTime().minusSeconds(1));
        else
            season.setEndTime(LocalDateTime.of(9999, 12, 31, 23, 59, 59));
-       seasonAdminRepository.save(season);
    }
 
    private void detach(Season season)
@@ -106,6 +119,5 @@ public class SeasonAdminService {
            else
                beforeSeason.setEndTime(LocalDateTime.of(9999, 12, 31, 23, 59, 59));
        }
-       seasonAdminRepository.delete(season);
    }
 }
