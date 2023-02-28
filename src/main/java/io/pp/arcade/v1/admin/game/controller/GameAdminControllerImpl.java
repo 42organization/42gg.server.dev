@@ -26,12 +26,10 @@ public class GameAdminControllerImpl implements GameAdminController{
         }
         Pageable pageable = PageRequest.of(page - 1, size);
 
-        if (seasonId == 0){
+        if (seasonId == 0)
             return gameAdminService.findAllGamesByAdmin(pageable);
-        }
-        else {
+        else
             return gameAdminService.findGamesBySeasonId(seasonId, pageable);
-        }
     }
 
     @Override
@@ -42,12 +40,9 @@ public class GameAdminControllerImpl implements GameAdminController{
             return null;
         }
         Pageable pageable = PageRequest.of(page - 1, size);
-        if (keyword == null){
+        if (keyword == null)
             return gameAdminService.findAllGamesByAdmin(pageable);
-        }
-        else {
+        else
             return gameAdminService.findGamesByIntraId(keyword, pageable);
-        }
     }
-
 }

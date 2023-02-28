@@ -89,8 +89,9 @@ public class GameAdminService {
         }
 
         /*list -> page*/
-        //Pageable pageable = PageRequest.of(page - 1, size);
-        Page<GameLogAdminDto> gameLogAdminDtoPage = new PageImpl<>(gameLogAdminDtoList, pageable, gameLogAdminDtoList.size());
+        int start = Math.min(Math.max(pageable.getPageSize() * (pageable.getPageNumber()), 0), gameLogAdminDtoList.size());
+        int end = Math.min((start + pageable.getPageSize()), gameLogAdminDtoList.size());
+        Page<GameLogAdminDto> gameLogAdminDtoPage = new PageImpl<>(gameLogAdminDtoList.subList(start, end), pageable, gameLogAdminDtoList.size());
         GameLogListAdminResponseDto responseDto = new GameLogListAdminResponseDto(gameLogAdminDtoPage.getContent(),
                 gameLogAdminDtoPage.getTotalPages(), gameLogAdminDtoPage.getNumber() + 1);
         return responseDto;
