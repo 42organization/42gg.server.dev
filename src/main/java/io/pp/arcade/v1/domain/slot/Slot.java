@@ -1,6 +1,5 @@
 package io.pp.arcade.v1.domain.slot;
 
-import io.pp.arcade.v1.domain.team.Team;
 import io.pp.arcade.v1.global.type.GameType;
 import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.util.BaseTimeEntity;
@@ -29,6 +28,10 @@ public class Slot extends BaseTimeEntity {
     @Column(name = "time")
     private LocalDateTime time;
 
+    @NotNull
+    @Column(name = "end_time")
+    private LocalDateTime endTime;
+
     @Setter
     @Column(name = "game_ppp")
     private Integer gamePpp;
@@ -47,9 +50,11 @@ public class Slot extends BaseTimeEntity {
     private Mode mode;
 
     @Builder
-    public Slot(Integer tableId, LocalDateTime time, Integer gamePpp, Integer headCount, GameType type, Mode mode) {
+    public Slot(Integer tableId, LocalDateTime time, LocalDateTime endTime,
+                Integer gamePpp, Integer headCount, GameType type, Mode mode) {
         this.tableId = tableId;
         this.time = time;
+        this.endTime = endTime;
         this.gamePpp = gamePpp;
         this.headCount = headCount;
         this.type = type;

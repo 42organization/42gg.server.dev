@@ -35,7 +35,8 @@ public class SlotGenerator extends AbstractScheduler {
 
         for(int i = 0; i < needSlotNum; i++) {
             LocalDateTime time = startTime.plusMinutes(nowSlotPolicy.getGameInterval() * i);
-            SlotAddDto dto = SlotAddDto.builder().tableId(1).time(time).build();
+            LocalDateTime endTime = time.plusMinutes(nowSlotPolicy.getGameInterval());
+            SlotAddDto dto = SlotAddDto.builder().tableId(1).time(time).endTime(endTime).build();
             slotService.addSlot(dto);
         }
     }

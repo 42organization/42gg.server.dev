@@ -1,5 +1,7 @@
 package io.pp.arcade.v1.global.util;
 
+import io.pp.arcade.v1.admin.slot.SlotManagement;
+import io.pp.arcade.v1.admin.slot.service.SlotAdminService;
 import io.pp.arcade.v1.domain.noti.NotiService;
 import io.pp.arcade.v1.domain.noti.dto.NotiAddDto;
 import io.pp.arcade.v1.domain.noti.dto.NotiCanceledTypeDto;
@@ -17,11 +19,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class NotiGenerater {
     private final NotiService notiService;
+    private final SlotAdminService slotAdminService;
 
     public void addMatchNotisBySlot(SlotDto slot) throws MessagingException {
+        SlotManagement nowSlotPolicy = slotAdminService.getNowSlotPolicy();
         Integer maxSlotHeadCount = GameType.SINGLE.equals(slot.getType()) ? 2 : 4;
         Boolean isMatched = slot.getHeadCount().equals(maxSlotHeadCount) ? true : false;
-        Boolean isImminent = isMatched && slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5)) ? true : false;
+        Boolean isImminent = isMatched &&
+                slot.getTime().isBefore(LocalDateTime.now().plusMinutes(nowSlotPolicy.getOpenMinute())) ? true : false;
         if (isImminent == true) {
             addNoti(null, slot, NotiType.IMMINENT);
         } else if (isMatched == true) {

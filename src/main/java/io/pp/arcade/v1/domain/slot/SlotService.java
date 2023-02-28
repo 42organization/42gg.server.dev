@@ -44,6 +44,7 @@ public class SlotService {
         Slot slot = slotRepository.save(Slot.builder()
                 .tableId(addDto.getTableId())
                 .time(addDto.getTime())
+                .endTime(addDto.getEndTime())
                 .headCount(0)
                 .mode(Mode.BOTH)
                 .build());
