@@ -1,4 +1,4 @@
-package io.pp.arcade.v1.admin.service;
+package io.pp.arcade.v1.admin.rank.service;
 
 import io.pp.arcade.v1.domain.rank.RankRedisRepository;
 import io.pp.arcade.v1.domain.rank.RedisKeyManager;
@@ -48,6 +48,11 @@ public class AdminRankRedisService {
             RedisRankingAddDto redisRankingAddDto = RedisRankingAddDto.builder().rankingKey(curRankingKey).rank(userRank).build();
             rankRedisRepository.addRanking(redisRankingAddDto);
         });
+    }
+
+    @Transactional
+    public void deleteSeasonRankBySeasonId(Integer seasonId) {
+        rankRedisRepository.deleteRankSeason(seasonId.toString());
     }
     @Transactional
     public List<RankDto> findRankByAdmin(Pageable pageable) {
