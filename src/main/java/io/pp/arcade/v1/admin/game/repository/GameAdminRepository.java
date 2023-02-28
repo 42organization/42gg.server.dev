@@ -9,9 +9,8 @@ import java.util.List;
 
 public interface GameAdminRepository extends JpaRepository<Game, Integer> {
     @Override
-    @Query("select g from Game g join fetch g.slot")
+    @Query("select g from Game g join fetch g.slot order by g.id desc")
     List<Game> findAll();
 
-    @EntityGraph(attributePaths = {"season"})
     List<Game> findBySeason(int seasonId);
 }

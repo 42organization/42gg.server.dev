@@ -42,7 +42,7 @@ public class GameAdminControllerImpl implements GameAdminController{
             return null;
         }
         Pageable pageable = PageRequest.of(page - 1, size);
-        if (keyword == null){    //keyword가 없는 경우 모든 유저의 전적 반환
+        if (keyword == null){
             return gameAdminService.findAllGamesByAdmin(pageable);
         }
         else {
