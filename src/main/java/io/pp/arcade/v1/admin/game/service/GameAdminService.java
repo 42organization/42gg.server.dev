@@ -19,10 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,21 +65,34 @@ public class GameAdminService {
             Game game = gameSubList.get(i);    //해당 게임에 대해 정보 찾기
             Optional<Slot> slot = slotAdminRepository.findById(game.getSlot().getId());      //해당 게임의 슬롯id로 슬롯 찾기
             List<SlotTeamUser> stuList = slotTeamUserAdminRepository.findAllBySlot(slot);  // 2개(단식) or 4개(복식)
-            SlotTeamUser stu1 = stuList.get(0);
-            SlotTeamUser stu2 = stuList.get(1);
+            //stuList = stuList.stream().sorted(Comparator.comparing(SlotTeamUser::getTeam)).collect(Collectors.toList());
+            Collections.sort(stuList, (a,b) -> a.getTeam().getId() - b.getTeam().getId());
+
+            SlotTeamUser stu1, stu2 = null, stu3, stu4 = null;
+            if (stuList.size() == 2){   //단식
+                stu1 = stuList.get(0);  //1팀
+                stu3 = stuList.get(1);  //2팀
+            }else{  //복식
+                stu1 = stuList.get(0);  //1팀
+                stu2 = stuList.get(1);  //1팀
+                stu3 = stuList.get(2);  //2팀
+                stu4 = stuList.get(3);  //2팀
+            }
 
             GameTeamAdminDto team1 = GameTeamAdminDto.builder()
                     .intraId1(stu1.getUser().getIntraId())
+                    .intraId2(stu2 == null ? null : stu2.getUser().getIntraId())
                     .teamId(stu1.getTeam().getId())
                     .score(stu1.getTeam().getScore())
                     .win(stu1.getTeam().getWin())
                     .build();
 
             GameTeamAdminDto team2 = GameTeamAdminDto.builder()
-                    .intraId1(stu2.getUser().getIntraId())
-                    .teamId(stu2.getTeam().getId())
-                    .score(stu2.getTeam().getScore())
-                    .win(stu2.getTeam().getWin())
+                    .intraId1(stu3.getUser().getIntraId())
+                    .intraId2(stu4 == null ? null : stu4.getUser().getIntraId())
+                    .teamId(stu3.getTeam().getId())
+                    .score(stu3.getTeam().getScore())
+                    .win(stu3.getTeam().getWin())
                     .build();
 
             GameLogAdminDto gameLog = GameLogAdminDto.builder()
