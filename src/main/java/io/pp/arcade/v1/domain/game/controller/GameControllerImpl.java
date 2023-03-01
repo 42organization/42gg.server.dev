@@ -134,7 +134,7 @@ public class GameControllerImpl implements GameController {
          */
         Integer season = requestDto.getSeason();
         if (season != null && season == 0) {
-            season = seasonService.findLatestRankSeason().getId();
+            season = seasonService.findCurrentRankSeason().getId();
         }
 
         PChangeListFindDto findDto = PChangeListFindDto.builder()

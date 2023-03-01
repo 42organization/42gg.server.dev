@@ -63,7 +63,7 @@ public class UserAdminControllerImpl implements UserAdminController {
         UserDto targetUser = userService.findById(UserFindDto.builder()
                 .userId(userId)
                 .build());
-        SeasonDto seasonDto = seasonService.findLatestRankSeason();
+        SeasonDto seasonDto = seasonService.findCurrentRankSeason();
         RankRedisFindDto rankRedisFindDto = RankRedisFindDto.builder()
                 .user(targetUser)
                 .gameType(GameType.getEnumFromValue("SINGLE")) // 현재는 싱글로만 동작

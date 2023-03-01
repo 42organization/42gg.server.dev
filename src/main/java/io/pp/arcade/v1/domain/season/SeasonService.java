@@ -1,6 +1,5 @@
 package io.pp.arcade.v1.domain.season;
 
-import io.pp.arcade.v1.admin.dto.create.SeasonCreateRequestDto;
 import io.pp.arcade.v1.admin.dto.update.SeasonUpdateDto;
 import io.pp.arcade.v1.domain.season.dto.SeasonDeleteDto;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
@@ -24,37 +23,21 @@ public class SeasonService {
     private final SeasonRepository seasonRepository;
 
     @Transactional
-    public void createSeasonByAdmin(SeasonCreateRequestDto createDto) {
-        Season lastSeason = seasonRepository.findFirstByOrderByIdDesc().orElse(null);
-        if (lastSeason != null) {
-            lastSeason.setEndTime(LocalDateTime.now().minusSeconds(1));
-        }
-        Season season = Season.builder()
-                .seasonName(createDto.getSeasonName())
-                .startTime(LocalDateTime.now())
-                .endTime(LocalDateTime.of(9999, 12, 31, 23, 59, 59))
-                .startPpp(createDto.getStartPpp())
-                .pppGap(createDto.getPppGap())
-                .seasonMode(createDto.getSeasonMode()).build();
-        seasonRepository.save(season);
-    }
-
-    @Transactional
     public void deleteSeasonByAdmin(SeasonDeleteDto deleteDto) {
         Season season = seasonRepository.findById(deleteDto.getSeasonId()).orElseThrow(() -> new BusinessException("E0001"));
         seasonRepository.delete(season);
     }
 
     @Transactional
-    public SeasonDto findLatestRankSeason() {
-        Season season = seasonRepository.findFirstBySeasonModeOrSeasonModeOrderByIdDesc(Mode.RANK, Mode.BOTH).orElseThrow(() -> new BusinessException("E0001"));
+    public SeasonDto findCurrentRankSeason() {
+        Season season = seasonRepository.findFirstByModeOrModeAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(Mode.RANK, Mode.BOTH, LocalDateTime.now()).orElseThrow(() -> new BusinessException("E0001"));
         return SeasonDto.from(season);
     }
 
     @Transactional
     public SeasonDto findSeasonById(Integer seasonId) {
         Season season = seasonRepository.findById(seasonId).orElse(null);
-        return season != null ? SeasonDto.from(season) : findLatestRankSeason();
+        return season != null ? SeasonDto.from(season) : findCurrentRankSeason();
     }
 
     @Transactional

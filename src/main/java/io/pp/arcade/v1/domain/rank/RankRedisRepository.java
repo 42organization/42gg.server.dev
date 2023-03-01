@@ -63,9 +63,14 @@ public class RankRedisRepository {
         redisRankList.set(updateDto.getSeasonKey(), updateDto.getUserId() - 1 , updateDto.getUserRank());
     }
 
-    public void updateRanking(RedisRankingUpdateDto updateDto ) {
+    public void updateRanking(RedisRankingUpdateDto updateDto) {
         String userIndex = updateDto.getRank().getId().toString();
         redis.opsForZSet().add(updateDto.getRankingKey(), userIndex, updateDto.getPpp());
+    }
+
+    public void deleteRankSeason(String key) {
+        Set<String> keysToDelete = redis.keys(key + ":*");
+        redis.delete(keysToDelete);
     }
 
     public List<RankUserDto> findRankingList(RedisRankingFindListDto findListDto) {

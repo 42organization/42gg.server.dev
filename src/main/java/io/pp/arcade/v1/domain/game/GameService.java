@@ -43,7 +43,7 @@ public class GameService {
     @Transactional
     public void addGame(GameAddDto addDto) {
         SlotDto slotDto = addDto.getSlotDto();
-        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(LocalDateTime.now(), LocalDateTime.now()).orElse(null);
+        Season season = seasonRepository.findFirstByModeAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(slotDto.getMode(), LocalDateTime.now());
         Slot slot = slotRepository.findById(slotDto.getId()).orElseThrow(() -> new BusinessException("E0001"));
         gameRepository.save(Game.builder()
                 .slot(slot)

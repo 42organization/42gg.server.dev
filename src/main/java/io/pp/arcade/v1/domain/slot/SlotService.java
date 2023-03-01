@@ -3,6 +3,8 @@ package io.pp.arcade.v1.domain.slot;
 import io.pp.arcade.v1.admin.dto.create.SlotCreateRequestDto;
 import io.pp.arcade.v1.admin.dto.delete.SlotDeleteDto;
 import io.pp.arcade.v1.admin.dto.update.SlotUpdateDto;
+import io.pp.arcade.v1.admin.slot.SlotManagement;
+import io.pp.arcade.v1.admin.slot.repository.SlotManagementRepository;
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatch;
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchRepository;
 import io.pp.arcade.v1.domain.season.Season;
@@ -38,6 +40,7 @@ public class SlotService {
     private final SeasonRepository seasonRepository;
     private final CurrentMatchRepository currentMatchRepository;
     private final RedisTemplate<String, String> redisTemplate;
+    private final SlotManagementRepository slotManagementRepository;
 
     @Transactional
     public void addSlot(SlotAddDto addDto) {
@@ -116,11 +119,17 @@ public class SlotService {
     @Transactional
     public List<SlotStatusDto> findSlotsStatus(SlotFindStatusDto findDto) {
         LocalDateTime now = findDto.getCurrentTime();
-        LocalDateTime todayStartTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), 0, 0, 0);
-        List<Slot> slots = slotRepository.findAllByTimeAfterOrderByTimeAsc(todayStartTime);
-
+        SlotManagement slotManagement = slotManagementRepository.findFirstByOrderByCreatedAtDesc();
+        Integer pastSlotTime = slotManagement.getPastSlotTime();
+        Integer futureSlotTime = slotManagement.getFutureSlotTime();
+        LocalDateTime startTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
+                now.getHour(), 0, 0).minusHours(pastSlotTime);
+        LocalDateTime endTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
+                now.getHour(), 0, 0).plusHours(futureSlotTime);
+        List<Slot> slots = slotRepository.findAllByTimeBetweenOrderByTimeAsc(startTime,
+                endTime.minusSeconds(1));
         User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
-        Season season = seasonRepository.findSeasonByStartTimeIsBeforeAndEndTimeIsAfter(LocalDateTime.now(), LocalDateTime.now()).orElse(null);
+        Season season = seasonRepository.findFirstByModeAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(findDto.getUserMode(), LocalDateTime.now());
         Integer pppGap;
         if (season == null) {
             pppGap = 100;
@@ -140,7 +149,6 @@ public class SlotService {
                     .pppGap(pppGap)
                     .userMode(findDto.getUserMode())
                     .build();
-            SlotStatusType status = getStatus(filterDto);
             slotStatusDtos.add(SlotStatusDto.builder()
                     .slotId(slot.getId())
                     .headCount(slot.getHeadCount())

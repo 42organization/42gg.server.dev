@@ -4,13 +4,16 @@ import io.pp.arcade.v1.admin.users.dto.*;
 import io.pp.arcade.v1.admin.users.repository.UserAdminRepository;
 import io.pp.arcade.v1.domain.rank.RankRedisRepository;
 import io.pp.arcade.v1.domain.rank.RedisKeyManager;
+import io.pp.arcade.v1.domain.rank.dto.RankKeyGetDto;
 import io.pp.arcade.v1.domain.rank.dto.RedisRankUpdateDto;
+import io.pp.arcade.v1.domain.rank.dto.RedisRankingUpdateDto;
 import io.pp.arcade.v1.domain.rank.entity.RankRedis;
 import io.pp.arcade.v1.domain.season.Season;
 import io.pp.arcade.v1.domain.season.SeasonRepository;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.exception.RankUpdateException;
+import io.pp.arcade.v1.global.type.GameType;
 import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.type.RoleType;
 import io.pp.arcade.v1.global.util.AsyncNewUserImageUploader;
@@ -26,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -112,6 +116,7 @@ public class UserAdminService {
         if (rankRedis == null) {
             throw new RankUpdateException("RK001");
         }
+
         rankRedis.setPpp(updateRequestDto.getPpp());
         rankRedis.setWins(updateRequestDto.getWins());
         rankRedis.setLosses(updateRequestDto.getLosses());
@@ -121,7 +126,7 @@ public class UserAdminService {
         Integer losses = updateRequestDto.getLosses();
         rankRedis.setWinRate((wins + losses) == 0 ? 0 : (double)(wins * 10000 / (wins + losses)) / 100);
 
-        Season season = seasonRepository.findFirstBySeasonModeOrSeasonModeOrderByIdDesc(Mode.RANK, Mode.BOTH).orElseThrow(() -> new BusinessException("E0001"));
+        Season season = seasonRepository.findFirstByModeOrModeAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(Mode.BOTH, Mode.RANK, LocalDateTime.now()).orElseThrow(() -> new BusinessException("E0001"));
         String redisSeason = redisKeyManager.getSeasonKey(season.getId().toString(), season.getSeasonName());
         RedisRankUpdateDto redisRankUpdateDto = RedisRankUpdateDto.builder()
                 .userRank(rankRedis)
@@ -129,6 +134,15 @@ public class UserAdminService {
                 .seasonKey(redisSeason)
                 .build();
         rankRedisRepository.updateRank(redisRankUpdateDto);
+
+        RankKeyGetDto rankKeyGetDto = RankKeyGetDto.builder().seasonId(season.getId()).seasonName(season.getSeasonName()).build();
+        String curRankingKey = redisKeyManager.getRankingKeyBySeason(rankKeyGetDto, GameType.SINGLE);
+        RedisRankingUpdateDto redisRankingUpdateDto = RedisRankingUpdateDto.builder()
+                .rankingKey(curRankingKey)
+                .rank(rankRedis)
+                .ppp(rankRedis.getPpp())
+                .build();
+        rankRedisRepository.updateRanking(redisRankingUpdateDto);
         return true;
     }
 }

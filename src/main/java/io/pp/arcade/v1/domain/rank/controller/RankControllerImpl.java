@@ -41,7 +41,7 @@ public class RankControllerImpl implements RankController {
         if (seasonId != null && seasonId > 0)
             seasonDto = seasonService.findSeasonById(requestDto.getSeason());
         else
-            seasonDto = seasonService.findLatestRankSeason();
+            seasonDto = seasonService.findCurrentRankSeason();
 
         RankRankingFindDto findRankingDto = RankRankingFindDto.builder().userId(user.getId()).seasonDto(seasonDto).build();
         Integer myRanking = rankRedisService.findRankingById(findRankingDto);

@@ -116,10 +116,10 @@ public class UserControllerImpl implements UserController {
         // 일단 게임타입은 SINGLE로 구현
 
         if (season == 0) {
-            season = seasonService.findLatestRankSeason().getId();
+            season = seasonService.findCurrentRankSeason().getId();
         }
         SeasonDto seasonDto = seasonService.findSeasonById(season);
-        if (seasonDto.getId().equals(seasonService.findLatestRankSeason().getId()))  {
+        if (seasonDto.getId().equals(seasonService.findCurrentRankSeason().getId()))  {
             rankDto = rankRedisService.findRankById(RankRedisFindDto.builder().user(targetUser).gameType(GameType.SINGLE).build());
         } else {
             rankDto = rankRedisService.findRankById(RankRedisFindDto.builder().user(targetUser).gameType(GameType.SINGLE).season(seasonDto).build());
@@ -140,7 +140,7 @@ public class UserControllerImpl implements UserController {
         if (season != null)
             seasonDto = seasonService.findSeasonById(season);
         else
-            seasonDto = seasonService.findLatestRankSeason();
+            seasonDto = seasonService.findCurrentRankSeason();
         if (seasonDto != null) {
             RankDto temp = rankService.findBySeasonIdAndUserId(seasonDto.getId(), targetUser.getId());
             if (temp != null) {
@@ -172,7 +172,7 @@ public class UserControllerImpl implements UserController {
         UserDto user = userService.findByIntraId(UserFindDto.builder().intraId(userId).build());
         PChangeListDto pChangePage = pChangeService.findRankPChangeByUserId(PChangeFindDto.builder()
                 .user(user)
-                .season(season == 0 ? seasonService.findLatestRankSeason().getId() : season)
+                .season(season == 0 ? seasonService.findCurrentRankSeason().getId() : season)
                 .count(10)
                 .build());
         List<PChangeDto> pChangeList = pChangePage.getPChangeList();
