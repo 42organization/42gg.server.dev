@@ -47,6 +47,7 @@ public class SlotService {
         Slot slot = slotRepository.save(Slot.builder()
                 .tableId(addDto.getTableId())
                 .time(addDto.getTime())
+                .endTime(addDto.getEndTime())
                 .headCount(0)
                 .mode(Mode.BOTH)
                 .build());
@@ -165,6 +166,11 @@ public class SlotService {
         SlotDto slotDto = slot == null ? null : SlotDto.from(slot);
         return slotDto;
     }
+    public SlotDto getFinishSlotByNow(LocalDateTime now) {
+        Slot slot = slotRepository.findSlotByEndTime(now).orElse(null);
+        SlotDto slotDto = slot == null ? null : SlotDto.from(slot);
+        return slotDto;
+    }
 
     public SlotStatusType getStatus(SlotFilterDto dto) {
         /* if currentTime > slotTime
@@ -239,4 +245,5 @@ public class SlotService {
         List<SlotDto> slotDtos = slots.stream().map(SlotDto::from).collect(Collectors.toList());
         return slotDtos;
     }
+
 }

@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface SlotManagementRepository
     extends JpaRepository<SlotManagement, Integer> {
-    SlotManagement findFirstByOrderByIdDesc();
+
     SlotManagement findFirstByOrderByCreatedAtDesc();
 }

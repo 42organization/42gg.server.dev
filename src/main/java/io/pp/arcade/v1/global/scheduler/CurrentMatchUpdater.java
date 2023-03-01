@@ -1,5 +1,7 @@
 package io.pp.arcade.v1.global.scheduler;
 
+import io.pp.arcade.v1.admin.slot.SlotManagement;
+import io.pp.arcade.v1.admin.slot.service.SlotAdminService;
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchModifyDto;
 import io.pp.arcade.v1.domain.slot.SlotService;
@@ -17,19 +19,22 @@ public class CurrentMatchUpdater extends AbstractScheduler {
     private final SlotService slotService;
     private final NotiGenerater notiGenerater;
     private final CurrentMatchService currentMatchService;
+    private final SlotAdminService slotAdminService;
 
-    public CurrentMatchUpdater(SlotService slotService, NotiGenerater notiGenerater, CurrentMatchService currentMatchService) {
+    public CurrentMatchUpdater(SlotService slotService, NotiGenerater notiGenerater,
+                               CurrentMatchService currentMatchService, SlotAdminService slotAdminService) {
         this.slotService = slotService;
         this.notiGenerater = notiGenerater;
         this.currentMatchService = currentMatchService;
-        this.setCron("0 */5 * * * *");
-        this.setInterval(5);
+        this.slotAdminService = slotAdminService;
+        this.setCron("0 */1 * * * *");
     }
 
     public void updateIsImminent() throws MessagingException {
+        SlotManagement nowSlotPolicy = slotAdminService.getNowSlotPolicy();
         LocalDateTime now = LocalDateTime.now();
         now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
-        now = now.plusMinutes(5);
+        now = now.plusMinutes(nowSlotPolicy.getOpenMinute());
         update(now);
     }
 

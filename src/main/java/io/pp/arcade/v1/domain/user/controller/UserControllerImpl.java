@@ -1,5 +1,7 @@
 package io.pp.arcade.v1.domain.user.controller;
 
+import io.pp.arcade.v1.admin.slot.SlotManagement;
+import io.pp.arcade.v1.admin.slot.service.SlotAdminService;
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchDto;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchFindByUserDto;
@@ -53,6 +55,7 @@ public class UserControllerImpl implements UserController {
     private final SeasonService seasonService;
     private final GameGenerator gameGenerator;
     private final CurrentMatchUpdater currentMatchUpdater;
+    private final SlotAdminService slotAdminService;
     /*
      * [메인 페이지]
      * - 유저 정보 조회
@@ -257,7 +260,8 @@ public class UserControllerImpl implements UserController {
     }
 
     private void checkForCurrentMatchUpdater(CurrentMatchDto currentMatch) throws MessagingException {
-        if (currentMatch.getGame() == null && LocalDateTime.now().isAfter(currentMatch.getSlot().getTime().minusMinutes(5))) {
+        SlotManagement nowSlotPolicy = slotAdminService.getNowSlotPolicy();
+        if (currentMatch.getGame() == null && LocalDateTime.now().isAfter(currentMatch.getSlot().getTime().minusMinutes(nowSlotPolicy.getOpenMinute()))) {
             currentMatchUpdater.updateIsImminent(currentMatch.getSlot().getTime());
         }
     }

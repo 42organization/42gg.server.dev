@@ -1,5 +1,7 @@
 package io.pp.arcade.v1.domain.slot.controller;
 
+import io.pp.arcade.v1.admin.slot.SlotManagement;
+import io.pp.arcade.v1.admin.slot.service.SlotAdminService;
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchAddDto;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchDto;
@@ -48,6 +50,8 @@ public class SlotControllerImpl implements SlotController {
     private final SeasonService seasonService;
     private final TokenService tokenService;
     private final RedisTemplate redisTemplate;
+    private final SlotGenerator slotGenerator;
+    private final SlotAdminService slotAdminService;
 
     @Override
     @GetMapping(value = "/match/tables/{tableId}/{mode}/{type}")
@@ -198,9 +202,10 @@ public class SlotControllerImpl implements SlotController {
     }
 
     private void modifyUsersCurrentMatchStatus(UserDto user, SlotDto slot) {
+        SlotManagement nowSlotPolicy = slotAdminService.getNowSlotPolicy();
         Integer maxSlotHeadCount = GameType.SINGLE.equals(slot.getType()) ? 2 : 4;
         Boolean isMatched = (slot.getHeadCount()).equals(maxSlotHeadCount);
-        Boolean isImminent = slot.getTime().isBefore(LocalDateTime.now().plusMinutes(5));
+        Boolean isImminent = slot.getTime().isBefore(LocalDateTime.now().plusMinutes(nowSlotPolicy.getOpenMinute()));
         CurrentMatchModifyDto matchModifyDto = CurrentMatchModifyDto.builder()
                 .slot(slot)
                 .isMatched(isMatched)

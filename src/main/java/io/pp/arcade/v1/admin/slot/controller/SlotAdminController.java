@@ -36,7 +36,6 @@ public class SlotAdminController {
         } catch (BusinessException e) {
             return ResponseEntity.badRequest().build();
         }
-        slotAdminService.setSlotGenerator(requestDto.getInterval(), requestDto.getFutureSlotTime());
         slotAdminService.addSlotSetting(requestDto.getPastSlotTime(),
                 requestDto.getFutureSlotTime(),
                 requestDto.getInterval(),
