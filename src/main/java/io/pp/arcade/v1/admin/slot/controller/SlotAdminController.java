@@ -44,22 +44,21 @@ public class SlotAdminController {
     }
 
     private void checkValid(SlotAdminRequestDto requestDto) {
-        List<Integer> intervals = List.of(15, 30, 60);
         if (requestDto.getInterval() == null
-                || !intervals.contains(requestDto.getInterval())) {
-            throw new BusinessException("SC001");
+                || 60 % requestDto.getInterval() != 0) {
+            throw new BusinessException("SM001");
         }
         if (requestDto.getFutureSlotTime() == null
-                || requestDto.getFutureSlotTime() > 12) {
-            throw new BusinessException("SC001");
+                || requestDto.getFutureSlotTime() > 23) {
+            throw new BusinessException("SM001");
         }
         if (requestDto.getPastSlotTime() == null
-                || requestDto.getPastSlotTime() > 12) {
-            throw new BusinessException("SC001");
+                || requestDto.getPastSlotTime() > 3) {
+            throw new BusinessException("SM001");
         }
         if (requestDto.getOpenMinute() == null
                 || requestDto.getOpenMinute() > requestDto.getInterval()) {
-            throw new BusinessException("SC001");
+            throw new BusinessException("SM001");
         }
     }
 }
