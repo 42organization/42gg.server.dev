@@ -10,7 +10,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @RequiredArgsConstructor
-public class FeedbackAdminRepositoryImpl implements FeedbackAdminRepositorySearch{
+public class FeedbackAdminRepositorySearchImpl implements FeedbackAdminRepositorySearch{
 
     private final EntityManager em;
     @Override

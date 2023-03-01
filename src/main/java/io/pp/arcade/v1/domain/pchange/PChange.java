@@ -20,7 +20,7 @@ public class PChange extends BaseTimeEntity {
     private Integer id;
 
     @NotNull
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id")
     private Game game;
 
