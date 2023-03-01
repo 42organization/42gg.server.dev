@@ -24,12 +24,12 @@ public class AnnouncementControllerImpl implements AnnouncementController {
     @GetMapping("/announcement")
     public AnnouncementResponseDto announcementLists(HttpServletRequest request) {
         tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        List<AnnouncementDto> announcements = announcementService.findAllAnnouncement();
+        AnnouncementDto announcement = announcementService.findLastAnnouncement();
         String content;
-        if (announcements.size() == 0) {
+        if (announcement == null) {
             content = "";
         } else {
-            content = announcementService.findAllAnnouncement().get(0).getContent();
+            content = announcementService.findLastAnnouncement().getContent();
         }
         return AnnouncementResponseDto.builder()
                 .content(content)

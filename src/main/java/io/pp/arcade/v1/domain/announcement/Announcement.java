@@ -1,10 +1,14 @@
 package io.pp.arcade.v1.domain.announcement;
 
+import java.time.LocalDateTime;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Getter
 @Entity
@@ -14,23 +18,37 @@ public class Announcement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "title")
-    private String title;
-
-    @Column(name = "content")
+    @Column(name = "content", length=10000)
     private String content;
-
-    @Column(name = "link")
-    private String link;
 
     @Column(name = "is_del")
     private Boolean isDel;
 
+    @Column(name = "creator_intra_id")
+    private String creatorIntraId;
+
+    @Column(name = "deleter_intra_id")
+    private String deleterIntraId;
+
+    @Column(name = "created_time")
+    private LocalDateTime createdTime;
+
+    @Column(name = "deleted_time")
+    private LocalDateTime deletedTime;
+
     @Builder
-    public Announcement(String title, String content, String link, Boolean isDel) {
-        this.title = title;
+    Announcement(String content, String creatorIntraId, LocalDateTime createdTime) {
         this.content = content;
-        this.link = link;
-        this.isDel = isDel == null ? false : isDel;
+        this.creatorIntraId = creatorIntraId;
+        this.deleterIntraId = null;
+        this.createdTime = createdTime;
+        this.deletedTime = null;
+        this.isDel = false;
+    }
+
+    public void update(String deleterIntraId, LocalDateTime deletedTime) {
+        this.deleterIntraId = deleterIntraId;
+        this.deletedTime = deletedTime;
+        this.isDel = true;
     }
 }

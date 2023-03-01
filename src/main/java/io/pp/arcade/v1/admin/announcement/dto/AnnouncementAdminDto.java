@@ -1,6 +1,6 @@
 package io.pp.arcade.v1.admin.announcement.dto;
 
-import io.pp.arcade.v1.admin.announcement.AnnouncementAdmin;
+import io.pp.arcade.v1.domain.announcement.Announcement;
 import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +15,7 @@ public class AnnouncementAdminDto {
     private LocalDateTime deletedTime;
     private Boolean isDel;
 
-    static public AnnouncementAdminDto from(AnnouncementAdmin announcement) {
+    static public AnnouncementAdminDto from(Announcement announcement) {
         return AnnouncementAdminDto.builder()
                 .content(announcement.getContent())
                 .creatorIntraId(announcement.getCreatorIntraId())
