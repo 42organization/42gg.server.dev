@@ -50,7 +50,6 @@ public class SlotControllerImpl implements SlotController {
     private final SeasonService seasonService;
     private final TokenService tokenService;
     private final RedisTemplate redisTemplate;
-    private final SlotGenerator slotGenerator;
     private final SlotAdminService slotAdminService;
 
     @Override

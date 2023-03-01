@@ -45,7 +45,7 @@ public class SlotGenerator extends AbstractScheduler {
         int cnt = 0;
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime standard = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), 0, 0);
-        LocalDateTime targetTime = standard.plusHours(nowSlotPolicy.getFutureSlotTime() + 1);
+        LocalDateTime targetTime = standard.plusHours(nowSlotPolicy.getFutureSlotTime());
 
         while (targetTime.compareTo(startTime) > 0) {
             startTime = startTime.plusMinutes(nowSlotPolicy.getGameInterval());
