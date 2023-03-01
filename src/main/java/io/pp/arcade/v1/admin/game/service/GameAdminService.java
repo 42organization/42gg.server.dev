@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -54,10 +56,17 @@ public class GameAdminService {
     @Transactional
     public GameLogListAdminResponseDto createGameLogAdminDto(List<Game> games, Pageable pageable){
         int gameNum = games.size();
+
+        //games에서 요청한 페이지에 해당하는 데이터가져오기
+        int subStart = Math.min(Math.max(pageable.getPageSize() * (pageable.getPageNumber()), 0), games.size());
+        int subEnd = Math.min((subStart + pageable.getPageSize()), games.size());
+        List<Game> gameSubList = games.subList(subStart, subEnd);
+        int subNum = gameSubList.size();
+
         List<GameLogAdminDto> gameLogAdminDtoList = new ArrayList<>();
 
-        for(int i=0;i<gameNum;i++){     // -> GameLogAdminDto 1개씩 생성
-            Game game = games.get(i);    //해당 게임에 대해 정보 찾기
+        for(int i=0;i<subNum;i++){     // -> GameLogAdminDto 1개씩 생성
+            Game game = gameSubList.get(i);    //해당 게임에 대해 정보 찾기
             Optional<Slot> slot = slotAdminRepository.findById(game.getSlot().getId());      //해당 게임의 슬롯id로 슬롯 찾기
             List<SlotTeamUser> stuList = slotTeamUserAdminRepository.findAllBySlot(slot);  // 2개(단식) or 4개(복식)
             SlotTeamUser stu1 = stuList.get(0);
@@ -80,6 +89,7 @@ public class GameAdminService {
             GameLogAdminDto gameLog = GameLogAdminDto.builder()
                     .gameId(game.getId())
                     .startAt(slot.get().getTime())
+                    .playTime(slot.get().getEndTime() == null ? null : String.valueOf(Duration.between(slot.get().getTime().toLocalTime(), slot.get().getEndTime().toLocalTime()).toMinutes()))
                     .mode(game.getMode().getValue() == 1? "Normal" : "Rank")
                     .team1(team1)
                     .team2(team2)
@@ -89,11 +99,12 @@ public class GameAdminService {
         }
 
         /*list -> page*/
-        int start = Math.min(Math.max(pageable.getPageSize() * (pageable.getPageNumber()), 0), gameLogAdminDtoList.size());
-        int end = Math.min((start + pageable.getPageSize()), gameLogAdminDtoList.size());
-        Page<GameLogAdminDto> gameLogAdminDtoPage = new PageImpl<>(gameLogAdminDtoList.subList(start, end), pageable, gameLogAdminDtoList.size());
+        int totalStart = Math.min(Math.max(pageable.getPageSize() * (pageable.getPageNumber()), 0), gameNum);
+        int totalEnd = Math.min((totalStart + pageable.getPageSize()), gameNum);
+        Page<Game> totalgamePage = new PageImpl<>(games.subList(totalStart, totalEnd), pageable, gameNum);
+        Page<GameLogAdminDto> gameLogAdminDtoPage = new PageImpl<>(gameLogAdminDtoList, pageable, gameLogAdminDtoList.size());
         GameLogListAdminResponseDto responseDto = new GameLogListAdminResponseDto(gameLogAdminDtoPage.getContent(),
-                gameLogAdminDtoPage.getTotalPages(), gameLogAdminDtoPage.getNumber() + 1);
+                totalgamePage.getTotalPages(), totalgamePage.getNumber() + 1);
         return responseDto;
     }
 }
