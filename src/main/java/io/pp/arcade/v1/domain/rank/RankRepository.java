@@ -13,6 +13,6 @@ public interface RankRepository extends JpaRepository<Rank,Integer> {
     Page<Rank> findAllBySeasonId(Integer seasonId, Pageable pageable);
     Optional<Rank> findBySeasonIdAndUserId(Integer seasonId, Integer userId);
     Page<Rank> findAllByOrderByIdDesc(Pageable pageable);
-
     List<Rank> findAllBySeasonId(Integer seasonId);
+    void deleteAllBySeasonId(Integer seasonId);
 }

@@ -69,9 +69,6 @@ class CurrentMatchServiceTest {
 
         slot = initiator.slots[0];
 
-        team1 = slot.getTeam1();
-        team2 = slot.getTeam2();
-
         game = gameRepository.save(Game.builder()
                 .slot(slot)
                 .season(1)

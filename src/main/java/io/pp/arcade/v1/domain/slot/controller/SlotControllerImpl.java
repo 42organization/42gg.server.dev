@@ -21,6 +21,7 @@ import io.pp.arcade.v1.domain.slot.dto.SlotStatusResponseDto;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.redis.Key;
+import io.pp.arcade.v1.global.scheduler.SlotGenerator;
 import io.pp.arcade.v1.global.type.GameType;
 import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.type.NotiType;
