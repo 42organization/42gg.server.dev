@@ -2,6 +2,7 @@ package io.pp.arcade.v1.domain.rank.entity;
 
 import io.pp.arcade.v1.domain.rank.dto.RankRedisDto;
 import io.pp.arcade.v1.domain.user.User;
+import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.global.type.GameType;
 import io.pp.arcade.v1.global.util.BaseTimeEntity;
 import io.pp.arcade.v1.global.type.RacketType;
@@ -94,4 +95,27 @@ public class Rank extends BaseTimeEntity implements Serializable {
         this.seasonId = seasonId;
         this.racketType = rankDto.getRacketType();
     }
+
+    public static Rank from (User user, GameType gameType, Integer seasonId, Integer ppp){
+        return Rank.builder()
+                .user(user)
+                .ppp(ppp)
+                .seasonId(seasonId)
+                .ranking(-1)
+                .racketType(user.getRacketType())
+                .gameType(gameType)
+                .wins(0)
+                .losses(0)
+                .statusMessage(user.getStatusMessage())
+                .build();
+    }
+//    this.user = user;
+//        this.ppp = ppp;
+//        this.seasonId = seasonId;
+//        this.ranking = ranking;
+//        this.racketType = racketType;
+//        this.gameType = gameType;
+//        this.wins = wins;
+//        this.losses = losses;
+//        this.statusMessage = statusMessage;
 }

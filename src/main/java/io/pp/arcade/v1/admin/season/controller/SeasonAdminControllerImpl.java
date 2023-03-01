@@ -1,15 +1,14 @@
 package io.pp.arcade.v1.admin.season.controller;
 
-import io.jsonwebtoken.lang.Collections;
-import io.pp.arcade.v1.admin.rank.service.AdminRankRedisService;
+import io.pp.arcade.v1.admin.rank.service.RankAdminService;
+import io.pp.arcade.v1.admin.rank.service.RankRedisAdminService;
 import io.pp.arcade.v1.admin.season.dto.SeasonCreateRequestDto;
 import io.pp.arcade.v1.admin.season.dto.SeasonAdminDto;
 import io.pp.arcade.v1.admin.season.dto.SeasonListAdminResponseDto;
 import io.pp.arcade.v1.admin.season.dto.SeasonUpdateRequestDto;
 import io.pp.arcade.v1.admin.season.service.SeasonAdminService;
-import io.pp.arcade.v1.domain.rank.dto.RankDto;
-import io.pp.arcade.v1.domain.rank.service.RankRedisService;
-import io.pp.arcade.v1.domain.rank.service.RankService;
+import io.pp.arcade.v1.domain.rank.dto.RankSaveAllDto;
+import io.pp.arcade.v1.domain.rank.dto.RankUserDto;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.type.Mode;
@@ -24,7 +23,8 @@ import java.util.List;
 @AllArgsConstructor
 public class SeasonAdminControllerImpl implements SeasonAdminController {
     private final SeasonAdminService seasonAdminService;
-    private final AdminRankRedisService adminRankRedisService;
+    private final RankRedisAdminService RankRedisAdminService;
+    private final RankAdminService rankAdminService;
 
     @GetMapping(value = "/season/{seasonMode}")
     public SeasonListAdminResponseDto rankSeasonList(Mode seasonMode) {
@@ -44,8 +44,10 @@ public class SeasonAdminControllerImpl implements SeasonAdminController {
         Integer seasonId = seasonAdminService.createSeason(seasonCreateReqeustDto);
         SeasonDto seasonDto = seasonAdminService.findSeasonById(seasonId);
         if ((seasonDto.getSeasonMode() == Mode.BOTH || seasonDto.getSeasonMode() == Mode.RANK)
-                && LocalDateTime.now().isBefore(seasonDto.getStartTime()))
-            adminRankRedisService.addAllUserRankByNewSeason(seasonDto, seasonDto.getStartPpp());
+                && LocalDateTime.now().isBefore(seasonDto.getStartTime())) {
+            rankAdminService.addAllUserRankByNewSeason(seasonDto, seasonDto.getStartPpp());
+            RankRedisAdminService.addAllUserRankByNewSeason(seasonDto, seasonDto.getStartPpp());
+        }
     }
 
     @DeleteMapping(value = "/season/{seasonId}")
@@ -53,8 +55,10 @@ public class SeasonAdminControllerImpl implements SeasonAdminController {
         SeasonDto seasonDto = seasonAdminService.findSeasonById(seasonId);
         seasonAdminService.deleteSeason(seasonId);
         if ((seasonDto.getSeasonMode() == Mode.BOTH || seasonDto.getSeasonMode() == Mode.RANK)
-                && LocalDateTime.now().isBefore(seasonDto.getStartTime()))
-            adminRankRedisService.deleteSeasonRankBySeasonId(seasonDto.getId());
+                && LocalDateTime.now().isBefore(seasonDto.getStartTime())) {
+            rankAdminService.deleteAllUserRankBySeason(seasonDto);
+            RankRedisAdminService.deleteSeasonRankBySeasonId(seasonDto.getId());
+        }
     }
 
     @PutMapping(value = "/season/{seasonId}")
@@ -63,8 +67,10 @@ public class SeasonAdminControllerImpl implements SeasonAdminController {
         SeasonDto seasonDto = seasonAdminService.findSeasonById(seasonId);
         if ((seasonDto.getSeasonMode() == Mode.BOTH || seasonDto.getSeasonMode() == Mode.RANK)
             && LocalDateTime.now().isBefore(seasonDto.getStartTime())) {
-            adminRankRedisService.deleteSeasonRankBySeasonId(seasonDto.getId());
-            adminRankRedisService.addAllUserRankByNewSeason(seasonDto, seasonDto.getStartPpp());
+            rankAdminService.deleteAllUserRankBySeason(seasonDto);
+            rankAdminService.addAllUserRankByNewSeason(seasonDto, seasonDto.getStartPpp());
+            RankRedisAdminService.deleteSeasonRankBySeasonId(seasonDto.getId());
+            RankRedisAdminService.addAllUserRankByNewSeason(seasonDto, seasonDto.getStartPpp());
         }
     }
 }
