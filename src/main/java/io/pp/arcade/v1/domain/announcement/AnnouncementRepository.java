@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AnnouncementRepository extends JpaRepository<Announcement, Integer> {
-    Optional<List<Announcement>> findAllByIsDelFalse();
+    Announcement findFirstByOrderByIdDesc();
 }

@@ -14,12 +14,12 @@ public class AnnouncementService {
     private final AnnouncementRepository announcementRepository;
 
     @Transactional
-    public List<AnnouncementDto> findAllAnnouncement() {
-        List<Announcement> announcements = announcementRepository.findAllByIsDelFalse().orElse(null);
-        List<AnnouncementDto> dtoList = null;
-        if (announcements != null) {
-            dtoList = announcements.stream().map(AnnouncementDto::from).collect(Collectors.toList());
+    public AnnouncementDto findLastAnnouncement() {
+        Announcement announcement = announcementRepository.findFirstByOrderByIdDesc();
+        if (announcement != null && announcement.getIsDel() == false) {
+            AnnouncementDto dto = AnnouncementDto.from(announcement);
+            return dto;
         }
-        return dtoList;
+        return null;
     }
 }
