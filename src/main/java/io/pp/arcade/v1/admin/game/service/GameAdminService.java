@@ -42,7 +42,6 @@ public class GameAdminService {
     @Transactional
     public GameLogListAdminResponseDto findGamesBySeasonId(int seasonId, Pageable pageable){
         List<Game> games = gameAdminRepository.findBySeason(seasonId);   //시즌 id로 게임들 찾아오기
-        games = games.stream().sorted(Comparator.comparing(Game::getId).reversed()).collect(Collectors.toList());
         return createGameLogAdminDto(games, pageable);
     }
 
