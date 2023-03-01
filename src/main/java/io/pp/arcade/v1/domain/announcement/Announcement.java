@@ -1,6 +1,5 @@
-package io.pp.arcade.v1.admin.announcement;
+package io.pp.arcade.v1.domain.announcement;
 
-import io.pp.arcade.v1.global.util.BaseTimeEntity;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,12 +9,11 @@ import javax.persistence.Id;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Entity
 @NoArgsConstructor
-public class AnnouncementAdmin {
+public class Announcement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -39,7 +37,7 @@ public class AnnouncementAdmin {
     private LocalDateTime deletedTime;
 
     @Builder
-    AnnouncementAdmin(String content, String creatorIntraId, LocalDateTime createdTime) {
+    Announcement(String content, String creatorIntraId, LocalDateTime createdTime) {
         this.content = content;
         this.creatorIntraId = creatorIntraId;
         this.deleterIntraId = null;
