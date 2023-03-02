@@ -20,8 +20,8 @@ public class RankRedisRepository {
     private final ListOperations<String, RankRedis> redisRankList;
     private final RedisKeyManager redisKeyManager;
 
-    public RankRedis findRank(String key, Integer index) {
-        return redisRankList.index(key, index - 1);
+    public RankRedis findRank(String key, Integer userId) {
+        return redisRankList.index(key, redisKeyManager.getRankIndex(key, userId));
     }
 
     public List<RankRedis> findAllRank(String key) {
@@ -60,7 +60,9 @@ public class RankRedisRepository {
     }
 
     public void updateRank(RedisRankUpdateDto updateDto) {
-        redisRankList.set(updateDto.getSeasonKey(), updateDto.getUserId() - 1 , updateDto.getUserRank());
+        String key = updateDto.getSeasonKey();
+        Integer userId = updateDto.getUserId();
+        redisRankList.set(key, redisKeyManager.getRankIndex(key, userId), updateDto.getUserRank());
     }
 
     public void updateRanking(RedisRankingUpdateDto updateDto) {
