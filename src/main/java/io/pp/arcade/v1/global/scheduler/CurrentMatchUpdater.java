@@ -32,7 +32,7 @@ public class CurrentMatchUpdater extends AbstractScheduler {
 
     public void updateIsImminent() throws MessagingException {
         SlotManagement nowSlotPolicy = slotAdminService.getNowSlotPolicy();
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().plusSeconds(1);
         now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
         now = now.plusMinutes(nowSlotPolicy.getOpenMinute());
         update(now);

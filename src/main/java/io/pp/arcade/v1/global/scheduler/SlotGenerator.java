@@ -43,7 +43,7 @@ public class SlotGenerator extends AbstractScheduler {
 
     private int calcNeedSlotNum(LocalDateTime startTime, SlotManagement nowSlotPolicy) {
         int cnt = 0;
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now().plusSeconds(1);
         LocalDateTime standard = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), 0, 0);
         LocalDateTime targetTime = standard.plusHours(nowSlotPolicy.getFutureSlotTime());
 

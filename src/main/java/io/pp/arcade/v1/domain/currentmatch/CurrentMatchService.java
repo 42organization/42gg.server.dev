@@ -62,7 +62,8 @@ public class CurrentMatchService {
         Game game = gameRepository.findById(saveDto.getGame().getId()).orElseThrow(() -> new BusinessException("E0001"));
         List<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllBySlotId(game.getSlot().getId());
         slotTeamUsers.forEach(slotTeamUser -> {
-            CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(slotTeamUser.getUser(), false).orElse(null);
+            CurrentMatch currentMatch = currentMatchRepository
+                    .findByUserIdAndIsDel(slotTeamUser.getUser().getId(), false).orElse(null);
             currentMatch.setGame(game);
         });
     }
@@ -121,7 +122,8 @@ public class CurrentMatchService {
         } else {
             List<SlotTeamUser> slotTeamUsers = slotTeamUserRepository.findAllBySlotId(removeDto.getSlot().getId());
             slotTeamUsers.forEach(slotTeamUser -> {
-                CurrentMatch currentMatch = currentMatchRepository.findByUserAndIsDel(slotTeamUser.getUser(), false).orElse(null);
+                CurrentMatch currentMatch = currentMatchRepository
+                        .findByUserIdAndIsDel(slotTeamUser.getUser().getId(), false).orElse(null);
                 if (currentMatch != null) {
                     currentMatch.setIsDel(true);
                 }

@@ -116,7 +116,7 @@ public class GameGenerator extends AbstractScheduler {
     public Runnable runnable() {
         return () -> {
             try {
-                LocalDateTime now = LocalDateTime.now();
+                LocalDateTime now = LocalDateTime.now().plusSeconds(1);
                 now = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), now.getHour(), now.getMinute(), 0);
                 SlotDto nowSlot = slotService.findByTime(now);
                 if (nowSlot == null)
