@@ -112,7 +112,7 @@ public class UserAdminService {
             asyncNewUserImageUploader.update(updateRequestDto.getIntraId(), multipartFile);
         }
 
-        RankRedis rankRedis = rankRedisRepository.findRank(redisKeyManager.getCurrentRankKey(), updateRequestDto.getUserId());
+        RankRedis rankRedis = rankRedisRepository.findRank(redisKeyManager.getCurrentRankKey(), user.getId());
         if (rankRedis == null) {
             throw new RankUpdateException("RK001");
         }
@@ -130,7 +130,7 @@ public class UserAdminService {
         String redisSeason = redisKeyManager.getSeasonKey(season.getId().toString(), season.getSeasonName());
         RedisRankUpdateDto redisRankUpdateDto = RedisRankUpdateDto.builder()
                 .userRank(rankRedis)
-                .userId(updateRequestDto.getUserId())
+                .userId(rankRedis.getId())
                 .seasonKey(redisSeason)
                 .build();
         rankRedisRepository.updateRank(redisRankUpdateDto);
