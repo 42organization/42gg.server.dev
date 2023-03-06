@@ -7,10 +7,10 @@ import io.pp.arcade.v1.admin.noti.dto.NotiToUserRequestDto;
 import io.pp.arcade.v1.admin.noti.service.NotiAdminService;
 import lombok.RequiredArgsConstructor;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,18 +25,17 @@ public class NotiAdminController {
 
     private final NotiAdminService notiAdminService;
     @GetMapping
-    public NotiListResponseDto getAllNotiByAdmin(@RequestParam int page,  @RequestParam(defaultValue = "20") int size,
-                                                 String q, HttpResponse httpResponse) {
+    public ResponseEntity<NotiListResponseDto> getAllNotiByAdmin(@RequestParam int page,
+                                                                 @RequestParam(defaultValue = "20") int size, String q) {
         if (page < 1 || size < 1) {
-            httpResponse.setStatusCode(HttpStatus.SC_BAD_REQUEST);
-            return null;
+            return ResponseEntity.badRequest().build();
         }
         Pageable pageable = PageRequest.of(page - 1, size,
                 Sort.by("createdAt").descending().and(Sort.by("user.intraId").ascending()));
         if (q == null)
-            return notiAdminService.getAllNoti(pageable);
+            return new ResponseEntity(notiAdminService.getAllNoti(pageable), HttpStatus.OK);
         else
-            return notiAdminService.getFilteredNotifications(pageable, q);
+            return new ResponseEntity<>(notiAdminService.getFilteredNotifications(pageable, q), HttpStatus.OK);
 
     }
 
