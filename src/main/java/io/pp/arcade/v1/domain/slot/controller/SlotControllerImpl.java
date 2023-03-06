@@ -274,7 +274,7 @@ public class SlotControllerImpl implements SlotController {
             throw new BusinessException("SC003");
         }
         if (redisTemplate.opsForValue().get(Key.PENALTY_USER_ADMIN + user.getIntraId()) != null) {
-            throw new BusinessException("SC003");
+            throw new BusinessException("SC005");
         }
     }
 
