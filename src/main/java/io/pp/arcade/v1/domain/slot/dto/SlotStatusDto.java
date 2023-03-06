@@ -11,14 +11,16 @@ import java.time.LocalDateTime;
 public class SlotStatusDto {
     private Integer slotId;
     private LocalDateTime time;
+    private LocalDateTime endTime;
     private String status;
     private Integer headCount;
     private String mode;
 
     @Builder
-    public SlotStatusDto(Integer slotId, LocalDateTime time, SlotStatusType status, Integer headCount, Mode mode) {
+    public SlotStatusDto(Integer slotId, LocalDateTime time, LocalDateTime endTime, SlotStatusType status, Integer headCount, Mode mode) {
         this.slotId = slotId;
         this.time = time;
+        this.endTime = endTime;
         this.status = status.getCode();
         this.headCount = headCount;
         this.mode = mode.getCode();
