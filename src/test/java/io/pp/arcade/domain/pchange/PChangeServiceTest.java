@@ -63,8 +63,6 @@ class PChangeServiceTest {
 
         slot = initiator.slots[0];
         slot.setMode(Mode.RANK);
-        team1 = slot.getTeam1();
-        team2 = slot.getTeam2();
 
         game = gameRepository.save(Game.builder()
                 .slot(slot)

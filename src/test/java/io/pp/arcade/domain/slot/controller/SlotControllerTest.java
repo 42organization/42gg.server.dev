@@ -435,7 +435,6 @@ class SlotControllerTest {
          * */
         {
             passedSlot = slots[0];
-            passedTeam1 = slots[0].getTeam1();
             user = users[0];
             body.put("slotId", passedSlot.getId().toString());
             body.put("mode", Mode.RANK.getCode());
