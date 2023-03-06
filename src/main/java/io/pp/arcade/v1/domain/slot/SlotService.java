@@ -153,6 +153,7 @@ public class SlotService {
                     .slotId(slot.getId())
                     .headCount(slot.getHeadCount())
                     .time(slot.getTime())
+                    .endTime(slot.getEndTime())
                     .mode(slot.getMode())
                     .status(getStatus(filterDto))
                     .build()
