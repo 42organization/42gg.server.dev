@@ -7,11 +7,13 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import io.pp.arcade.v1.domain.user.User;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.*;
 import java.util.Arrays;
+import java.util.UUID;
 
 @Component
 public class UserImageHandler {
@@ -46,12 +48,19 @@ public class UserImageHandler {
         }
     }
 
-    public String updateAndGetS3ImageUri(MultipartFile multipartFile, String fileName) throws IOException
+    public String updateAndGetS3ImageUri(MultipartFile multipartFile, User user) throws IOException
     {
-        if (fileName.equals("small_default.jpeg"))
+        String imageUrl = user.getImageUri();
+        String userFileName = imageUrl.split("/")[imageUrl.split("/").length - 1];
+        String updateFileName = user.getIntraId() + "-" + UUID.randomUUID().toString() + ".jpeg";
+        if (updateFileName.equals("small_default.jpeg"))
             return defaultImageUrl;
-        else
-            return uploadToS3(multipartFile, fileName);
+        else {
+            String s3ImageUrl = uploadToS3(multipartFile, updateFileName);;
+            if (!imageUrl.equals(defaultImageUrl))
+                amazonS3.deleteObject(new DeleteObjectRequest(bucketName, dir + userFileName));
+            return s3ImageUrl;
+        }
     }
     private Boolean isStringValid(String intraId) {
         return intraId != null && intraId.length() != 0;
