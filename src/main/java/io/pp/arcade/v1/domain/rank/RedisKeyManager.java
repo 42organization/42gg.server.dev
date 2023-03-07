@@ -4,6 +4,7 @@ import io.pp.arcade.v1.domain.rank.dto.RankKeyGetDto;
 import io.pp.arcade.v1.domain.rank.entity.RankRedis;
 import io.pp.arcade.v1.domain.season.SeasonService;
 import io.pp.arcade.v1.domain.season.dto.SeasonDto;
+import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.type.GameType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.ListOperations;

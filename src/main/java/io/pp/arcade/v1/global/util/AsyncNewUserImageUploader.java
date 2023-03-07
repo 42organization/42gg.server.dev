@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.repository.query.Param;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityManager;
@@ -46,6 +47,7 @@ public class AsyncNewUserImageUploader {
         });
     }
 
+    @Transactional
     @Async("asyncExecutor")
     public void update(String intraId, MultipartFile multipartFile) throws IOException {
         User user =  userRepository.getUserByIntraId(intraId);

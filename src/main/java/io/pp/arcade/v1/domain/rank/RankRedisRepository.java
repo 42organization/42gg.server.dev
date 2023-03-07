@@ -21,7 +21,10 @@ public class RankRedisRepository {
     private final RedisKeyManager redisKeyManager;
 
     public RankRedis findRank(String key, Integer userId) {
-        return redisRankList.index(key, redisKeyManager.getRankIndex(key, userId));
+        Integer redisIndex = redisKeyManager.getRankIndex(key, userId);
+        if (redisIndex == null)
+            return null;
+        return redisRankList.index(key, redisIndex);
     }
 
     public List<RankRedis> findAllRank(String key) {
