@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface PChangeAdminRepository
         extends JpaRepository<PChange, Integer>{
-    @Query(value = "SELECT pc FROM PChange pc join fetch pc.user WHERE pc.user.intraId LIKE %:intraId% OR pc.user.intraId LIKE %:intraId% order by pc.user.intraId asc, pc.id desc")
+    @Query(value = "SELECT pc FROM PChange pc join fetch pc.user WHERE pc.user.intraId LIKE %:intraId% order by pc.user.intraId asc, pc.id desc")
     List<PChange> findPChangesByUser_IntraId(@Param("intraId") String intraId);
 }

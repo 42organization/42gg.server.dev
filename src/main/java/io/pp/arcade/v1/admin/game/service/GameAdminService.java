@@ -98,7 +98,7 @@ public class GameAdminService {
             GameLogAdminDto gameLog = GameLogAdminDto.builder()
                     .gameId(game.getId())
                     .startAt(slot.get().getTime())
-                    .playTime(slot.get().getEndTime() == null ? null : String.valueOf(Duration.between(slot.get().getTime().toLocalTime(), slot.get().getEndTime().toLocalTime()).toMinutes()))
+                    .slotTime(slot.get().getEndTime() == null ? null : String.valueOf(Duration.between(slot.get().getTime().toLocalTime(), slot.get().getEndTime().toLocalTime()).toMinutes()))
                     .mode(game.getMode().getValue() == 1? "Normal" : "Rank")
                     .team1(team1)
                     .team2(team2)
