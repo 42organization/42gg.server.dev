@@ -1,5 +1,7 @@
 package io.pp.arcade.v1.global.util;
 
+import com.amazonaws.AmazonServiceException;
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
@@ -60,7 +62,7 @@ public class UserImageHandler {
             InputStream inputStream = multipartFile.getInputStream();
             ObjectMetadata objMeta = new ObjectMetadata();
             objMeta.setContentLength(multipartFile.getSize());
-            amazonS3.putObject(new PutObjectRequest(bucketName, s3FileName, inputStream, objMeta).withCannedAcl(CannedAccessControlList.PublicRead)); //예외 처리?
+            amazonS3.putObject(new PutObjectRequest(bucketName, s3FileName, inputStream, objMeta).withCannedAcl(CannedAccessControlList.PublicRead));
             return amazonS3.getUrl(bucketName, s3FileName).toString();
     }
 }

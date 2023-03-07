@@ -1,5 +1,6 @@
 package io.pp.arcade.v1.global.exception.handler;
 
+import com.amazonaws.AmazonServiceException;
 import io.pp.arcade.v1.global.exception.AccessException;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.exception.RankUpdateException;
@@ -102,6 +103,13 @@ public class ControllerExceptionAdvice {
         log.error("RankUpdateException", ex);
         ExceptionResponse response = ExceptionResponse.from(ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.MULTI_STATUS);
+    }
+
+    @ExceptionHandler(AmazonServiceException.class)
+    protected ResponseEntity<ExceptionResponse> httpRequestMethodNotSupportedExceptionHandle(AmazonServiceException ex) throws MessagingException {
+        log.error("AmazonServiceException", ex);
+        ExceptionResponse response = ExceptionResponse.from("AWSS3", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getStatusCode()));
     }
 
     @ExceptionHandler(AccessException.class)

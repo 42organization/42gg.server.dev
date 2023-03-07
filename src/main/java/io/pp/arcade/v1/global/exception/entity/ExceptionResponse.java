@@ -43,6 +43,6 @@ public class ExceptionResponse {
     @Builder
     private ExceptionResponse(String code, String message){
         this.code = code;
-        this.message = "잘못된 요청입니다.";
+        this.message = message;
     }
 }

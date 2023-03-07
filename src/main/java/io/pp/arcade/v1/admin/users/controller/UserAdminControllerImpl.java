@@ -11,6 +11,7 @@ import io.pp.arcade.v1.domain.user.UserService;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.domain.user.dto.UserFindDto;
 import io.pp.arcade.v1.global.exception.BusinessException;
+import io.pp.arcade.v1.global.exception.entity.ExceptionResponse;
 import io.pp.arcade.v1.global.type.GameType;
 import lombok.AllArgsConstructor;
 import org.apache.http.HttpResponse;
@@ -87,13 +88,13 @@ public class UserAdminControllerImpl implements UserAdminController {
 
     @Override
     @PutMapping(value = "/users/{userId}/detail")
-    public ResponseEntity userDetailUpdate(UserUpdateRequestAdmintDto updateRequestDto, MultipartFile multipartFile) {
+    public ResponseEntity<ExceptionResponse> userDetailUpdate(UserUpdateRequestAdmintDto updateRequestDto, MultipartFile multipartFile) {
         try {
             if (multipartFile != null) {
                 if (multipartFile.getSize() > 50000) {
-                    return ResponseEntity.status(413).build();
+                    return new ResponseEntity<>(ExceptionResponse.from("E0001", "이미지 파일 50KB 초과"), org.springframework.http.HttpStatus.valueOf(413));
                 } else if (multipartFile.getContentType() == null || !multipartFile.getContentType().equals("image/jpeg")) {
-                    return ResponseEntity.status(415).build();
+                    return new ResponseEntity<>(ExceptionResponse.from("E0001",  "이미지 타입이 올바르지 않습니다."), org.springframework.http.HttpStatus.valueOf(415));
                 }
             }
             userAdminService.updateUserDetailByAdmin(updateRequestDto, multipartFile);

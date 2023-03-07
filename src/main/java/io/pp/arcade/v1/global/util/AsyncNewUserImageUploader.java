@@ -8,6 +8,9 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.persistence.EntityManager;
+import javax.persistence.LockModeType;
+import javax.persistence.PersistenceContext;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
@@ -16,6 +19,8 @@ import java.util.Optional;
 public class AsyncNewUserImageUploader {
     private final UserImageHandler userImageHandler;
     private final UserRepository userRepository;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     @Value("${info.image.defaultUrl}")
     private String defaultImageUrl;
@@ -44,11 +49,15 @@ public class AsyncNewUserImageUploader {
     @Async("asyncExecutor")
     public void update(String intraId, MultipartFile multipartFile) throws IOException {
         User user =  userRepository.getUserByIntraId(intraId);
+        entityManager.lock(user, LockModeType.PESSIMISTIC_WRITE);
         String s3ImageUrl = userImageHandler.updateAndGetS3ImageUri(multipartFile, user.getIntraId() + ".jpeg");
         if (s3ImageUrl == null) {
             userRepository.updateUserImageUri(user.getId(), defaultImageUrl);
         } else {
             userRepository.updateUserImageUri(user.getId(), s3ImageUrl);
         }
+        entityManager.lock(user, LockModeType.NONE);
+        entityManager.flush();
+        entityManager.clear();
     }
 }

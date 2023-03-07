@@ -66,8 +66,7 @@ class NotiServiceTest {
         user2 = initiator.users[1];
         user3 = initiator.users[2];
         user4 = initiator.users[3];
-        team1 = slot.getTeam1();
-        team2 = slot.getTeam2();
+
     }
 
 
