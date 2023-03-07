@@ -15,6 +15,7 @@ import javax.persistence.PersistenceContext;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
 public class AsyncNewUserImageUploader {
@@ -52,7 +53,7 @@ public class AsyncNewUserImageUploader {
     public void update(String intraId, MultipartFile multipartFile) throws IOException {
         User user =  userRepository.getUserByIntraId(intraId);
         entityManager.lock(user, LockModeType.PESSIMISTIC_WRITE);
-        String s3ImageUrl = userImageHandler.updateAndGetS3ImageUri(multipartFile, user.getIntraId() + ".jpeg");
+        String s3ImageUrl = userImageHandler.updateAndGetS3ImageUri(multipartFile, user);
         if (s3ImageUrl == null) {
             userRepository.updateUserImageUri(user.getId(), defaultImageUrl);
         } else {
