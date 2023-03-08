@@ -1,10 +1,10 @@
 package io.pp.arcade.v1.admin.noti.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@AllArgsConstructor
+@NoArgsConstructor
 public class NotiToAllRequestDto {
     private String message;
 }
