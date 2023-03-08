@@ -121,13 +121,9 @@ public class SlotService {
         LocalDateTime now = findDto.getCurrentTime();
         SlotManagement slotManagement = slotManagementRepository.findFirstByOrderByCreatedAtDesc();
         Integer pastSlotTime = slotManagement.getPastSlotTime();
-        Integer futureSlotTime = slotManagement.getFutureSlotTime();
         LocalDateTime startTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
                 now.getHour(), 0, 0).minusHours(pastSlotTime);
-        LocalDateTime endTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(),
-                now.getHour(), 0, 0).plusHours(futureSlotTime);
-        List<Slot> slots = slotRepository.findAllByTimeBetweenOrderByTimeAsc(startTime,
-                endTime.minusSeconds(1));
+        List<Slot> slots = slotRepository.findAllByTimeAfterOrderByTimeAsc(startTime.minusSeconds(1));
         User user = userRepository.findById(findDto.getUserId()).orElseThrow(() -> new BusinessException("E0001"));
         Season season = seasonRepository.findFirstByModeAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(findDto.getUserMode(), LocalDateTime.now());
         Integer pppGap;
