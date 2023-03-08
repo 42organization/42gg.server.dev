@@ -28,6 +28,7 @@ public interface SeasonAdminRepository extends JpaRepository <Season, Integer> {
     Optional<Season> findFirstByOrderByIdDesc();
     Optional<Season> findFirstBySeasonModeOrSeasonModeOrderByIdDesc(Mode mode1, Mode mode2);
     List<Season> findAllBySeasonMode(Mode mode);
+    List<Season> findAllBySeasonModeOrderByStartTimeDesc(Mode mode);
     List<Season> findAllBySeasonModeOrSeasonMode(Mode mode1, Mode mode2);
     List<Season> findAllBySeasonModeOrSeasonModeAndStartTimeIsBeforeOrderByStartTimeDesc(Mode mode1, Mode mode2, LocalDateTime now);
     Page<Season> findAllByOrderByIdDesc(Pageable pageable);

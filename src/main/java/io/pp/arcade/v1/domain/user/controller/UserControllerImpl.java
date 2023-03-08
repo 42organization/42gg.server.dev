@@ -28,6 +28,7 @@ import io.pp.arcade.v1.global.scheduler.CurrentMatchUpdater;
 import io.pp.arcade.v1.global.scheduler.GameGenerator;
 import io.pp.arcade.v1.global.type.GameType;
 import io.pp.arcade.v1.global.type.RoleType;
+import io.pp.arcade.v1.global.type.SnsType;
 import io.pp.arcade.v1.global.util.ExpLevelCalculator;
 import io.pp.arcade.v1.global.util.HeaderUtil;
 import lombok.AllArgsConstructor;
@@ -99,6 +100,7 @@ public class UserControllerImpl implements UserController {
                 .currentExp(currentExp)
                 .maxExp(maxExp)
                 .rivalRecord(rivalRecord)
+                .snsNotiOpt(targetUser.getSnsNotiOpt())
                 .build();
         return responseDto;
     }
@@ -201,7 +203,8 @@ public class UserControllerImpl implements UserController {
         userService.modifyUserProfile(UserModifyProfileDto.builder()
                 .userId(user.getId())
                 .racketType(requestDto.getRacketType())
-                .statusMessage(requestDto.getStatusMessage()).build());
+                .statusMessage(requestDto.getStatusMessage())
+                .snsNotiOpt(SnsType.getEnumFromCode(requestDto.getSnsNotiOpt())).build());
     }
 
     @Override

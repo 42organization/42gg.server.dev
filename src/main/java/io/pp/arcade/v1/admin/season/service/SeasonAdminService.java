@@ -26,7 +26,7 @@ public class SeasonAdminService {
 
     @Transactional
     public List<SeasonAdminDto> findAllSeasonByMode(Mode seasonMode) {
-        List<Season> seasons =  seasonAdminRepository.findAllBySeasonMode(seasonMode);
+        List<Season> seasons =  seasonAdminRepository.findAllBySeasonModeOrderByStartTimeDesc(seasonMode);
         List<SeasonAdminDto> dtoList = new ArrayList<>();
         for (Season season : seasons) {
             SeasonAdminDto dto = SeasonAdminDto.from(season);

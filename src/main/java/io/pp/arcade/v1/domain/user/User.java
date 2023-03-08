@@ -1,6 +1,7 @@
 package io.pp.arcade.v1.domain.user;
 
 import io.pp.arcade.v1.global.type.RoleType;
+import io.pp.arcade.v1.global.type.SnsType;
 import io.pp.arcade.v1.global.util.BaseTimeEntity;
 import io.pp.arcade.v1.global.type.RacketType;
 import lombok.Builder;
@@ -57,8 +58,13 @@ public class User extends BaseTimeEntity implements Serializable {
     @Column(name = "total_exp")
     private Integer totalExp;
 
+    @Setter
+    @Column(name = "sns_noti_opt")
+    @Enumerated(EnumType.STRING)
+    private SnsType snsNotiOpt;
+
     @Builder
-    public User(String intraId, String eMail, String imageUri, RacketType racketType, String statusMessage, Integer ppp, RoleType roleType, Integer totalExp) {
+    public User(String intraId, String eMail, String imageUri, RacketType racketType, String statusMessage, Integer ppp, RoleType roleType, Integer totalExp, SnsType snsNotiOpt) {
         this.intraId = intraId;
         this.eMail = eMail;
         this.imageUri = imageUri;
@@ -67,5 +73,6 @@ public class User extends BaseTimeEntity implements Serializable {
         this.roleType = roleType;
         this.ppp = ppp;
         this.totalExp = totalExp;
+        this.snsNotiOpt = snsNotiOpt;
     }
 }
