@@ -17,12 +17,12 @@ public enum Mode implements Constant{
     private final String code;
 
     @JsonCreator(mode = JsonCreator.Mode.DELEGATING)
-    public static Mode getEnumValue(String value) {
+    public static Mode getEnumValue(String code) {
         for(Mode e : values()) {
-            if(e.code.equals(value)) {
+            if(e.code.equals(code)) {
                 return e;
             }
-            else if (e.code.toUpperCase(Locale.ROOT).equals(value.toUpperCase(Locale.ROOT)))
+            else if (e.code.toUpperCase(Locale.ROOT).equals(code.toUpperCase(Locale.ROOT)))
                 return e;
         }
         return null;

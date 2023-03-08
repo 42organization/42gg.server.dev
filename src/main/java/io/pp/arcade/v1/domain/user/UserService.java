@@ -77,6 +77,7 @@ public class UserService {
         //user.setImageUri(modifyDto.getUserImageUri());
         user.setRacketType(modifyDto.getRacketType());
         user.setStatusMessage(modifyDto.getStatusMessage());
+        user.setSnsNotiOpt(modifyDto.getSnsNotiOpt());
     }
 
     /* 문자열을 포함하는 intraId를 가진 유저 찾기 */

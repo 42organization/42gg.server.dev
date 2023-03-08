@@ -3,6 +3,7 @@ package io.pp.arcade.v1.domain.user.dto;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.global.type.RacketType;
 import io.pp.arcade.v1.global.type.RoleType;
+import io.pp.arcade.v1.global.type.SnsType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,7 +21,7 @@ public class UserDto {
     private RoleType roleType;
     private Integer ppp;
     private Integer totalExp;
-
+    private SnsType snsNotiOpt;
 
     public static UserDto from(User user) {
         UserDto userDto;
@@ -37,6 +38,7 @@ public class UserDto {
                     .roleType(user.getRoleType())
                     .ppp(user.getPpp())
                     .totalExp(user.getTotalExp())
+                    .snsNotiOpt(user.getSnsNotiOpt())
                     .build();
         }
         return userDto;

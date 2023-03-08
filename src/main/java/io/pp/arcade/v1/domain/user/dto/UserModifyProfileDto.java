@@ -1,6 +1,7 @@
 package io.pp.arcade.v1.domain.user.dto;
 
 import io.pp.arcade.v1.global.type.RacketType;
+import io.pp.arcade.v1.global.type.SnsType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -12,6 +13,7 @@ public class UserModifyProfileDto {
     private String userImageUri;
     private RacketType racketType;
     private String statusMessage;
+    private SnsType snsNotiOpt;
 
     @Override
     public String toString() {
@@ -21,6 +23,7 @@ public class UserModifyProfileDto {
                 ", userImageUri='" + userImageUri + '\'' +
                 ", racketType=" + racketType +
                 ", statusMessage='" + statusMessage + '\'' +
+                ", snsType='" + snsNotiOpt + '\'' +
                 '}';
     }
 }

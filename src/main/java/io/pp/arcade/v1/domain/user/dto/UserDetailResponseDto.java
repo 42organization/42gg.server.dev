@@ -1,6 +1,7 @@
 package io.pp.arcade.v1.domain.user.dto;
 
 import io.pp.arcade.v1.global.type.RacketType;
+import io.pp.arcade.v1.global.type.SnsType;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -15,9 +16,10 @@ public class UserDetailResponseDto {
     private Integer maxExp;
     private Double expRate;
     private UserRivalRecordDto rivalRecord;
+    private SnsType snsNotiOpt;
 
     @Builder
-    public UserDetailResponseDto(String intraId, String userImageUri, Integer level, Integer currentExp, Integer maxExp, RacketType racketType, String statusMessage, UserRivalRecordDto rivalRecord) {
+    public UserDetailResponseDto(String intraId, String userImageUri, Integer level, Integer currentExp, Integer maxExp, RacketType racketType, String statusMessage, UserRivalRecordDto rivalRecord, SnsType snsNotiOpt) {
         this.intraId = intraId;
         this.userImageUri = userImageUri;
         this.racketType = racketType.getCode();
@@ -27,6 +29,7 @@ public class UserDetailResponseDto {
         this.maxExp = maxExp;
         this.expRate = (double)(currentExp * 10000 / maxExp) / 100;
         this.rivalRecord = rivalRecord;
+        this.snsNotiOpt = snsNotiOpt;
     }
 
     @Override
@@ -40,6 +43,7 @@ public class UserDetailResponseDto {
                 ", currentExp=" + currentExp +
                 ", maxExp=" + maxExp +
                 ", rivalRecord=" + rivalRecord +
+                ", snstype=" + snsNotiOpt +
                 '}';
     }
 }
