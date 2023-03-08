@@ -1,8 +1,8 @@
 package io.pp.arcade.v1.admin.announcement.controller;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.pp.arcade.DatabaseCleanup;
 import io.pp.arcade.TestInitiator;
 import io.pp.arcade.v1.admin.announcement.repository.AnnouncementAdminRepository;
 import io.pp.arcade.v1.domain.announcement.Announcement;
@@ -23,8 +23,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,41 +37,30 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 @SpringBootTest
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureMockMvc
 class AnnouncementAdminControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
-//    @Autowired
-//    private WebApplicationContext webApplicationContext;
-
-//    @Autowired
-//    TestInitiator initiator;
+    @Autowired
+    private DatabaseCleanup databaseCleanup;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private AnnouncementAdminRepository announcementAdminRepository;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private TokenRepository tokenRepository;
-
     private List<User> users;
     private List<Token> tokens;
-
-//    MockHttpSession session = new MockHttpSession();
-
-//    @BeforeEach
-//    void init() {
-//        initiator.letsgo();
-//
-//    }
     @BeforeEach
     void init() {
+        databaseCleanup.execute();
         initUsers();
         initTokens();
         Announcement announcement1 = Announcement.builder()
@@ -84,8 +76,8 @@ class AnnouncementAdminControllerTest {
                 .createdTime(LocalDateTime.now().minusHours(1))
                 .creatorIntraId("rjeong")
                 .build();
-        announcementAdminRepository.save(announcement1);
-        announcement1.update("yuikim", LocalDateTime.now());
+        announcementAdminRepository.save(announcement2);
+        announcement2.update("yuikim", LocalDateTime.now());
     }
     @Test
     @DisplayName("관리자가 공지사항 관리자 페이지 조회")
@@ -93,9 +85,12 @@ class AnnouncementAdminControllerTest {
     void announcementListByAdmin() throws Exception{
         mockMvc.perform(get("/pingpong/admin/announcement").contentType(MediaType.APPLICATION_JSON)
                     .header("Authorization", "Bearer " + tokens.get(0).getAccessToken()))
-                .andExpect(jsonPath("$.announcementList[0].content").value("test1: we need to change announcement!"))
-                .andExpect(jsonPath("$.announcementList[0].creatorIntraId").value("yuikim"))
-                .andExpect(jsonPath("$.announcementList[0].deleterIntraId").value("euikim"))
+                .andExpect(jsonPath("$.announcementList[1].content").value("test1: we need to change announcement!"))
+                .andExpect(jsonPath("$.announcementList[1].creatorIntraId").value("yuikim"))
+                .andExpect(jsonPath("$.announcementList[1].deleterIntraId").value("euikim"))
+                .andExpect(jsonPath("$.announcementList[0].content").value("test2: we need to change announcement!"))
+                .andExpect(jsonPath("$.announcementList[0].creatorIntraId").value("rjeong"))
+                .andExpect(jsonPath("$.announcementList[0].deleterIntraId").value("yuikim"))
                 .andExpect(status().isOk());
     }
 
@@ -142,10 +137,19 @@ class AnnouncementAdminControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
-//
-//    @Test
-//    void announcementModify() {
-//    }
+
+    @Test
+    @DisplayName("최근 공지사항이 삭제된 상태에서 공지사항 삭제")
+    void announcementModify() throws Exception{
+        Map<String, String> info = new HashMap<>();
+        info.put("deleterIntraId", "yuikim");
+        info.put("deletedTime", "2023-03-06T20:19:37");
+        mockMvc.perform(put("/pingpong/admin/announcement")
+                .content(objectMapper.writeValueAsString(info))
+                .header("Authorization", "Bearer " + tokens.get(0).getAccessToken())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 
 
     private void initUsers() {
