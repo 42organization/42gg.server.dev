@@ -7,5 +7,4 @@ import lombok.Getter;
 @AllArgsConstructor
 public class NotiToAllRequestDto {
     private String message;
-    private Boolean sendMail;
 }

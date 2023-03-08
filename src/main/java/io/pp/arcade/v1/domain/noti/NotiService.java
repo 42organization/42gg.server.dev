@@ -1,9 +1,10 @@
 package io.pp.arcade.v1.domain.noti;
 
 import io.pp.arcade.v1.admin.dto.create.NotiCreateRequestDto;
-import io.pp.arcade.v1.admin.dto.update.NotiUpdateRequestDto;
 import io.pp.arcade.v1.domain.noti.dto.*;
-import io.pp.arcade.v1.domain.noti.slackbot.SlackbotService;
+import io.pp.arcade.v1.global.notification.NotiMailSender;
+import io.pp.arcade.v1.global.notification.SnsNotiService;
+import io.pp.arcade.v1.global.notification.slackbot.SlackbotService;
 import io.pp.arcade.v1.domain.slot.Slot;
 import io.pp.arcade.v1.domain.slot.SlotRepository;
 import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUser;
@@ -13,11 +14,10 @@ import io.pp.arcade.v1.domain.user.UserRepository;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.type.NotiType;
 import lombok.AllArgsConstructor;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
+
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,12 +28,12 @@ public class NotiService {
     private final NotiRepository notiRepository;
     private final UserRepository userRepository;
     private final SlotRepository slotRepository;
-    private final NotiMailSender notiMailSender;
-    private final SlackbotService slackbotService;
+
+    private final SnsNotiService snsNotiService;
     private final SlotTeamUserRepository slotTeamUserRepository;
 
     @Transactional
-    public void addNoti(NotiAddDto notiAddDto) throws MessagingException {
+    public void addNoti(NotiAddDto notiAddDto) {
         Slot slot = null;
         if (notiAddDto.getSlot() != null) {
             slot = slotRepository.findById(notiAddDto.getSlot().getId()).orElseThrow(() -> new BusinessException("E0001"));
@@ -46,8 +46,7 @@ public class NotiService {
                         .message(notiAddDto.getMessage())
                         .isChecked(false)
                         .build());
-//                notiMailSender.sendMail(noti, users.getUser());
-                slackbotService.sendSlackNoti(users.getUser().getIntraId(), noti);
+                snsNotiService.sendSnsNotification(noti, users.getUser());
             }
         } else {
             User user = userRepository.findById(notiAddDto.getUser().getId()).orElseThrow(() -> new BusinessException("E0001"));
@@ -58,9 +57,7 @@ public class NotiService {
                     .message(notiAddDto.getMessage())
                     .isChecked(false)
                     .build());
-//            notiMailSender.sendMail(noti, user);
-            slackbotService.sendSlackNoti(user.getIntraId(), noti);
-            notiRepository.save(noti);
+            snsNotiService.sendSnsNotification(noti, user);
         }
     }
 
@@ -141,7 +138,6 @@ public class NotiService {
                 .message("축하합니다!! 이벤트에 당첨되었습니다🎉")
                 .isChecked(false)
                 .build();
-        slackbotService.sendSlackNoti(user.getIntraId(), noti);
-//        notiMailSender.sendMail(noti, user);
+        snsNotiService.sendSnsNotification(noti, user);
     }
 }

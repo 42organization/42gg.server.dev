@@ -6,15 +6,12 @@ import io.pp.arcade.v1.admin.noti.dto.NotiToAllRequestDto;
 import io.pp.arcade.v1.admin.noti.dto.NotiToUserRequestDto;
 import io.pp.arcade.v1.admin.noti.service.NotiAdminService;
 import lombok.RequiredArgsConstructor;
-import org.apache.http.HttpResponse;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.mail.MessagingException;
 import java.util.NoSuchElementException;
 
 
@@ -35,16 +32,15 @@ public class NotiAdminController {
         if (q == null)
             return new ResponseEntity(notiAdminService.getAllNoti(pageable), HttpStatus.OK);
         else
-            return new ResponseEntity<>(notiAdminService.getFilteredNotifications(pageable, q), HttpStatus.OK);
+            return new ResponseEntity(notiAdminService.getFilteredNotifications(pageable, q), HttpStatus.OK);
 
     }
 
     @PostMapping("/{intraId}")
     public ResponseEntity addNoitToUserByAdmin(@PathVariable String intraId,
-                                               @RequestBody NotiToUserRequestDto requestDto) throws MessagingException {
+                                               @RequestBody NotiToUserRequestDto requestDto) {
         try{
-            notiAdminService.addNotiToUser(intraId, requestDto.getSlotId(),
-                    requestDto.getMessage(), requestDto.getSendMail());
+            notiAdminService.addNotiToUser(intraId, requestDto.getMessage());
         } catch (NoSuchElementException e){
             return ResponseEntity.badRequest().build();
         }
@@ -53,7 +49,7 @@ public class NotiAdminController {
 
     @PostMapping
     public void addNotiToAllUser(@RequestBody NotiToAllRequestDto requestDto) {
-        notiAdminService.addNotiToAll(requestDto.getMessage(), requestDto.getSendMail());
+        notiAdminService.addNotiToAll(requestDto.getMessage());
     }
 
 }

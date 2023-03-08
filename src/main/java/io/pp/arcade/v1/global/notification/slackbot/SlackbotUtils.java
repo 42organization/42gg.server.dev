@@ -1,4 +1,4 @@
-package io.pp.arcade.v1.domain.noti.slackbot;
+package io.pp.arcade.v1.global.notification.slackbot;
 
 public class SlackbotUtils {
     public static String conversationsUrl = "https://slack.com/api/conversations.open";
