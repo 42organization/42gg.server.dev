@@ -1,12 +1,10 @@
-package io.pp.arcade.v1.domain.noti.slackbot;
+package io.pp.arcade.v1.global.notification.slackbot;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pp.arcade.v1.domain.noti.Noti;
 import io.pp.arcade.v1.global.type.NotiType;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
@@ -19,7 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.util.HashMap;
 import java.util.Map;
 
-import static io.pp.arcade.v1.domain.noti.slackbot.SlackbotUtils.*;
+import static io.pp.arcade.v1.global.notification.slackbot.SlackbotUtils.*;
 
 @Service
 public class SlackbotService {
@@ -47,7 +45,7 @@ public class SlackbotService {
         ResponseEntity<SlackUserInfoResponse> responseEntity = restTemplate
                 .exchange(userIdGetUrl, HttpMethod.POST, request, SlackUserInfoResponse.class);
         if (!responseEntity.getBody().ok)
-            throw new RuntimeException("fail to get slack user info");
+            throw new SlackSendException("fail to get slack user info");
         return responseEntity.getBody().user.id;
     }
 
@@ -63,7 +61,7 @@ public class SlackbotService {
         try {
             contentBody = objectMapper.writeValueAsString(map);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("json parse error in getDmChannelId()", e);
+            throw new SlackSendException("json parse error in getDmChannelId()", e);
         }
 
         HttpEntity<String> entity = new HttpEntity<>(contentBody, httpHeaders);
@@ -71,7 +69,7 @@ public class SlackbotService {
         ResponseEntity<ConversationResponse> responseEntity = restTemplate
                 .exchange(conversationsUrl, HttpMethod.POST, entity, ConversationResponse.class);
         if(!responseEntity.getBody().ok)
-            throw new RuntimeException("fail to get user dm channel id");
+            throw new SlackSendException("fail to get user dm channel id");
         return responseEntity.getBody().channel.id;
     }
 
@@ -93,7 +91,7 @@ public class SlackbotService {
         try {
             contentBody = objectMapper.writeValueAsString(map);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("json parse error in sendSlackNoti()", e);
+            throw new SlackSendException("json parse error in sendSlackNoti()", e);
         }
 
         HttpEntity<String> entity = new HttpEntity<>(contentBody, httpHeaders);
@@ -101,7 +99,7 @@ public class SlackbotService {
         ResponseEntity<String> respEntity = restTemplate
                 .exchange(sendMessageUrl, HttpMethod.POST, entity, String.class);
         if(respEntity.getStatusCode() != HttpStatus.OK)
-            throw new RuntimeException("fail to send notification");
+            throw new SlackSendException("fail to send notification");
     }
 
     private String getMessage(Noti noti) {

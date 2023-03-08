@@ -1,5 +1,6 @@
-package io.pp.arcade.v1.domain.noti;
+package io.pp.arcade.v1.global.notification;
 
+import io.pp.arcade.v1.domain.noti.Noti;
 import io.pp.arcade.v1.domain.user.User;
 import io.pp.arcade.v1.global.type.NotiType;
 import io.pp.arcade.v1.global.util.AsyncMailSender;

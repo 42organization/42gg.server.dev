@@ -7,7 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class NotiToUserRequestDto {
     String intraId;
-    Integer slotId;
     String message;
-    Boolean sendMail;
 }
