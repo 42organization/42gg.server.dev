@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SlotRepository extends JpaRepository<Slot, Integer> {
-    List<Slot> findAllByTimeBetweenOrderByTimeAsc(LocalDateTime startTime, LocalDateTime endTime);
+    List<Slot> findAllByTimeAfterOrderByTimeAsc(LocalDateTime startTime);
     Optional<Slot> findByTime(LocalDateTime time);
     Page<Slot> findAllByOrderByIdDesc(Pageable pageable);
     Optional<Slot> findFirstByOrderByTimeDesc();
