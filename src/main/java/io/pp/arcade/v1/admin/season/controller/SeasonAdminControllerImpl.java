@@ -39,6 +39,8 @@ public class SeasonAdminControllerImpl implements SeasonAdminController {
 
     @PostMapping(value = "/season")
     public void createSeason(SeasonCreateRequestDto seasonCreateReqeustDto) {
+        if (seasonCreateReqeustDto.getSeasonMode() == null)
+            throw new BusinessException("E0001");
         if (seasonCreateReqeustDto.getStartTime().isBefore(LocalDateTime.now()))
             throw new BusinessException("E0001");
         Integer seasonId = seasonAdminService.createSeason(seasonCreateReqeustDto);

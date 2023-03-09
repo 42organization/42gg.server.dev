@@ -5,16 +5,23 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Builder
 @Getter
 public class SeasonCreateRequestDto {
+
+    @NotNull
     private String seasonName;
+    @NotNull
     @DateTimeFormat(iso = DateTimeFormat.ISO.TIME)
     private LocalDateTime startTime;
+    @NotNull
     private Integer startPpp;
+    @NotNull
     private Integer pppGap;
+    @NotNull
     private Mode seasonMode;
 
     @Override
