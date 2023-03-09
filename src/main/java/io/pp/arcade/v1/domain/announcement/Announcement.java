@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Announcement {
     @Id
-    @NotNull
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -32,7 +31,7 @@ public class Announcement {
     @Column(name = "creator_intra_id")
     private String creatorIntraId;
 
-    @NotNull
+
     @Column(name = "deleter_intra_id")
     private String deleterIntraId;
 
@@ -40,7 +39,6 @@ public class Announcement {
     @Column(name = "created_time")
     private LocalDateTime createdTime;
 
-    @NotNull
     @Column(name = "deleted_time")
     private LocalDateTime deletedTime;
 
