@@ -135,14 +135,16 @@ public class UserAdminService {
                 .build();
         rankRedisRepository.updateRank(redisRankUpdateDto);
 
-        RankKeyGetDto rankKeyGetDto = RankKeyGetDto.builder().seasonId(season.getId()).seasonName(season.getSeasonName()).build();
-        String curRankingKey = redisKeyManager.getRankingKeyBySeason(rankKeyGetDto, GameType.SINGLE);
-        RedisRankingUpdateDto redisRankingUpdateDto = RedisRankingUpdateDto.builder()
-                .rankingKey(curRankingKey)
-                .rank(rankRedis)
-                .ppp(rankRedis.getPpp())
-                .build();
-        rankRedisRepository.updateRanking(redisRankingUpdateDto);
+        if (updateRequestDto.getWins() + updateRequestDto.getLosses() > 0) {
+            RankKeyGetDto rankKeyGetDto = RankKeyGetDto.builder().seasonId(season.getId()).seasonName(season.getSeasonName()).build();
+            String curRankingKey = redisKeyManager.getRankingKeyBySeason(rankKeyGetDto, GameType.SINGLE);
+            RedisRankingUpdateDto redisRankingUpdateDto = RedisRankingUpdateDto.builder()
+                    .rankingKey(curRankingKey)
+                    .rank(rankRedis)
+                    .ppp(rankRedis.getPpp())
+                    .build();
+            rankRedisRepository.updateRanking(redisRankingUpdateDto);
+        }
         return true;
     }
 }
