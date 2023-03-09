@@ -1,6 +1,6 @@
 package io.pp.arcade.v1.global.notification.slackbot;
 
-public class SlackSendException extends RuntimeException{
+public class SlackSendException extends Exception{
     public SlackSendException(String message) {
         super(message);
     }
