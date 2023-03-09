@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.pp.arcade.v1.domain.noti.Noti;
 import io.pp.arcade.v1.global.type.NotiType;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
@@ -20,6 +21,7 @@ import java.util.Map;
 import static io.pp.arcade.v1.global.notification.slackbot.SlackbotUtils.*;
 
 @Service
+@Slf4j
 public class SlackbotService {
     @Value("${slack.xoxbToken}")
     private String authenticationToken;
@@ -31,7 +33,7 @@ public class SlackbotService {
         this.objectMapper = objectMapper;
     }
 
-    private String getSlackUserId(String intraId) {
+    private String getSlackUserId(String intraId) throws SlackSendException {
         String userEmail = intraId + intraEmailSuffix;
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -49,7 +51,7 @@ public class SlackbotService {
         return responseEntity.getBody().user.id;
     }
 
-    private String getDmChannelId(String slackUserId) {
+    private String getDmChannelId(String slackUserId) throws SlackSendException {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.AUTHORIZATION,
                 authenticationPrefix + authenticationToken);
@@ -75,6 +77,14 @@ public class SlackbotService {
 
     @Async("asyncExecutor")
     public void sendSlackNoti(String intraId, Noti noti) {
+        try {
+            startSendNoti(intraId, noti);
+        } catch (SlackSendException e) {
+            log.error("SlackSendException message = {}", e.getMessage());
+        }
+    }
+
+    private void startSendNoti(String intraId, Noti noti) throws SlackSendException {
         String slackUserId = getSlackUserId(intraId);
         String slackChannelId = getDmChannelId(slackUserId);
         String message = getMessage(noti);

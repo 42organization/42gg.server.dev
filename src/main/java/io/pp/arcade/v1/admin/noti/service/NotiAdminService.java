@@ -59,7 +59,7 @@ public class NotiAdminService {
                     .isChecked(false)
                     .build();
             notiAdminRepository.save(noti);
-            snsNotiService.sendSnsNotification(noti, user);
+//            snsNotiService.sendSnsNotification(noti, user);
         });
     }
 
