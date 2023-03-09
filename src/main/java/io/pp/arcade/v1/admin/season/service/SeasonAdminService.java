@@ -11,6 +11,7 @@ import io.pp.arcade.v1.domain.season.dto.SeasonDto;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.type.Mode;
 import lombok.AllArgsConstructor;
+import org.apache.tomcat.jni.Local;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 public class SeasonAdminService {
     private final SeasonAdminRepository seasonAdminRepository;
+    private final Integer minSeasonLength = 1;
 
     @Transactional
     public List<SeasonAdminDto> findAllSeasonByMode(Mode seasonMode) {
@@ -53,6 +55,7 @@ public class SeasonAdminService {
                 .build();
         insert(newSeason);
         seasonAdminRepository.save(newSeason);
+        checkSeasonAtDB(createDto.getSeasonMode());
         return (newSeason.getId());
     }
 
@@ -61,6 +64,7 @@ public class SeasonAdminService {
         Season season = seasonAdminRepository.findById(seasonId).orElseThrow(() -> new BusinessException("E0001"));
         detach(season);
         seasonAdminRepository.delete(season);
+        checkSeasonAtDB(season.getSeasonMode());
     }
     @Transactional
     public void updateSeason(Integer seasonId, SeasonUpdateRequestDto updateDto) {
@@ -76,6 +80,7 @@ public class SeasonAdminService {
             season.setStartPpp(updateDto.getStartPpp());
             insert(season);
             seasonAdminRepository.save(season);
+            checkSeasonAtDB(updateDto.getSeasonMode());
         }
    }
 
@@ -90,10 +95,10 @@ public class SeasonAdminService {
        List<Season> afterSeasons = seasonAdminRepository.findAfterSeasons(season.getSeasonMode(), season.getStartTime());
        Season afterSeason = afterSeasons.isEmpty() ? null : afterSeasons.get(0);
 
-       if (LocalDateTime.now().isAfter(season.getStartTime()))
+       if (LocalDateTime.now().plusMinutes(1).isAfter(season.getStartTime()))
            throw new BusinessException("E0001");
        if (beforeSeason != null) {
-           if (beforeSeason.getStartTime().plusMinutes(1).isAfter(season.getStartTime()))
+           if (beforeSeason.getStartTime().plusDays(1).isAfter(season.getStartTime()))
                throw new BusinessException("E0001");
            beforeSeason.setEndTime(season.getStartTime().minusSeconds(1));
        }
@@ -120,4 +125,38 @@ public class SeasonAdminService {
                beforeSeason.setEndTime(LocalDateTime.of(9999, 12, 31, 23, 59, 59));
        }
    }
+
+   private void checkSeasonAtDB(Mode seasonMode)
+   {
+       List<Season> seasons =  seasonAdminRepository.findAllBySeasonModeOrderByStartTimeDesc(seasonMode);
+       for (int i = 0; i < seasons.size(); i++) {
+           for (int j = i + 1; j < seasons.size(); j++) {
+               if (isOverlap(seasons.get(i), seasons.get(j)))
+                   throw new BusinessException("E0001");
+           }
+       }
+   }
+
+    private boolean isOverlap(Season season1, Season season2) {
+        LocalDateTime start1 = season1.getStartTime();
+        LocalDateTime end1 = season1.getEndTime();
+        LocalDateTime start2 = season2.getStartTime();
+        LocalDateTime end2 = season2.getEndTime();
+
+        if (start1.isEqual(end1) || start2.isEqual(end2)) {
+            return false;
+        }
+        // 첫 번째 기간이 두 번째 기간의 이전에 끝날 때
+        if (end1.isBefore(start2)) {
+            return false;
+        }
+
+        // 첫 번째 기간이 두 번째 기간의 이후에 시작할 때
+        if (start1.isAfter(end2)) {
+            return false;
+        }
+
+        // 나머지 경우에는 두 기간이 겹칩니다.
+        return true;
+    }
 }
