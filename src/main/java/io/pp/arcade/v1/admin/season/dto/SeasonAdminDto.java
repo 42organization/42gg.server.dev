@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 public class SeasonAdminDto {
 
-    private Integer id;
+    private Integer seasonId;
     private String seasonName;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
@@ -32,7 +32,7 @@ public class SeasonAdminDto {
         else
             status = 2; //SEASON_FUTUER
         return SeasonAdminDto.builder()
-                .id(season.getId())
+                .seasonId(season.getId())
                 .seasonName(season.getSeasonName())
                 .startTime(season.getStartTime())
                 .endTime(season.getEndTime())
