@@ -31,7 +31,7 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
     @GetMapping(value = "/match/current")
     public CurrentMatchResponseDto currentMatchFind(HttpServletRequest request) {
         UserDto user = tokenService.findUserByAccessToken(HeaderUtil.getAccessToken(request));
-        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUser(user);;
+        CurrentMatchDto currentMatch = currentMatchService.findCurrentMatchByUser(user);
         CurrentMatchResponseDto responseDto = getCurrentMatchResponseDto(currentMatch, user);
         return responseDto;
     }
@@ -57,6 +57,7 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
         List<String> enemyTeam = new ArrayList<>();
         LocalDateTime slotTime = null;
         boolean isMatch = false;
+        Boolean isImminent = false;
         Integer slotId = null;
 
         if (currentMatch != null) {
@@ -64,6 +65,7 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
             slotId = slot.getId();
             slotTime = slot.getTime();
             isMatch = currentMatch.getIsMatched();
+            isImminent = currentMatch.getMatchImminent();
             // 경기는 5분전이고 매치가 성사되었는가?
             if (currentMatch.getMatchImminent() && isMatch){
                 TeamsUserListDto teamsUserListDto = teamService.findUserListInTeams(slot, curUser);
@@ -77,6 +79,7 @@ public class CurrentMatchControllerImpl implements CurrentMatchController {
                 .slotId(slotId)
                 .myTeam(myTeam)
                 .enemyTeam(enemyTeam)
+                .isImminent(isImminent)
                 .build();
         return responseDto;
     }

@@ -14,6 +14,7 @@ public class CurrentMatchResponseDto {
     private List<String> myTeam;
     private List<String> enemyTeam;
     private Boolean isMatched;
+    private Boolean isImminent;
 
     @Override
     public String toString() {

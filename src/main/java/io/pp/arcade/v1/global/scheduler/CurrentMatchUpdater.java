@@ -2,6 +2,8 @@ package io.pp.arcade.v1.global.scheduler;
 
 import io.pp.arcade.v1.admin.slot.SlotManagement;
 import io.pp.arcade.v1.admin.slot.service.SlotAdminService;
+import io.pp.arcade.v1.domain.currentmatch.CurrentMatch;
+import io.pp.arcade.v1.domain.currentmatch.CurrentMatchRepository;
 import io.pp.arcade.v1.domain.currentmatch.CurrentMatchService;
 import io.pp.arcade.v1.domain.currentmatch.dto.CurrentMatchModifyDto;
 import io.pp.arcade.v1.domain.slot.SlotService;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 //@Scheduled(cron = "0 */" + intervalTime + " " + startTime + "-" + endTime + " * * *", zone = "Asia/Seoul") // 초 분 시 일 월 년 요일
 @Component
@@ -19,13 +22,15 @@ public class CurrentMatchUpdater extends AbstractScheduler {
     private final SlotService slotService;
     private final NotiGenerater notiGenerater;
     private final CurrentMatchService currentMatchService;
+    private final CurrentMatchRepository currentMatchRepository;
     private final SlotAdminService slotAdminService;
 
     public CurrentMatchUpdater(SlotService slotService, NotiGenerater notiGenerater,
-                               CurrentMatchService currentMatchService, SlotAdminService slotAdminService) {
+                               CurrentMatchService currentMatchService, CurrentMatchRepository currentMatchRepository, SlotAdminService slotAdminService) {
         this.slotService = slotService;
         this.notiGenerater = notiGenerater;
         this.currentMatchService = currentMatchService;
+        this.currentMatchRepository = currentMatchRepository;
         this.slotAdminService = slotAdminService;
         this.setCron("0 */1 * * * *");
     }
@@ -47,6 +52,8 @@ public class CurrentMatchUpdater extends AbstractScheduler {
         if (slot == null) {
             return;
         }
+        if (currentMatchAlreadyUpdated(slot))
+            return;
         Integer maxHeadCount = GameType.SINGLE.equals(slot.getType()) ? 2 : 4;
         if (maxHeadCount.equals(slot.getHeadCount())) {
             CurrentMatchModifyDto modifyDto = CurrentMatchModifyDto.builder()
@@ -57,6 +64,15 @@ public class CurrentMatchUpdater extends AbstractScheduler {
             currentMatchService.modifyCurrentMatch(modifyDto);
             notiGenerater.addMatchNotisBySlot(slot);
         }
+    }
+
+    private boolean currentMatchAlreadyUpdated(SlotDto slot) {
+        List<CurrentMatch> currentMatches = currentMatchRepository.findAllBySlotId(slot.getId());
+        for (CurrentMatch currentMatch : currentMatches) {
+            if (currentMatch.getMatchImminent())
+                return true;
+        }
+        return false;
     }
 
     @Override
