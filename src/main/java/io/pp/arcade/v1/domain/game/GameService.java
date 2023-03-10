@@ -13,6 +13,7 @@ import io.pp.arcade.v1.domain.slotteamuser.SlotTeamUserRepository;
 import io.pp.arcade.v1.domain.team.TeamRepository;
 import io.pp.arcade.v1.global.exception.BusinessException;
 import io.pp.arcade.v1.global.type.GameType;
+import io.pp.arcade.v1.global.type.Mode;
 import io.pp.arcade.v1.global.type.StatusType;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -43,7 +44,8 @@ public class GameService {
     @Transactional
     public void addGame(GameAddDto addDto) {
         SlotDto slotDto = addDto.getSlotDto();
-        Season season = seasonRepository.findFirstByModeAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(slotDto.getMode(), LocalDateTime.now());
+        Season season = seasonRepository.findFirstByModeOrModeAndStartTimeLessThanEqualAndEndTimeGreaterThanEqual(slotDto.getMode(), Mode.BOTH, LocalDateTime.now()).orElseThrow(() -> new BusinessException("E0001"));
+
         Slot slot = slotRepository.findById(slotDto.getId()).orElseThrow(() -> new BusinessException("E0001"));
         gameRepository.save(Game.builder()
                 .slot(slot)
