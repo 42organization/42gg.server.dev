@@ -35,8 +35,6 @@ public class RankRedisAdminService {
         users.forEach(user -> {
             UserDto userDto = UserDto.from(user);
             RankRedis userRank = RankRedis.from(userDto, GameType.SINGLE);
-            user.setPpp(startPpp);
-            userRank.setPpp(startPpp);
             RedisRankAddDto redisRankAddDto = RedisRankAddDto.builder().key(curRankKey).userId(userDto.getId()).rank(userRank).build();
             rankRedisRepository.addRank(redisRankAddDto);
 
