@@ -92,9 +92,7 @@ public class ControllerExceptionAdvice {
     @ExceptionHandler(BusinessException.class)
     protected ResponseEntity<ExceptionResponse> httpRequestMethodNotSupportedExceptionHandle(BusinessException ex) throws MessagingException {
         log.error("BusinessException", ex);
-        //String message = messageSource.getMessage(filter(ex.getMessage()), null, Locale.KOREA);
-        ExceptionResponse response = ExceptionResponse.from(ex.getMessage());
-//        sendMail(response.getMessage());
+        ExceptionResponse response = ExceptionResponse.from(ex.getCode(), ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 

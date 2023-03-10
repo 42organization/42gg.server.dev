@@ -40,9 +40,9 @@ public class SeasonAdminControllerImpl implements SeasonAdminController {
     @PostMapping(value = "/season")
     public void createSeason(SeasonCreateRequestDto seasonCreateReqeustDto) {
         if (seasonCreateReqeustDto.getSeasonMode() == null)
-            throw new BusinessException("E0001");
+            throw new BusinessException("E0001", "존재하지 않은 모드입니다.");
         if (seasonCreateReqeustDto.getStartTime().isBefore(LocalDateTime.now()))
-            throw new BusinessException("E0001");
+            throw new BusinessException("E0001", "현재시간 이전의 시즌을 생성 할 수 없습니다.");
         Integer seasonId = seasonAdminService.createSeason(seasonCreateReqeustDto);
         SeasonDto seasonDto = seasonAdminService.findSeasonById(seasonId);
         if ((seasonDto.getSeasonMode() == Mode.BOTH || seasonDto.getSeasonMode() == Mode.RANK)
