@@ -11,6 +11,7 @@ import io.pp.arcade.v1.domain.user.UserRepository;
 import io.pp.arcade.v1.domain.user.dto.UserDto;
 import io.pp.arcade.v1.global.type.RacketType;
 import io.pp.arcade.v1.global.type.RoleType;
+import io.pp.arcade.v1.global.type.SnsType;
 import io.pp.arcade.v1.global.util.AsyncNewUserImageUploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -77,6 +78,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 .intraId(userInfo.getIntraId())
                 .roleType(RoleType.USER)
                 .imageUri(userInfo.getImageUrl())
+                .snsNotiOpt(SnsType.EMAIL)
                 .statusMessage("")
                 .racketType(RacketType.NONE)
                 .ppp(1000)
