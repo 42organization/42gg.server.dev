@@ -36,8 +36,8 @@ jobs:
     - name: make application ymls
       run:
         cd ./src/main/resources
-        echo "${{ secrets.application.yml }}" > ./application.yml
-        echo "${{ secrets.application-test.yml }}" > ./application.yml
+        echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
+        echo "${{ secrets.APPLICATION_LOCAL_YML }}" > ./application-local.yml
       shell: bash
       
     
