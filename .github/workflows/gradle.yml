@@ -34,7 +34,7 @@ jobs:
         distribution: 'temurin'
         
     - name: make application ymls
-      run:
+      run: |
         cd ./src/main/resources
         echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
         echo "${{ secrets.APPLICATION_TEST_YML }}" > ./application-test.yml
@@ -50,7 +50,7 @@ jobs:
       run: ./gradlew bootWar
       
     - name: build new docker image as latest tag
-      run:
+      run: |
         docker build -t ${{ env.IMAGE_NAME }}:latest .
         docker push ${{ env.IMAGE_NAME }}:latest
       
