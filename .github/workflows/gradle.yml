@@ -67,3 +67,4 @@ jobs:
           cd ./docker
           docker rmi -f ${{ env.IMAGE_NAME }}:latest
           docker-compose up -d
+
