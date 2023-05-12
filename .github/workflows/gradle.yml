@@ -58,7 +58,7 @@ jobs:
         
 
     - name: executing docker-compose up on test server
-      uses: appleboy/ssh-action@master
+      uses: appleboy/ssh-action@v0.1.9
       with:
         host: ${{ secrets.TEST_SERVER_HOST }}
         username: ec2-user
