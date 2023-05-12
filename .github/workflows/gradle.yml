@@ -58,7 +58,7 @@ jobs:
         
 
     - name: executing docker-compose up on test server
-      uses: appleboy/ssh-action@v0.1.9
+      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.TEST_SERVER_HOST }}
         username: ec2-user
@@ -67,4 +67,3 @@ jobs:
           cd ./docker
           docker rmi -f ${{ env.IMAGE_NAME }}:latest
           docker-compose up -d
-
