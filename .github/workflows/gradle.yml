@@ -38,6 +38,7 @@ jobs:
         cd ./src/main/resources
         echo "${{ secrets.APPLICATION_YML }}" > ./application.yml
         echo "${{ secrets.APPLICATION_TEST_YML }}" > ./application-test.yml
+        cat application.yml
       shell: bash
       
     - name: Login to Docker Hub
