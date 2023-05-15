@@ -55,13 +55,12 @@ jobs:
       run: |
         docker build -t ${{ env.IMAGE_NAME }}:latest .
         docker push ${{ env.IMAGE_NAME }}:latest
-        
 
     - name: executing docker-compose up on test server
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.TEST_SERVER_HOST }}
-        username: ec2-user
+        username: ${{ secrets.TEST_SERVER_USERNAME }}
         key: ${{ secrets.TEST_SERVER_PEM }}
         script: |
           cd ./docker
