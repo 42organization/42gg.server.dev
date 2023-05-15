@@ -65,7 +65,7 @@ jobs:
       with:
         aws-access-key-id: ${{ secrets.AWS_SECURITY_ACCESS_KEY_ID }}
         aws-secret-access-key: ${{ secrets.AWS_SECURITY_SECRECT_KEY }}
-        aws-region: ap-northeast-2c
+        aws-region: ap-northeast-2
 
     - name: Add Github Actions IP to Security group
       run: |
