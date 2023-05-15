@@ -56,6 +56,21 @@ jobs:
         docker build -t ${{ env.IMAGE_NAME }}:latest .
         docker push ${{ env.IMAGE_NAME }}:latest
 
+    - name: Get Github Actions IP
+      id: ip
+      uses: haythem/public-ip@v1.3
+
+    - name: AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_SECURITY_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECURITY_SECRECT_KEY }}
+        aws-region: ap-northeast-2c
+
+    - name: Add Github Actions IP to Security group
+      run: |
+          aws ec2 authorize-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+
     - name: executing docker-compose up on test server
       uses: appleboy/ssh-action@master
       with:
@@ -66,3 +81,7 @@ jobs:
           cd ./docker
           docker rmi -f ${{ env.IMAGE_NAME }}:latest
           docker-compose up -d
+
+    - name: Remove Github Actions IP From Security Group
+      run: |
+          aws ec2 revoke-security-group-ingress --group-id ${{ secrets.AWS_SG_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
